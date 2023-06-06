@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+ mvlvudb_app:
+  env_file: .env
+  build:
+   args:
+    user: ${USER}
+    uid: ${UID}
+   context: ./
+   dockerfile: Dockerfile
+  image: mvlvudb
+  container_name: mvlvudb-app
+  restart: unless-stopped
+  working_dir: /usr/share/nginx/html
+  volumes:
+    - ${WORK_DIR_SRC}:/usr/share/nginx/html
+  networks:
+    - mvlvudb
+
+ mvlvudb_db:
+  image: mariadb
+  container_name: mvlvudb-db
+  restart: unless-stopped
+  environment:
+    MYSQL_DATABASE: mvlvudb
+    MYSQL_ROOT_PASSWORD: 123123
+    MYSQL_PASSWORD: 123123
+    MYSQL_USER: root
+  volumes:
+  - mvlvudbdata:/var/lib/mysq
+  networks:
+  - mvlvudb
+
+ nginx_mvlvudb:
+  image: nginx
+  env_file: .env
+  volumes:
+  - ${WORK_DIR_SRC}:/usr/share/nginx/html
+  - ${WORK_DIR}:/etc/nginx/conf.d
+  ports:
+  -  "9999:80"
+  networks:
+  - mvlvudb
+
+networks:
+  mvlvudb:
+    driver: bridge
+
+volumes:
+  mvlvudbdata:
+   name: mvlvudbdata
+   external: true

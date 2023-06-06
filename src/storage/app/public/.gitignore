@@ -1,0 +1,7 @@
+!.gitignore
+/authors/*
+!/authors/.gitkeep
+/content/*
+!/content/.gitkeep
+/links/*
+!/links/.gitkeep

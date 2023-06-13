@@ -1,7 +1,7 @@
 <template>
 
     <transition name="slide-fade">
-        <div v-if="toast && this.visible" class="max-w-xs w-full flex items-center fixed p-4 top-0 mt-5 mr-5 right-0 z-50 rounded-lg  shadow-xl bg-white">
+        <div v-if="toast && this.visible" class="max-w-sm w-full flex items-center fixed p-4 top-0 mt-5 mr-5 right-0 z-50 rounded-lg shadow-xl bg-gray-300">
             <div class="mr-2">
                 <Icons v-if="type === 'danger'"       name="danger"  class="w-7 h-7 text-red-500"/> 
                 <Icons v-else-if="type === 'success'" name="success" class="w-7 h-7 text-green-500"/> 

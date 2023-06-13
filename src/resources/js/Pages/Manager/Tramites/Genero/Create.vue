@@ -4,10 +4,10 @@
         <!-- Page title & actions -->
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0 flex items-center">
-				<a class="btn-blue" :href="route('discapacidad')">
+				<a class="btn-blue" :href="route('genero')">
                     <ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
                 </a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo tramite Discapacidad</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo tramite Género y Diversidad</h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
               	<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
@@ -121,19 +121,6 @@
 							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
 							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
-						<div class="col-span-12 sm:col-span-3 ">
-							<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-							<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="codigo-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-
-						<div class="col-span-12 sm:col-span-3 ">
-							<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-							<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico" autocomplete="diagnostico-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-
-
-					</div>
-					<div class="grid grid-cols-12 gap-6">
 
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
@@ -144,7 +131,7 @@
 							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 							<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
-
+						
 					</div>
 
 				</div>
@@ -280,6 +267,8 @@
 							<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad Hijos</label>
 							<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
+
+						<!-- TODO: Analizar integracion de parentezco en el formulario  -->
 
 					</div>
 

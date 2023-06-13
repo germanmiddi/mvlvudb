@@ -5,24 +5,189 @@ namespace App\Http\Controllers\Manager\Tramites\Discapacidad;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Manager\AddressData;
+use App\Models\Manager\AditionalData;
+//Models
+use App\Models\Manager\Pais;
+use App\Models\Manager\Barrio;
+use App\Models\Manager\Localidad;
+use App\Models\Manager\CanalAtencion;
+use App\Models\Manager\CoberturaMedica;
+use App\Models\Manager\ContactData;
+use App\Models\Manager\Cud;
+use App\Models\Manager\EducationData;
+use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\TipoDocumento;
+use App\Models\Manager\TipoOcupacion;
+use App\Models\Manager\TipoPension;
+use App\Models\Manager\TipoVivienda;
+use App\Models\Manager\SituacionConyugal;
+use App\Models\Manager\RolTramite;
+use App\Models\Manager\TipoTramite;
+use App\Models\Manager\ProgramaSocial;
+use App\Models\Manager\Person;
+use App\Models\Manager\SocialData;
+use App\Models\Manager\Tramite;
 
 class DiscapacidadController extends Controller
 {
     //index
-    public function index(){
-        return Inertia::render('Manager/Tramites/Discapacidad/Index');
+
+    public function index()
+    {
+        //$tramite = Tramite::where('id',1)->get();
+        //dd($tramite[0]->rol_tramite[0]['description']);
+        return Inertia::render('Manager/Tramites/Discapacidad/Index',
+        [
+            'toast' => Session::get('toast')
+        ]);
     }
     //create
     public function create()
     {
-        return Inertia::render('Manager/Tramites/Discapacidad/Create');
+        return Inertia::render(
+            'Manager/Tramites/Discapacidad/Create',
+            [
+                'paises' => Pais::all(),
+                'barrios' => Barrio::all(),
+                'localidades' => Localidad::all(),
+                'canalesAtencion' => CanalAtencion::all(),
+                'coberturasMedica' => CoberturaMedica::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'nivelesEducativo' => NivelEducativo::all(),
+                'tiposDocumento' => TipoDocumento::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
+                'tiposPension' => TipoPension::all(),
+                'tiposVivienda' => TipoVivienda::all(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'rolesTramite' => RolTramite::all(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
+                'programasSocial' => ProgramaSocial::all()
+            ]
+        );
     }
     //store
     public function store(Request $request)
     {
-        //
+        //$request = $request['form'];
+        //dd($request);
+        DB::beginTransaction();
+        try {
+            $person = Person::updateOrCreate(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento']
+                ],
+                [
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'fecha_nac' => date("Y-m-d ", strtotime($request['fecha_nac'])),
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'num_cuit' => $request['num_cuit'] ?? null
+                ]
+            );
+
+            AditionalData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'cant_hijos' => $request['cant_hijos'],
+                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
+                    'situacion_conyugal_id' => $request['situacion_conyugal_id']
+                ]
+            );
+
+            SocialData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'subsidio' => $request['subsidio']
+                ]
+            );
+
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'beca' => $request['beca'],
+                    'nivel_educativo_id' => $request['nivel_educativo_id'],
+                    'estado_educativo_id' => $request['estado_educativo_id']
+                ]
+            );
+
+            // address_data
+
+            AddressData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'latitude' => $request['latitude'],
+                    'longitude' => $request['longitude'],
+                    'google_address' => $request['google_address'],
+                    'pais_id' => $request['pais_id'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'phone' => $request['phone'],
+                    'email' => $request['email']
+                ]
+            );
+
+            //cud
+            Cud::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'codigo' => $request['codigo'],
+                    'diagnostico' => $request['diagnostico']
+                ]
+            );
+            // tramite
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                    'observacion' => $request['observacion'],
+
+                    'canal_atencion_id' => $request['canal_atencion_id'],
+                    'tipo_tramite_id' => $request['tipo_tramite_id'],
+                ]
+            );
+
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+
+            DB::commit();
+            return Redirect::route('discapacidad')->with(['toast' => ['message' => 'Se generado correctamente el tramite del usuario.', 'status' => '200']]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return Redirect::route('discapacidad')->with(['toast' => ['message' => 'Se generado correctamente el tramite del usuario.', 'status' => '203']]);
+        }
     }
     //show
     public function show($id)
@@ -43,5 +208,18 @@ class DiscapacidadController extends Controller
     public function destroy($id)
     {
         //
+    }
+    //list
+    public function list()
+    {
+        return  Tramite::orderBy("created_at", 'DESC')
+            ->paginate(999)
+            ->withQueryString()
+            ->through(fn ($tramite) => [
+                'tramite'   => $tramite,
+                'persons'   => $tramite->persons,
+                'contact_data' => $tramite->persons[0]->contact,
+                'rol_tramite' => $tramite->rol_tramite[0]['description']
+            ]);
     }
 }

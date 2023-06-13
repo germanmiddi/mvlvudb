@@ -12,17 +12,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call([
-        //     CuitexportsTableSeeder::class,
-        //     CountrycodeSeeder::class
-
-        // ]);
+        $this->call([
+            LocalidadesSeeder::class,
+            BarriosSeeder::class,
+            CanalAtencionSeeder::class,
+            CoberturaMedicaSeeder::class,
+            DependenciasSeeder::class,
+            EstadoEducativoSeeder::class,
+            NivelEducativoSeeder::class,
+            PaisesSeeder::class,
+            SedesSeeder::class,
+            TipoDocumentoSeeder::class,
+            TipoOcupacionSeeder::class,
+            TipoPensionSeeder::class,
+            TipoVinculoFamiliarSeeder::class,
+            TipoViviendaSeeder::class,
+            RolTramiteSeeder::class,
+            SituacionConyugalSeeder::class,
+            TipoTramiteSeeder::class,
+            ProgramaSocialSeeder::class
+        ]);
 
         User::create([
             'name' => 'German Middi',
             'email' => 'g@gmail.com',
             'password' => bcrypt('Inicio123')
-        ]);
+        ]); 
 
         
 

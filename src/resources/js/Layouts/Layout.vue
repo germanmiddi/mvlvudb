@@ -125,19 +125,31 @@
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Centros Barriales Infancia</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Centros Barriales Juventud</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Discapacidad</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Intermedias</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Form 2.0</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Fortalecimiento Comunitario</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Género y Diversidad</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Hábitat</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Niñez y Adolescencia</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Promoción y Protección de derechos</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Personas Mayores</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Operativos</li>
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >Vivienda social</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md " >Centros Barriales Infancia</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Centros Barriales Juventud</li>
+                    <a :href="route('discapacidad')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Discapacidad
+                      </li>
+                    </a>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Intermedias</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Form 2.0</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Fortalecimiento Comunitario</li>
+                    <a :href="route('genero')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Género y Diversidad
+                      </li>
+                    </a>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Hábitat</li>
+                    <a :href="route('ninez')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Niñez y Adolescencia
+                      </li>
+                    </a>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Promoción y Protección de derechos</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Personas Mayores</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Operativos</li>
+                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Vivienda social</li>
                   </DisclosurePanel>
 
               </Disclosure>

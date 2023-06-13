@@ -4,10 +4,10 @@
         <!-- Page title & actions -->
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0 flex items-center">
-				<a class="btn-blue" :href="route('discapacidad')">
+				<a class="btn-blue" :href="route('ninez')">
                     <ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
                 </a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo tramite Discapacidad</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo tramite de Niñez y Adolescencia</h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
               	<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
@@ -24,7 +24,6 @@
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
 						<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
-						<!-- <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p> -->
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -77,9 +76,6 @@
 						<div class="">
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 						</div>
-						<div class="flex-shrink-0">
-							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Beneficiario</button>
-						</div>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -103,10 +99,11 @@
 							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
-						<div class="col-span-12 sm:col-span-3 ">
+						<!-- TODO: Ver si se incluye fecha de nacimiento. -->
+						<!-- <div class="col-span-12 sm:col-span-3 ">
 							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
 							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
+						</div>  -->
 
 					</div>
 
@@ -121,19 +118,6 @@
 							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
 							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
-						<div class="col-span-12 sm:col-span-3 ">
-							<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-							<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="codigo-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-
-						<div class="col-span-12 sm:col-span-3 ">
-							<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-							<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico" autocomplete="diagnostico-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-
-
-					</div>
-					<div class="grid grid-cols-12 gap-6">
 
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
@@ -144,12 +128,241 @@
 							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 							<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
+						
+					</div>
+
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<!-- TODO: Ver si tipo de vivienda es dato necesario para el responsable o para el niño -->
+						<!-- TODO: Analizar integracion de parentezco en el formulario  -->
+						<!-- <div class="col-span-12 sm:col-span-3">
+							<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de Vivienda</label>
+							<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id" autocomplete="tipo_vivienda-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un tipo de vivienda</option>
+								<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
+									:value="tipoVivienda.id">{{
+											tipoVivienda.description
+									}}</option>
+							</select>
+						</div>   -->
+						<div class="col-span-12 sm:col-span-3">
+							<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
+							<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="localidad_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione una localidad</option>
+								<option v-for="localidad in localidades" :key="localidad.id"
+									:value="localidad.id">{{
+											localidad.description
+									}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
+							<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un barrio</option>
+								<option v-for="barrio in barriosComputed" :key="barrio.id"
+									:value="barrio.id">{{
+											barrio.description
+									}}</option>
+							</select>
+						</div>  
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-4 ">
+							<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
+							<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="calle-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
+							<input v-model="form.number" type="text" name="number" id="number" autocomplete="number-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
+							<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
+							<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+
+					</div>
+
+					<!-- TODO: Ver si se inluye google Maps -->
+					<!-- <div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-6 ">
+							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
+							<vue-google-autocomplete ref="address" id="map" v-model="address"
+								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+								placeholder="Ingrese la dirección"
+								v-on:placechanged="getAddressData">
+							</vue-google-autocomplete>
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+							<input v-model="form.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label class="block text-transparent ">Button</label>
+							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
+						</div> 
+						<div class="col-span-12 sm:col-span-12 ">
+							<GoogleMap v-if="this.showMap" :form_map="form_google">
+							</GoogleMap>
+						</div> 
+						
+					</div> -->
+
+				</div>
+			</div>
+
+		<!-- DATOS DEL MENOR -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Menor</h3>
+						</div>
+						<div class="flex-shrink-0">
+							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Menor</button>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						
+						<!-- TODO: Ver si se incluye CUIT del menor. -->
+						<!-- <div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div>  -->
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
 
 					</div>
 
 				</div>
 			</div>
 
+		<!-- DATOS DE LOS TUTORES -->
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos de los Tutores/Padres</h3>
+						</div>
+					</div>
+
+					<hr>
+					<span for="name" class="block text-sm font-medium text-gray-700">Datos de la Turora/Madre </span>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre </label>
+							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						
+						<!-- TODO: Ver si se incluye CUIT del menor. -->
+						<!-- <div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div>  -->
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+					</div>
+
+					<hr>
+					<span for="name" class="block text-sm font-medium text-gray-700">Datos del Tutor/Padre </span>
+
+					<div class="grid grid-cols-12 gap-6">
+						
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre </label>
+							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						
+						<!-- TODO: Ver si se incluye CUIT del menor. -->
+						<!-- <div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div>  -->
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+					</div>
+
+				</div>
+			</div>
+
+			<!-- DIRECCION -->
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
@@ -213,11 +426,12 @@
 
 
 					</div>
-					<div class="grid grid-cols-12 gap-6">
+
+					<!-- TODO: Ver si se inluye google Maps -->
+					<!-- <div class="grid grid-cols-12 gap-6">
 
 						<div class="col-span-12 sm:col-span-6 ">
 							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
-							<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
 							<vue-google-autocomplete ref="address" id="map" v-model="address"
 								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 								placeholder="Ingrese la dirección"
@@ -242,11 +456,12 @@
 							</GoogleMap>
 						</div> 
 						
-					</div>
+					</div> -->
 
 				</div>
 			</div>
 
+			<!-- SITUACION SOCIAL -->
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
@@ -281,11 +496,14 @@
 							<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
+						
+
 					</div>
 
 				</div>
 			</div>
 
+			<!-- ESTUDIOS -->
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
@@ -328,7 +546,7 @@
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-3">
+						<!-- <div class="col-span-12 sm:col-span-3">
 							<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ocupación</label>
 							<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id" autocomplete="tipo_ocupacion_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 								<option disabled value="" selected>Selecciones una ocupacion</option>
@@ -338,7 +556,7 @@
 									tipoOcupacion.description
 								}}</option>
 							</select>
-						</div>  
+						</div>   -->
 						<div class="col-span-12 sm:col-span-3">
 							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive Jubilación / Pensión</label>
 							<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -487,7 +705,8 @@ export default {
             this.toastMessage = "";
         },
 		async submit() {
-			this.$inertia.post(route('discapacidad.store'), this.form)
+			console.log('SUBMIR')
+			//this.$inertia.post(route('discapacidad.store'), this.form)
 		},
 		async getPerson(){
 			const get = `${route('persons.getPersonDni', this.form.num_documento)}`

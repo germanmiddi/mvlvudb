@@ -13,6 +13,12 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+        <!-- Google Maps -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2ZgKApfK_YBbSnZE6NGGacXCnYqF3zNw&libraries=places"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>

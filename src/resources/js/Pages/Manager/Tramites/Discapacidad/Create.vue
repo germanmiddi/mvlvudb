@@ -19,7 +19,7 @@
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 		
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
-			<form action="#" method="POST">
+			<form action="#" method="POST" enctype="multipart/form-data">
 			<div class="shadow sm:rounded-md sm:overflow-hidden">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
@@ -31,7 +31,11 @@
 
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-							<input v-model="form.fecha" type="text" name="fecha" id="fecha" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="false" 
+										autoApply :format="format">
+							</Datepicker>
 						</div>
 
 						<div class="col-span-12 sm:col-span-5">
@@ -105,7 +109,11 @@
 
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha_nac" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="false" 
+										autoApply :format="format">
+							</Datepicker>
 						</div> 
 
 					</div>
@@ -403,16 +411,24 @@
 
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+						</div>
+						<div class="flex-shrink-0">
+							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo Adicional</button>
+						</div>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
+
+						
 						<div class="col-span-12 sm:col-span-8 ">
 							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
 							<div class="flex ">
 								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-								<input type="file" name="file" id="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+								<input  @change="handleFileUpload" type="file" name="file" id="file" ref="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 							</div>
 						</div> 
 						
@@ -441,6 +457,8 @@ import {ArrowLeftCircleIcon} from '@heroicons/vue/24/outline';
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
 import VueGoogleAutocomplete from "vue-google-autocomplete"
 import Toast from "@/Layouts/Components/Toast.vue";
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
 
@@ -466,6 +484,7 @@ export default {
 		GoogleMap,
 		VueGoogleAutocomplete,
 		Toast,
+		Datepicker
 	},
 	data() {
 		return {
@@ -477,61 +496,105 @@ export default {
             labelType: "info",
             message: "",
             showToast: false,
+			file: "" 
 		}
 	},
 	setup() {
+		const format = (date) => {
+			const day = date.getDate();
+			const month = date.getMonth() + 1;
+			const year = date.getFullYear();
 
+			return `${day}/${month}/${year}`;
+		}
+
+		const startTime = ref({ hours: 9, minutes: 0 });
+
+		const open = ref(false)
+
+		return {
+			format,
+			startTime,
+			open
+		}
 	},
 	methods: {
 		clearMessage() {
             this.toastMessage = "";
         },
 		async submit() {
-			this.$inertia.post(route('discapacidad.store'), this.form)
+			let rt = route('discapacidad.store');
+
+			const formData = new FormData();
+			formData.append('file', this.file);
+			formData.append('data', this.form);
+			//this.form.file = this.file
+
+			axios.post(rt, formData).then(response => {
+				console.log(response)
+				if (response.status == 200) {
+					this.labelType = "success";
+                	this.toastMessage = response.data.message; 
+					setTimeout(()=> { 
+						window.open(route('pdf.acusepdf',response.data.idTramite), '_blank');
+					}, 1000)
+					setTimeout(()=> { 
+						window.location.href = '/discapacidad';
+					}, 3100)
+				} else {
+					this.labelType = "danger";
+                	this.toastMessage = response.data.message;
+				}
+			});
 		},
 		async getPerson(){
-			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
-
+			let num_doc = this.form.num_documento;
+			const get = `${route('persons.getPersonDni', num_doc)}`
 			const response = await fetch(get, { method: 'GET' })
             let data = await response.json()
-            data = data.data[0].person
+			if(!data.data.length == 0){
+				this.labelType = "success";
+                this.toastMessage = "El DNI indicado se encuentra registrado";
 
-			/// Recuperar datos.
-			this.form.tipo_documento_id = data.tipo_documento_id
-			this.form.num_cuit = data.num_cuit
-			this.form.fecha_nac = data.fecha_nac
-			this.form.name = data.name
-			this.form.lastname = data.lastname
-			this.form.codigo = data.cud.codigo
-			this.form.diagnostico = data.cud.diagnostico
-			this.form.email = data.contact[0].email
-			this.form.phone = data.contact[0].phone
-			this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
-			this.form.cant_hijos = data.aditional[0].cant_hijos
-			this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form.tipo_documento_id = data.tipo_documento_id
+				this.form.num_cuit = data.num_cuit
+				this.form.fecha_nac = data.fecha_nac
+				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
+				this.form.name = data.name
+				this.form.lastname = data.lastname
+				this.form.codigo = data.cud.codigo
+				this.form.diagnostico = data.cud.diagnostico
+				this.form.email = data.contact[0].email
+				this.form.phone = data.contact[0].phone
+				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
+				this.form.cant_hijos = data.aditional[0].cant_hijos
+				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
+				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
+				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
+				this.form.tipo_pension_id = data.social[0].tipo_pension_id
+				this.form.subsidio = data.social[0].subsidio
+				this.form.beca = data.education[0].beca
+				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
+				this.form.estado_educativo_id = data.education[0].estado_educativo_id
+				this.form.calle = data.address[0].calle
+				this.form.number = data.address[0].number
+				this.form.piso = data.address[0].piso
+				this.form.dpto = data.address[0].dpto
+				this.form.latitude = data.address[0].latitude
+				this.form.longitude = data.address[0].longitude
+				this.form.google_address = data.address[0].google_address
 
-			this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
-			this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
-			this.form.tipo_pension_id = data.social[0].tipo_pension_id
-			this.form.subsidio = data.social[0].subsidio
-
-			this.form.beca = data.education[0].beca
-			this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
-			this.form.estado_educativo_id = data.education[0].estado_educativo_id
-
-			this.form.calle = data.address[0].calle
-			this.form.number = data.address[0].number
-			this.form.piso = data.address[0].piso
-			this.form.dpto = data.address[0].dpto
-			this.form.latitude = data.address[0].latitude
-			this.form.longitude = data.address[0].longitude
-			this.form.google_address = data.address[0].google_address
-			//address.data.autocompleteText = data.address[0].google_address
-			//this.address.data.autocompleteText = 'New value';
-	
-			this.form.pais_id = data.address[0].pais_id
-			this.form.localidad_id = data.address[0].localidad_id
-			this.form.get_barrio_id = data.address[0].barrio_id
+				this.form.pais_id = data.address[0].pais_id
+				this.form.localidad_id = data.address[0].localidad_id
+				this.form.get_barrio_id = data.address[0].barrio_id			
+			}else{
+				this.labelType = "info";
+                this.toastMessage = "El DNI indicado no se encuentra registrado";
+				this.form = {}
+				this.form.num_documento = num_doc
+			}
 		},
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData['formatted_address']
@@ -541,7 +604,11 @@ export default {
             this.form_google = addressData
 
             this.showMap = true
-        }
+        },
+
+		handleFileUpload(event) {
+			this.file = event.target.files[0];
+		},
 
 	},
     created() {

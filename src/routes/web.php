@@ -9,13 +9,15 @@ use App\Http\Controllers\Manager\Tramite\TramiteController;
 use App\Http\Controllers\Manager\Tramites\Discapacidad\DiscapacidadController;
 use App\Http\Controllers\Manager\Tramites\Genero\GeneroController;
 use App\Http\Controllers\Manager\Tramites\Ninez\NinezController;
-
-
+use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
 
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Printer PDF
+    Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
     
     // Tramites
     Route::get('/alta-tramites', [TramiteController::class, 'index'])->name('alta-tramite')->middleware('auth');

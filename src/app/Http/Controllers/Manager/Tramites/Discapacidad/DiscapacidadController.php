@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+
+//Models
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
-//Models
 use App\Models\Manager\Pais;
 use App\Models\Manager\Barrio;
 use App\Models\Manager\Localidad;
@@ -33,14 +34,13 @@ use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 
+
 class DiscapacidadController extends Controller
 {
     //index
 
     public function index()
     {
-        //$tramite = Tramite::where('id',1)->get();
-        //dd($tramite[0]->rol_tramite[0]['description']);
         return Inertia::render('Manager/Tramites/Discapacidad/Index',
         [
             'toast' => Session::get('toast')
@@ -49,8 +49,7 @@ class DiscapacidadController extends Controller
     //create
     public function create()
     {
-        return Inertia::render(
-            'Manager/Tramites/Discapacidad/Create',
+        return Inertia::render('Manager/Tramites/Discapacidad/Create',
             [
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
@@ -73,8 +72,9 @@ class DiscapacidadController extends Controller
     //store
     public function store(Request $request)
     {
-        //$request = $request['form'];
-        //dd($request);
+        
+        /* dd($request->file);
+        $request = $request['form']; */
         DB::beginTransaction();
         try {
             $person = Person::updateOrCreate(
@@ -183,10 +183,10 @@ class DiscapacidadController extends Controller
             $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
 
             DB::commit();
-            return Redirect::route('discapacidad')->with(['toast' => ['message' => 'Se generado correctamente el tramite del usuario.', 'status' => '200']]);
+            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return Redirect::route('discapacidad')->with(['toast' => ['message' => 'Se generado correctamente el tramite del usuario.', 'status' => '203']]);
+            return response()->json(['message' => 'Se ha producido un error al momento de registrar el tramite.'], 203);
         }
     }
     //show
@@ -219,7 +219,8 @@ class DiscapacidadController extends Controller
                 'tramite'   => $tramite,
                 'persons'   => $tramite->persons,
                 'contact_data' => $tramite->persons[0]->contact,
-                'rol_tramite' => $tramite->rol_tramite[0]['description']
+                'rol_tramite' => $tramite->rol_tramite[0]['description'],
+                'tipo_tramite' => $tramite->tipoTramite
             ]);
     }
 }

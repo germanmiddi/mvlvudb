@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'tramites' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tramites'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -35,18 +35,23 @@ class Tramite extends Model
     {
         return $this->belongsTo(TipoTramite::class);
     }
-
-    // //Relationships Many to Many
+    
+    
+    public function rol_tramite(){
+        return $this->belongsToMany(RolTramite::class, 'person_tramite');
+    }
+    
+    public function archivos()
+    {
+        return $this->hasMany(Archivo::class);
+    }
+    
     public function persons(){
         return $this->belongsToMany(Person::class, 'person_tramite')
             ->withPivot('rol_tramite_id');
     }
-
-    public function rol_tramite(){
-        return $this->belongsToMany(RolTramite::class, 'person_tramite');
-    }
-
-    /* protected $casts = [
+    
+    protected $casts = [
         'fecha' => 'datetime:d-m-Y',
-    ]; */
+    ];
 }

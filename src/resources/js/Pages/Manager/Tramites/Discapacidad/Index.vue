@@ -37,11 +37,11 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
+                                        Rol
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
+                                        Tramite
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
                                         <span >Acciones</span>
@@ -61,12 +61,10 @@
                                         {{ data.tramite.persons[0].num_documento }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.persons[0].contact[0].email
-                                        }}
+                                        {{ data.tramite.rol_tramite[0].description }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
                                         <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
@@ -99,7 +97,7 @@
                                                         Ver</a>
                                                     </MenuItem>
                                                     <MenuItem v-slot="{ active }">
-                                                    <a href="#" 
+                                                    <a :href="route('pdf.acusepdf', data.tramite.id )" target="_blank" 
                                                         class="block px-4 py-2 text-sm">
                                                         Imprimir</a>
                                                     </MenuItem>

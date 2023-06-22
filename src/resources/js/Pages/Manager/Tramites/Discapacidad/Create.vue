@@ -33,7 +33,7 @@
 							<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
 							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha" 
 										:enableTimePicker="false"
-										:monthChangeOnScroll="false" 
+										:monthChangeOnScroll="true" 
 										autoApply :format="format">
 							</Datepicker>
 						</div>
@@ -226,7 +226,7 @@
 						<div class="col-span-12 sm:col-span-6 ">
 							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
 							<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
-							<vue-google-autocomplete ref="address" id="map" v-model="address"
+							<vue-google-autocomplete ref="address" id="map" v-model="this.form.google_address"
 								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 								placeholder="Ingrese la dirección"
 								v-on:placechanged="getAddressData">
@@ -246,7 +246,7 @@
 							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
 						</div> 
 						<div class="col-span-12 sm:col-span-12 ">
-							<GoogleMap v-if="this.showMap" :form_map="form_google">
+							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
 							</GoogleMap>
 						</div> 
 						
@@ -489,6 +489,7 @@ export default {
 	data() {
 		return {
 			form: {},
+			form_temp: {},
 			form_google: "",
 			address: "",
             showMap: false,
@@ -508,14 +509,14 @@ export default {
 			return `${day}/${month}/${year}`;
 		}
 
-		const startTime = ref({ hours: 9, minutes: 0 });
+		//const startTime = ref({ hours: 9, minutes: 0 });
 
-		const open = ref(false)
+		//const open = ref(false)
 
 		return {
 			format,
-			startTime,
-			open
+			//startTime,
+		//	open
 		}
 	},
 	methods: {
@@ -527,11 +528,24 @@ export default {
 
 			const formData = new FormData();
 			formData.append('file', this.file);
-			formData.append('data', this.form);
-			//this.form.file = this.file
+			
+			/* 
+			** Se formatea las fechas para que las mismas sean enviadas en formato 
+			** Output: 2023-06-22T01:33:00.000Z
+			** a traves del formData
+			*/ 
 
-			axios.post(rt, formData).then(response => {
-				console.log(response)
+			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
+			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
+
+			for (var clave in this.form) {
+				if (this.form.hasOwnProperty(clave)) {
+					formData.append(clave, this.form[clave]);
+				}
+			}
+
+			try {
+				const response = await axios.post(rt, formData); 
 				if (response.status == 200) {
 					this.labelType = "success";
                 	this.toastMessage = response.data.message; 
@@ -545,11 +559,20 @@ export default {
 					this.labelType = "danger";
                 	this.toastMessage = response.data.message;
 				}
-			});
+			} catch (error) {
+				console.log(error)
+			}
+			
 		},
 		async getPerson(){
-			let num_doc = this.form.num_documento;
-			const get = `${route('persons.getPersonDni', num_doc)}`
+			this.form_temp.num_documento = this.form.num_documento;
+			this.form_temp.tipo_documento_id = this.form.tipo_documento_id;
+			this.form_temp.fecha = this.form.fecha;
+			this.form_temp.tipo_tramite_id = this.form.tipo_tramite_id;
+			this.form_temp.canal_atencion_id = this.form.canal_atencion_id;
+			this.form_temp.observacion = this.form.observacion;
+
+			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
             let data = await response.json()
 			if(!data.data.length == 0){
@@ -593,7 +616,8 @@ export default {
 				this.labelType = "info";
                 this.toastMessage = "El DNI indicado no se encuentra registrado";
 				this.form = {}
-				this.form.num_documento = num_doc
+				this.form = this.form_temp
+				this.form_temp = {}
 			}
 		},
 		getAddressData: function (addressData, placeResultData, id) {
@@ -609,6 +633,11 @@ export default {
 		handleFileUpload(event) {
 			this.file = event.target.files[0];
 		},
+		coord_google($coord) {
+			this.form.latitude = $coord.position.lat
+			this.form.longitude = $coord.position.lng
+			this.form.google_address = $coord.address
+		}
 
 	},
     created() {
@@ -620,7 +649,7 @@ export default {
 			this.form.get_barrio_id = null
             return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
         }
-	},
+	}
 }
 </script>
 

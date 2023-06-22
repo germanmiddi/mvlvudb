@@ -6,7 +6,8 @@
         :center="markerOptions.position" 
         :zoom="16"
         :getDraggable="true"
-        place_changed="geolocateStart">
+        place_changed="geolocateStart"
+        @click="mapClicked">
         <Marker :options="markerOptions" />
     </GoogleMap>
 </template>
@@ -36,6 +37,31 @@ export default defineComponent({
                 title: this.form_map['route']
             }
         }
+    },
+    methods: {
+      mapClicked(event) {
+        console.log(event)
+        this.form_map['latitude'] =  event.latLng.lat()
+        this.form_map['longitude'] =  event.latLng.lng()
+        this.markerOptions = { 
+            position: 
+                { 
+                    lat: this.form_map['latitude'], 
+                    lng: this.form_map['longitude']
+                }, 
+            label: 'C', 
+            title: this.form_map['route'],
+        }
+
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: this.markerOptions.position }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+               this.markerOptions.address = results[0].formatted_address;
+            }
+            this.$emit('coordenadas_google',this.markerOptions);
+        });
+      
+      },
     },
    
     watch:{

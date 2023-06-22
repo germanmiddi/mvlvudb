@@ -72,9 +72,6 @@ class DiscapacidadController extends Controller
     //store
     public function store(Request $request)
     {
-        
-        /* dd($request->file);
-        $request = $request['form']; */
         DB::beginTransaction();
         try {
             $person = Person::updateOrCreate(
@@ -85,7 +82,7 @@ class DiscapacidadController extends Controller
                 [
                     'lastname' => $request['lastname'],
                     'name' => $request['name'],
-                    'fecha_nac' => date("Y-m-d ", strtotime($request['fecha_nac'])),
+                    'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
                     'num_documento' => $request['num_documento'],
                     'num_cuit' => $request['num_cuit'] ?? null

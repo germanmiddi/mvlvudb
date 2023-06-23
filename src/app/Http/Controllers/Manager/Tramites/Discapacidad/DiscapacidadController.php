@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
+use App\Http\Controllers\Manager\Uploads\FileController;
+
 //Models
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
@@ -74,6 +76,7 @@ class DiscapacidadController extends Controller
     {
         DB::beginTransaction();
         try {
+            //d($request->file('file'));
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -179,9 +182,22 @@ class DiscapacidadController extends Controller
 
             $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
 
+            if ($request->hasFile('file')) {
+                $fileController = new FileController;
+                $data = [];
+    
+                $data['file'] = $request->file('file');
+                $data['tramite_id'] =  $tramite_data['id'];
+                $data['description'] =  $request['description_file']; 
+                $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                
+                $fileController->upload($data );
+            }
+
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             return response()->json(['message' => 'Se ha producido un error al momento de registrar el tramite.'], 203);
         }
@@ -194,7 +210,26 @@ class DiscapacidadController extends Controller
     //edit
     public function edit($id)
     {
-        //
+        return Inertia::render('Manager/Tramites/Discapacidad/Edit',
+            [
+                'paises' => Pais::all(),
+                'barrios' => Barrio::all(),
+                'localidades' => Localidad::all(),
+                'canalesAtencion' => CanalAtencion::all(),
+                'coberturasMedica' => CoberturaMedica::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'nivelesEducativo' => NivelEducativo::all(),
+                'tiposDocumento' => TipoDocumento::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
+                'tiposPension' => TipoPension::all(),
+                'tiposVivienda' => TipoVivienda::all(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'rolesTramite' => RolTramite::all(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
+                'programasSocial' => ProgramaSocial::all(),
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address')->get()
+            ]
+        );
     }
     //update
     public function update(Request $request, $id)

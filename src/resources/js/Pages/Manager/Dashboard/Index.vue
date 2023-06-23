@@ -22,7 +22,7 @@
                                 {{ project.title }}
                             </a>
                             <!-- <p class="text-gray-500">{{ project.totalTramites }} Tramites</p> -->
-                            <a :href="route('discapacidad')" class="text-gray-500 hover:underline hover:text-gray-700">Ver Bandeja</a>
+                            <a :href="route(project.route)" class="text-gray-500 hover:underline hover:text-gray-700">Ver Bandeja</a>
                         </div>
                         <!-- <Menu as="div" class="flex-shrink-0 pr-2">
                             <MenuButton class="w-8 h-8 bg-white inline-flex items-center justify-center text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
@@ -77,6 +77,33 @@ const projects = [
       lastUpdated: 'March 17, 2020',
       pinned: true,
       bgColorClass: 'bg-pink-600',
+      route: 'discapacidad'
+    },
+    {
+      id: 2,
+      title: 'Género y Diversidad',
+      initials: 'GA',
+      team: 'Engineering',
+      members: [
+      ],
+      totalTramites: 12,
+      lastUpdated: 'March 17, 2020',
+      pinned: true,
+      bgColorClass: 'bg-green-600',
+      route: 'genero'
+    },
+    {
+      id: 3,
+      title: 'Niñez y Adolescencia',
+      initials: 'GA',
+      team: 'Engineering',
+      members: [
+      ],
+      totalTramites: 12,
+      lastUpdated: 'March 17, 2020',
+      pinned: true,
+      bgColorClass: 'bg-blue-600',
+      route: 'ninez'
     },
     // More projects...
   ]

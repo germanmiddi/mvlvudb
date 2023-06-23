@@ -15,6 +15,7 @@ class Archivo extends Model
     protected $fillable = [
         'name',
         'description',
+        'ext',
         'tramite_id',
     ];
 

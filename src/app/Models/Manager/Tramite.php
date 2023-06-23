@@ -51,7 +51,7 @@ class Tramite extends Model
             ->withPivot('rol_tramite_id');
     }
     
-    protected $casts = [
+    /* protected $casts = [
         'fecha' => 'datetime:d-m-Y',
-    ];
+    ]; */
 }

@@ -24,7 +24,8 @@ Route::middleware(['auth'])->group(function () {
    
     // Discapacidad
     Route::get('/discapacidad', [DiscapacidadController::class, 'index'])->name('discapacidad');    
-    Route::get('/discapacidad/create', [DiscapacidadController::class, 'create'])->name('discapacidad.create');    
+    Route::get('/discapacidad/create', [DiscapacidadController::class, 'create'])->name('discapacidad.create');  
+    Route::get('/discapacidad/edit/{id}', [DiscapacidadController::class, 'edit'])->name('discapacidad.edit');    
     Route::post('/discapacidad/store', [DiscapacidadController::class, 'store'])->name('discapacidad.store');    
     Route::get('/discapacidad/list', [DiscapacidadController::class, 'list'])->name('discapacidad.list'); 
 

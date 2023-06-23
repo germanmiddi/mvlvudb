@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Manager\Parentesco;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 class DatabaseSeeder extends Seeder
@@ -13,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            LocalidadesSeeder::class,
+           /*  LocalidadesSeeder::class,
             BarriosSeeder::class,
             CanalAtencionSeeder::class,
             CoberturaMedicaSeeder::class,
@@ -30,14 +32,15 @@ class DatabaseSeeder extends Seeder
             RolTramiteSeeder::class,
             SituacionConyugalSeeder::class,
             TipoTramiteSeeder::class,
-            ProgramaSocialSeeder::class
+            ProgramaSocialSeeder::class, */
+            ParentescosSeeder::class,
         ]);
 
-        User::create([
+       /*  User::create([
             'name' => 'German Middi',
             'email' => 'g@gmail.com',
             'password' => bcrypt('Inicio123')
-        ]); 
+        ]);  */
 
         
 

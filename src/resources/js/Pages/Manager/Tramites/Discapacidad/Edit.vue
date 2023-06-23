@@ -7,7 +7,7 @@
 				<a class="btn-blue" :href="route('discapacidad')">
                     <ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
                 </a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo Tramite Discapacidad</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar Tramite Discapacidad</h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
               	<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
@@ -248,7 +248,7 @@
 						<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}</p>
 						<div class="col-span-12 sm:col-span-12 ">
 							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
-								
+
 							</GoogleMap>
 						</div> 
 						
@@ -479,7 +479,8 @@ export default {
 		situacionesConyugal : Object,
 		rolesTramite : Object,
 		tiposTramite : Object,
-		programasSocial  : Object
+		programasSocial  : Object,
+		tramite: Object,
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -526,7 +527,7 @@ export default {
             this.toastMessage = "";
         },
 		async submit() {
-			let rt = route('discapacidad.store');
+			/* let rt = route('discapacidad.store');
 
 			const formData = new FormData();
 			formData.append('file', this.file);
@@ -537,7 +538,7 @@ export default {
 			** a traves del formData
 			*/ 
 
-			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
+			/*this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
 			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
 
 			for (var clave in this.form) {
@@ -563,24 +564,16 @@ export default {
 				}
 			} catch (error) {
 				console.log(error)
-			}
+			} */
 			
 		},
 		async getPerson(){
 			this.form_temp.num_documento = this.form.num_documento;
-			this.form_temp.tipo_documento_id = this.form.tipo_documento_id;
-			this.form_temp.fecha = this.form.fecha;
-			this.form_temp.tipo_tramite_id = this.form.tipo_tramite_id;
-			this.form_temp.canal_atencion_id = this.form.canal_atencion_id;
-			this.form_temp.observacion = this.form.observacion;
 
 			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
             let data = await response.json()
 			if(!data.data.length == 0){
-				this.labelType = "success";
-                this.toastMessage = "El DNI indicado se encuentra registrado";
-
 				data = data.data[0].person
 				/// Recuperar datos.
 				this.form.tipo_documento_id = data.tipo_documento_id
@@ -657,9 +650,15 @@ export default {
             return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
         }
 	},
-	mounted(){
+	mounted() {
+		this.form.num_documento = this.tramite[0].persons[0].num_documento
+		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
+		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
+		this.form.observacion = this.tramite[0].observacion
+		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
+		this.getPerson()
 		
-	}
+	}, 
 }
 </script>
 

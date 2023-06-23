@@ -21,6 +21,7 @@ use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\Parentesco;
 use App\Models\Manager\TipoDocumento;
 use App\Models\Manager\TipoOcupacion;
 use App\Models\Manager\TipoPension;
@@ -65,7 +66,8 @@ class GeneroController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
-                'programasSocial' => ProgramaSocial::all()
+                'programasSocial' => ProgramaSocial::all(),
+                'parentescos' => Parentesco::all(),
             ]
         );
     }

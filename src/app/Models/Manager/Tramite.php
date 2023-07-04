@@ -2,6 +2,7 @@
 
 namespace App\Models\Manager;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,8 @@ class Tramite extends Model
         'canal_atencion_id',
         'tipo_tramite_id',
         'tipo_institucion_id',
-        'person_id'
+        'person_id',
+        'dependencia_id'
     ];
 
     public function sede()
@@ -54,4 +56,9 @@ class Tramite extends Model
     /* protected $casts = [
         'fecha' => 'datetime:d-m-Y',
     ]; */
+
+    public function getFecha()
+    {
+        return Carbon::parse($this->fecha)->format('d/m/Y');
+    }
 }

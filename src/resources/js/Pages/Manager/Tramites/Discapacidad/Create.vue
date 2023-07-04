@@ -419,25 +419,43 @@
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
 						</div>
 						<div class="flex-shrink-0">
-							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo Adicional</button>
+							<button @click="addFile()" type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo</button>
 						</div>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
-
-						
 						<div class="col-span-12 sm:col-span-8 ">
 							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
 							<div class="flex ">
 								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-								<input  @change="handleFileUpload" type="file" name="file" id="file" ref="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+								<input @change="handleFileChange" type="file" name="file" id="file" ref="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 							</div>
 						</div> 
-						
 					</div>
+
+					<div v-for="(file, index) in files" :key="index">
+					
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="descripcion" class="block text-sm font-medium text-gray-700">Archivo N° {{index}} - {{ file.name }}</label>
+						</div>  
+						<div class="col-span-12 sm:col-span-3 flex-shrink-0">
+							<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
+								Eliminar Archivo
+							</button>
+						</div>
+					</div>
+
 				</div>
+
+				</div>
+
+				
+				
 			</div>
 			</form>
+
+			
         </div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
@@ -499,7 +517,10 @@ export default {
             labelType: "info",
             message: "",
             showToast: false,
-			file: "" 
+			file: "",
+			file_tmp: {},
+			files: [],
+    		selectedFile: null
 		}
 	},
 	setup() {
@@ -511,14 +532,8 @@ export default {
 			return `${day}/${month}/${year}`;
 		}
 
-		//const startTime = ref({ hours: 9, minutes: 0 });
-
-		//const open = ref(false)
-
 		return {
 			format,
-			//startTime,
-		//	open
 		}
 	},
 	methods: {
@@ -589,8 +604,10 @@ export default {
 				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
 				this.form.lastname = data.lastname
-				this.form.codigo = data.cud.codigo
-				this.form.diagnostico = data.cud.diagnostico
+				if(data.cud){
+					this.form.codigo = data.cud.codigo
+					this.form.diagnostico = data.cud.diagnostico
+				}
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
 				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
@@ -611,6 +628,7 @@ export default {
 					this.form.latitude = data.address[0].latitude
 					this.form.longitude = data.address[0].longitude
 					// TODO: MAPA: Ver como cargar las coordenadas para que se visualice en el mapa. 
+					this.showMap = true
 				}
 
 				this.form.google_address = data.address[0].google_address
@@ -635,16 +653,32 @@ export default {
             this.showMap = true
         },
 
-		handleFileUpload(event) {
+		/* handleFileUpload(event) {
 			this.file = event.target.files[0];
+		}, */
+		handleFileChange(event) {
+			this.selectedFile = event.target.files[0];
 		},
+		addFile() {
+			if (this.selectedFile) {
+				this.files.push(this.selectedFile)
+				this.selectedFile = null
+			}
+		},
+		/* clearFile() {
+			this.selectedFile = null
+		}, */
+		deleteFile(index) {
+			this.files.splice(index, 1);
+		},
+
 		coord_google($coord) {
 			this.form.latitude = $coord.position.lat
 			this.form.longitude = $coord.position.lng
 			this.form.google_address = $coord.address
 
 			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
-		}
+		},
 
 	},
     created() {

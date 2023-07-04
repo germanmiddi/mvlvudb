@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager\Tramites\Genero;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
 use Illuminate\Http\Request;
@@ -74,7 +75,126 @@ class GeneroController extends Controller
     //store
     public function store(Request $request)
     {
-        
+        DB::beginTransaction();
+        try {
+            $person = Person::updateOrCreate(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento']
+                ],
+                [
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'fecha_nac' => $request['fecha_nac'],
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'num_cuit' => $request['num_cuit'] ?? null
+                ]
+            );
+
+            AditionalData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'cant_hijos' => $request['cant_hijos'],
+                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
+                    'situacion_conyugal_id' => $request['situacion_conyugal_id']
+                ]
+            );
+
+            SocialData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'subsidio' => $request['subsidio']
+                ]
+            );
+
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'beca' => $request['beca'],
+                    'nivel_educativo_id' => $request['nivel_educativo_id'],
+                    'estado_educativo_id' => $request['estado_educativo_id']
+                ]
+            );
+
+            // address_data
+
+            AddressData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'latitude' => $request['latitude'],
+                    'longitude' => $request['longitude'],
+                    'google_address' => $request['google_address'],
+                    'pais_id' => $request['pais_id'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'phone' => $request['phone'],
+                    'email' => $request['email']
+                ]
+            );
+
+            // Obtengo ID de la dependencia.
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();            
+
+            // tramite
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                    'observacion' => $request['observacion'],
+
+                    'canal_atencion_id' => $request['canal_atencion_id'],
+                    'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'dependencia_id' => $dependencia['dependencia_id']
+                ]
+            );
+
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+
+            if ($request->hasFile('file')) {
+                $fileController = new FileController;
+                $data = [];
+    
+                $data['file'] = $request->file('file');
+                $data['tramite_id'] =  $tramite_data['id'];
+                $data['description'] =  $request['description_file']; 
+                $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                
+                $fileController->upload($data );
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            DB::rollBack();
+            return response()->json(['message' => 'Se ha producido un error al momento de registrar el tramite.'], 203);
+        }
     }
     //show
     public function show($id)
@@ -99,7 +219,20 @@ class GeneroController extends Controller
     //list
     public function list()
     {
-        
+        $result = Tramite::query();
+
+        $result->where('dependencia_id', 6);
+
+        return  $result->orderBy("tramites.created_at", 'DESC')
+            ->paginate(999)
+            ->withQueryString()
+            ->through(fn ($tramite) => [
+                'tramite'   => $tramite,
+                'persons'   => $tramite->persons,
+                'contact_data' => $tramite->persons[0]->contact,
+                'rol_tramite' => $tramite->rol_tramite[0]['description'],
+                'tipo_tramite' => $tramite->tipoTramite
+            ]);
     }
 }
 

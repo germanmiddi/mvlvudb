@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('person_id');
             $table->integer('cant_hijos')->nullable();
             $table->unsignedBigInteger('tipo_vivienda_id');
-            $table->unsignedBigInteger('tipo_vinculo_familiar_id');
+            $table->unsignedBigInteger('tipo_vinculo_familiar_id')->nullable();
             $table->unsignedBigInteger('situacion_conyugal_id')->nullable();
             $table->timestamps();
 

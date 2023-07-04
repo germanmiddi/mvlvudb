@@ -37,14 +37,15 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
+                                        Rol
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
+                                        Tramite
                                     </th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
-                                        <span >Acciones</span>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
+                                        <span>Acciones</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -58,54 +59,71 @@
                                         {{ data.tramite.persons[0].name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].num_documento }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{
-                                            data.tramite.persons[0].contact[0].email
+                                            data.tramite.persons[0]
+                                                .num_documento
                                         }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        {{
+                                            data.tramite.rol_tramite[0]
+                                                .description
+                                        }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{
+                                            data.tramite.tipo_tramite
+                                                .description
+                                        }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
                                         <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
                                             <PencilSquareIcon class="w-5 h-5 text-purple-700 mr-2" />
                                         </a> -->
-                                        <Menu as="div" class="inline-node" >
-                                        <div>
-                                            <MenuButton class="btn-blue h-7">
-                                                <EllipsisVerticalIcon name="options-vertical" class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
-                                            </MenuButton>
-                                        </div>
-                                        <transition enter-active-class="transition ease-out duration-100"
-                                            enter-from-class="transform opacity-0 scale-95"
-                                            enter-to-class="transform opacity-100 scale-100"
-                                            leave-active-class="transition ease-in duration-75"
-                                            leave-from-class="transform opacity-100 scale-100"
-                                            leave-to-class="transform opacity-0 scale-95">
-                                            <MenuItems
-                                                class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-                                                <div class="py-1 text-left">
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" 
-                                                        class="block px-4 py-2 text-sm">
-                                                        Editar</a>
-                                                    </MenuItem>
+                                        <Menu as="div" class="inline-node">
+                                            <div>
+                                                <MenuButton class="btn-blue h-7">
+                                                    <EllipsisVerticalIcon name="options-vertical"
+                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600 hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
+                                                </MenuButton>
+                                            </div>
+                                            <transition enter-active-class="transition ease-out duration-100"
+                                                enter-from-class="transform opacity-0 scale-95"
+                                                enter-to-class="transform opacity-100 scale-100"
+                                                leave-active-class="transition ease-in duration-75"
+                                                leave-from-class="transform opacity-100 scale-100"
+                                                leave-to-class="transform opacity-0 scale-95">
+                                                <MenuItems
+                                                    class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+                                                    <div class="py-1 text-left">
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a :href="route(
+                                                            'genero.edit',
+                                                            data
+                                                                .tramite
+                                                                .id
+                                                        )
+                                                            " class="block px-4 py-2 text-sm">
+                                                            Editar</a>
+                                                        </MenuItem>
 
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" 
-                                                        class="block px-4 py-2 text-sm">
-                                                        Ver</a>
-                                                    </MenuItem>
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" 
-                                                        class="block px-4 py-2 text-sm">
-                                                        Imprimir</a>
-                                                    </MenuItem>
-                                                </div>
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                            Ver</a>
+                                                        </MenuItem>
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a :href="route(
+                                                            'pdf.acusepdf',
+                                                            data
+                                                                .tramite
+                                                                .id
+                                                        )
+                                                            " target="_blank" class="block px-4 py-2 text-sm">
+                                                            Imprimir</a>
+                                                        </MenuItem>
+                                                    </div>
 
-                                               <!--  <div class="py-1 text-left">
+                                                    <!--  <div class="py-1 text-left">
                                                     <MenuItem v-slot="{ active }">
                                                     <a href="#" @click="createInvoice(order.order)"
                                                         :class="[(active ? 'bg-gray-100 text-gray-900 ' : 'text-gray-700 hover:bg-gray-50', 'block px-4 py-2 text-sm'),
@@ -115,10 +133,9 @@
                                                 </div>
 
                                                 -->
-
-                                            </MenuItems>
-                                        </transition>
-                                    </Menu>
+                                                </MenuItems>
+                                            </transition>
+                                        </Menu>
                                     </td>
                                 </tr>
                             </tbody>
@@ -169,9 +186,7 @@ export default {
     setup() {
         const sidebarOpen = ref(false);
 
-        return {
-
-        };
+        return {};
     },
     methods: {
         clearMessage() {

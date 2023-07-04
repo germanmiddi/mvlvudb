@@ -169,6 +169,11 @@ class DiscapacidadController extends Controller
                     'diagnostico' => $request['diagnostico']
                 ]
             );
+
+            // Obtengo ID de la dependencia.
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+
+
             // tramite
             $tramite_data = Tramite::Create(
                 [
@@ -177,6 +182,7 @@ class DiscapacidadController extends Controller
 
                     'canal_atencion_id' => $request['canal_atencion_id'],
                     'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'dependencia_id' => $dependencia['dependencia_id']
                 ]
             );
 
@@ -244,7 +250,11 @@ class DiscapacidadController extends Controller
     //list
     public function list()
     {
-        return  Tramite::orderBy("created_at", 'DESC')
+        $result = Tramite::query();
+
+        $result->where('dependencia_id', 2);
+
+        return  $result->orderBy("tramites.created_at", 'DESC')
             ->paginate(999)
             ->withQueryString()
             ->through(fn ($tramite) => [

@@ -745,21 +745,28 @@ export default {
 
 			this.showMap = true;
 		},
-		handleFileChange(event) {
+		handleFileUpload(event) {
+			this.file = event.target.files[0];
+		},
+		// CARGA MASIVA DE FILE
+		/*handleFileChange(event) {
 			this.selectedFile = event.target.files[0];
 		},
 		addFile() {
 			if (this.selectedFile) {
-				this.files.push(this.selectedFile)
+				this.files.push(
+					{
+						description: this.form.description_file,
+						file: this.selectedFile,
+					}
+				)
 				this.selectedFile = null
+				this.form.description_file = ''
 			}
 		},
-		/* clearFile() {
-			this.selectedFile = null
-		}, */
 		deleteFile(index) {
 			this.files.splice(index, 1);
-		},
+		},*/
 
 		coord_google($coord) {
 			this.form.latitude = $coord.position.lat

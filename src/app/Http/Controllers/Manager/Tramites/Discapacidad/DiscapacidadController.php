@@ -35,7 +35,8 @@ use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DiscapacidadController extends Controller
 {
@@ -76,7 +77,6 @@ class DiscapacidadController extends Controller
     {
         DB::beginTransaction();
         try {
-           
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -201,11 +201,12 @@ class DiscapacidadController extends Controller
             }
 
             DB::commit();
+            Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
-            return response()->json(['message' => 'Se ha producido un error al momento de registrar el tramite.'], 203);
+            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
     //show
@@ -344,11 +345,12 @@ class DiscapacidadController extends Controller
             }
 
             DB::commit();
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Discapacidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
             return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
-            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite.'], 203);
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Discapacidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
     //destroy

@@ -4,10 +4,10 @@
 		<!-- Page title & actions -->
 		<div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
 			<div class="flex-1 min-w-0 flex items-center">
-				<a class="btn-blue" :href="route('discapacidad')">
+				<a class="btn-blue" :href="route('genero')">
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar Tramite Discapacidad</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar Tramite Género y Diversidad</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
@@ -181,6 +181,21 @@
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
 							</div>
 
 						</div>
@@ -586,6 +601,7 @@ export default {
 		tiposTramite: Object,
 		programasSocial: Object,
 		tramite: Object,
+		parentescos: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -628,7 +644,7 @@ export default {
 			this.toastMessage = "";
 		},
 		async submit() {
-			let rt = route('discapacidad.update', this.form.tramite_id);
+			let rt = route('genero.update', this.form.tramite_id);
 
 			const formData = new FormData();
 			formData.append('file', this.file);
@@ -654,7 +670,7 @@ export default {
 					this.labelType = "success";
 					this.toastMessage = response.data.message; 
 					setTimeout(()=> { 
-						window.location.href = '/discapacidad';
+						window.location.href = '/genero';
 					}, 3100)
 				} else {
 					this.labelType = "danger";
@@ -762,6 +778,7 @@ export default {
 		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
 		this.form.observacion = this.tramite[0].observacion
+		this.form.parentesco_id = this.tramite[0].parentesco_id
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 
 		if(this.tramite[0].archivos && this.tramite[0].archivos.length > 0 ){

@@ -41,7 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    
     Route::get('/genero/create', [GeneroController::class, 'create'])->name('genero.create');   
     Route::get('/genero/edit/{id}', [GeneroController::class, 'edit'])->name('genero.edit');   
-    Route::post('/genero/store', [GeneroController::class, 'store'])->name('genero.store');    
+    Route::post('/genero/store', [GeneroController::class, 'store'])->name('genero.store'); 
+    Route::post('/genero/update/{id}', [GeneroController::class, 'update'])->name('genero.update');     
     Route::get('/genero/list', [GeneroController::class, 'list'])->name('genero.list'); 
 
     // Niñez y Adolescencia

@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('tramites', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->date('fecha');
             $table->string('observacion',250);
             $table->unsignedBigInteger('sede_id')->nullable();
             $table->unsignedBigInteger('canal_atencion_id');

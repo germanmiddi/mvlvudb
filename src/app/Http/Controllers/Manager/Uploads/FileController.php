@@ -31,7 +31,18 @@ class FileController extends Controller
         } catch (\Throwable $th) {
             dd($th);
         }
+    }
 
-        
+    public function downloadfile($id)
+    {
+
+        $archivo = Archivo::where('id', $id)->first();
+
+        // Verificar si el archivo existe
+        if (!Storage::disk('public')->exists($archivo['name'])) {
+            abort(404);
+        }
+        // Generar la respuesta de descarga
+        return response()->download(storage_path('app/public/' . $archivo['name']));
     }
 }

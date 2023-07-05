@@ -428,34 +428,31 @@
 							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
 							<div class="flex ">
 								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-								<input @change="handleFileChange" type="file" name="file" id="file" ref="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+								<input @change="handleFileUpload" type="file" name="file" id="file" ref="file" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 							</div>
 						</div> 
 					</div>
 
+					<!-- CARGA MASIVA DE FILES
+					
 					<div v-for="(file, index) in files" :key="index">
 					
 					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-3">
-							<label for="descripcion" class="block text-sm font-medium text-gray-700">Archivo N° {{index}} - {{ file.name }}</label>
+						<div class="col-span-12 sm:col-span-4">
+							<label for="descripcion" class="block text-sm font-medium text-gray-700">Archivo N° {{index}} - {{ file.description }} | {{ file.file.name }}</label>
 						</div>  
 						<div class="col-span-12 sm:col-span-3 flex-shrink-0">
 							<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
 								Eliminar Archivo
 							</button>
 						</div>
-					</div>
+					</div> 
+					
+				</div> -->
 
 				</div>
-
-				</div>
-
-				
-				
 			</div>
 			</form>
-
-			
         </div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
@@ -518,9 +515,11 @@ export default {
             message: "",
             showToast: false,
 			file: "",
+			/* CARGA MASIVA DE FILE
 			file_tmp: {},
 			files: [],
     		selectedFile: null
+			*/
 		}
 	},
 	setup() {
@@ -627,8 +626,14 @@ export default {
 				if(data.address[0].latitude && data.address[0].longitude){
 					this.form.latitude = data.address[0].latitude
 					this.form.longitude = data.address[0].longitude
-					// TODO: MAPA: Ver como cargar las coordenadas para que se visualice en el mapa. 
-					this.showMap = true
+
+					// Carga de datos para visualizar el mapa.
+					this.form_temp = {}
+					this.form_temp.latitude = parseFloat(data.address[0].latitude)
+					this.form_temp.longitude = parseFloat(data.address[0].longitude)
+					this.form_temp.route = data.address[0].google_address
+					this.form_google = this.form_temp
+           			this.showMap = true
 				}
 
 				this.form.google_address = data.address[0].google_address
@@ -648,29 +653,36 @@ export default {
             this.form.latitude = addressData['latitude']
             this.form.longitude = addressData['longitude']
 
+			console.log(typeof addressData['route']); 
+
             this.form_google = addressData
 
             this.showMap = true
         },
 
-		/* handleFileUpload(event) {
+		handleFileUpload(event) {
 			this.file = event.target.files[0];
-		}, */
-		handleFileChange(event) {
+		},
+
+		// CARGA MASIVA DE FILE
+		/*handleFileChange(event) {
 			this.selectedFile = event.target.files[0];
 		},
 		addFile() {
 			if (this.selectedFile) {
-				this.files.push(this.selectedFile)
+				this.files.push(
+					{
+						description: this.form.description_file,
+						file: this.selectedFile,
+					}
+				)
 				this.selectedFile = null
+				this.form.description_file = ''
 			}
 		},
-		/* clearFile() {
-			this.selectedFile = null
-		}, */
 		deleteFile(index) {
 			this.files.splice(index, 1);
-		},
+		},*/
 
 		coord_google($coord) {
 			this.form.latitude = $coord.position.lat

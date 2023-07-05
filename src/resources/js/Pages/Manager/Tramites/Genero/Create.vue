@@ -86,20 +86,7 @@
 									Ingrese información adicional del tramite.
 								</p>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_documento_id"
-									class="block text-sm font-medium text-gray-700">Parentesco</label>
-								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
-									autocomplete="parentesco_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
-										Seleccione un tipo de documento
-									</option>
-									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
-										{{ parentesco.description }}
-									</option>
-								</select>
-							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -190,8 +177,22 @@
 								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
 						</div>
-
+						
 					</div>
 				</div>
 
@@ -713,8 +714,14 @@ export default {
 				if (data.address[0].latitude && data.address[0].longitude) {
 					this.form.latitude = data.address[0].latitude
 					this.form.longitude = data.address[0].longitude
-					// TODO: MAPA: Ver como cargar las coordenadas para que se visualice en el mapa. 
-					this.showMap = true
+
+					// Carga de datos para visualizar el mapa.
+					this.form_temp = {}
+					this.form_temp.latitude = parseInt(data.address[0].latitude)
+					this.form_temp.longitude = parseInt(data.address[0].longitude)
+					this.form_temp.route = data.address[0].google_address
+					this.form_google = this.form_temp
+           			this.showMap = true
 				}
 
 				this.form.google_address = data.address[0].google_address

@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('number', 100)->nullable();
             $table->string('piso', 50)->nullable();
             $table->string('dpto', 50)->nullable();
-            $table->decimal('latitude', 12, 10)->nullable();
-            $table->decimal('longitude', 12, 10)->nullable();
+            $table->decimal('latitude', 20, 18)->nullable();
+            $table->decimal('longitude', 20, 18)->nullable();
             $table->string('google_address', 250)->nullable();
             $table->timestamps();
 

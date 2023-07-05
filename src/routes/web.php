@@ -10,6 +10,7 @@ use App\Http\Controllers\Manager\Tramites\Discapacidad\DiscapacidadController;
 use App\Http\Controllers\Manager\Tramites\Genero\GeneroController;
 use App\Http\Controllers\Manager\Tramites\Ninez\NinezController;
 use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
+use App\Http\Controllers\Manager\Uploads\FileController;
 
 Route::middleware(['auth'])->group(function () {
 
@@ -18,15 +19,19 @@ Route::middleware(['auth'])->group(function () {
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
+
+    // Manejo de Archivos
+    Route::get('/download/file/{id}', [FileController::class, 'downloadfile'])->name('download.file');
     
     // Tramites
-    Route::get('/alta-tramites', [TramiteController::class, 'index'])->name('alta-tramite')->middleware('auth');
+    Route::get('/alta-tramites', [TramiteController::class, 'index'])->name('alta-tramite');
    
     // Discapacidad
     Route::get('/discapacidad', [DiscapacidadController::class, 'index'])->name('discapacidad');    
     Route::get('/discapacidad/create', [DiscapacidadController::class, 'create'])->name('discapacidad.create');  
     Route::get('/discapacidad/edit/{id}', [DiscapacidadController::class, 'edit'])->name('discapacidad.edit');    
-    Route::post('/discapacidad/store', [DiscapacidadController::class, 'store'])->name('discapacidad.store');    
+    Route::post('/discapacidad/store', [DiscapacidadController::class, 'store'])->name('discapacidad.store');   
+    Route::post('/discapacidad/update/{id}', [DiscapacidadController::class, 'update'])->name('discapacidad.update');    
     Route::get('/discapacidad/list', [DiscapacidadController::class, 'list'])->name('discapacidad.list'); 
 
     // Person

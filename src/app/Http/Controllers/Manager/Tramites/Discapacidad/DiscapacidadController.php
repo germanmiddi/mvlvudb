@@ -76,7 +76,7 @@ class DiscapacidadController extends Controller
     {
         DB::beginTransaction();
         try {
-            //d($request->file('file'));
+           
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -233,14 +233,123 @@ class DiscapacidadController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address')->get()
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
             ]
         );
     }
     //update
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+           
+            Person::where('id',$request['person_id'])->update(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'fecha_nac' => $request['fecha_nac'],
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'num_cuit' => $request['num_cuit'] ?? null
+                ]
+            );
+
+            AditionalData::where('person_id',$request['person_id'])->update(
+                [
+                    'cant_hijos' => $request['cant_hijos'],
+                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
+                    'situacion_conyugal_id' => $request['situacion_conyugal_id']
+                ]
+            );
+
+            SocialData::where('person_id', $request['person_id'])->update(
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'subsidio' => $request['subsidio']
+                ]
+            );
+
+            EducationData::where('person_id', $request['person_id'])->update(
+                [
+                    'beca' => $request['beca'],
+                    'nivel_educativo_id' => $request['nivel_educativo_id'],
+                    'estado_educativo_id' => $request['estado_educativo_id']
+                ]
+            );
+
+            // address_data
+
+            AddressData::where('person_id', $request['person_id'])->update(
+                [
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'latitude' => $request['latitude'],
+                    'longitude' => $request['longitude'],
+                    'google_address' => $request['google_address'],
+                    'pais_id' => $request['pais_id'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::where('person_id', $request['person_id'])->update(
+                [
+                    'phone' => $request['phone'],
+                    'email' => $request['email']
+                ]
+            );
+
+            //cud
+            Cud::where('person_id', $request['person_id'])->update(
+                [
+                    'codigo' => $request['codigo'],
+                    'diagnostico' => $request['diagnostico']
+                ]
+            );
+
+            // Obtengo ID de la dependencia.
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+
+
+            // tramite
+            Tramite::where('id', $request['tramite_id'])->update(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                    'observacion' => $request['observacion'],
+                    'canal_atencion_id' => $request['canal_atencion_id'],
+                    'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'dependencia_id' => $dependencia['dependencia_id']
+                ]
+            );
+
+            if ($request->hasFile('file')) {
+                $fileController = new FileController;
+                $data = [];
+    
+                $data['file'] = $request->file('file');
+                $data['tramite_id'] =  $request['tramite_id'];
+                $data['description'] =  $request['description_file']; 
+                $data['dependencia'] =  $dependencia['description'];
+                
+                $fileController->upload($data );
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            DB::rollBack();
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite.'], 203);
+        }
     }
     //destroy
     public function destroy($id)

@@ -170,7 +170,8 @@ class GeneroController extends Controller
 
                     'canal_atencion_id' => $request['canal_atencion_id'],
                     'tipo_tramite_id' => $request['tipo_tramite_id'],
-                    'dependencia_id' => $dependencia['dependencia_id']
+                    'dependencia_id' => $dependencia['dependencia_id'],
+                    'parentesco_id' => $request['parentesco_id'],
                 ]
             );
 

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_tramite_id');
             $table->unsignedBigInteger('tipo_institucion_id')->nullable();
             $table->unsignedBigInteger('dependencia_id');
+            $table->unsignedBigInteger('parentesco_id')->nullable();
             $table->timestamps();
 
             $table->foreign('sede_id')
@@ -52,6 +53,12 @@ return new class extends Migration
             $table->foreign('tipo_institucion_id')
                 ->references('id')
                 ->on('tipo_institucion')
+                ->onDelete('NO ACTION')
+                ->onUpdate('NO ACTION');
+                
+            $table->foreign('parentesco_id')
+                ->references('id')
+                ->on('parentescos')
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
 

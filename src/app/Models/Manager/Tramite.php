@@ -20,7 +20,8 @@ class Tramite extends Model
         'tipo_tramite_id',
         'tipo_institucion_id',
         'person_id',
-        'dependencia_id'
+        'dependencia_id',
+        'parentesco_id'
     ];
 
     public function sede()
@@ -51,6 +52,16 @@ class Tramite extends Model
     public function persons(){
         return $this->belongsToMany(Person::class, 'person_tramite')
             ->withPivot('rol_tramite_id');
+    }
+
+    public function dependencia()
+    {
+        return $this->belongsTo(Dependencia::class);
+    }
+
+    public function parentesco()
+    {
+        return $this->belongsTo(Parentesco::class);
     }
     
     /* protected $casts = [

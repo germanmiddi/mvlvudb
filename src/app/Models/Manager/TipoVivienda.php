@@ -9,7 +9,7 @@ class TipoVivienda extends Model
 {
     protected $table = 'tipo_vivienda';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

@@ -9,7 +9,7 @@ class CanalAtencion extends Model
 {
     protected $table = 'canal_atencion';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

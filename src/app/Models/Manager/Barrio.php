@@ -9,7 +9,7 @@ class Barrio extends Model
 {
     protected $table = 'barrios';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

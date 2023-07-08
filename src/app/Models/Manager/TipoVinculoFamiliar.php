@@ -9,7 +9,7 @@ class TipoVinculoFamiliar extends Model
 {
     protected $table = 'tipo_vinculo_familiar';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

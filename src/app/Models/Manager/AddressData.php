@@ -9,7 +9,7 @@ class AddressData extends Model
 {
     protected $table = 'address_data';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'person_id',

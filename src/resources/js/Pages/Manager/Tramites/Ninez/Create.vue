@@ -99,11 +99,10 @@
 							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
-						<!-- TODO: Ver si se incluye fecha de nacimiento. -->
-						<!-- <div class="col-span-12 sm:col-span-3 ">
+						<div class="col-span-12 sm:col-span-3 ">
 							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
 							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
+						</div> 
 
 					</div>
 
@@ -252,18 +251,18 @@
 
 					<div class="grid grid-cols-12 gap-6">
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="name_menor" class="block text-sm font-medium text-gray-700">Nombre</label>
+							<input v-model="form.name_menor" type="text" name="name_menor" id="name_menor" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="lastname_menor" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname_menor" type="text" name="lastname_menor" id="lastname_menor" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 						
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
-							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="num_documento_menor" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento_menor" @focusout="getPerson()" type="text" name="num_documento_menor" id="num_documento_menor" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 						
 						<!-- TODO: Ver si se incluye CUIT del menor. -->
@@ -273,8 +272,8 @@
 						</div>  -->
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="fecha_nac_menor" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac_menor" type="text" name="fecha_nac_menor" id="fecha_nac_menor" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 					</div>
@@ -299,18 +298,18 @@
 
 					<div class="grid grid-cols-12 gap-6">
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="name" class="block text-sm font-medium text-gray-700">Nombre </label>
-							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="name_madre" class="block text-sm font-medium text-gray-700">Nombre </label>
+							<input v-model="form.name_madre" type="text" name="name_madre" id="name_madre" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="lastname_madre" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname_madre" type="text" name="lastname_madre" id="lastname_madre" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
-							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="num_documento_madre" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento_madre" type="text" name="num_documento_madre" id="num_documento_madre" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 						
 						<!-- TODO: Ver si se incluye CUIT del menor. -->
@@ -320,8 +319,8 @@
 						</div>  -->
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="fecha_nac_madre" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac_madre" type="text" name="fecha_nac_madre" id="fecha_nac_madre" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 					</div>
@@ -332,18 +331,18 @@
 					<div class="grid grid-cols-12 gap-6">
 						
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="name" class="block text-sm font-medium text-gray-700">Nombre </label>
-							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="name_padre" class="block text-sm font-medium text-gray-700">Nombre </label>
+							<input v-model="form.name_padre" type="text" name="name_padre" id="name_padre" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="lastname_padre" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname_padre" type="text" name="lastname_padre" id="lastname_padre" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
-							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="num_documento_padre" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento_padre" @focusout="getPerson()" type="text" name="num_documento_padre" id="num_documento_padre" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 						
 						<!-- TODO: Ver si se incluye CUIT del menor. -->
@@ -353,8 +352,8 @@
 						</div>  -->
 
 						<div class="col-span-12 sm:col-span-3 ">
-							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-							<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							<label for="fecha_nac_padre" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<input v-model="form.fecha_nac_padre" type="text" name="fecha_nac_padre" id="fecha_nac_padre" autocomplete="fecha_nac-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
 
 					</div>

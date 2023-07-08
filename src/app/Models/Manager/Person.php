@@ -10,8 +10,8 @@ class Person extends Model
 
     protected $table = 'person';
     protected $primaryKey = 'id';
-    public $timestamps = false;
-
+    public $timestamps = true;
+    
     protected $fillable = [
         'lastname',
         'name',

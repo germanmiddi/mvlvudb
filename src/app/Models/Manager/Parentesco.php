@@ -9,7 +9,7 @@ class Parentesco extends Model
 {
     protected $table = 'parentescos';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

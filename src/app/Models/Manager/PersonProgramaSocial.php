@@ -14,5 +14,5 @@ class PersonProgramaSocial extends Pivot
     protected $table = 'person_programa_social';
     protected $primaryKey = ['person_id', 'programa_social_id'];
     public $incrementing = false;
-    public $timestamps = false;
+    public $timestamps = true;
 }

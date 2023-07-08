@@ -9,8 +9,8 @@ class Sede extends Model
 {
     protected $table = 'sedes';
     protected $primaryKey = 'id';
-    public $timestamps = false;
-
+    public $timestamps = true;
+    
     protected $fillable = [
         'description',
         'dependencia_id',

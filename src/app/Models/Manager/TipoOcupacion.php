@@ -9,7 +9,7 @@ class TipoOcupacion extends Model
 {
     protected $table = 'tipo_ocupacion';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

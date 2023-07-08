@@ -9,7 +9,7 @@ class ProgramaSocial extends Model
 {
     protected $table = 'programa_social';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

@@ -118,7 +118,8 @@
 									Documento</label>
 								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
 									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" :disabled="true"/>
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:disabled="true" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
@@ -492,11 +493,7 @@
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
 							</div>
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
-									Archivo Adicional</button>
-							</div>
+
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -509,30 +506,42 @@
 									<input @change="handleFileUpload" type="file" name="file" id="file" ref="file"
 										autocomplete="file-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+									<div class="flex-shrink-0">
+										<button @click="addFile()" type="button"
+											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+											Subir Archivo</button>
+									</div>
 								</div>
 							</div>
-							<div v-if="this.form_archivo.id" class="col-span-12 sm:col-span-6 ">
-								<table class="min-w-full divide-y divide-gray-200">
+							<div class="col-span-6 sm:col-span-12 ">
+								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
 									<thead class="bg-gray-50">
 										<tr>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-												Descripcion
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+												Observacion
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Accion
 											</th>
 										</tr>
 									</thead>
-									<tbody class="bg-white divide-y divide-gray-200">
-										<tr>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ this.form_archivo.description }}
+									<tbody  class="bg-white divide-y divide-gray-200">
+										<tr v-for="archivo in form_archivo " :key="archivo.id">
+											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+												{{ archivo.description }}
 											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												<a class="btn-green" :href="'/download/file/' + this.form_archivo.id" target="_blank" title="Descargar Archivo">
+											<td class="px-6 py-4 text-center text-sm font-medium">
+												<a class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white"
+													:href="'/download/file/' + archivo.id" target="_blank"
+													title="Descargar Archivo">
 													Descargar
+												</a>
+												<a class="ml-2 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+													 
+													title="Descargar Archivo" >
+													Eliminar
 												</a>
 											</td>
 										</tr>
@@ -632,7 +641,7 @@ export default {
 
 			const formData = new FormData();
 			formData.append('file', this.file);
-			
+
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
 			** Output: 2023-06-22T01:33:00.000Z
@@ -649,11 +658,11 @@ export default {
 			}
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-					this.toastMessage = response.data.message; 
-					setTimeout(()=> { 
+					this.toastMessage = response.data.message;
+					setTimeout(() => {
 						window.location.href = '/discapacidad';
 					}, 3100)
 				} else {
@@ -763,12 +772,13 @@ export default {
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
 		this.form.observacion = this.tramite[0].observacion
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
+		this.form_archivo = this.tramite[0].archivos
 
-		if(this.tramite[0].archivos && this.tramite[0].archivos.length > 0 ){
+		/* if(this.tramite[0].archivos && this.tramite[0].archivos.length > 0 ){
 			this.form_archivo.id = this.tramite[0].archivos[0].id
 			this.form_archivo.description = this.tramite[0].archivos[0].description
 			this.form_archivo.ext = this.tramite[0].archivos[0].ext
-		}
+		} */
 		this.getPerson()
 
 	},

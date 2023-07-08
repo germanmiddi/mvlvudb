@@ -9,7 +9,7 @@ class TipoPension extends Model
 {
     protected $table = 'tipo_pension';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

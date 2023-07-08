@@ -9,7 +9,7 @@ class Dependencia extends Model
 {
     protected $table = 'dependencias';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

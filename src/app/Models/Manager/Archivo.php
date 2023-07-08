@@ -11,6 +11,7 @@ class Archivo extends Model
     
     protected $table = 'archivos';
     protected $primaryKey = 'id';
+    public $timestamps = true;
     
     protected $fillable = [
         'name',

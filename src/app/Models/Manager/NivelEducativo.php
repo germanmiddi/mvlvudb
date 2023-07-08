@@ -9,7 +9,7 @@ class NivelEducativo extends Model
 {
     protected $table = 'nivel_educativo';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

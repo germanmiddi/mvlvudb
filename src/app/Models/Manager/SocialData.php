@@ -9,7 +9,7 @@ class SocialData extends Model
 {
     protected $table = 'social_data';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'person_id',

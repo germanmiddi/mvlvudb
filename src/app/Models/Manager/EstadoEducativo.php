@@ -9,8 +9,8 @@ class EstadoEducativo extends Model
 {
     protected $table = 'estado_educativo';
     protected $primaryKey = 'id';
-    public $timestamps = false;
-
+    public $timestamps = true;
+    
     protected $fillable = [
         'description',
     ];

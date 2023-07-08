@@ -9,7 +9,7 @@ class ContactData extends Model
 {
     protected $table = 'contact_data';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'phone',

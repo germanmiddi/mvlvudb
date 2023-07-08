@@ -9,7 +9,7 @@ class EducationData extends Model
 {
     protected $table = 'education_data';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'beca',

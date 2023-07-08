@@ -9,7 +9,7 @@ class RolTramite extends Model
 {
     protected $table = 'rol_tramite';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

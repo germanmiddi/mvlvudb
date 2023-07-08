@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Cud extends Model
 {
     protected $table = 'cud';
-    public $timestamps = false;
-
+    public $timestamps = true;
+    
     protected $fillable = [
         'codigo',
         'diagnostico',

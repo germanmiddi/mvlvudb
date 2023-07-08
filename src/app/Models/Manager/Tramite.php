@@ -10,7 +10,7 @@ class Tramite extends Model
 {
     protected $table = 'tramites';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'fecha',

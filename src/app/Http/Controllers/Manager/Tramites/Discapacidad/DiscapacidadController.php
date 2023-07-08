@@ -37,6 +37,7 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DiscapacidadController extends Controller
 {
@@ -170,40 +171,57 @@ class DiscapacidadController extends Controller
                 ]
             );
 
-            // Obtengo ID de la dependencia.
-            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
-
-
+            $list_tramites_id = array();
+            
             // tramite
-            $tramite_data = Tramite::Create(
-                [
-                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
-                    'observacion' => $request['observacion'],
+            if($request['tramites_id'] != null){
 
-                    'canal_atencion_id' => $request['canal_atencion_id'],
-                    'tipo_tramite_id' => $request['tipo_tramite_id'],
-                    'dependencia_id' => $dependencia['dependencia_id']
-                ]
-            );
-
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-
-            if ($request->hasFile('file')) {
-                $fileController = new FileController;
-                $data = [];
+                foreach ($request['tramites_id'] as $indice => $valor) {
+                    
+                    // Obtengo ID de la dependencia.
+                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
     
-                $data['file'] = $request->file('file');
-                $data['tramite_id'] =  $tramite_data['id'];
-                $data['description'] =  $request['description_file']; 
-                $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                    $tramite_data = Tramite::Create(
+                        [
+                            'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                            'observacion' => $request['tramites_observacion'][$indice],
+        
+                            'canal_atencion_id' => $request['canal_atencion_id'],
+                            'tipo_tramite_id' => $request['tramites_id'][$indice],
+                            'dependencia_id' => $dependencia['dependencia_id']
+                        ]
+                    );
+                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+       
+                    if($request['files'] != null){
+                        foreach ($request['files'] as $indice => $valor) {
+        
+                            $fileController = new FileController;
+                            $data = [];
                 
-                $fileController->upload($data );
+                            $data['base64'] = $request['files'][$indice];
+                            $data['tramite_id'] =  $tramite_data['id'];
+                            $data['description'] =  $request['files_descripcion'][$indice]; 
+                            $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                            
+                            $fileController->uploadbase64($data);
+                        }
+                    }
+                    
+                    
+                    $list_tramites_id[] = $tramite_data['id'];
+                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                }
+            }else{
+                // Se verifica que se haya enviado tipos de tramite
+                DB::rollBack();
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
             }
-
             DB::commit();
-            Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
-            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
+            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);

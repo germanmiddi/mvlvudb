@@ -9,7 +9,7 @@ class AditionalData extends Model
 {
     protected $table = 'aditional_data';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'person_id',

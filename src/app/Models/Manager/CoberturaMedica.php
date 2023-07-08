@@ -9,7 +9,7 @@ class CoberturaMedica extends Model
 {
     protected $table = 'cobertura_medica';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

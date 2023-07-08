@@ -9,7 +9,7 @@ class TipoTramite extends Model
 {
     protected $table = 'tipo_tramite';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'description',

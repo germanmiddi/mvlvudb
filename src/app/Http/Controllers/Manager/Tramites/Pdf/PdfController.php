@@ -20,7 +20,8 @@ class PdfController extends Controller
             'domicilio' => $tramite->persons[0]->address[0]->google_address,
             'num_documento' => $tramite->persons[0]->num_documento,
             'dependencia' => $tramite->tipoTramite->dependencia->description,
-            'tipo_tramite' => $tramite->tipoTramite->description
+            'tipo_tramite' => $tramite->tipoTramite->description,
+            'observacion' => $tramite->observacion
         ];
         return PDF::loadView('pdf/acusepdf', $data)->stream('acuse.pdf');
     }

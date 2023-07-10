@@ -16,6 +16,62 @@
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
+        <div class="px-4 mt-6 sm:px-6 lg:px-8">
+
+<div class="shadow sm:rounded-md sm:overflow-hidden">
+    <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+            <div class="">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+            </div>
+            <div class="flex-shrink-0">
+                <button type="button"
+                    class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
+                    Filtro</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 sm:col-span-3 ">
+                <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
+                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+            </div>
+            <div class="col-span-12 sm:col-span-3 ">
+                <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+                    Documento</label>
+                <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
+                    autocomplete="address-level2"
+                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+            </div>
+            <div class="col-span-12 sm:col-span-3 ">
+                <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+                <!-- <Datepicker
+                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    v-model="filter.date" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+                    :format="format">
+                </Datepicker> -->
+                <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
+                        :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+            </div>
+            <div class="col-span-12 sm:col-span-3">
+                <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
+                    Tramite</label>
+                <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+                    autocomplete="tipo_tramite_id_name"
+                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" selected>Selecciones un tipo de tramite</option>
+                    <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
+                        tipoTramite.description
+                    }}</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -140,6 +196,25 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <hr>
+                        <div class="flex justify-between mx-5 my-3 px-2 items-center">
+                            <div>
+                                Mostrando: {{ this.tramites.from }} a {{ this.tramites.to }} - Entradas encontradas:
+                                {{ this.tramites.total }}
+                            </div>
+
+                            <div class="flex flex-wrap -mb-1">
+                                <template v-for="link in tramites.links">
+                                    <div v-if="link.url === null"
+                                        class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
+                                        v-html="link.label"> </div>
+                                    <div v-else
+                                        class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
+                                        :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
+                                        @click="getTramitesPaginate(link.url)" v-html="link.label"> </div>
+                                </template>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,6 +225,8 @@
 <script>
 import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 import {
     ChevronRightIcon,
@@ -173,6 +250,7 @@ export default {
         PencilSquareIcon,
         ArrowsPointingOutIcon,
         Toast,
+        Datepicker
     },
     data() {
         return {
@@ -181,22 +259,48 @@ export default {
             labelType: "info",
             message: "",
             showToast: false,
+            filter: {},
+            length: 10,
+            customFormat: 'd-M-Y'
         };
     },
     setup() {
-        const sidebarOpen = ref(false);
-
-        return {};
     },
     methods: {
         clearMessage() {
             this.toastMessage = "";
         },
         async getTramites() {
-            const get = `${route("genero.list")}`;
+            this.tramites = ''
+            let filter = `&length=${this.length}`
+
+            if (this.filter.name) {
+                filter += `&name=${JSON.stringify(this.filter.name)}`
+            }
+
+            if (this.filter.num_documento) {
+                filter += `&num_documento=${JSON.stringify(this.filter.num_documento)}`
+            }
+
+            if (this.filter.date) {
+                filter += `&date=${JSON.stringify(this.filter.date)}`
+            }
+
+            if (this.filter.tipo_tramite_id) {
+                filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
+            }
+
+            const get = `${route('genero.list')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
             this.tramites = await response.json();
+        },
+        async getTramitesPaginate(link) {
+            var get = `${link}`;
+            const response = await fetch(get, { method: 'GET' })
+
+            this.tramites = await response.json()
+            //console.log(this.orders)  
         },
     },
     mounted() {

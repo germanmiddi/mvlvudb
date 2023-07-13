@@ -21,7 +21,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
 
     // Manejo de Archivos
-    Route::get('/download/file/{id}', [FileController::class, 'downloadfile'])->name('download.file');
+    Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
+    Route::post('/file/updoad', [FileController::class, 'uploadfile'])->name('file.upload');
+    Route::delete('/file/delete/{id}', [FileController::class, 'deletefile'])->name('file.delete');
     
     // Tramites
     Route::get('/alta-tramites', [TramiteController::class, 'index'])->name('alta-tramite');

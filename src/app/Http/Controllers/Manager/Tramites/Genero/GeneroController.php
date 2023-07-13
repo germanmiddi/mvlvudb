@@ -161,40 +161,95 @@ class GeneroController extends Controller
                     'email' => $request['email']
                 ]
             );
+            
+            /**
+             * Registro de Beneficiario
+             */
 
-            // Obtengo ID de la dependencia.
-            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();            
-
-            // tramite
-            $tramite_data = Tramite::Create(
-                [
-                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
-                    'observacion' => $request['observacion'],
-
-                    'canal_atencion_id' => $request['canal_atencion_id'],
-                    'tipo_tramite_id' => $request['tipo_tramite_id'],
-                    'dependencia_id' => $dependencia['dependencia_id'],
-                    'parentesco_id' => $request['parentesco_id'],
-                ]
-            );
-
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-
-            if ($request->hasFile('file')) {
-                $fileController = new FileController;
-                $data = [];
+             if ($request['beneficiario_control'] == 'true') {
+                $beneficiario = Person::updateOrCreate(
+                    [
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento']
+                    ],
+                    [
+                        'lastname' => $request['beneficiario_lastname'],
+                        'name' => $request['beneficiario_name'],
+                        'fecha_nac' => $request['beneficiario_fecha_nac'],
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                    ]
+                );
     
-                $data['file'] = $request->file('file');
-                $data['tramite_id'] =  $tramite_data['id'];
-                $data['description'] =  $request['description_file']; 
-                $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
-                
-                $fileController->upload($data );
+                ContactData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
+    
             }
 
+
+            /**
+             * FIN Registro de Beneficiario
+             */
+
+            $list_tramites_id = array();
+
+            // tramite
+            if($request['tramites_id'] != null){
+
+                foreach ($request['tramites_id'] as $indice => $valor) {
+                    
+                    // Obtengo ID de la dependencia.
+                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
+    
+                    $tramite_data = Tramite::Create(
+                        [
+                            'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                            'observacion' => $request['tramites_observacion'][$indice],
+        
+                            'canal_atencion_id' => $request['canal_atencion_id'],
+                            'tipo_tramite_id' => $request['tramites_id'][$indice],
+                            'dependencia_id' => $dependencia['dependencia_id'],
+                            'parentesco_id' => $request['parentesco_id'],
+                        ]
+                    );
+                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+                    if ($beneficiario) {
+                        $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                    }
+                    if($request['files'] != null){
+                        foreach ($request['files'] as $indice => $valor) {
+        
+                            $fileController = new FileController;
+                            $data = [];
+                
+                            $data['base64'] = $request['files'][$indice];
+                            $data['tramite_id'] =  $tramite_data['id'];
+                            $data['description'] =  $request['files_descripcion'][$indice]; 
+                            $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                            
+                            $fileController->uploadbase64($data);
+                        }
+                    }
+                    
+                    
+                    $list_tramites_id[] = $tramite_data['id'];
+                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                }
+            }else{
+                // Se verifica que se haya enviado tipos de tramite
+                DB::rollBack();
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
+            }
             DB::commit();
-            Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
-            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramite' => $tramite_data['id']], 200);
+            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
@@ -311,6 +366,37 @@ class GeneroController extends Controller
                 ]
             );
 
+            /**
+             * Registro de Beneficiario
+             */
+
+             if ($request['beneficiario_control'] == 'true') {
+                Person::where('id',$request['beneficiario_id'])->update(
+                    [
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                        'lastname' => $request['beneficiario_lastname'],
+                        'name' => $request['beneficiario_name'],
+                        'fecha_nac' => $request['beneficiario_fecha_nac'],
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                    ]
+                );
+
+                ContactData::where('person_id', $request['beneficiario_id'])->update(
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
+    
+            }
+
+
+            /**
+             * FIN Registro de Beneficiario
+             */
+
             // Obtengo ID de la dependencia.
             $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
 
@@ -362,6 +448,14 @@ class GeneroController extends Controller
 
         $result->where('dependencia_id', 6);
 
+        $name = json_decode(request('name'));  
+            $result->whereIn('id', function ($sub) use($name) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                            ->where('person_tramite.rol_tramite_id', 1);
+                    });
+
 
         if(request('name')){
             $name = json_decode(request('name'));  
@@ -398,7 +492,7 @@ class GeneroController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        return  $result->orderBy("tramites.created_at", 'DESC')
+        return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
             ->through(fn ($tramite) => [

@@ -172,6 +172,52 @@ class DiscapacidadController extends Controller
                 ]
             );
 
+
+            /**
+             * Registro de Beneficiario
+             */
+
+            if ($request['beneficiario_control'] == 'true') {
+                $beneficiario = Person::updateOrCreate(
+                    [
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento']
+                    ],
+                    [
+                        'lastname' => $request['beneficiario_lastname'],
+                        'name' => $request['beneficiario_name'],
+                        'fecha_nac' => $request['beneficiario_fecha_nac'],
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                    ]
+                );
+    
+                ContactData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
+    
+                Cud::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'codigo' => $request['beneficiario_codigo'],
+                        'diagnostico' => $request['beneficiario_diagnostico']
+                    ]
+                );
+            }
+
+
+            /**
+             * FIN Registro de Beneficiario
+             */
+
             $list_tramites_id = array();
             
             // tramite
@@ -182,6 +228,7 @@ class DiscapacidadController extends Controller
                     // Obtengo ID de la dependencia.
                     $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
     
+                    // Tramites del Titular
                     $tramite_data = Tramite::Create(
                         [
                             'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
@@ -192,8 +239,12 @@ class DiscapacidadController extends Controller
                             'dependencia_id' => $dependencia['dependencia_id']
                         ]
                     );
-                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+                    if ($beneficiario) {
+                        $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                    }
        
+
                     if($request['files'] != null){
                         foreach ($request['files'] as $indice => $valor) {
         
@@ -208,10 +259,11 @@ class DiscapacidadController extends Controller
                             $fileController->uploadbase64($data);
                         }
                     }
-                    
+
+
                     
                     $list_tramites_id[] = $tramite_data['id'];
-                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
                 }
             }else{
                 // Se verifica que se haya enviado tipos de tramite
@@ -336,6 +388,44 @@ class DiscapacidadController extends Controller
                 ]
             );
 
+            /**
+             * Registro de Beneficiario
+             */
+
+            if ($request['beneficiario_control'] == 'true') {
+                Person::where('id',$request['beneficiario_id'])->update(
+                    [
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                        'lastname' => $request['beneficiario_lastname'],
+                        'name' => $request['beneficiario_name'],
+                        'fecha_nac' => $request['beneficiario_fecha_nac'],
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                    ]
+                );
+
+                ContactData::where('person_id', $request['beneficiario_id'])->update(
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
+    
+                //cud
+                Cud::where('person_id', $request['beneficiario_id'])->update(
+                    [
+                        'codigo' => $request['beneficiario_codigo'],
+                        'diagnostico' => $request['beneficiario_diagnostico']
+                    ]
+                );
+            }
+
+
+            /**
+             * FIN Registro de Beneficiario
+             */
+
             // Obtengo ID de la dependencia.
             $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
 
@@ -422,7 +512,7 @@ class DiscapacidadController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        return  $result->orderBy("tramites.created_at", 'DESC')
+        return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
             ->through(fn ($tramite) => [

@@ -123,7 +123,8 @@
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 						</div>
 						<div class="flex-shrink-0">
-							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Beneficiario</button>
+							<button type="button" @click="addBeneficiario()" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+							:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{this.textBtnBenef}}</button>
 						</div>
 					</div>
 
@@ -198,6 +199,8 @@
 
 				</div>
 			</div>
+
+			<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" @data_beneficiario="beneficiario"></FormBeneficiario>
 
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -520,10 +523,11 @@
 <script>
 
 import { ref } from 'vue'
-import {ArrowLeftCircleIcon} from '@heroicons/vue/24/outline';
+import {ArrowLeftCircleIcon} from '@heroicons/vue/24/outline'
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
 import VueGoogleAutocomplete from "vue-google-autocomplete"
-import Toast from "@/Layouts/Components/Toast.vue";
+import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
+import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -551,25 +555,35 @@ export default {
 		GoogleMap,
 		VueGoogleAutocomplete,
 		Toast,
-		Datepicker
+		Datepicker,
+		FormBeneficiario
 	},
 	data() {
 		return {
 			form: {},
 			form_temp: {},
 			form_google: "",
+			form_beneficiario: {},
 			address: "",
+			/* BENEFICIARIO */
+			textBtnBenef: "Agregar Beneficiario",
+			showBenef: false,
+			beneficiario_control: false,
+			/* MAPA */
+			textMap:  "Ver Mapa",
             showMap: false,
+			/* MENSAJERIA */
 			toastMessage: "",
             labelType: "info",
             message: "",
             showToast: false,
-			file: "",
 			/* CARGA MASIVA DE FILE */
+			file: "",
 			file_tmp: {},
 			files: [],
     		selectedFile: null,
-			tramites: []
+			tramites: [],
+			
 		}
 	},
 	setup() {
@@ -593,7 +607,6 @@ export default {
 			let rt = route('discapacidad.store');
 
 			const formData = new FormData();
-			//formData.append('file', this.file);
 
 			Object.entries(this.tramites).forEach(([clave, valor]) => {
 				formData.append('tramites_id[]', valor.id);
@@ -619,6 +632,15 @@ export default {
 					formData.append(clave, this.form[clave]);
 				}
 			}
+
+			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			for (var clave in this.form_beneficiario) {
+				if (this.form_beneficiario.hasOwnProperty(clave)) {
+					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+				}
+			}
+
+			formData.append('beneficiario_control', this.beneficiario_control)
 
 			try {
 				const response = await axios.post(rt, formData); 
@@ -711,6 +733,17 @@ export default {
 				this.form_temp = {}
 			}
 		},
+		addBeneficiario(){
+			if(this.showBenef){
+				this.textBtnBenef = 'Agregar Beneficiario'
+				this.form_beneficiario = {}
+				this.beneficiario_control = false
+			}else{
+				this.beneficiario_control = true
+				this.textBtnBenef = 'Borrar Beneficiario'
+			}
+			this.showBenef = !this.showBenef
+		},
 	
 	/* ***********************
 	** * MANEJO DE GOOGLE MAPS
@@ -764,8 +797,6 @@ export default {
 				)
 				this.selectedFile = null
 				this.form.description_file = ''
-				const inputfile = this.$refs.inputfile;
-				inputfile.value = '';
 			}else{
 				this.labelType = "danger";
                 this.toastMessage = "Debe completar completar los datos del archivo";
@@ -811,6 +842,10 @@ export default {
 	** * FIN MANEJO DE TIPO DE TRAMITE
 	**********************************
 	*/ 
+
+		beneficiario(data){
+			this.form_beneficiario = data;
+		}
 
 	},
 	computed: {

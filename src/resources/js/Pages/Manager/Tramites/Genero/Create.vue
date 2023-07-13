@@ -24,72 +24,97 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST">
 				<div class="shadow sm:rounded-md sm:overflow-hidden">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Declaración Jurada
-							</h3>
-							<!-- <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p> -->
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="true" 
+										autoApply :format="format">
+							</Datepicker>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-								<Datepicker
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:format="format">
-								</Datepicker>
-							</div>
+						<div class="col-span-12 sm:col-span-3">
+							<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
+							<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion" autocomplete="canal_atencion-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Selecciones un canal de atencion</option>
+								<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
+									:value="canalAtencion.id">{{
+											canalAtencion.description
+									}}</option>
+							</select>
+						</div>   
+					</div>
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de Tramite</label>
+							<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id" autocomplete="tipo_tramite_id_name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Selecciones un tipo de tramite</option>
+								<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
+									:value="tipoTramite.id">{{
+											tipoTramite.description
+									}}</option>
+							</select>
+						</div>  
 
-							<div class="col-span-12 sm:col-span-5">
-								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Tramite</label>
-								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-									autocomplete="tipo_tramite_id_name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
-										Selecciones un tipo de tramite
-									</option>
-									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-										:value="tipoTramite.id">
-										{{ tipoTramite.description }}
-									</option>
-								</select>
+						<div class="col-span-12 sm:col-span-9">
+							<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones </label>
+							<div class="mt-1">
+								<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
-									Atención</label>
-								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
-									autocomplete="canal_atencion-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
-										Selecciones un canal de atencion
-									</option>
-									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
-										:value="canalAtencion.id">
-										{{ canalAtencion.description }}
-									</option>
-								</select>
-							</div>
-						</div>
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-8">
-								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
-								</label>
-								<div class="mt-1">
-									<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3"
-										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
-								</div>
-								<p class="mt-2 text-sm text-gray-500">
-									Ingrese información adicional del tramite.
-								</p>
-							</div>
-							
+							<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
 						</div>
 					</div>
+					<div class="flex items-center justify-end flex-wrap sm:flex-nowrap ">
+						<div class="flex-shrink-0">
+							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="addTramite()">Agregar Tramite</button>
+						</div>
+					</div>
+					<div class="grid grid-cols-12 gap-12">
+						<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+                                        Tramite
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+                                        Observacion
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                                        Accion
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+								<tr v-for="(tramite, index) in tramites" :key="index">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                     	{{tramite.titulo}}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    	{{tramite.observacion}}
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-sm font-medium">
+										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
+											Borrar
+										</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+						
+					</div> 
 				</div>
+				
+			</div>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -103,10 +128,10 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
-									Agregar Beneficiario
-								</button>
+								<div class="flex-shrink-0">
+									<button type="button" @click="addBeneficiario()" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{this.textBtnBenef}}</button>
+								</div>
 							</div>
 						</div>
 
@@ -195,6 +220,8 @@
 						
 					</div>
 				</div>
+
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" @data_beneficiario="beneficiario"></FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -524,28 +551,57 @@
 					</div>
 				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Archivos Adjuntos
-							</h3>
-						</div>
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-8">
-								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-								<div class="flex">
-									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
-										autocomplete="descripcion-level2"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input type="file" name="file" id="file" autocomplete="file-level2"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-8 ">
+							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+							<div class="flex ">
+								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
+								<input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+								<div class="flex-shrink-0">
+									<button @click="addFile()" type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo</button>
 								</div>
 							</div>
+						</div> 
+						<div class="col-span-6 sm:col-span-6">
+							<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+										Descripcion
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                                        Accion
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+								<tr v-for="(file, index) in files" :key="index">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    	{{file.description}}
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-sm font-medium">
+										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
+											Eliminar
+										</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 						</div>
 					</div>
 				</div>
+			</div>
 			</form>
 		</div>
 
@@ -565,6 +621,7 @@ import { ref } from "vue";
 import { ArrowLeftCircleIcon } from "@heroicons/vue/24/outline";
 import GoogleMap from "@/Layouts/Components/GoogleMap.vue";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
+import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -593,23 +650,34 @@ export default {
 		GoogleMap,
 		VueGoogleAutocomplete,
 		Toast,
-		Datepicker
+		Datepicker,
+		FormBeneficiario
 	},
 	data() {
 		return {
 			form: {},
 			form_temp: {},
 			form_google: "",
+			form_beneficiario: {},
 			address: "",
-			showMap: false,
+			/* BENEFICIARIO */
+			textBtnBenef: "Agregar Beneficiario",
+			showBenef: false,
+			beneficiario_control: false,
+			/* MAPA */
+			textMap:  "Ver Mapa",
+            showMap: false,
+			/* MENSAJERIA */
 			toastMessage: "",
-			labelType: "info",
-			message: "",
-			showToast: false,
+            labelType: "info",
+            message: "",
+            showToast: false,
+			/* CARGA MASIVA DE FILE */
 			file: "",
 			file_tmp: {},
 			files: [],
-			selectedFile: null
+    		selectedFile: null,
+			tramites: [],
 		};
 	},
 	setup() {
@@ -633,7 +701,16 @@ export default {
 			let rt = route('genero.store');
 
 			const formData = new FormData();
-			formData.append('file', this.file);
+
+			Object.entries(this.tramites).forEach(([clave, valor]) => {
+				formData.append('tramites_id[]', valor.id);
+				formData.append('tramites_observacion[]', valor.observacion);
+			});
+
+			Object.entries(this.files).forEach(([clave, valor]) => {
+				formData.append('files[]', valor.file);
+				formData.append('files_descripcion[]', valor.description);
+			});
 
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
@@ -650,13 +727,25 @@ export default {
 				}
 			}
 
+			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			for (var clave in this.form_beneficiario) {
+				if (this.form_beneficiario.hasOwnProperty(clave)) {
+					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+				}
+			}
+
+			formData.append('beneficiario_control', this.beneficiario_control)
+
 			try {
 				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
-					setTimeout(() => {
-						window.open(route('pdf.acusepdf', response.data.idTramite), '_blank');
+					setTimeout(()=> { 
+						response.data.idTramites.forEach(element => {
+							console.log(element)
+							window.open(route('pdf.acusepdf',element), '_blank');
+						});
 					}, 1000)
 					setTimeout(() => {
 						window.location.href = '/genero';
@@ -736,6 +825,20 @@ export default {
 				this.form_temp = {}
 			}
 		},
+		addBeneficiario(){
+			if(this.showBenef){
+				this.textBtnBenef = 'Agregar Beneficiario'
+				this.form_beneficiario = {}
+				this.beneficiario_control = false
+			}else{
+				this.beneficiario_control = true
+				this.textBtnBenef = 'Borrar Beneficiario'
+			}
+			this.showBenef = !this.showBenef
+		},
+	/* ***********************
+	** * MANEJO DE GOOGLE MAPS
+	*/ 
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData["formatted_address"];
 			this.form.latitude = addressData["latitude"];
@@ -745,15 +848,34 @@ export default {
 
 			this.showMap = true;
 		},
-		handleFileUpload(event) {
-			this.file = event.target.files[0];
+		coord_google($coord) {
+			this.form.latitude = $coord.position.lat
+			this.form.longitude = $coord.position.lng
+			this.form.google_address = $coord.address
+
 		},
-		// CARGA MASIVA DE FILE
-		/*handleFileChange(event) {
-			this.selectedFile = event.target.files[0];
+	/* 
+	** * FIN MANEJO DE GOOGLE MAPS
+	******************************
+	*/ 
+
+	/* ********************
+	** * MANEJO DE ARCHIVOS
+	*/ 
+	handleFileChange(event) {
+			//this.selectedFile = event.target.files[0];
+			const file =  event.target.files[0];
+			const reader = new FileReader();
+
+			reader.onload = () => {
+				this.selectedFile = reader.result; // Obtiene los datos en Base64 sin la cabecera
+			};
+
+			reader.readAsDataURL(file);
 		},
+
 		addFile() {
-			if (this.selectedFile) {
+			if (this.selectedFile && this.form.description_file) {
 				this.files.push(
 					{
 						description: this.form.description_file,
@@ -762,19 +884,58 @@ export default {
 				)
 				this.selectedFile = null
 				this.form.description_file = ''
+				/* const inputfile = this.$refs.inputfile;
+				inputfile.value = ''; */
+			}else{
+				this.labelType = "danger";
+                this.toastMessage = "Debe completar completar los datos del archivo";
 			}
 		},
 		deleteFile(index) {
 			this.files.splice(index, 1);
-		},*/
-
-		coord_google($coord) {
-			this.form.latitude = $coord.position.lat
-			this.form.longitude = $coord.position.lng
-			this.form.google_address = $coord.address
-
-			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
 		},
+
+	/* 
+	** * FIN MANEJO DE ARCHIVOS
+	***************************
+	*/ 
+		
+	/* ***************************
+	** * MANEJO DE TIPO DE TRAMITE
+	*/ 
+		addTramite() {
+			if(this.tramites.find( tramite => tramite.id === this.form.tipo_tramite_id )){
+				this.labelType = "danger";
+                this.toastMessage = "El tipo de tramite ya se ha ingresado previamente";
+			}else{
+				if(this.form.tipo_tramite_id != '' && this.form.observacion != ''){
+					this.tramites.push(
+						{
+							id: this.form.tipo_tramite_id,
+							titulo: this.tiposTramite.find( tramite => tramite.id === this.form.tipo_tramite_id ).description,
+							observacion: this.form.observacion,
+						}
+					)
+				}else{
+					this.labelType = "danger";
+                	this.toastMessage = "Debe completar todos los datos";
+				}
+			}
+			this.form.tipo_tramite_id = ''
+			this.form.observacion = ''
+		},
+		deleteTramite(index) {
+			this.tramites.splice(index, 1);
+		},
+	/* 
+	** * FIN MANEJO DE TIPO DE TRAMITE
+	**********************************
+	*/ 
+
+		beneficiario(data){
+			this.form_beneficiario = data;
+		}
+		
 	},
 	created() { },
 	computed: {
@@ -784,5 +945,10 @@ export default {
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
 		}
 	},
+
+	mounted(){
+		this.form.tipo_tramite_id = ''
+		this.form.observacion = ''
+	}
 };
 </script>

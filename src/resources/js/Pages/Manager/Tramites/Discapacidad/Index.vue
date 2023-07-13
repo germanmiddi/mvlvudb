@@ -106,7 +106,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in tramites.data" :key="data.tramite.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ data.tramite.fecha }}
+                                        {{ fechaFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.persons[0].lastname }},
@@ -283,6 +283,22 @@ export default {
             this.tramites = await response.json()
             //console.log(this.orders)  
         },
+        fechaFormateada(fecha) {
+            const fechaObjeto = new Date(fecha);
+            fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+
+            const dia = fechaObjeto.getDate();
+            const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
+            const anio = fechaObjeto.getFullYear();
+
+            // Agregar ceros iniciales si es necesario
+            const diaFormateado = dia < 10 ? `0${dia}` : dia;
+            const mesFormateado = mes < 10 ? `0${mes}` : mes;
+
+            return `${diaFormateado}-${mesFormateado}-${anio}`;
+
+            return fecha;
+        },
     },
     mounted() {
         if (this.toast) {
@@ -295,7 +311,7 @@ export default {
             }
         }
         this.getTramites();
-    },
+    }
 };
 </script>
 

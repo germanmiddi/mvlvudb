@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Archivo;
+use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -34,6 +35,38 @@ class FileController extends Controller
             Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:upload","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $data['tramite_id'], "Nombre File" => $fileName ]);
         } catch (\Throwable $th) {
             Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:upload","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+        }
+    }
+
+    public function uploadFile(Request $request)
+    {
+        try {
+            if ($request->hasFile('file')) {
+                $extension = $request['file']->getClientOriginalExtension();
+
+                $tramite = Tramite::where('id', $request['tramite_id'])->first();
+                $fileName = $tramite->dependencia['description'].'-ID'.$request['tramite_id'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
+                Storage::putFileAs('public', $request['file'], $fileName);
+        
+                $archivo = Archivo::Create(
+                    [
+                        'name' => $fileName,
+                        'description' => $request['description'],
+                        'ext' => $extension,
+                        'tramite_id' => $request['tramite_id']
+                    ]
+                );
+                Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'], "Nombre File" => $fileName ]);
+                return response()->json(['message' => 'Se ha recibido un Archivo. Comuniquese con el administrador.', 'archivo' => $archivo], 200);
+            }else{
+
+                Log::info("Se ha recibido un FILE ", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id']]);
+                return response()->json(['message' => 'Se ha recibido un Archivo. Comuniquese con el administrador.'], 203);
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+            Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha generado un error al momento de almacenar el Archivo. Comuniquese con el administrador.'], 203);
         }
     }
 
@@ -90,5 +123,24 @@ class FileController extends Controller
         // Generar la respuesta de descarga
         Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:downloadfile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
         return response()->download(storage_path('app/public/' . $archivo['name']));
+    }
+
+    public function deletefile($id){
+
+        try {
+        $file = Archivo::where('id', $id)->first();
+            if (Storage::disk('public')->exists($file->name)) {
+                Archivo::where('id', $id)->delete();
+                Storage::disk('public')->delete($file->name);
+                Log::info("Se ha eliminado un FILE ", ["Modulo" => "File:delete","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Archivo" => $id, "Nombre File" => $file->name ]);
+                return response()->json(['message' => 'Se eliminado correctamente el archivo.'], 200);
+            } else {
+                Log::info("No se ha encontrado el FILE ", ["Modulo" => "File:delete","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Archivo" => $id, "Nombre File" => $file->name ]);
+                return response()->json(['message' => 'Se ha encontrado el archivo que desea eliminar. Comuniquese con el administrador.'], 203);
+            }
+        } catch (\Throwable $th) {
+            Log::error("Se ha generado un error al momento de eliminar el FILE", ["Modulo" => "File:delete","Usuario" => Auth::user()->id.": ".Auth::user()->name, 'ID ARCHIVO' => $id, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar eliminar el archivo. Comuniquese con el administrador.'], 203);
+        }
     }
 }

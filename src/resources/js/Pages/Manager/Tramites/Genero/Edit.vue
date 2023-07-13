@@ -91,11 +91,11 @@
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 							</div>
-							<div class="flex-shrink-0">
+							<!-- <div class="flex-shrink-0">
 								<button type="button"
 									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
 									Beneficiario</button>
-							</div>
+							</div> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -202,6 +202,8 @@
 
 					</div>
 				</div>
+
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -507,11 +509,7 @@
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
 							</div>
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
-									Archivo Adicional</button>
-							</div>
+
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -524,30 +522,41 @@
 									<input @change="handleFileUpload" type="file" name="file" id="file" ref="file"
 										autocomplete="file-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+									<div class="flex-shrink-0">
+										<button @click="uploadFile()" type="button"
+											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+											Subir Archivo</button>
+									</div>
 								</div>
 							</div>
-							<div v-if="this.form_archivo.id" class="col-span-12 sm:col-span-6 ">
-								<table class="min-w-full divide-y divide-gray-200">
+							<div class="col-span-6 sm:col-span-6 ">
+								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
 									<thead class="bg-gray-50">
 										<tr>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-												Descripcion
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+												Observacion
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Accion
 											</th>
 										</tr>
 									</thead>
-									<tbody class="bg-white divide-y divide-gray-200">
-										<tr>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ this.form_archivo.description }}
+									<tbody  class="bg-white divide-y divide-gray-200">
+										<tr v-for="archivo in form_archivo " :key="archivo.id">
+											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+												{{ archivo.description }}
 											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												<a class="btn-green" :href="'/download/file/' + this.form_archivo.id" target="_blank" title="Descargar Archivo">
+											<td class="px-6 py-4 text-center text-sm font-medium">
+												<a class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white"
+													:href="'/file/download/' + archivo.id" target="_blank"
+													title="Descargar Archivo">
 													Descargar
+												</a>
+												<a class="ml-2 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+													@click="deleteFile(archivo.id)" title="Eliminar Archivo" >
+													Eliminar
 												</a>
 											</td>
 										</tr>
@@ -578,6 +587,7 @@ import { ref } from 'vue'
 import { ArrowLeftCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline';
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
 import VueGoogleAutocomplete from "vue-google-autocomplete"
+import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -609,7 +619,8 @@ export default {
 		GoogleMap,
 		VueGoogleAutocomplete,
 		Toast,
-		Datepicker
+		Datepicker,
+		FormBeneficiario
 	},
 	data() {
 		return {
@@ -623,7 +634,9 @@ export default {
 			message: "",
 			showToast: false,
 			file: "",
-			form_archivo: {}
+			form_archivo: {},
+			form_beneficiario: {},
+			showBenef: false
 		}
 	},
 	setup() {
@@ -663,6 +676,15 @@ export default {
 					formData.append(clave, this.form[clave]);
 				}
 			}
+
+			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			for (var clave in this.form_beneficiario) {
+				if (this.form_beneficiario.hasOwnProperty(clave)) {
+					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+				}
+			}
+
+			formData.append('beneficiario_control', this.beneficiario_control)
 
 			try {
 				const response = await axios.post(rt, formData); 
@@ -759,6 +781,55 @@ export default {
 			this.form.google_address = $coord.address
 
 			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
+		},
+
+		beneficiario(data){
+			this.form_beneficiario = data;
+		},
+		async deleteFile(id){
+
+			let rt = route('file.delete', id);
+
+			try {
+				const response = await axios.delete(rt); 
+				if (response.status == 200) {
+					this.labelType = "success";
+                	this.toastMessage = response.data.message; 
+					this.form_archivo = this.form_archivo .filter(function(file) {
+						return file.id !== id;
+					});
+				} else {
+					this.labelType = "danger";
+                	this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		async uploadFile(){
+
+			let rt = route('file.upload');
+			const formData = new FormData();
+
+			formData.append('file', this.file);
+			formData.append('tramite_id', this.form.tramite_id);
+			formData.append('description', this.form.description_file);
+		
+
+			try {
+				const response = await axios.post(rt, formData); 
+				if (response.status == 200) {
+					this.labelType = "success";
+                	this.toastMessage = response.data.message; 
+					this.form_archivo.push(response.data.archivo)
+					this.form.description_file = ''
+				} else {
+					this.labelType = "danger";
+                	this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			}
 		}
 
 	},
@@ -774,18 +845,27 @@ export default {
 	},
 	mounted() {
 		this.form.tramite_id = this.tramite[0].id
-		this.form.num_documento = this.tramite[0].persons[0].num_documento
+
+		//console.log(this.tramite[0].persons[0].pivot.rol_tramite_id)
+		let titular
+		let beneficiario
+		titular = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 1))
+		beneficiario = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 2))
+
+		this.form.num_documento = titular[0].num_documento
 		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
 		this.form.observacion = this.tramite[0].observacion
 		this.form.parentesco_id = this.tramite[0].parentesco_id
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
+		this.form_archivo = this.tramite[0].archivos
 
-		if(this.tramite[0].archivos && this.tramite[0].archivos.length > 0 ){
-			this.form_archivo.id = this.tramite[0].archivos[0].id
-			this.form_archivo.description = this.tramite[0].archivos[0].description
-			this.form_archivo.ext = this.tramite[0].archivos[0].ext
+		if(beneficiario != ''){
+			this.form_beneficiario.num_documento = beneficiario[0].num_documento
+			this.showBenef = true
+			this.beneficiario_control = true
 		}
+		
 		this.getPerson()
 
 	},

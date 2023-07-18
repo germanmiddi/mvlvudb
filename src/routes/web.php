@@ -7,6 +7,8 @@ use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\Persons\PersonController;
 use App\Http\Controllers\Manager\Tramite\TramiteController;
 use App\Http\Controllers\Manager\Tramites\Discapacidad\DiscapacidadController;
+use App\Http\Controllers\Manager\Tramites\Habitat\HabitatController;
+use App\Http\Controllers\Manager\Tramites\Fortalecimiento\FortalecimientoController;
 use App\Http\Controllers\Manager\Tramites\Genero\GeneroController;
 use App\Http\Controllers\Manager\Tramites\Ninez\NinezController;
 use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
@@ -49,7 +51,25 @@ Route::middleware(['auth'])->group(function () {
 
     // Niñez y Adolescencia
     Route::get('/ninez', [NinezController::class, 'index'])->name('ninez');    
-    Route::get('/ninez/create', [NinezController::class, 'create'])->name('ninez.create');    
+    Route::get('/ninez/create', [NinezController::class, 'create'])->name('ninez.create');   
+    Route::get('/ninez/edit/{id}', [NinezController::class, 'edit'])->name('ninez.edit'); 
     Route::post('/ninez/store', [NinezController::class, 'store'])->name('ninez.store');    
+    Route::post('/ninez/update/{id}', [NinezController::class, 'update'])->name('ninez.update');     
     Route::get('/ninez/list', [NinezController::class, 'list'])->name('ninez.list'); 
+
+    // Fortalecimiento
+    Route::get('/fortalecimiento', [FortalecimientoController::class, 'index'])->name('fortalecimiento');    
+    Route::get('/fortalecimiento/create', [FortalecimientoController::class, 'create'])->name('fortalecimiento.create');  
+    Route::get('/fortalecimiento/edit/{id}', [FortalecimientoController::class, 'edit'])->name('fortalecimiento.edit');    
+    Route::post('/fortalecimiento/store', [FortalecimientoController::class, 'store'])->name('fortalecimiento.store');   
+    Route::post('/fortalecimiento/update/{id}', [FortalecimientoController::class, 'update'])->name('fortalecimiento.update');    
+    Route::get('/fortalecimiento/list', [FortalecimientoController::class, 'list'])->name('fortalecimiento.list'); 
+
+    // Habitat
+    Route::get('/habitat', [HabitatController::class, 'index'])->name('habitat');    
+    Route::get('/habitat/create', [HabitatController::class, 'create'])->name('habitat.create');  
+    Route::get('/habitat/edit/{id}', [HabitatController::class, 'edit'])->name('habitat.edit');    
+    Route::post('/habitat/store', [HabitatController::class, 'store'])->name('habitat.store');   
+    Route::post('/habitat/update/{id}', [HabitatController::class, 'update'])->name('habitat.update');    
+    Route::get('/habitat/list', [HabitatController::class, 'list'])->name('habitat.list'); 
 });

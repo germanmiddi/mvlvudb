@@ -135,13 +135,21 @@
                     </a>
                     <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Intermedias</li>
                     <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Form 2.0</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Fortalecimiento Comunitario</li>
+                    <a :href="route('fortalecimiento')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Fortalecimiento Comunitario
+                      </li>
+                    </a>
                     <a :href="route('genero')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Género y Diversidad
                       </li>
                     </a>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Hábitat</li>
+                    <a :href="route('habitat')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Hábitat
+                      </li>
+                    </a>
                     <a :href="route('ninez')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Niñez y Adolescencia

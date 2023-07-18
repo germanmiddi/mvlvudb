@@ -1,15 +1,17 @@
 <template>
     <main class="flex-1">
         <!-- Page title & actions -->
+
+
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                    Bandeja General de Niñez y Adolescencia
+                    Bandeja General de Habitat
                 </h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
-                <a :href="route('ninez.create')"
+                <a :href="route('habitat.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
             </div>
         </div>
@@ -26,8 +28,7 @@
                         </div>
                         <div class="flex-shrink-0">
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-                                @click="getTramites()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
@@ -46,10 +47,8 @@
                         </div>
                         <div class="col-span-12 sm:col-span-3 ">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-                            <Datepicker
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
-                                :enableTimePicker="false" :format="customFormat"></Datepicker>
+                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
+                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                             <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
@@ -69,6 +68,7 @@
 
             </div>
         </div>
+
 
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -91,11 +91,11 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
+                                        Rol
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
+                                        Tramite
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
@@ -116,12 +116,10 @@
                                         {{ data.tramite.persons[0].num_documento }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.persons[0].contact[0].email
-                                        }}
+                                        {{ data.tramite.rol_tramite[0].description }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
                                         <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
@@ -144,13 +142,8 @@
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'ninez.edit',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " class="block px-4 py-2 text-sm">
+                                                        <a :href="route('habitat.edit', data.tramite.id)"
+                                                            class="block px-4 py-2 text-sm">
                                                             Editar</a>
                                                         </MenuItem>
 
@@ -159,13 +152,8 @@
                                                             Ver</a>
                                                         </MenuItem>
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'pdf.acusepdf',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " target="_blank" class="block px-4 py-2 text-sm">
+                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
+                                                            class="block px-4 py-2 text-sm">
                                                             Imprimir</a>
                                                         </MenuItem>
                                                     </div>
@@ -231,6 +219,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 export default {
     props: {
         toast: Object,
+        tiposTramite: Object
     },
     components: {
         Menu,
@@ -282,7 +271,7 @@ export default {
                 filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
             }
 
-            const get = `${route('ninez.list')}?${filter}`
+            const get = `${route('habitat.list')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
             this.tramites = await response.json();
@@ -296,6 +285,8 @@ export default {
         },
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
+            fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+
             const dia = fechaObjeto.getDate();
             const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
             const anio = fechaObjeto.getFullYear();
@@ -305,6 +296,8 @@ export default {
             const mesFormateado = mes < 10 ? `0${mes}` : mes;
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
+
+            return fecha;
         },
     },
     mounted() {
@@ -318,7 +311,7 @@ export default {
             }
         }
         this.getTramites();
-    },
+    }
 };
 </script>
 

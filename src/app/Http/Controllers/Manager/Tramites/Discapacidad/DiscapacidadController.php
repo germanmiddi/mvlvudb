@@ -240,7 +240,7 @@ class DiscapacidadController extends Controller
                         ]
                     );
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                    if ($beneficiario) {
+                    if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
        

@@ -240,12 +240,12 @@ class GeneroController extends Controller
                     
                     
                     $list_tramites_id[] = $tramite_data['id'];
-                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
                 }
             }else{
                 // Se verifica que se haya enviado tipos de tramite
                 DB::rollBack();
-                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
                 return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
             }
             DB::commit();

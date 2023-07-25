@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->foreign('tramite_id')
                 ->references('id')
-                ->on('tramite')
+                ->on('tramites')
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
             
@@ -34,9 +34,9 @@ return new class extends Migration
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
 
-            $table->foreign('parentescos')
+            $table->foreign('parentesco_id')
                 ->references('id')
-                ->on('dependencias')
+                ->on('parentescos')
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
         });

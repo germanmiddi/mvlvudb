@@ -100,7 +100,7 @@
                                     	{{tramite.observacion}}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
-										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
+										<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
 											Borrar
 										</button>
                                     </td>
@@ -443,6 +443,16 @@
 									programaSocial.description
 								}}</option>
 							</select>
+							<!-- <Listbox v-model="selectPlanes" multiple >
+								<ListboxButton >
+									{{ selectPlanes.map((person) => person.description).join(', ') }}
+								</ListboxButton>
+								<ListboxOptions class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<ListboxOption v-for="person in programasSocial" :key="person.id" :value="person">
+										{{ person.id }}
+									</ListboxOption>
+								</ListboxOptions>
+							</Listbox> -->
 						</div>  
 						<div class="col-span-12 sm:col-span-3">
 							<label for="beca" class="block text-sm font-medium text-gray-700">Recibe Beca Educativa</label>
@@ -495,7 +505,7 @@
                                     	{{file.description}}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
-										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
+										<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
 											Eliminar
 										</button>
                                     </td>
@@ -514,6 +524,8 @@
 				Guardar
 			</button>
 		</div>
+
+		
      
     </main>
 
@@ -530,6 +542,20 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+  } from '@headlessui/vue'
+
+  const people = [
+    { id: 1, name: 'Durward Reynolds', unavailable: false },
+    { id: 2, name: 'Kenton Towne', unavailable: false },
+    { id: 3, name: 'Therese Wunsch', unavailable: false },
+    { id: 4, name: 'Benedict Kessler', unavailable: true },
+    { id: 5, name: 'Katelyn Rohan', unavailable: false },
+  ]
 
 export default {
 
@@ -556,7 +582,12 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario
+		FormBeneficiario,
+		Listbox,
+		ListboxButton,
+		ListboxOptions,
+		ListboxOption,
+		people
 	},
 	data() {
 		return {
@@ -583,6 +614,8 @@ export default {
 			files: [],
     		selectedFile: null,
 			tramites: [],
+
+			selectPlanes: []
 			
 		}
 	},

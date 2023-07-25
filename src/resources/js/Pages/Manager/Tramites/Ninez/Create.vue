@@ -113,7 +113,7 @@
 											{{ tramite.observacion }}
 										</td>
 										<td class="px-6 py-4 text-center text-sm font-medium">
-											<button
+											<button type="button"
 												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
 												@click="deleteTramite(tramite)">
 												Borrar
@@ -136,6 +136,13 @@
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<div class="flex-shrink-0">
+									<button type="button" @click="addBeneficiario()"
+										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+										:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{ this.textBtnBenef }}</button>
+								</div>
 							</div>
 						</div>
 
@@ -205,16 +212,35 @@
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
+
 						</div>
 
 					</div>
 				</div>
+
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" @data_beneficiario="beneficiario">
+				</FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
 						</div>
+
 
 						<div class="grid grid-cols-12 gap-6">
 							<!-- TODO: Ver si tipo de vivienda es dato necesario para el responsable o para el niño -->
@@ -326,75 +352,22 @@
 					</div>
 				</div>
 
-				<!-- DATOS DEL MENOR -->
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<!-- <div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
-					</div> -->
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Menor</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
-									Menor</button>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_menor" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name_menor" type="text" name="name_menor" id="name_menor"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_menor" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_menor" type="text" name="lastname_menor" id="lastname_menor"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_menor" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_menor" @focusout="getPerson()" type="text"
-									name="num_documento_menor" id="num_documento_menor" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_menor" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_menor" type="text" name="fecha_nac_menor"
-									id="fecha_nac_menor" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
 				<!-- DATOS DE LOS TUTORES -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<FormNino :tiposDocumento="tiposDocumento" @data_ninos="ninos_data"></FormNino>
+				<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" @data_familiares="familiares_data"></FormFamiliar>
+				
+				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<!-- <div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
-					</div> -->
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos de los Tutores/Padres</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<div class="flex-shrink-0">
+									<button type="button" @click="addFamiliar()"
+										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+										:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{ this.textBtnBenef }}</button>
+								</div>
 							</div>
 						</div>
 
@@ -424,12 +397,6 @@
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="fecha_nac_madre" class="block text-sm font-medium text-gray-700">Fecha de
 									Nacimiento</label>
@@ -441,50 +408,46 @@
 						</div>
 
 						<hr>
-						<span for="name" class="block text-sm font-medium text-gray-700">Datos del Tutor/Padre </span>
 
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_padre" class="block text-sm font-medium text-gray-700">Nombre </label>
-								<input v-model="form.name_padre" type="text" name="name_padre" id="name_padre"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_padre" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_padre" type="text" name="lastname_padre" id="lastname_padre"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_padre" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_padre" @focusout="getPerson()" type="text"
-									name="num_documento_padre" id="num_documento_padre" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_padre" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_padre" type="text" name="fecha_nac_padre"
-									id="fecha_nac_padre" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
+						<div class="grid grid-cols-12 gap-12">
+							<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
+								<thead class="bg-gray-50">
+									<tr>
+										<th scope="col"
+											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+											Tramite
+										</th>
+										<th scope="col"
+											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+											Observacion
+										</th>
+										<th scope="col"
+											class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+											Accion
+										</th>
+									</tr>
+								</thead>
+								<tbody class="bg-white divide-y divide-gray-200">
+									<tr v-for="(familiar, index) in familiares" :key="index">
+										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+											{{ familiar.titulo }}
+										</td>
+										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{{ familiar.observacion }}
+										</td>
+										<td class="px-6 py-4 text-center text-sm font-medium">
+											<button
+												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+												@click="deleteTramite(tramite)">
+												Borrar
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
-
 					</div>
-				</div>
+				</div> -->
 
 				<!-- DIRECCION -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
@@ -823,7 +786,7 @@
 												{{ file.description }}
 											</td>
 											<td class="px-6 py-4 text-center text-sm font-medium">
-												<button
+												<button type="button"
 													class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
 													@click="deleteFile(index)">
 													Eliminar
@@ -858,6 +821,9 @@ import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline';
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
 import VueGoogleAutocomplete from "vue-google-autocomplete"
 import Toast from "@/Layouts/Components/Toast.vue";
+import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
+import FormFamiliar from '@/Layouts/Components/Tramites/FormFamiliar.vue';
+import FormNino from '@/Layouts/Components/Tramites/FormNino.vue';
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -878,7 +844,8 @@ export default {
 		situacionesConyugal: Object,
 		rolesTramite: Object,
 		tiposTramite: Object,
-		programasSocial: Object
+		programasSocial: Object,
+		parentescos: Object,
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -886,17 +853,27 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
+		FormBeneficiario,
+		FormFamiliar,
+		FormNino
 	},
 	data() {
 		return {
 			form: {},
 			form_google: "",
+			form_beneficiario: {},
+			form_familiares: [],
+			form_ninos: [],
 			address: "",
 			/* MENSAJERIA */
 			toastMessage: "",
 			labelType: "info",
 			message: "",
 			showToast: false,
+			/* BENEFICIARIO */
+			textBtnBenef: "Agregar Beneficiario",
+			showBenef: false,
+			beneficiario_control: false,
 			/* MAPA */
 			textMap: "Ver Mapa",
 			showMap: false,
@@ -905,7 +882,7 @@ export default {
 			file_tmp: {},
 			files: [],
 			selectedFile: null,
-			tramites: [],
+			tramites: []
 		}
 	},
 	setup() {
@@ -939,12 +916,22 @@ export default {
 				formData.append('files[]', valor.file);
 				formData.append('files_descripcion[]', valor.description);
 			});
-						
+
+			Object.entries(this.form_familiares).forEach(([clave, valor]) => {
+				formData.append('familiar_id[]', valor.id);
+				formData.append('familiar_name[]', valor.name);
+				formData.append('familiar_lastname[]', valor.lastname);
+				formData.append('familiar_num_doc[]', valor.num_doc);
+				formData.append('familiar_tipo_documento_id[]', valor.tipo_documento_id);
+				formData.append('familiar_fecha_nac[]', valor.fecha_nac);
+				formData.append('familiar_parentesco_id[]', valor.parentesco_id);
+			});
+
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
 			** Output: 2023-06-22T01:33:00.000Z
 			** a traves del formData
-			*/ 
+			*/
 
 			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
 			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
@@ -955,37 +942,37 @@ export default {
 				}
 			}
 
-			/* this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
 			for (var clave in this.form_beneficiario) {
 				if (this.form_beneficiario.hasOwnProperty(clave)) {
 					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
 				}
 			}
 
-			formData.append('beneficiario_control', this.beneficiario_control) */
+			formData.append('beneficiario_control', this.beneficiario_control)
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
-					setTimeout(()=> { 
+					this.toastMessage = response.data.message;
+					setTimeout(() => {
 						response.data.idTramites.forEach(element => {
 							console.log(element)
-							window.open(route('pdf.acusepdf',element), '_blank');
+							window.open(route('pdf.acusepdf', element), '_blank');
 						});
 					}, 1000)
-					setTimeout(()=> { 
+					setTimeout(() => {
 						window.location.href = '/ninez';
 					}, 3100)
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
 			}
-			
+
 		},
 		async getPerson() {
 			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
@@ -1030,6 +1017,17 @@ export default {
 			this.form.pais_id = data.address[0].pais_id
 			this.form.localidad_id = data.address[0].localidad_id
 			this.form.get_barrio_id = data.address[0].barrio_id
+		},
+		addBeneficiario() {
+			if (this.showBenef) {
+				this.textBtnBenef = 'Agregar Beneficiario'
+				this.form_beneficiario = {}
+				this.beneficiario_control = false
+			} else {
+				this.beneficiario_control = true
+				this.textBtnBenef = 'Borrar Beneficiario'
+			}
+			this.showBenef = !this.showBenef
 		},
 		/* ***********************
 		** * MANEJO DE GOOGLE MAPS
@@ -1129,6 +1127,15 @@ export default {
 		** * FIN MANEJO DE TIPO DE TRAMITE
 		**********************************
 		*/
+		beneficiario(data){
+			this.form_beneficiario = data;
+		},
+		familiares_data(data){
+			this.form_familiares = data;
+		},
+		ninos_data(data){
+			this.form_ninos = data;
+		}
 
 	},
 	created() {

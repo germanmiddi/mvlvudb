@@ -100,7 +100,7 @@
                                     	{{tramite.observacion}}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
-										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
+										<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
 											Borrar
 										</button>
                                     </td>

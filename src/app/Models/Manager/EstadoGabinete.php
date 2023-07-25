@@ -5,17 +5,19 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Sede extends Model
+class EstadoGabinete extends Model
 {
-    protected $table = 'sedes';
+    protected $table = 'estado_gabinete';
     protected $primaryKey = 'id';
     public $timestamps = true;
-    
+
     protected $fillable = [
         'description',
+        'activo',
     ];
 
-    public function tramites(){
-        return $this->hasMany(Tramite::class);
+    public function cbiData()
+    {
+        return $this->hasMany(CbiData::class);
     }
 }

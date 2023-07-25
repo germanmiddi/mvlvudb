@@ -4,10 +4,10 @@
         <!-- Page title & actions -->
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0 flex items-center">
-				<a class="btn-blue" :href="route('fortalecimiento')">
+				<a class="btn-blue" :href="route('juventud')">
                     <ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
                 </a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo Tramite Fortalecimiento Comunitario</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo Tramite Centros Barriales Juventud | CBJ</h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
               	<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
@@ -120,11 +120,107 @@
 					</div> -->
 					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 						<div class="">
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Centro Barrial Juventud | CBJ</h3>
 						</div>
-						<div class="flex-shrink-0">
-							<button type="button" @click="addBeneficiario()" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-							:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{this.textBtnBenef}}</button>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Sede</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Año de
+									inicio CBJ</label>
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Estado en CBJ</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Inscripcion a Comedor</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Actividades en CBJ</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Apoyo Escolar</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Actividades por area de empleo</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Acompañamiento CBJ</label>
+								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una sede</option>
+									
+								</select>
+							</div>
+
+						</div>
+
+
+				</div>
+			</div>
+
+			<!-- DATOS DEL TITULAR.. -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 						</div>
 					</div>
 
@@ -171,27 +267,41 @@
 							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
 							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
+
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 							<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
-	
+
 						<div class="col-span-12 sm:col-span-3 ">
 							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 							<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 						</div> 
-						
+
+						<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
+
 					</div>
 
 				</div>
 			</div>
 
-			<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento"  @data_beneficiario="beneficiario"></FormBeneficiario>
-
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Titular</h3>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -290,7 +400,7 @@
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Social</h3>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Social | Titular</h3>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -329,7 +439,7 @@
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios</h3>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | Titular</h3>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -364,7 +474,7 @@
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Laboral</h3>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Laboral | Titular</h3>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -397,7 +507,7 @@
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Datos</h3>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Datos | Titular</h3>
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
@@ -440,6 +550,262 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- FIN DATOS DEL TITULAR.. -->
+
+			<!-- DATOS DEL NIÑO.. -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Beneficiario</h3>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de Documento</label>
+							<select v-model="form_nino.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id" autocomplete="tipo_documento_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un tipo de documento</option>
+								<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+									:value="tipoDocumento.id">{{
+											tipoDocumento.description
+									}}</option>
+							</select>
+						</div>  
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form_nino.num_documento" @focusout="getPersonNino()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form_nino.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form_nino.fecha_nac" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="false" 
+										autoApply :format="format">
+							</Datepicker>
+						</div> 
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+							<input v-model="form_nino.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form_nino.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
+							<input v-model="form_nino.email" type="text" name="email" id="email" autocomplete="email-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+							<input v-model="form_nino.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+					</div>
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Beneficiario</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de Vivienda</label>
+							<select v-model="form_nino.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id" autocomplete="tipo_vivienda-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un tipo de vivienda</option>
+								<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
+									:value="tipoVivienda.id">{{
+											tipoVivienda.description
+									}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
+							<select v-model="form_nino.localidad_id" id="localidad_id" name="localidad_id" autocomplete="localidad_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione una localidad</option>
+								<option v-for="localidad in localidades" :key="localidad.id"
+									:value="localidad.id">{{
+											localidad.description
+									}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
+							<select v-model="form_nino.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un barrio</option>
+								<option v-for="barrio in barriosNinoComputed" :key="barrio.id"
+									:value="barrio.id">{{
+											barrio.description
+									}}</option>
+							</select>
+						</div>  
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-4 ">
+							<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
+							<input v-model="form_nino.calle" type="text" name="calle" id="calle" autocomplete="calle-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
+							<input v-model="form_nino.number" type="text" name="number" id="number" autocomplete="number-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
+							<input v-model="form_nino.piso" type="text" name="piso" id="piso" autocomplete="piso-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
+							<input v-model="form_nino.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+
+					</div>
+					<!-- <div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-6 ">
+							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
+							
+							<vue-google-autocomplete ref="address" id="map"
+								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+								placeholder="Ingrese la dirección"
+								v-on:placechanged="getAddressData">
+							</vue-google-autocomplete>
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+							<input v-model="form_nino.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label class="block text-transparent ">Button</label>
+							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
+						</div> 
+						<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}</p>
+						<div class="col-span-12 sm:col-span-12 ">
+							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
+								
+							</GoogleMap>
+						</div> 
+						
+					</div> -->
+
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | Beneficiario</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo en curso</label>
+							<select v-model="form_nino.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id" autocomplete="nivel_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un nivel educativo</option>
+								<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
+								:value="nivelEducativo.id"
+								:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
+									nivelEducativo.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo alcanzado</label>
+							<select  v-model="form_nino.estado_educativo_id" id="estado_educativo_id" name="estado_educativo_id" autocomplete="estado_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un estado educativo</option>
+								<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
+								:value="estadoEducativo.id"
+								:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
+									estadoEducativo.description
+								}}</option>
+							</select>
+						</div>  
+
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Salud | Beneficiario</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3">
+							<label for="subsidio" class="block text-sm font-medium text-gray-700">Apto médico presentado</label>
+							<select v-model="form_nino.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="subsidio" class="block text-sm font-medium text-gray-700">Libreta de vacunación presentada</label>
+							<select v-model="form_nino.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Lugar de Atención</label>
+							<select v-model="form_nino.programa_social_id" id="programa_social_id" name="programa_social_id" autocomplete="programa_social_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un programa social</option>
+								<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
+								:value="programaSocial.id"
+								:bind:select="programaSocial.id == form.programa_social_id">{{
+									programaSocial.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="beca" class="block text-sm font-medium text-gray-700">Estado de salud (A tener presente)</label>
+							<select v-model="form_nino.programa_social_id" id="programa_social_id" name="programa_social_id" autocomplete="programa_social_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un programa social</option>
+								<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
+								:value="programaSocial.id"
+								:bind:select="programaSocial.id == form.programa_social_id">{{
+									programaSocial.description
+								}}</option>
+							</select>							
+						</div>  
+					</div>
+				</div>
+			</div>
+
+			<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" @data_familiares="familiares_data"></FormFamiliar>
+
+			<!-- FIN DATOS DEL NIÑO -->
 
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -500,22 +866,20 @@
 				Guardar
 			</button>
 		</div>
-     
     </main>
-
-
 </template>
 
 <script>
-
 import { ref } from 'vue'
 import {ArrowLeftCircleIcon} from '@heroicons/vue/24/outline'
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
 import VueGoogleAutocomplete from "vue-google-autocomplete"
 import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
+import FormFamiliar from '@/Layouts/Components/Tramites/FormFamiliar.vue'
 import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+
 
 export default {
 
@@ -534,7 +898,8 @@ export default {
 		situacionesConyugal : Object,
 		rolesTramite : Object,
 		tiposTramite : Object,
-		programasSocial  : Object
+		programasSocial  : Object,
+		parentescos: Object,
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -542,14 +907,17 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario
+		FormBeneficiario,
+		FormFamiliar
 	},
 	data() {
 		return {
 			form: {},
 			form_temp: {},
+			form_nino: {},
 			form_google: "",
 			form_beneficiario: {},
+			form_familiares: [],
 			address: "",
 			/* BENEFICIARIO */
 			textBtnBenef: "Agregar Beneficiario",
@@ -569,6 +937,8 @@ export default {
 			files: [],
     		selectedFile: null,
 			tramites: [],
+
+			selectPlanes: []
 			
 		}
 	},
@@ -590,7 +960,7 @@ export default {
             this.toastMessage = "";
         },
 		async submit() {
-			let rt = route('fortalecimiento.store');
+			let rt = route('juventud.store');
 
 			const formData = new FormData();
 
@@ -640,7 +1010,7 @@ export default {
 						});
 					}, 1000)
 					setTimeout(()=> { 
-						window.location.href = '/fortalecimiento';
+						window.location.href = '/discapacidad';
 					}, 3100)
 				} else {
 					this.labelType = "danger";
@@ -713,6 +1083,66 @@ export default {
 				this.form = {}
 				this.form = this.form_temp
 				this.form_temp = {}
+			}
+		},
+		async getPersonNino(){
+			let numDoc = this.form.num_documento;
+			let tipoDoc = this.form.tipo_documento_id;
+
+			const get = `${route('persons.getPersonDni', this.form_nino.num_documento)}`
+			const response = await fetch(get, { method: 'GET' })
+            let data = await response.json()
+			if(!data.data.length == 0){
+				this.labelType = "success";
+                this.toastMessage = "El DNI indicado se encuentra registrado";
+
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form_nino.tipo_documento_id = data.tipo_documento_id
+				this.form_nino.num_cuit = data.num_cuit
+				this.form_nino.fecha_nac = data.fecha_nac
+				this.form_nino.fecha_nac = new Date(this.form_nino.fecha_nac + "T00:00:00.000-03:00")
+				this.form_nino.name = data.name
+				this.form_nino.lastname = data.lastname
+				this.form_nino.email = data.contact[0].email
+				this.form_nino.phone = data.contact[0].phone
+				this.form_nino.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
+				this.form_nino.cant_hijos = data.aditional[0].cant_hijos
+				this.form_nino.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
+				this.form_nino.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
+				this.form_nino.cobertura_medica_id = data.social[0].cobertura_medica_id
+				this.form_nino.tipo_pension_id = data.social[0].tipo_pension_id
+				this.form_nino.subsidio = data.social[0].subsidio
+				this.form_nino.beca = data.education[0].beca
+				this.form_nino.nivel_educativo_id = data.education[0].nivel_educativo_id
+				this.form_nino.estado_educativo_id = data.education[0].estado_educativo_id
+				this.form_nino.calle = data.address[0].calle
+				this.form_nino.number = data.address[0].number
+				this.form_nino.piso = data.address[0].piso
+				this.form_nino.dpto = data.address[0].dpto
+				if(data.address[0].latitude && data.address[0].longitude){
+					this.form_nino.latitude = data.address[0].latitude
+					this.form_nino.longitude = data.address[0].longitude
+
+					// Carga de datos para visualizar el mapa.
+					this.form_temp = {}
+					this.form_temp.latitude = parseFloat(data.address[0].latitude)
+					this.form_temp.longitude = parseFloat(data.address[0].longitude)
+					this.form_temp.route = data.address[0].google_address
+					this.form_google_nino = this.form_temp
+           			this.showMap = true
+				}
+
+				this.form_nino.google_address = data.address[0].google_address
+				this.form_nino.pais_id = data.address[0].pais_id
+				this.form_nino.localidad_id = data.address[0].localidad_id
+				this.form_nino.get_barrio_id = data.address[0].barrio_id			
+			}else{
+				this.labelType = "info";
+                this.toastMessage = "El DNI indicado no se encuentra registrado";
+				this.form_nino = {}
+				this.form_nino.num_documento = numDoc
+				this.form_nino.tipo_documento_id = tipoDoc
 			}
 		},
 		addBeneficiario(){
@@ -827,6 +1257,9 @@ export default {
 
 		beneficiario(data){
 			this.form_beneficiario = data;
+		},
+		familiares_data(data){
+			this.form_familiares = data;
 		}
 
 	},
@@ -835,6 +1268,11 @@ export default {
 			this.form.barrio_id = this.form.get_barrio_id
 			this.form.get_barrio_id = null
             return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
+        },
+		barriosNinoComputed: function(){
+			this.form_nino.barrio_id = this.form_nino.get_barrio_id
+			this.form_nino.get_barrio_id = null
+            return this.barrios.filter(barrio => barrio.localidad_id == this.form_nino.localidad_id)
         }
 	},
 

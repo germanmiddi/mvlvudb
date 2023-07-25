@@ -11,6 +11,8 @@ use App\Http\Controllers\Manager\Tramites\Habitat\HabitatController;
 use App\Http\Controllers\Manager\Tramites\Fortalecimiento\FortalecimientoController;
 use App\Http\Controllers\Manager\Tramites\Genero\GeneroController;
 use App\Http\Controllers\Manager\Tramites\Ninez\NinezController;
+use App\Http\Controllers\Manager\Tramites\Infancia\InfanciaController;
+use App\Http\Controllers\Manager\Tramites\Juventud\JuventudController;
 use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
@@ -18,6 +20,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/statistics', [DashboardController::class, 'getstatistics'])->name('dashboard.statistics');
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
@@ -72,4 +75,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/habitat/store', [HabitatController::class, 'store'])->name('habitat.store');   
     Route::post('/habitat/update/{id}', [HabitatController::class, 'update'])->name('habitat.update');    
     Route::get('/habitat/list', [HabitatController::class, 'list'])->name('habitat.list'); 
+    
+    // Infancia CBI
+    Route::get('/infancia', [InfanciaController::class, 'index'])->name('infancia');    
+    Route::get('/infancia/create', [InfanciaController::class, 'create'])->name('infancia.create');  
+    Route::get('/infancia/edit/{id}', [InfanciaController::class, 'edit'])->name('infancia.edit');    
+    Route::post('/infancia/store', [InfanciaController::class, 'store'])->name('infancia.store');   
+    Route::post('/infancia/update/{id}', [InfanciaController::class, 'update'])->name('infancia.update');    
+    Route::get('/infancia/list', [InfanciaController::class, 'list'])->name('infancia.list'); 
+
+    // Infancia CBI
+    Route::get('/juventud', [JuventudController::class, 'index'])->name('juventud');    
+    Route::get('/juventud/create', [JuventudController::class, 'create'])->name('juventud.create');  
+    Route::get('/juventud/edit/{id}', [JuventudController::class, 'edit'])->name('juventud.edit');    
+    Route::post('/juventud/store', [JuventudController::class, 'store'])->name('juventud.store');   
+    Route::post('/juventud/update/{id}', [JuventudController::class, 'update'])->name('juventud.update');    
+    Route::get('/juventud/list', [JuventudController::class, 'list'])->name('juventud.list'); 
 });

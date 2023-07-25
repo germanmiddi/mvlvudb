@@ -126,8 +126,16 @@
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
                     <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md " >Bandeja General</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md " >Centros Barriales Infancia</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Centros Barriales Juventud</li>
+                    <a :href="route('infancia')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Centros Barriales Infancia
+                      </li>
+                    </a>
+                    <a :href="route('juventud')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Centros Barriales Juventud
+                      </li>
+                    </a>
                     <a :href="route('discapacidad')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Discapacidad

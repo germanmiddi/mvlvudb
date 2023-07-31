@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex-shrink-0">
                     <div class="flex-shrink-0">
-                        <button type="button" @click="addFamiliar()"
+                        <button type="button" @click="addMenor()"
                             class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
                             :class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">Agregar Familiar</button>
                     </div>
@@ -108,7 +108,7 @@
                             <td class="px-6 py-4 text-center text-sm font-medium">
                                 <button type="button"
                                     class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-                                    @click="deleteFamiliar(index)">
+                                    @click="deleteMenor(index)">
                                     Borrar
                                 </button>
                             </td>
@@ -177,7 +177,7 @@ export default ({
                 this.form_nino.id = data.id 
                 this.form_nino.tipo_documento_id = data.tipo_documento_id
                 this.form_nino.fecha_nac = data.fecha_nac
-                this.form_nino.fecha_nac = new Date(this.form_nino.fecha_nac + "T00:00:00.000-03:00")
+                ///this.form_nino.fecha_nac = new Date(this.form_nino.fecha_nac + "T00:00:00.000-03:00")
                 this.form_nino.name = data.name
                 this.form_nino.lastname = data.lastname
             } else {
@@ -191,21 +191,25 @@ export default ({
         		/* ***************************
 		** * MANEJO DE ninos
 		*/
-		addFamiliar() {
+		addMenor() {
 			if (this.ninos.find(familiar => familiar.id === this.form_nino.id)) {
 				this.labelType = "danger";
 				this.toastMessage = "La persona ya se ha ingresado previamente";
 			} else {
-				if (this.form_nino.name && this.form_nino.lastname  && this.form_nino.num_documento && this.form_nino.fecha_nac && this.form_nino.parentesco_id) {
-					this.ninos.push(
-						{
+				if (this.form_nino.name && this.form_nino.lastname  && this.form_nino.num_documento && this.form_nino.fecha_nac) {
+                    console.log("FECHA: " + this.form_nino.fecha_nac)
+                    this.ninos.push(
+                        {
 							id: this.form_nino.id,
 							name: this.form_nino.name,
 							lastname: this.form_nino.lastname,
 							num_documento: this.form_nino.num_documento,
-							fecha_nac: this.form_nino.fecha_nac,
+                            tipo_documento_id: this.form_nino.tipo_documento_id,
+							fecha_nac: new Date(this.form_nino.fecha_nac).toISOString(),
 						}
                     )
+                        console.log("NIÑOS: "+ this.ninos[0].fecha_nac)
+
                     this.form_nino = {}
 				} else {
 					this.labelType = "danger";
@@ -213,7 +217,7 @@ export default ({
 				}
 			}
 		},
-		deleteNino(index) {
+		deleteMenor(index) {
 			this.ninos.splice(index, 1);
 		},
 		/* 

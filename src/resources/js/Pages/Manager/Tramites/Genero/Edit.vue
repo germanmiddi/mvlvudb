@@ -153,23 +153,6 @@
 									autocomplete="lastname-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-								<input v-model="form.codigo" type="text" name="codigo" id="codigo"
-									autocomplete="codigo-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
-									autocomplete="diagnostico-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-
-						</div>
-						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
@@ -203,7 +186,7 @@
 					</div>
 				</div>
 
-				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -693,7 +676,7 @@ export default {
 					this.toastMessage = response.data.message; 
 					setTimeout(()=> { 
 						window.location.href = '/genero';
-					}, 3100)
+					}, 1000)
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
@@ -719,8 +702,6 @@ export default {
 				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
 				this.form.lastname = data.lastname
-				this.form.codigo = data.cud.codigo
-				this.form.diagnostico = data.cud.diagnostico
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
 				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id

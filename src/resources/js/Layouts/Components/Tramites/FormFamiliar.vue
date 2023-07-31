@@ -216,7 +216,8 @@ export default ({
                 this.form_temp = {}
             }
         },
-        		/* ***************************
+        
+        /* ***************************
 		** * MANEJO DE FAMILIARES
 		*/
 		addFamiliar() {
@@ -231,7 +232,8 @@ export default ({
 							name: this.form_familiar.name,
 							lastname: this.form_familiar.lastname,
 							num_documento: this.form_familiar.num_documento,
-							fecha_nac: this.form_familiar.fecha_nac,
+                            tipo_documento_id: this.form_familiar.tipo_documento_id,
+							fecha_nac: new Date(this.form_familiar.fecha_nac).toISOString(),
 							parentesco_description: this.parentescos.find(parentesco => parentesco.id === this.form_familiar.parentesco_id).description,
 							parentesco_id: this.parentescos.find(parentesco => parentesco.id === this.form_familiar.parentesco_id).id,
 						}

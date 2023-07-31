@@ -659,7 +659,7 @@ export default {
 					this.toastMessage = response.data.message;
 					setTimeout(() => {
 						window.location.href = '/habitat';
-					}, 3100)
+					}, 1000)
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;

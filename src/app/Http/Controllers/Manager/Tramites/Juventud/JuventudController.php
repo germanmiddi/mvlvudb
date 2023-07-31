@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 use App\Http\Controllers\Manager\Uploads\FileController;
-
+use App\Models\Manager\AcompanamientoCbj;
+use App\Models\Manager\ActividadCbj;
 //Models
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
@@ -19,9 +20,11 @@ use App\Models\Manager\Barrio;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\CoberturaMedica;
+use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Parentesco;
@@ -74,6 +77,10 @@ class JuventudController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::all(),
+                'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
+                'comedores' => Comedor::where('activo', true)->get(),
+                'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
+                'estadosCbj' => EstadoCbj::where('activo', true)->get()
             ]
         );
     }

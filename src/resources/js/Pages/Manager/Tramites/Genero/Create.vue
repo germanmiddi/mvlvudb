@@ -782,8 +782,6 @@ export default {
 				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
 				this.form.lastname = data.lastname
-				this.form.codigo = data.cud.codigo
-				this.form.diagnostico = data.cud.diagnostico
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
 				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id

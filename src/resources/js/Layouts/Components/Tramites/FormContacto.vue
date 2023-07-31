@@ -229,7 +229,7 @@ export default ({
                 this.form_temp = {}
             }
         },
-        		/* ***************************
+        /* ***************************
 		** * MANEJO DE contactos
 		*/
 		addcontacto() {
@@ -244,8 +244,10 @@ export default ({
 							name: this.form_contacto.name,
 							lastname: this.form_contacto.lastname,
 							num_documento: this.form_contacto.num_documento,
-							fecha_nac: this.form_contacto.fecha_nac,
+                            tipo_documento_id: this.form_contacto.tipo_documento_id,
+							fecha_nac: new Date(this.form_contacto.fecha_nac).toISOString(),
                             phone: this.form_contacto.phone,
+                            email: this.form_contacto.email,
 							parentesco_description: this.parentescos.find(parentesco => parentesco.id === this.form_contacto.parentesco_id).description,
 							parentesco_id: this.parentescos.find(parentesco => parentesco.id === this.form_contacto.parentesco_id).id,
 						}

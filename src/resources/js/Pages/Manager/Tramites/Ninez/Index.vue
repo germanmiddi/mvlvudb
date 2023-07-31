@@ -90,14 +90,6 @@
                                         DNI
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
-                                    </th>
-                                    <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
                                         <span>Acciones</span>
                                     </th>
@@ -109,16 +101,10 @@
                                         {{ fechaFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].lastname }},
-                                        {{ data.tramite.persons[0].name }}
+                                        <div v-html=" namePersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].num_documento }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.persons[0].contact[0].email
-                                        }}
+                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.rol_tramite[0].description }}
@@ -296,6 +282,8 @@ export default {
         },
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
+            fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+
             const dia = fechaObjeto.getDate();
             const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
             const anio = fechaObjeto.getFullYear();
@@ -305,7 +293,33 @@ export default {
             const mesFormateado = mes < 10 ? `0${mes}` : mes;
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
+
+            return fecha;
         },
+        namePersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.lastname + ', '+element.name
+                }else{
+                    name_benef = element.lastname + ', '+element.name
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        },
+        dniPersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.num_documento
+                }else{
+                    name_benef = element.num_documento
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        }
     },
     mounted() {
         if (this.toast) {

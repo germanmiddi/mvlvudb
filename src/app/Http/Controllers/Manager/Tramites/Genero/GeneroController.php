@@ -220,7 +220,7 @@ class GeneroController extends Controller
                         ]
                     );
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-                    if ($beneficiario) {
+                    if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
                     if($request['files'] != null){
@@ -355,14 +355,6 @@ class GeneroController extends Controller
                 [
                     'phone' => $request['phone'],
                     'email' => $request['email']
-                ]
-            );
-
-            //cud
-            Cud::where('person_id', $request['person_id'])->update(
-                [
-                    'codigo' => $request['codigo'],
-                    'diagnostico' => $request['diagnostico']
                 ]
             );
 

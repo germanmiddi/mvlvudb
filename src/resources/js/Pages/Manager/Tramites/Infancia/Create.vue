@@ -142,8 +142,8 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="tipo_documento_id-name"
+								<select v-model="form.sede_id" id="sede_id" name="sede_id"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" selected>Seleccione una sede</option>
 									<option v-for="sede in sedes" :key="sede.id"
@@ -154,7 +154,7 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
+								<label for="anio_inicio" class="block text-sm font-medium text-gray-700">Fecha de
 									inicio CBI</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -851,10 +851,10 @@
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_educativo_id"
+								<label for="escuela_id"
 									class="block text-sm font-medium text-gray-700">Escuela</label>
-								<select v-model="form_nino.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+								<select v-model="form_nino.escuela_id" id="escuela_id"
+									name="escuela_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="" selected>Selecciones un escuela</option>
 									<option v-for="escuela in escuelas" :key="escuela.id" :value="escuela.id">{{
@@ -867,25 +867,28 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_educativo_id"
 									class="block text-sm font-medium text-gray-700">Dependencia</label>
-								<select v-model="form_nino.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+								<select v-model="form_nino.escuela_dependencia_id" id="escuela_dependencia_id"
+									name="escuela_dependencia_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un estado educativo</option>
-
+									<option disabled value="" selected>Selecciones una dependencia</option>
+									<option v-for="escuelaDependencia in escuelasDependencias" :key="escuelaDependencia.id" :value="escuelaDependencia.id">{{
+										escuelaDependencia.description
+									}}</option>
 								</select>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_educativo_id"
 									class="block text-sm font-medium text-gray-700">Localidad</label>
-								<select v-model="form_nino.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+								<select v-model="form_nino.escuela_localidad_id" id="escuela_localidad_id"
+									name="escuela_localidad_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="" selected>Selecciones un estado educativo</option>
-
+									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">{{
+										localidad.description
+									}}</option>
 								</select>
 							</div>
-
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
@@ -901,6 +904,7 @@
 										}}</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo alcanzado</label>
@@ -917,24 +921,28 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Año en
+								<label for="escuela_nivel_id" class="block text-sm font-medium text-gray-700">Año en
 									Curso</label>
-								<select v-model="form_nino.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+								<select v-model="form_nino.escuela_nivel_id" id="escuela_nivel_id"
+									name="escuela_nivel_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="" selected>Selecciones un estado educativo</option>
-
+									<option v-for="escuelaNivel in escuelasNiveles" :key="escuelaNivel.id" :value="escuelaNivel.id">{{
+										escuelaNivel.description
+									}}</option>
 								</select>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_educativo_id"
+								<label for="escuela_turno_id"
 									class="block text-sm font-medium text-gray-700">Turno</label>
-								<select v-model="form_nino.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+								<select v-model="form_nino.escuela_turno_id" id="escuela_turno_id"
+									name="escuela_turno_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="" selected>Selecciones un estado educativo</option>
-
+									<option v-for="escuelaTurno in escuelasTurnos" :key="escuelaTurno.id" :value="escuelaTurno.id">{{
+										escuelaTurno.description
+									}}</option>
 								</select>
 							</div>
 
@@ -963,15 +971,14 @@
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-9">
-								<label for="nino_observacion" class="block text-sm font-medium text-gray-700">Observaciones
+								<label for="nino_observacion_educacion" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
-									<textarea v-model="form_nino.observacion" id="nino_observacion" name="nino_observacion" rows="3"
+									<textarea v-model="form_nino.observacion_educacion" id="observacion_educacion" name="observacion_educacion" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
-								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
+								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional sobre la educación del niño.</p>
 							</div>
-
 						</div>
 
 					</div>
@@ -989,50 +996,63 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="subsidio" class="block text-sm font-medium text-gray-700">Apto médico
 									presentado</label>
-								<select v-model="form_nino.subsidio" id="subsidio" name="subsidio"
-									autocomplete="subsidio-name"
+								<select v-model="form_nino.apto_medico" id="apto_medico" name="apto_medico"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Libreta de vacunación
+								<label for="libreta_vacunacion" class="block text-sm font-medium text-gray-700">Libreta de vacunación
 									presentada</label>
-								<select v-model="form_nino.subsidio" id="subsidio" name="subsidio"
-									autocomplete="subsidio-name"
+								<select v-model="form_nino.libreta_vacunacion" id="libreta_vacunacion" name="libreta_vacunacion"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Lugar de
+								<label for="centro_salud_id" class="block text-sm font-medium text-gray-700">Lugar de
 									Atención</label>
-								<select v-model="form_nino.programa_social_id" id="programa_social_id"
-									name="programa_social_id" autocomplete="programa_social_id-name"
+								<select v-model="form_nino.centro_salud_id" id="centro_salud_id"
+									name="centro_salud_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="" selected>Selecciones un programa social</option>
-									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
-										:value="programaSocial.id"
-										:bind:select="programaSocial.id == form.programa_social_id">{{
-											programaSocial.description
+									<option v-for="centroSalud in centrosSalud" :key="centroSalud.id"
+										:value="centroSalud.id">{{
+											centroSalud.description
 										}}</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
-								<label for="beca" class="block text-sm font-medium text-gray-700">Estado de salud (A tener
+								<label for="estado_salud_id" class="block text-sm font-medium text-gray-700">Estado de salud (A tener
 									presente)</label>
-								<select v-model="form_nino.programa_social_id" id="programa_social_id"
-									name="programa_social_id" autocomplete="programa_social_id-name"
+								<select v-model="form_nino.estado_salud_id" id="estado_salud_id"
+									name="estado_salud_id" autocomplete="programa_social_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un programa social</option>
-									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
-										:value="programaSocial.id"
-										:bind:select="programaSocial.id == form.programa_social_id">{{
-											programaSocial.description
+									<option disabled value="" selected>Selecciones un estado de salud</option>
+									<option v-for="estadoSalud in estadosSalud" :key="estadoSalud.id"
+										:value="estadoSalud.id">{{
+											estadoSalud.description
 										}}</option>
 								</select>
+							</div>
+
+						</div>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-9">
+								<label for="nino_observacion_salud" class="block text-sm font-medium text-gray-700">Observaciones
+								</label>
+								<div class="mt-1">
+									<textarea v-model="form_nino.observacion_salud" id="nino_observacion_salud" name="nino_observacion_salud" rows="3"
+										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
+								</div>
+								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional a la salud del niño.</p>
 							</div>
 						</div>
 					</div>
@@ -1152,6 +1172,11 @@ export default {
 		estadosCbi: Object,
 		estadosGabinete: Object,
 		escuelas: Object,
+		escuelasDependencias: Object,
+		escuelasNiveles: Object,
+		escuelasTurnos: Object,
+		centrosSalud: Object,
+		estadosSalud: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -1249,11 +1274,20 @@ export default {
 				}
 			}
 
+			// Datos del Niño
+			this.form_nino.fecha_nac = (this.form_nino.fecha_nac) ? new Date(this.form_nino.fecha_nac).toISOString() : null;
+
+			for (var clave in this.form_nino) {
+				if (this.form_nino.hasOwnProperty(clave)) {
+					formData.append('nino_'+clave, this.form_nino[clave]);
+				}
+			}
+
 			Object.entries(this.form_familiares).forEach(([clave, valor]) => {
 				formData.append('familiar_id[]', valor.id);
 				formData.append('familiar_name[]', valor.name);
 				formData.append('familiar_lastname[]', valor.lastname);
-				formData.append('familiar_num_doc[]', valor.num_doc);
+				formData.append('familiar_num_documento[]', valor.num_documento);
 				formData.append('familiar_tipo_documento_id[]', valor.tipo_documento_id);
 				formData.append('familiar_fecha_nac[]', valor.fecha_nac);
 				formData.append('familiar_parentesco_id[]', valor.parentesco_id);
@@ -1263,10 +1297,11 @@ export default {
 				formData.append('contacto_id[]', valor.id);
 				formData.append('contacto_name[]', valor.name);
 				formData.append('contacto_lastname[]', valor.lastname);
-				formData.append('contacto_num_doc[]', valor.num_doc);
+				formData.append('contacto_num_documento[]', valor.num_documento);
 				formData.append('contacto_tipo_documento_id[]', valor.tipo_documento_id);
 				formData.append('contacto_fecha_nac[]', valor.fecha_nac);
 				formData.append('contacto_phone[]', valor.phone);
+				formData.append('contacto_email[]', valor.email);
 				formData.append('contacto_parentesco_id[]', valor.parentesco_id);
 			});
 
@@ -1292,7 +1327,7 @@ export default {
 						});
 					}, 1000)
 					setTimeout(() => {
-						window.location.href = '/discapacidad';
+						window.location.href = '/infancia';
 					}, 3100)
 				} else {
 					this.labelType = "danger";
@@ -1398,6 +1433,24 @@ export default {
 				this.form_nino.beca = data.education[0].beca
 				this.form_nino.nivel_educativo_id = data.education[0].nivel_educativo_id
 				this.form_nino.estado_educativo_id = data.education[0].estado_educativo_id
+				this.form_nino.escuela_id = data.education[0].escuela_id
+				this.form_nino.escuela_dependencia_id = data.education[0].escuela_dependencia_id
+				this.form_nino.escuela_localidad_id = data.education[0].escuela_localidad_id
+				this.form_nino.anio_curso = data.education[0].anio_curso
+				this.form_nino.escuela_turno_id = data.education[0].escuela_turno_id
+				this.form_nino.escuela_nivel_id = data.education[0].escuela_nivel_id
+				this.form_nino.permanencia = data.education[0].permanencia
+				this.form_nino.certificado_escolar = data.education[0].certificado_escolar
+				this.form_nino.observacion_educacion = data.education[0].observacion
+
+				if(data.salud){
+					this.form_nino.apto_medico = data.salud.apto_medico
+					this.form_nino.libreta_vacunacion = data.salud.libreta_vacunacion
+					this.form_nino.centro_salud_id = data.salud.centro_salud_id
+					this.form_nino.estado_salud_id = data.salud.estado_salud_id
+					this.form_nino.observacion_salud = data.salud.observacion
+				}
+
 				this.form_nino.calle = data.address[0].calle
 				this.form_nino.number = data.address[0].number
 				this.form_nino.piso = data.address[0].piso
@@ -1414,6 +1467,8 @@ export default {
 					this.form_google_nino = this.form_temp
 					this.showMap = true
 				}
+
+
 
 				this.form_nino.google_address = data.address[0].google_address
 				this.form_nino.pais_id = data.address[0].pais_id

@@ -7,8 +7,7 @@
 				<a class="btn-blue" :href="route('ninez')">
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar tramite de Niñez y Adolescencia
-				</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar tramite de Niñez y Adolescencia</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
@@ -22,11 +21,12 @@
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
-			<form action="#" method="POST">
+			<form action="#" method="POST" enctype="multipart/form-data">
 				<div class="shadow sm:rounded-md sm:overflow-hidden">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
+							<!-- <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -38,6 +38,20 @@
 									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
 									:format="format">
 								</Datepicker>
+							</div>
+
+							<div class="col-span-12 sm:col-span-5">
+								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Tramite</label>
+								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+									autocomplete="tipo_tramite_id_name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Selecciones un tipo de tramite</option>
+									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
+										:value="tipoTramite.id">{{
+											tipoTramite.description
+										}}</option>
+								</select>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
@@ -55,21 +69,7 @@
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Tramite</label>
-								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-									autocomplete="tipo_tramite_id_name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un tipo de tramite</option>
-									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-										:value="tipoTramite.id">{{
-											tipoTramite.description
-										}}</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-9">
+							<div class="col-span-12 sm:col-span-8">
 								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
@@ -79,53 +79,7 @@
 								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
 							</div>
 						</div>
-						<div class="flex items-center justify-end flex-wrap sm:flex-nowrap ">
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-									@click="addTramite()">Agregar Tramite</button>
-							</div>
-						</div>
-						<div class="grid grid-cols-12 gap-12">
-							<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
-								<thead class="bg-gray-50">
-									<tr>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-											Tramite
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
-											Observacion
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
-											Accion
-										</th>
-									</tr>
-								</thead>
-								<tbody class="bg-white divide-y divide-gray-200">
-									<tr v-for="(tramite, index) in tramites" :key="index">
-										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{{ tramite.titulo }}
-										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{{ tramite.observacion }}
-										</td>
-										<td class="px-6 py-4 text-center text-sm font-medium">
-											<button
-												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-												@click="deleteTramite(tramite)">
-												Borrar
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-						</div>
 					</div>
-
 				</div>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
@@ -137,6 +91,11 @@
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 							</div>
+							<!-- <div class="flex-shrink-0">
+								<button type="button"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
+									Beneficiario</button>
+							</div> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -159,7 +118,8 @@
 									Documento</label>
 								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
 									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:disabled="true" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
@@ -171,9 +131,11 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
 									Nacimiento</label>
-								<input v-model="form.fecha_nac" type="text" name="fecha_nac" id="fecha_nac"
-									autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
 							</div>
 
 						</div>
@@ -210,283 +172,8 @@
 					</div>
 				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
-						</div>
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
 
-						<div class="grid grid-cols-12 gap-6">
-							<!-- TODO: Ver si tipo de vivienda es dato necesario para el responsable o para el niño -->
-							<!-- TODO: Analizar integracion de parentezco en el formulario  -->
-							<!-- <div class="col-span-12 sm:col-span-3">
-							<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de Vivienda</label>
-							<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id" autocomplete="tipo_vivienda-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" selected>Seleccione un tipo de vivienda</option>
-								<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-									:value="tipoVivienda.id">{{
-											tipoVivienda.description
-									}}</option>
-							</select>
-						</div>   -->
-							<div class="col-span-12 sm:col-span-3">
-								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
-								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
-									autocomplete="localidad_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una localidad</option>
-									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">{{
-										localidad.description
-									}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
-									autocomplete="barrio_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un barrio</option>
-									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
-										barrio.description
-									}}</option>
-								</select>
-							</div>
-
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-4 ">
-								<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
-								<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="calle-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
-								<input v-model="form.number" type="text" name="number" id="number"
-									autocomplete="number-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-6 ">
-								<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección
-									Google</label>
-								<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
-								<vue-google-autocomplete ref="address" id="map"
-									classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									placeholder="Ingrese la dirección" v-on:placechanged="getAddressData">
-								</vue-google-autocomplete>
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-								<input v-model="form.latitude" type="text" name="latitude" id="latitude"
-									autocomplete="latitude-level2" disabled
-									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
-								<input v-model="form.longitude" type="text" name="longitude" id="longitude"
-									autocomplete="longitude-level2" disabled
-									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label class="block text-transparent ">Button</label>
-								<a @click="this.showMap = !this.showMap"
-									class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver
-									Mapa</a>
-							</div>
-							<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}
-							</p>
-							<div class="col-span-12 sm:col-span-12 ">
-								<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
-
-								</GoogleMap>
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<!-- DATOS DEL MENOR -->
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<!-- <div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
-					</div> -->
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Menor</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
-									Menor</button>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_menor" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name_menor" type="text" name="name_menor" id="name_menor"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_menor" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_menor" type="text" name="lastname_menor" id="lastname_menor"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_menor" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_menor" @focusout="getPerson()" type="text"
-									name="num_documento_menor" id="num_documento_menor" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_menor" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_menor" type="text" name="fecha_nac_menor"
-									id="fecha_nac_menor" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<!-- DATOS DE LOS TUTORES -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<!-- <div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
-					</div> -->
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos de los Tutores/Padres</h3>
-							</div>
-						</div>
-
-						<hr>
-						<span for="name" class="block text-sm font-medium text-gray-700">Datos de la Turora/Madre </span>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_madre" class="block text-sm font-medium text-gray-700">Nombre </label>
-								<input v-model="form.name_madre" type="text" name="name_madre" id="name_madre"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_madre" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_madre" type="text" name="lastname_madre" id="lastname_madre"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_madre" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_madre" type="text" name="num_documento_madre"
-									id="num_documento_madre" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_madre" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_madre" type="text" name="fecha_nac_madre"
-									id="fecha_nac_madre" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-						<hr>
-						<span for="name" class="block text-sm font-medium text-gray-700">Datos del Tutor/Padre </span>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_padre" class="block text-sm font-medium text-gray-700">Nombre </label>
-								<input v-model="form.name_padre" type="text" name="name_padre" id="name_padre"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_padre" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_padre" type="text" name="lastname_padre" id="lastname_padre"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_padre" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_padre" @focusout="getPerson()" type="text"
-									name="num_documento_padre" id="num_documento_padre" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<!-- TODO: Ver si se incluye CUIT del menor. -->
-							<!-- <div class="col-span-12 sm:col-span-3 ">
-							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div>  -->
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_padre" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_padre" type="text" name="fecha_nac_padre"
-									id="fecha_nac_padre" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<!-- DIRECCION -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
@@ -560,42 +247,49 @@
 
 
 						</div>
+						<div class="grid grid-cols-12 gap-6">
 
-						<!-- TODO: Ver si se inluye google Maps -->
-						<!-- <div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-6 ">
+								<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección
+									Google</label>
+								<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
+								<vue-google-autocomplete ref="address" id="map"
+									classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									placeholder="Ingrese la dirección" v-on:placechanged="getAddressData">
+								</vue-google-autocomplete>
+							</div>
+							<div class="col-span-12 sm:col-span-2 ">
+								<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+								<input v-model="form.latitude" type="text" name="latitude" id="latitude"
+									autocomplete="latitude-level2" disabled
+									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
 
-						<div class="col-span-12 sm:col-span-6 ">
-							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
-							<vue-google-autocomplete ref="address" id="map" v-model="address"
-								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-								placeholder="Ingrese la dirección"
-								v-on:placechanged="getAddressData">
-							</vue-google-autocomplete>
-						</div> 
-						<div class="col-span-12 sm:col-span-2 ">
-							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-							<input v-model="form.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
+							<div class="col-span-12 sm:col-span-2 ">
+								<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+								<input v-model="form.longitude" type="text" name="longitude" id="longitude"
+									autocomplete="longitude-level2" disabled
+									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							<div class="col-span-12 sm:col-span-2 ">
+								<label class="block text-transparent ">Button</label>
+								<a @click="this.showMap = !this.showMap"
+									class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver
+									Mapa</a>
+							</div>
+							<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}
+							</p>
+							<div class="col-span-12 sm:col-span-12 ">
+								<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
 
-						<div class="col-span-12 sm:col-span-2 ">
-							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
-							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-						<div class="col-span-12 sm:col-span-2 ">
-							<label class="block text-transparent ">Button</label>
-							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
-						</div> 
-						<div class="col-span-12 sm:col-span-12 ">
-							<GoogleMap v-if="this.showMap" :form_map="form_google">
-							</GoogleMap>
-						</div> 
-						
-					</div> -->
+								</GoogleMap>
+							</div>
+
+						</div>
 
 					</div>
 				</div>
 
-				<!-- SITUACION SOCIAL -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
@@ -636,14 +330,11 @@
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
-
-
 						</div>
 
 					</div>
 				</div>
 
-				<!-- ESTUDIOS -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
@@ -692,17 +383,20 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<!-- <div class="col-span-12 sm:col-span-3">
-							<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ocupación</label>
-							<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id" autocomplete="tipo_ocupacion_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones una ocupacion</option>
-								<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
-								:value="tipoOcupacion.id"
-								:bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">{{
-									tipoOcupacion.description
-								}}</option>
-							</select>
-						</div>   -->
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_ocupacion_id"
+									class="block text-sm font-medium text-gray-700">Ocupación</label>
+								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
+									autocomplete="tipo_ocupacion_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="" selected>Selecciones una ocupacion</option>
+									<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
+										:value="tipoOcupacion.id" :bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">
+										{{
+											tipoOcupacion.description
+										}}</option>
+								</select>
+							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive
 									Jubilación / Pensión</label>
@@ -782,8 +476,63 @@
 
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
+								<h3 class="text-lg leading-6 font-medium text-gray-900">Familiares</h3>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-12">
+								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
+									<thead class="bg-gray-50">
+										<tr>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Dni
+											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Nombre
+											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Apellido
+											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Parentesco
+											</th>
+										</tr>
+									</thead>
+									<tbody class="bg-white divide-y divide-gray-200">
+										<tr v-for="(familiar, index) in form_familiares" :key="index">
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{{ familiar.person.num_documento }}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{{ familiar.person.name }}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{{ familiar.person.lastname }}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{{ familiar.parentesco.description }}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
 							</div>
+
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -857,10 +606,10 @@
 <script>
 
 import { ref } from 'vue'
-//import { Inertia } from '@inertiajs/inertia'
-import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline';
-import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
+import { ArrowLeftCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline';
 import VueGoogleAutocomplete from "vue-google-autocomplete"
+import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
+import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -882,15 +631,17 @@ export default {
 		situacionesConyugal: Object,
 		rolesTramite: Object,
 		tiposTramite: Object,
+		programasSocial: Object,
 		tramite: Object,
-		programasSocial: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
+		ArrowDownCircleIcon,
 		GoogleMap,
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
+		FormBeneficiario
 	},
 	data() {
 		return {
@@ -898,20 +649,16 @@ export default {
 			form_temp: {},
 			form_google: "",
 			address: "",
-			/* MENSAJERIA */
+			showMap: false,
 			toastMessage: "",
 			labelType: "info",
 			message: "",
 			showToast: false,
-			/* MAPA */
-			textMap: "Ver Mapa",
-			showMap: false,
-			/* CARGA MASIVA DE FILE */
 			file: "",
-			file_tmp: {},
-			files: [],
-			selectedFile: null,
-			tramites: [],
+			form_archivo: {},
+			form_familiares: {},
+			form_beneficiario: {},
+			showBenef: false
 		}
 	},
 	setup() {
@@ -935,12 +682,13 @@ export default {
 			let rt = route('ninez.update', this.form.tramite_id);
 
 			const formData = new FormData();
-						
+			formData.append('file', this.file);
+
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
 			** Output: 2023-06-22T01:33:00.000Z
 			** a traves del formData
-			*/ 
+			*/
 
 			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
 			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
@@ -951,78 +699,82 @@ export default {
 				}
 			}
 
-			/* this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
 			for (var clave in this.form_beneficiario) {
 				if (this.form_beneficiario.hasOwnProperty(clave)) {
 					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
 				}
 			}
 
-			formData.append('beneficiario_control', this.beneficiario_control) */
+			formData.append('beneficiario_control', this.beneficiario_control)
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
-					setTimeout(()=> { 
+					this.toastMessage = response.data.message;
+					setTimeout(() => {
 						window.location.href = '/ninez';
-					}, 3100)
+					}, 1000)
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
 			}
-			
+
 		},
 		async getPerson() {
-			this.form_temp.num_documento = this.form.num_documento
+			this.form_temp.num_documento = this.form.num_documento;
 
 			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
 			if (!data.data.length == 0) {
 				data = data.data[0].person
-
 				/// Recuperar datos.
+				this.form.person_id = data.id
 				this.form.tipo_documento_id = data.tipo_documento_id
 				this.form.num_cuit = data.num_cuit
 				this.form.fecha_nac = data.fecha_nac
+				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
 				this.form.lastname = data.lastname
-				this.form.codigo = data.cud.codigo
-				this.form.diagnostico = data.cud.diagnostico
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
 				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
 				this.form.cant_hijos = data.aditional[0].cant_hijos
 				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
-
 				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
 				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
 				this.form.tipo_pension_id = data.social[0].tipo_pension_id
 				this.form.subsidio = data.social[0].subsidio
-
 				this.form.beca = data.education[0].beca
 				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
 				this.form.estado_educativo_id = data.education[0].estado_educativo_id
-
 				this.form.calle = data.address[0].calle
 				this.form.number = data.address[0].number
 				this.form.piso = data.address[0].piso
 				this.form.dpto = data.address[0].dpto
-				this.form.latitude = data.address[0].latitude
-				this.form.longitude = data.address[0].longitude
-				this.form.google_address = data.address[0].google_address
-				//address.data.autocompleteText = data.address[0].google_address
-				//this.address.data.autocompleteText = 'New value';
+				if (data.address[0].latitude && data.address[0].longitude) {
+					this.form.latitude = data.address[0].latitude
+					this.form.longitude = data.address[0].longitude
 
+					// Carga de datos para visualizar el mapa.
+					this.form_temp = {}
+					this.form_temp.latitude = parseFloat(data.address[0].latitude)
+					this.form_temp.longitude = parseFloat(data.address[0].longitude)
+					this.form_temp.route = data.address[0].google_address
+					this.form_google = this.form_temp
+					this.showMap = true
+				}
+
+				this.form.google_address = data.address[0].google_address
 				this.form.pais_id = data.address[0].pais_id
 				this.form.localidad_id = data.address[0].localidad_id
 				this.form.get_barrio_id = data.address[0].barrio_id
-			}else{
+			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";
 				this.form = {}
@@ -1030,9 +782,6 @@ export default {
 				this.form_temp = {}
 			}
 		},
-		/* ***********************
-		** * MANEJO DE GOOGLE MAPS
-		*/
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData['formatted_address']
 			this.form.latitude = addressData['latitude']
@@ -1046,13 +795,16 @@ export default {
 		handleFileUpload(event) {
 			this.file = event.target.files[0];
 		},
-
 		coord_google($coord) {
-			this.form.latitude = $coord.position.lat
-			this.form.longitude = $coord.position.lng
+			this.form.latitude = $coord.position.lat.toString()
+			this.form.longitude = $coord.position.lng.toString()
 			this.form.google_address = $coord.address
 
 			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
+		},
+
+		beneficiario(data){
+			this.form_beneficiario = data;
 		},
 		async deleteFile(id){
 
@@ -1098,10 +850,7 @@ export default {
 			} catch (error) {
 				console.log(error)
 			}
-		},
-
-
-		
+		}
 
 	},
 	created() {
@@ -1114,7 +863,6 @@ export default {
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
 		}
 	},
-
 	mounted() {
 		this.form.tramite_id = this.tramite[0].id
 
@@ -1124,11 +872,13 @@ export default {
 		titular = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 1))
 		beneficiario = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 2))
 
+			// Familiares
+		this.form_familiares = this.tramite[0].familiares
+
 		this.form.num_documento = titular[0].num_documento
 		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
 		this.form.observacion = this.tramite[0].observacion
-		this.form.parentesco_id = this.tramite[0].parentesco_id
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos
 
@@ -1137,11 +887,9 @@ export default {
 			this.showBenef = true
 			this.beneficiario_control = true
 		}
-		
 		this.getPerson()
-	}
+	},
 }
-
 </script>
 
 

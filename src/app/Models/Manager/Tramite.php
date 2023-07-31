@@ -63,6 +63,11 @@ class Tramite extends Model
     {
         return $this->belongsTo(Parentesco::class);
     }
+
+    public function cbi_data()
+    {
+        return $this->hasOne(CbiData::class, 'tramite_id', 'id');
+    }
     
     /* protected $casts = [
         'fecha' => 'datetime:d-m-Y',
@@ -71,5 +76,15 @@ class Tramite extends Model
     public function getFecha()
     {
         return Carbon::parse($this->fecha)->format('d/m/Y');
+    }
+
+    public function familiares()
+    {
+        return $this->hasMany(Familiar::class);
+    }
+
+    public function contactos()
+    {
+        return $this->hasMany(ContactoEmergencia::class);
     }
 }

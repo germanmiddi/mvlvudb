@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('person_id');
             $table->unsignedBigInteger('localidad_id');
             $table->unsignedBigInteger('pais_id');
-            $table->unsignedBigInteger('barrio_id');
-            $table->integer('calle')->nullable();
+            $table->unsignedBigInteger('barrio_id')->nullable();
+            $table->string('calle',100)->nullable();
             $table->string('number', 100)->nullable();
             $table->string('piso', 50)->nullable();
             $table->string('dpto', 50)->nullable();

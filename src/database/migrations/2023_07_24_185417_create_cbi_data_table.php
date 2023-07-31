@@ -17,16 +17,22 @@ return new class extends Migration
         Schema::create('cbi_data', function (Blueprint $table) {
             $table->id();
             $table->integer('anio_inicio');
-            $table->boolean('ani_inicio')->nullable();
             $table->boolean('aut_firmada')->nullable();
             $table->boolean('aut_retirarse')->nullable();
             $table->boolean('aut_uso_imagen')->nullable();
             $table->boolean('act_varias')->nullable();
             $table->boolean('act_esporadicas')->nullable();
             $table->boolean('comedor')->nullable();
+            $table->unsignedBigInteger('tramite_id')->nullable();
             $table->unsignedBigInteger('estado_cbi_id')->nullable();
             $table->unsignedBigInteger('estado_gabinete_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('tramite_id')
+                ->references('id')
+                ->on('tramites')
+                ->onDelete('NO ACTION')
+                ->onUpdate('NO ACTION');
 
             $table->foreign('estado_cbi_id')
                 ->references('id')

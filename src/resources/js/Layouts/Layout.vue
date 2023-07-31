@@ -125,7 +125,11 @@
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md " >Bandeja General</li>
+                    <a :href="route('general')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Bandeja General
+                      </li>
+                    </a>
                     <a :href="route('infancia')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
@@ -163,10 +167,22 @@
                         Niñez y Adolescencia
                       </li>
                     </a>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Promoción y Protección de derechos</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Personas Mayores</li>
+                    <a :href="route('promocion')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Promoción y Protección de derechos
+                      </li>
+                    </a>
+                    <a :href="route('mayores')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Personas Mayores
+                      </li>
+                    </a>
                     <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Operativos</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Vivienda social</li>
+                    <a :href="route('vivienda')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Vivienda social
+                      </li>
+                    </a>
                   </DisclosurePanel>
 
               </Disclosure>

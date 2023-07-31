@@ -900,6 +900,10 @@ export default {
 		tiposTramite : Object,
 		programasSocial  : Object,
 		parentescos: Object,
+		comedores: Object,
+		estadosCbj: Object,
+		actividadesCbj: Object,
+		acompanamientosCbj: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,

@@ -69,4 +69,9 @@ class Person extends Model
     {
         return $this->hasOne(Cud::class);
     }
+
+    public function salud()
+    {
+        return $this->hasOne(SaludData::class);
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cud extends Model
+class CbiData extends Model
 {
     protected $table = 'cbi_data';
     public $timestamps = true;
@@ -16,24 +16,25 @@ class Cud extends Model
         'aut_retirarse',
         'aut_uso_imagen',
         'act_varias',
-        'act_esporadica',
+        'act_esporadicas',
         'comedor',
         'estado_cbi_id',
-        'estado_gabinete'
+        'estado_gabinete_id',
+        'tramite_id'
     ];
 
     public function estadoCbi()
     {
-        return $this->belongsTo(EstadoCbi::class);
+        return $this->belongsTo(EstadoCbi::class, 'estado_cbi_id');
     }
 
     public function estadoGabinete()
     {
-        return $this->belongsTo(EstadoGabinete::class);
+        return $this->belongsTo(EstadoGabinete::class, 'estado_gabinete_id');
     }
 
     public function tramite()
     {
-        return $this->hasOne(Tramite::class);
+        return $this->hasOne(Tramite::class, 'tramite_id');
     }
 }

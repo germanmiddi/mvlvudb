@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('familiares', function (Blueprint $table) {
             $table->id();
-            $table->string('description', 100);
             $table->unsignedBigInteger('tramite_id');
             $table->unsignedBigInteger('person_id');
             $table->unsignedBigInteger('parentesco_id');

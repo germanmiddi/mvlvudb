@@ -64,7 +64,7 @@ class FileController extends Controller
                 return response()->json(['message' => 'Se ha recibido un Archivo. Comuniquese con el administrador.'], 203);
             }
         } catch (\Throwable $th) {
-            dd($th);
+            //dd($th);
             Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha generado un error al momento de almacenar el Archivo. Comuniquese con el administrador.'], 203);
         }

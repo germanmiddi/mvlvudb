@@ -244,7 +244,6 @@ class DiscapacidadController extends Controller
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
        
-
                     if($request['files'] != null){
                         foreach ($request['files'] as $indice => $valor) {
         
@@ -274,7 +273,6 @@ class DiscapacidadController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);

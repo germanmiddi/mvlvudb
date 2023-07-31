@@ -18,14 +18,22 @@ use App\Models\Manager\Pais;
 use App\Models\Manager\Barrio;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\CanalAtencion;
+use App\Models\Manager\CbiData;
+use App\Models\Manager\CentroSalud;
 use App\Models\Manager\CoberturaMedica;
 use App\Models\Manager\ContactData;
+use App\Models\Manager\ContactoEmergencia;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\Escuela;
+use App\Models\Manager\EscuelaDependencia;
+use App\Models\Manager\EscuelaNivel;
+use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoCbi;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\EstadoGabinete;
+use App\Models\Manager\EstadoSalud;
+use App\Models\Manager\Familiar;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Parentesco;
 use App\Models\Manager\TipoDocumento;
@@ -37,6 +45,7 @@ use App\Models\Manager\RolTramite;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\Person;
+use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
@@ -81,7 +90,12 @@ class InfanciaController extends Controller
                 'sedes' => Sede::all(),
                 'estadosCbi' => EstadoCbi::all(),
                 'estadosGabinete' => EstadoGabinete::all(),
-                'escuelas' => Escuela::all()
+                'escuelas' => Escuela::where('primaria', true)->get(),
+                'escuelasDependencias' => EscuelaDependencia::all(),
+                'escuelasNiveles' => EscuelaNivel::all(),
+                'escuelasTurnos' => EscuelaTurno::all(),
+                'centrosSalud' => CentroSalud::where('activo', true)->get(),
+                'estadosSalud' => EstadoSalud::where('activo', true)->get(),
             ]
         );
     }
@@ -92,6 +106,9 @@ class InfanciaController extends Controller
         dd($request);
         DB::beginTransaction();
         try {
+            /**
+             * DATOS DEL TITULAR
+             */
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -173,41 +190,99 @@ class InfanciaController extends Controller
                     'email' => $request['email']
                 ]
             );
+            /**
+             * FIN DATOS DEL TITULAR
+             */
 
             /**
-                * Registro de Beneficiario
-                */
+             * DATOS DEL NIÑO
+             */
 
-            if ($request['beneficiario_control'] == 'true') {
-                $beneficiario = Person::updateOrCreate(
-                    [
-                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento']
-                    ],
-                    [
-                        'lastname' => $request['beneficiario_lastname'],
-                        'name' => $request['beneficiario_name'],
-                        'fecha_nac' => $request['beneficiario_fecha_nac'],
-                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento'],
-                    ]
-                );
-    
-                ContactData::updateOrCreate(
-                    [
-                        'person_id' => $beneficiario->id
-                    ],
-                    [
-                        'phone' => $request['beneficiario_phone'],
-                        'email' => $request['beneficiario_email']
-                    ]
-                );
-    
-            }
+             $nino = Person::updateOrCreate(
+                [
+                    'tipo_documento_id' => $request['nino_tipo_documento_id'],
+                    'num_documento' => $request['nino_num_documento']
+                ],
+                [
+                    'lastname' => $request['nino_lastname'],
+                    'name' => $request['nino_name'],
+                    'fecha_nac' => $request['nino_fecha_nac'],
+                    'tipo_documento_id' => $request['nino_tipo_documento_id'],
+                    'num_documento' => $request['nino_num_documento'],
+                    'num_cuit' => $request['nino_num_cuit'] ?? null
+                ]
+            );
+
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $nino->id
+                ],
+                [
+                    'nivel_educativo_id' => $request['nino_nivel_educativo_id'],
+                    'estado_educativo_id' => $request['nino_estado_educativo_id'],
+                    'escuela_id' => $request['nino_escuela_id'],
+                    'escuela_dependencia_id' => $request['nino_escuela_dependencia_id'],
+                    'escuela_localidad_id' => $request['nino_escuela_localidad_id'],
+                    'escuela_nivel_id' => $request['nino_escuela_nivel_id'],
+                    'escuela_turno_id' => $request['nino_escuela_turno_id'],
+                    'permanencia' => $request['nino_permanencia'],
+                    'certificado_escolar' => $request['nino_certificado_escolar'],
+                    'observacion' => $request['nino_observacion_educacion'],
+                ]
+            );
+
+            // address_data
+
+            AddressData::updateOrCreate(
+                [
+                    'person_id' => $nino->id
+                ],
+                [
+                    'calle' => $request['nino_calle'],
+                    'number' => $request['nino_number'],
+                    'piso' => $request['nino_piso'],
+                    'dpto' => $request['nino_dpto'],
+                    'latitude' => $request['nino_latitude'],
+                    'longitude' => $request['nino_longitude'],
+                    'google_address' => $request['nino_google_address'],
+                    'pais_id' => $request['nino_pais_id'],
+                    'localidad_id' => $request['nino_localidad_id'],
+                    'barrio_id' => $request['nino_barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::updateOrCreate(
+                [
+                    'person_id' => $nino->id
+                ],
+                [
+                    'phone' => $request['nino_phone'],
+                    'email' => $request['nino_email']
+                ]
+            );
+
+            // salud_data
+
+            SaludData::updateOrCreate(
+                [
+                    'person_id' => $nino->id
+                ],
+                [
+                    'apto_medico' => $request['nino_apto_medico'],
+                    'libreta_vacunacion' => $request['nino_libreta_vacunacion'],
+                    'observacion' => $request['nino_observacion'],
+                    'centro_salud_id' => $request['nino_centro_salud_id'],
+                    'estado_salud_id' => $request['nino_estado_salud_id'],
+                    'observacion' => $request['nino_observacion_salud'],
+                ]
+            );
 
             /**
-                * FIN Registro de Beneficiario
-                */
+             * FIN DATOS DEL NIÑO
+             */
 
             $list_tramites_id = array();
             
@@ -227,16 +302,96 @@ class InfanciaController extends Controller
         
                             'canal_atencion_id' => $request['canal_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
-                            'dependencia_id' => $dependencia['dependencia_id']
+                            'dependencia_id' => $dependencia['dependencia_id'],
+                            'sede_id' => $request['sede_id']
+                        ]
+                    );
+
+                    CbiData::Create(
+                        [
+                            'anio_inicio' => $request['anio_inicio'],
+                            'aut_firmada' => $request['aut_firmada'],
+                            'aut_retirarse' => $request['aut_retirarse'],
+                            'aut_uso_imagen' => $request['aut_uso_imagen'],
+                            'act_varias' => $request['act_varias'],
+                            'act_esporadicas' => $request['act_esporadicas'],
+                            'comedor' => $request['comedor'],
+                            'estado_cbi_id' => $request['estado_cbi_id'],
+                            'estado_gabinete_id'  => $request['estado_gabinete_id'],
+                            'tramite_id' => $tramite_data['id']
                         ]
                     );
 
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                    if (isset($beneficiario)) {
-                        $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                    
+                    $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+
+                    // Verifico si existe familiar asociado.
+                  
+                    if($request['familiar_id']){
+                        foreach ($request['familiar_id'] as $indice => $valor) {
+                            $familiar = Person::updateOrCreate(
+                                [
+                                    'tipo_documento_id' => $request['familiar_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['familiar_num_documento'][$indice]
+                                ],
+                                [
+                                    'lastname' => $request['familiar_lastname'][$indice],
+                                    'name' => $request['familiar_name'][$indice],
+                                    'fecha_nac' => $request['familiar_fecha_nac'][$indice],
+                                    'tipo_documento_id' => $request['familiar_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['familiar_num_documento'][$indice]
+                                ]
+                            );
+
+                            Familiar::updateOrCreate(
+                                [
+                                    'person_id' => $familiar['id'],
+                                    'tramite_id' => $tramite_data['id'],
+                                    'parentesco_id' => $request['familiar_parentesco_id'][$indice]
+                                ]
+                            );
+                        }
+                    }
+                    
+                    // Verifico si existe Contacto de Emergencia asociado.
+                  
+                    if($request['contacto_id']){
+                        foreach ($request['contacto_id'] as $indice => $valor) {
+                            $contacto = Person::updateOrCreate(
+                                [
+                                    'tipo_documento_id' => $request['contacto_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['contacto_num_documento'][$indice]
+                                ],
+                                [
+                                    'lastname' => $request['contacto_lastname'][$indice],
+                                    'name' => $request['contacto_name'][$indice],
+                                    'fecha_nac' => $request['contacto_fecha_nac'][$indice],
+                                    'tipo_documento_id' => $request['contacto_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['contacto_num_documento'][$indice]
+                                ]
+                            );
+
+                            ContactData::updateOrCreate(
+                                [
+                                    'person_id' => $contacto['id']
+                                ],
+                                [
+                                    'phone' => $request['contacto_phone'][$indice],
+                                    'email' => $request['contacto_email'][$indice]
+                                ]
+                            );
+
+                            ContactoEmergencia::updateOrCreate(
+                                [
+                                    'person_id' => $contacto['id'],
+                                    'tramite_id' => $tramite_data['id'],
+                                    'parentesco_id' => $request['contacto_parentesco_id'][$indice]
+                                ]
+                            );
+                        }
                     }
         
-
                     if($request['files'] != null){
                         foreach ($request['files'] as $indice => $valor) {
         
@@ -268,6 +423,227 @@ class InfanciaController extends Controller
                 DB::rollBack();
                 Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Infancia:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
                 return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+    //edit
+    public function edit($id)
+    {
+        return Inertia::render(
+            'Manager/Tramites/Infancia/Edit',
+            [
+                'paises' => Pais::all(),
+                'barrios' => Barrio::all(),
+                'localidades' => Localidad::all(),
+                'canalesAtencion' => CanalAtencion::all(),
+                'coberturasMedica' => CoberturaMedica::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'nivelesEducativo' => NivelEducativo::all(),
+                'tiposDocumento' => TipoDocumento::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
+                'tiposPension' => TipoPension::all(),
+                'tiposVivienda' => TipoVivienda::all(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'rolesTramite' => RolTramite::all(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 12)->get(),
+                'programasSocial' => ProgramaSocial::all(),
+                'parentescos' => Parentesco::all(),
+                'sedes' => Sede::all(),
+                'estadosCbi' => EstadoCbi::all(),
+                'estadosGabinete' => EstadoGabinete::all(),
+                'escuelas' => Escuela::where('primaria', true)->get(),
+                'escuelasDependencias' => EscuelaDependencia::all(),
+                'escuelasNiveles' => EscuelaNivel::all(),
+                'escuelasTurnos' => EscuelaTurno::all(),
+                'centrosSalud' => CentroSalud::where('activo', true)->get(),
+                'estadosSalud' => EstadoSalud::where('activo', true)->get(),
+                'tramite' => Tramite::where('id', $id)->with('contactos', 'familiares', 'cbi_data', 'persons', 'persons.address','persons.salud','persons.education','persons.contact','persons.social','persons.aditional', 'archivos', 'familiares.person', 'familiares.parentesco', 'contactos.person', 'contactos.parentesco', 'contactos.person.contact')->get()
+            ]
+        );
+    }
+
+    public function update(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+           
+            Person::where('id',$request['person_id'])->update(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'fecha_nac' => $request['fecha_nac'],
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'num_cuit' => $request['num_cuit'] ?? null
+                ]
+            );
+
+            AditionalData::where('person_id',$request['person_id'])->update(
+                [
+                    'cant_hijos' => $request['cant_hijos'],
+                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
+                    'situacion_conyugal_id' => $request['situacion_conyugal_id']
+                ]
+            );
+
+            SocialData::where('person_id', $request['person_id'])->update(
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'subsidio' => $request['subsidio']
+                ]
+            );
+
+            EducationData::where('person_id', $request['person_id'])->update(
+                [
+                    'beca' => $request['beca'],
+                    'nivel_educativo_id' => $request['nivel_educativo_id'],
+                    'estado_educativo_id' => $request['estado_educativo_id']
+                ]
+            );
+
+            // address_data
+
+            AddressData::where('person_id', $request['person_id'])->update(
+                [
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'latitude' => $request['latitude'],
+                    'longitude' => $request['longitude'],
+                    'google_address' => $request['google_address'],
+                    'pais_id' => $request['pais_id'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::where('person_id', $request['person_id'])->update(
+                [
+                    'phone' => $request['phone'],
+                    'email' => $request['email']
+                ]
+            );
+
+            /**
+             * DATOS DEL NIÑO
+             */
+
+            Person::where('id', $request['nino_person_id'])->update(
+                [
+                    'lastname' => $request['nino_lastname'],
+                    'name' => $request['nino_name'],
+                    'fecha_nac' => $request['nino_fecha_nac'],
+                    'tipo_documento_id' => $request['nino_tipo_documento_id'],
+                    'num_documento' => $request['nino_num_documento'],
+                    'num_cuit' => $request['nino_num_cuit'] ?? null
+                ]
+            );
+
+            EducationData::where('person_id', $request['nino_person_id'])->update(
+                [
+                    'nivel_educativo_id' => $request['nino_nivel_educativo_id'],
+                    'estado_educativo_id' => $request['nino_estado_educativo_id'],
+                    'escuela_id' => $request['nino_escuela_id'],
+                    'escuela_dependencia_id' => $request['nino_escuela_dependencia_id'],
+                    'escuela_localidad_id' => $request['nino_escuela_localidad_id'],
+                    'escuela_nivel_id' => $request['nino_escuela_nivel_id'],
+                    'escuela_turno_id' => $request['nino_escuela_turno_id'],
+                    'permanencia' => $request['nino_permanencia'],
+                    'certificado_escolar' => $request['nino_certificado_escolar'],
+                    'observacion' => $request['nino_observacion_educacion'],
+                ]
+            );
+
+            // address_data
+
+            AddressData::where('person_id', $request['nino_person_id'])->update(
+                [
+                    'calle' => $request['nino_calle'],
+                    'number' => $request['nino_number'],
+                    'piso' => $request['nino_piso'],
+                    'dpto' => $request['nino_dpto'],
+                    /* 'latitude' => $request['nino_latitude'],
+                    'longitude' => $request['nino_longitude'],
+                    'google_address' => $request['nino_google_address'],
+                    'pais_id' => $request['nino_pais_id'], */
+                    'localidad_id' => $request['nino_localidad_id'],
+                    /* 'barrio_id' => $request['nino_barrio_id'], */
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::where('person_id', $request['nino_person_id'])->update(
+                [
+                    'phone' => $request['nino_phone'],
+                    'email' => $request['nino_email']
+                ]
+            );
+
+            // salud_data
+
+            SaludData::where('person_id', $request['nino_person_id'])->update(
+                [
+                    'apto_medico' => $request['nino_apto_medico'],
+                    'libreta_vacunacion' => $request['nino_libreta_vacunacion'],
+                    'observacion' => $request['nino_observacion'],
+                    'centro_salud_id' => $request['nino_centro_salud_id'],
+                    'estado_salud_id' => $request['nino_estado_salud_id'],
+                    'observacion' => $request['nino_observacion_salud'],
+                ]
+            );
+
+            /**
+             * FIN DATOS DEL NIÑO
+             */
+
+              // Obtengo ID de la dependencia.
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+
+
+            // tramite
+            Tramite::where('id', $request['tramite_id'])->update(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                    'observacion' => $request['observacion'],
+                    'canal_atencion_id' => $request['canal_atencion_id'],
+                    'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'dependencia_id' => $dependencia['dependencia_id'],
+                    'sede_id' => $request['sede_id'],
+                ]
+            );
+
+            CbiData::where('tramite_id', $request['tramite_id'])->update(
+                [
+                    'anio_inicio' => $request['anio_inicio'],
+                    'aut_firmada' => $request['aut_firmada'],
+                    'aut_retirarse' => $request['aut_retirarse'],
+                    'aut_uso_imagen' => $request['aut_uso_imagen'],
+                    'act_varias' => $request['act_varias'],
+                    'act_esporadicas' => $request['act_esporadicas'],
+                    'comedor' => $request['comedor'],
+                    'estado_cbi_id' => $request['estado_cbi_id'],
+                    'estado_gabinete_id'  => $request['estado_gabinete_id']
+                ]
+            );
+
+            DB::commit();
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            DB::rollBack();
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
 

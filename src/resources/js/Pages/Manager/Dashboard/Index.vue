@@ -134,6 +134,45 @@ const projects = [
       bgColorClass: 'bg-pink-600',
       route: 'habitat'
     },
+    {
+      id: 9,
+      title: 'Promoción y Protección de Derechos',
+      initials: 'PP',
+      team: 'Engineering',
+      members: [
+      ],
+      totalTramites: 12,
+      lastUpdated: 'March 17, 2020',
+      pinned: true,
+      bgColorClass: 'bg-yellow-600',
+      route: 'promocion'
+    },
+    {
+      id: 14,
+      title: 'Personas Mayores',
+      initials: 'PM',
+      team: 'Engineering',
+      members: [
+      ],
+      totalTramites: 12,
+      lastUpdated: 'March 17, 2020',
+      pinned: true,
+      bgColorClass: 'bg-green-600',
+      route: 'mayores'
+    },
+    {
+      id: 11,
+      title: 'Vivienda Social',
+      initials: 'VS',
+      team: 'Engineering',
+      members: [
+      ],
+      totalTramites: 11,
+      lastUpdated: 'March 17, 2020',
+      pinned: true,
+      bgColorClass: 'bg-indigo-600',
+      route: 'vivienda'
+    },
     // More projects...
   ]
 const pinnedProjects = projects.filter((project) => project.pinned)

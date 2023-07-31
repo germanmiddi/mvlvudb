@@ -91,10 +91,6 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tramite
                                     </th>
                                     <th scope="col"
@@ -109,14 +105,10 @@
                                         {{ fechaFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].lastname }},
-                                        {{ data.tramite.persons[0].name }}
+                                        <div v-html=" namePersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].num_documento }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.tipo_tramite.description }}
@@ -243,6 +235,7 @@ export default {
             filter: {},
             length: 10,
             customFormat: 'd-M-Y'
+            
         };
     },
     setup() {
@@ -299,6 +292,30 @@ export default {
 
             return fecha;
         },
+        namePersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.lastname + ', '+element.name
+                }else{
+                    name_benef = element.lastname + ', '+element.name
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        },
+        dniPersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.num_documento
+                }else{
+                    name_benef = element.num_documento
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        }
     },
     mounted() {
         if (this.toast) {

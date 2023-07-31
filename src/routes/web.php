@@ -9,11 +9,15 @@ use App\Http\Controllers\Manager\Tramite\TramiteController;
 use App\Http\Controllers\Manager\Tramites\Discapacidad\DiscapacidadController;
 use App\Http\Controllers\Manager\Tramites\Habitat\HabitatController;
 use App\Http\Controllers\Manager\Tramites\Fortalecimiento\FortalecimientoController;
+use App\Http\Controllers\Manager\Tramites\Promocion\PromocionController;
+use App\Http\Controllers\Manager\Tramites\General\GeneralController;
+use App\Http\Controllers\Manager\Tramites\Mayor\MayorController;
 use App\Http\Controllers\Manager\Tramites\Genero\GeneroController;
 use App\Http\Controllers\Manager\Tramites\Ninez\NinezController;
 use App\Http\Controllers\Manager\Tramites\Infancia\InfanciaController;
 use App\Http\Controllers\Manager\Tramites\Juventud\JuventudController;
 use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
+use App\Http\Controllers\Manager\Tramites\Vivienda\ViviendaController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
 Route::middleware(['auth'])->group(function () {
@@ -32,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     
     // Tramites
     Route::get('/alta-tramites', [TramiteController::class, 'index'])->name('alta-tramite');
+
+    // General
+    Route::get('/general', [GeneralController::class, 'index'])->name('general');  
+    Route::get('/general/list', [GeneralController::class, 'list'])->name('general.list');   
    
     // Discapacidad
     Route::get('/discapacidad', [DiscapacidadController::class, 'index'])->name('discapacidad');    
@@ -68,6 +76,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/fortalecimiento/update/{id}', [FortalecimientoController::class, 'update'])->name('fortalecimiento.update');    
     Route::get('/fortalecimiento/list', [FortalecimientoController::class, 'list'])->name('fortalecimiento.list'); 
 
+    // Promocion
+    Route::get('/promocion', [PromocionController::class, 'index'])->name('promocion');    
+    Route::get('/promocion/create', [PromocionController::class, 'create'])->name('promocion.create');  
+    Route::get('/promocion/edit/{id}', [PromocionController::class, 'edit'])->name('promocion.edit');    
+    Route::post('/promocion/store', [PromocionController::class, 'store'])->name('promocion.store');   
+    Route::post('/promocion/update/{id}', [PromocionController::class, 'update'])->name('promocion.update');    
+    Route::get('/promocion/list', [PromocionController::class, 'list'])->name('promocion.list'); 
+
+    // Promocion
+    Route::get('/mayores', [MayorController::class, 'index'])->name('mayores');    
+    Route::get('/mayores/create', [MayorController::class, 'create'])->name('mayores.create');  
+    Route::get('/mayores/edit/{id}', [MayorController::class, 'edit'])->name('mayores.edit');    
+    Route::post('/mayores/store', [MayorController::class, 'store'])->name('mayores.store');   
+    Route::post('/mayores/update/{id}', [MayorController::class, 'update'])->name('mayores.update');    
+    Route::get('/mayores/list', [MayorController::class, 'list'])->name('mayores.list'); 
+
     // Habitat
     Route::get('/habitat', [HabitatController::class, 'index'])->name('habitat');    
     Route::get('/habitat/create', [HabitatController::class, 'create'])->name('habitat.create');  
@@ -91,4 +115,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/juventud/store', [JuventudController::class, 'store'])->name('juventud.store');   
     Route::post('/juventud/update/{id}', [JuventudController::class, 'update'])->name('juventud.update');    
     Route::get('/juventud/list', [JuventudController::class, 'list'])->name('juventud.list'); 
+
+    // Vivienda
+    Route::get('/vivienda', [ViviendaController::class, 'index'])->name('vivienda');    
+    Route::get('/vivienda/create', [ViviendaController::class, 'create'])->name('vivienda.create');  
+    Route::get('/vivienda/edit/{id}', [ViviendaController::class, 'edit'])->name('vivienda.edit');    
+    Route::post('/vivienda/store', [ViviendaController::class, 'store'])->name('vivienda.store');   
+    Route::post('/vivienda/update/{id}', [ViviendaController::class, 'update'])->name('vivienda.update');    
+    Route::get('/vivienda/list', [ViviendaController::class, 'list'])->name('vivienda.list'); 
 });

@@ -21,6 +21,7 @@ use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\Familiar;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Parentesco;
 use App\Models\Manager\TipoDocumento;
@@ -77,9 +78,9 @@ class NinezController extends Controller
     //store
     public function store(Request $request)
     {
-        dd($request['familiar']);
         DB::beginTransaction();
         try {
+            
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -165,7 +166,7 @@ class NinezController extends Controller
             /**
              * Registro de Beneficiario
              */
-
+            
              if ($request['beneficiario_control'] == 'true') {
                 $beneficiario = Person::updateOrCreate(
                     [
@@ -193,7 +194,6 @@ class NinezController extends Controller
     
             }
 
-
             /**
              * FIN Registro de Beneficiario
              */
@@ -220,9 +220,39 @@ class NinezController extends Controller
                         ]
                     );
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-                    if ($beneficiario) {
+
+                    if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
+
+                    // Verifico si existe familiar asociado.
+                  
+                    if($request['familiar_id']){
+                        foreach ($request['familiar_id'] as $indice => $valor) {
+                            $familiar = Person::updateOrCreate(
+                                [
+                                    'tipo_documento_id' => $request['familiar_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['familiar_num_documento'][$indice]
+                                ],
+                                [
+                                    'lastname' => $request['familiar_lastname'][$indice],
+                                    'name' => $request['familiar_name'][$indice],
+                                    'fecha_nac' => $request['familiar_fecha_nac'][$indice],
+                                    'tipo_documento_id' => $request['familiar_tipo_documento_id'][$indice],
+                                    'num_documento' => $request['familiar_num_documento'][$indice]
+                                ]
+                            );
+
+                            Familiar::updateOrCreate(
+                                [
+                                    'person_id' => $familiar['id'],
+                                    'tramite_id' => $tramite_data['id'],
+                                    'parentesco_id' => $request['familiar_parentesco_id'][$indice]
+                                ]
+                            );
+                        }
+                    }
+
                     if($request['files'] != null){
                         foreach ($request['files'] as $indice => $valor) {
         
@@ -237,6 +267,7 @@ class NinezController extends Controller
                             $fileController->uploadbase64($data);
                         }
                     }
+
                     
                     $list_tramites_id[] = $tramite_data['id'];
                      Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
@@ -250,6 +281,7 @@ class NinezController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
+           // dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
@@ -282,14 +314,148 @@ class NinezController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 8)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'familiares', 'familiares.person', 'familiares.parentesco')->get()
             ]
         );
     }
     //update
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+           
+            Person::where('id',$request['person_id'])->update(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'fecha_nac' => $request['fecha_nac'],
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento'],
+                    'num_cuit' => $request['num_cuit'] ?? null
+                ]
+            );
+
+            AditionalData::where('person_id',$request['person_id'])->update(
+                [
+                    'cant_hijos' => $request['cant_hijos'],
+                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
+                    'situacion_conyugal_id' => $request['situacion_conyugal_id']
+                ]
+            );
+
+            SocialData::where('person_id', $request['person_id'])->update(
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'subsidio' => $request['subsidio']
+                ]
+            );
+
+            EducationData::where('person_id', $request['person_id'])->update(
+                [
+                    'beca' => $request['beca'],
+                    'nivel_educativo_id' => $request['nivel_educativo_id'],
+                    'estado_educativo_id' => $request['estado_educativo_id']
+                ]
+            );
+
+            // address_data
+
+            AddressData::where('person_id', $request['person_id'])->update(
+                [
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'latitude' => $request['latitude'],
+                    'longitude' => $request['longitude'],
+                    'google_address' => $request['google_address'],
+                    'pais_id' => $request['pais_id'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
+
+                ]
+            );
+
+            // contact_data
+
+            ContactData::where('person_id', $request['person_id'])->update(
+                [
+                    'phone' => $request['phone'],
+                    'email' => $request['email']
+                ]
+            );
+
+            /**
+             * Registro de Beneficiario
+             */
+
+             if ($request['beneficiario_control'] == 'true') {
+                Person::where('id',$request['beneficiario_id'])->update(
+                    [
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                        'lastname' => $request['beneficiario_lastname'],
+                        'name' => $request['beneficiario_name'],
+                        'fecha_nac' => $request['beneficiario_fecha_nac'],
+                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
+                        'num_documento' => $request['beneficiario_num_documento'],
+                    ]
+                );
+
+                ContactData::where('person_id', $request['beneficiario_id'])->update(
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
+    
+            }
+
+
+            /**
+             * FIN Registro de Beneficiario
+             */
+
+            // Obtengo ID de la dependencia.
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+
+
+            // tramite
+            Tramite::where('id', $request['tramite_id'])->update(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                    'observacion' => $request['observacion'],
+                    'canal_atencion_id' => $request['canal_atencion_id'],
+                    'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'dependencia_id' => $dependencia['dependencia_id'],
+                    'parentesco_id' => $request['parentesco_id'],
+                ]
+            );
+
+            if ($request->hasFile('file')) {
+                $fileController = new FileController;
+                $data = [];
+    
+                $data['file'] = $request->file('file');
+                $data['tramite_id'] =  $request['tramite_id'];
+                $data['description'] =  $request['description_file']; 
+                $data['dependencia'] =  $dependencia['description'];
+                
+                $fileController->upload($data );
+            }
+
+            DB::commit();
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Ninez:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Ninez:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
+        }
     }
     //destroy
     public function destroy($id)

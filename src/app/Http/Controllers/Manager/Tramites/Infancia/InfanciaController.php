@@ -103,7 +103,7 @@ class InfanciaController extends Controller
     //store
    public function store(Request $request)
    {
-        dd($request);
+        //dd($request);
         DB::beginTransaction();
         try {
             /**
@@ -419,7 +419,7 @@ class InfanciaController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
-                dd($th);
+                //dd($th);
                 DB::rollBack();
                 Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Infancia:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
                 return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
@@ -640,7 +640,7 @@ class InfanciaController extends Controller
             Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
             return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
         } catch (\Throwable $th) {
-            dd($th);
+            //dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);

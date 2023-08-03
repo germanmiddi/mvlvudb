@@ -23,7 +23,22 @@ class EducationData extends Model
         'escuela_turno_id',
         'permanencia',
         'certificado_escolar',
-        'observacion'
+        'observacion',
+        'escuela_primaria_id',
+        'escuela_secundaria_id',
+        'escuela_nocturna_id',
+        'orientacion_secundario_id',
+        'nivel_secundario_id',
+        'turno_nocturno_id',
+        'dependencia_nocturno_id',
+        'terciario',
+        'name_terciaria',
+        'carrera_terciaria',
+        'anio_terciario',
+        'universitario',
+        'name_universitaria',
+        'carrera_universitaria',
+        'anio_universitario'
 
     ];
 

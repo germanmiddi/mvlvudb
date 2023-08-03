@@ -14,6 +14,12 @@ class SaludData extends Model
         'apto_medico',
         'libreta_vacunacion',
         'observacion',
+        'fecha_apto_medico',
+        'electrocardiograma',
+        'fecha_electrocardiograma',
+        'medicacion',
+        'name_medicacion',
+        'dosis',
         'person_id',
         'centro_salud_id',
         'estado_salud_id'

@@ -12,8 +12,9 @@
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
-					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					@click="submit">
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+					:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
+					@click="submit" :disabled="btnGuardar">
 					Guardar
 				</button>
 			</div>
@@ -21,100 +22,146 @@
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
+		<div v-if="v$.form.$error" class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+				role="alert">
+				<p class="font-bold">Campos requeridos</p>
+				<p v-for="error of v$.tramites.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
+				<p v-for="error of v$.form.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
+			</div>
+		</div>
+
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST">
 				<div class="shadow sm:rounded-md sm:overflow-hidden">
-				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-					<div>
-						<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
-					</div>
-
-					<div class="grid grid-cols-12 gap-6">
-
-						<div class="col-span-12 sm:col-span-3 ">
-							<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha" 
-										:enableTimePicker="false"
-										:monthChangeOnScroll="true" 
-										autoApply :format="format">
-							</Datepicker>
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+						<div>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">
+								Declaración Jurada
+							</h3>
 						</div>
 
-						<div class="col-span-12 sm:col-span-3">
-							<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
-							<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion" autocomplete="canal_atencion-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" selected>Selecciones un canal de atencion</option>
-								<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
-									:value="canalAtencion.id">{{
-											canalAtencion.description
-									}}</option>
-							</select>
-						</div>   
-					</div>
-					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-3">
-							<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de Tramite</label>
-							<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id" autocomplete="tipo_tramite_id_name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" selected>Selecciones un tipo de tramite</option>
-								<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-									:value="tipoTramite.id">{{
-											tipoTramite.description
-									}}</option>
-							</select>
-						</div>  
-
-						<div class="col-span-12 sm:col-span-9">
-							<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones </label>
-							<div class="mt-1">
-								<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+									:format="format" :style="v$.form.fecha.$error
+										? datepickerStyle
+										: ''
+										">
+								</Datepicker>
+								<span v-if="v$.form.fecha.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
-							<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
+									Atención</label>
+								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
+									autocomplete="canal_atencion-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.canal_atencion_id.$error
+										? 'border-red-500'
+										: ''
+										">
+									<option value="" selected></option>
+									<option value="" selected>
+										Selecciones un canal de atencion
+									</option>
+									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
+										:value="canalAtencion.id">
+										{{ canalAtencion.description }}
+									</option>
+								</select>
+								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
 						</div>
-					</div>
-					<div class="flex items-center justify-end flex-wrap sm:flex-nowrap ">
-						<div class="flex-shrink-0">
-							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="addTramite()">Agregar Tramite</button>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Tramite</label>
+								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+									autocomplete="tipo_tramite_id_name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.tramites.$error ? 'border-red-500' : ''">
+									<option value="" selected>
+										Selecciones un tipo de tramite
+									</option>
+									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
+										:value="tipoTramite.id">
+										{{ tipoTramite.description }}
+									</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-9">
+								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
+								</label>
+								<div class="mt-1">
+									<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3"
+										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+										:class="v$.tramites.$error ? 'border-red-500' : ''" />
+								</div>
+								<p class="mt-2 text-sm text-gray-500">
+									Ingrese información adicional del tramite.
+								</p>
+							</div>
 						</div>
+						<div class="flex items-center justify-end flex-wrap sm:flex-nowrap">
+							<div class="flex-shrink-0">
+								<button type="button"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+									@click="addTramite()">
+									Agregar Tramite
+								</button>
+							</div>
+						</div>
+						<div class="grid grid-cols-12 gap-12">
+							<table class="min-w-full divide-y divide-gray-200 w-full col-span-12">
+								<thead class="bg-gray-50">
+									<tr>
+										<th scope="col"
+											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+											Tramite
+										</th>
+										<th scope="col"
+											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+											Observacion
+										</th>
+										<th scope="col"
+											class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+											Accion
+										</th>
+									</tr>
+								</thead>
+								<tbody class="bg-white divide-y divide-gray-200">
+									<tr v-for="(tramite, index) in tramites" :key="index">
+										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+											{{ tramite.titulo }}
+										</td>
+										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{{ tramite.observacion }}
+										</td>
+										<td class="px-6 py-4 text-center text-sm font-medium">
+											<button type="button"
+												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+												@click="deleteTramite(tramite)">
+												Borrar
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<span v-if="v$.tramites.$error" class="text-red-500 text-xs">No ha seleccionado tramites</span>
 					</div>
-					<div class="grid grid-cols-12 gap-12">
-						<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-                                        Tramite
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
-                                        Observacion
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
-                                        Accion
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-								<tr v-for="(tramite, index) in tramites" :key="index">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                     	{{tramite.titulo}}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    	{{tramite.observacion}}
-                                    </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium">
-										<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
-											Borrar
-										</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-						
-					</div> 
 				</div>
-				
-			</div>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -128,10 +175,14 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<div class="flex-shrink-0">
-									<button type="button" @click="addBeneficiario()" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{this.textBtnBenef}}</button>
-								</div>
+								<button type="button" @click="addBeneficiario()"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showBenef
+										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
+										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
+										">
+									{{ this.textBtnBenef }}
+								</button>
 							</div>
 						</div>
 
@@ -140,9 +191,9 @@
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
 								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="tipo_documento_id-name"
+									autocomplete="off" :class="v$.form.tipo_documento_id.$error ? 'border-red-500' : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
+									<option value="" disabled>
 										Seleccione un tipo de documento
 									</option>
 									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
@@ -150,58 +201,86 @@
 										{{ tipoDocumento.description }}
 									</option>
 								</select>
+								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
 								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
-									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									id="num_documento" autocomplete="level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.num_documento.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
-								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-								<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit"
-									autocomplete="num_cuit-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.name.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.lastname.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
 									Nacimiento</label>
 								<Datepicker
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
-									autoApply :format="format">
+									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2"
+								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
+								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
+								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+						</div>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
+								<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
+								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
+									autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id"
 									class="block text-sm font-medium text-gray-700">Parentesco</label>
@@ -217,11 +296,13 @@
 								</select>
 							</div>
 						</div>
-						
 					</div>
 				</div>
 
-				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" @data_beneficiario="beneficiario"></FormBeneficiario>
+
+
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" @data_beneficiario="beneficiario">
+				</FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -232,21 +313,6 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Vivienda</label>
-								<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id"
-									autocomplete="tipo_vivienda-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
-										Seleccione un tipo de vivienda
-									</option>
-									<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-										:value="tipoVivienda.id">
-										{{ tipoVivienda.description }}
-									</option>
-								</select>
-							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
@@ -466,7 +532,7 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive
+								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
 									Jubilación / Pensión</label>
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
 									autocomplete="tipo_pension_id-name"
@@ -512,15 +578,7 @@
 									</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe
-									Subsidio</label>
-								<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
@@ -538,77 +596,80 @@
 									</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="beca" class="block text-sm font-medium text-gray-700">Recibe Beca
-									Educativa</label>
-								<select v-model="form.beca" id="beca" name="beca" autocomplete="beca-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+
 						</div>
 					</div>
 				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-
-					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-						<div class="">
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+							<div class="">
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Archivos Adjuntos
+								</h3>
+							</div>
 						</div>
-					</div>
 
-					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-8 ">
-							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-							<div class="flex ">
-								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-								<input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
-								<div class="flex-shrink-0">
-									<button @click="addFile()" type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo</button>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-8">
+								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+								<div class="flex">
+									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
+										autocomplete="descripcion-level2"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
+									<input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile"
+										autocomplete="file-level2"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+									<div class="flex-shrink-0">
+										<button @click="addFile()" type="button"
+											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+											Agregar Archivo
+										</button>
+									</div>
 								</div>
 							</div>
-						</div> 
-						<div class="col-span-6 sm:col-span-6">
-							<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
-										Descripcion
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
-                                        Accion
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-								<tr v-for="(file, index) in files" :key="index">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    	{{file.description}}
-                                    </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium">
-										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
-											Eliminar
-										</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+							<div class="col-span-6 sm:col-span-6">
+								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12">
+									<thead class="bg-gray-50">
+										<tr>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+												Descripcion
+											</th>
+											<th scope="col"
+												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+												Accion
+											</th>
+										</tr>
+									</thead>
+									<tbody class="bg-white divide-y divide-gray-200">
+										<tr v-for="(file, index) in files" :key="index">
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{{ file.description }}
+											</td>
+											<td class="px-6 py-4 text-center text-sm font-medium">
+												<button
+													class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+													@click="deleteFile(index)">
+													Eliminar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 			</form>
 		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
-				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				@click="submit">
+				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
+				:disabled="btnGuardar">
 				Guardar
 			</button>
 		</div>
@@ -617,14 +678,17 @@
 
 <script>
 import { ref } from "vue";
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers, minLength } from '@vuelidate/validators'
+
 //import { Inertia } from '@inertiajs/inertia'
 import { ArrowLeftCircleIcon } from "@heroicons/vue/24/outline";
 import GoogleMap from "@/Layouts/Components/GoogleMap.vue";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
-import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue'
+import FormBeneficiario from "@/Layouts/Components/Tramites/FormBeneficiario.vue";
 import Toast from "@/Layouts/Components/Toast.vue";
-import Datepicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
 	props: {
@@ -651,7 +715,11 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario
+		FormBeneficiario,
+		required,
+		useVuelidate,
+		helpers,
+		minLength,
 	},
 	data() {
 		return {
@@ -665,20 +733,39 @@ export default {
 			showBenef: false,
 			beneficiario_control: false,
 			/* MAPA */
-			textMap:  "Ver Mapa",
-            showMap: false,
+			textMap: "Ver Mapa",
+			showMap: false,
 			/* MENSAJERIA */
 			toastMessage: "",
-            labelType: "info",
-            message: "",
-            showToast: false,
+			labelType: "info",
+			message: "",
+			showToast: false,
 			/* CARGA MASIVA DE FILE */
 			file: "",
 			file_tmp: {},
 			files: [],
-    		selectedFile: null,
+			selectedFile: null,
 			tramites: [],
+			btnGuardar: false,
+			datepickerStyle: {
+				color: 'red',
+				border: '1px solid red',
+			}
 		};
+	},
+	validations() {
+		return {
+			tramites: { required: helpers.withMessage('Debe seleccionar minimo un tramite', required) },
+			form: {
+				fecha: { required: helpers.withMessage('El campo Fecha es Obligatorio', required) },
+				canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento es Obligatorio', required) },
+				num_documento: { required: helpers.withMessage('El campo N° de documento es Obligatorio', required) }, // Matches this.contact.email
+				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
+			},
+		}
 	},
 	setup() {
 		const format = (date) => {
@@ -687,39 +774,49 @@ export default {
 			const year = date.getFullYear();
 
 			return `${day}/${month}/${year}`;
-		}
+		};
 
 		return {
 			format,
-		}
+			v$: useVuelidate()
+		};
 	},
 	methods: {
 		clearMessage() {
 			this.toastMessage = "";
 		},
 		async submit() {
-			let rt = route('genero.store');
+			const result = await this.v$.$validate()
+			if (!result) {
+				return
+			}
+			this.btnGuardar = true
+			let rt = route("genero.store");
 
 			const formData = new FormData();
 
 			Object.entries(this.tramites).forEach(([clave, valor]) => {
-				formData.append('tramites_id[]', valor.id);
-				formData.append('tramites_observacion[]', valor.observacion);
+				formData.append("tramites_id[]", valor.id);
+				formData.append("tramites_observacion[]", valor.observacion);
 			});
 
 			Object.entries(this.files).forEach(([clave, valor]) => {
-				formData.append('files[]', valor.file);
-				formData.append('files_descripcion[]', valor.description);
+				formData.append("files[]", valor.file);
+				formData.append("files_descripcion[]", valor.description);
 			});
 
-			/* 
-			** Se formatea las fechas para que las mismas sean enviadas en formato 
-			** Output: 2023-06-22T01:33:00.000Z
-			** a traves del formData
-			*/
+			/*
+			 ** Se formatea las fechas para que las mismas sean enviadas en formato
+			 ** Output: 2023-06-22T01:33:00.000Z
+			 ** a traves del formData
+			 */
 
-			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
-			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
+			this.form.fecha = this.form.fecha
+				? new Date(this.form.fecha).toISOString()
+				: null;
+			this.form.fecha_nac = this.form.fecha_nac
+				? new Date(this.form.fecha_nac).toISOString()
+				: null;
 
 			for (var clave in this.form) {
 				if (this.form.hasOwnProperty(clave)) {
@@ -727,37 +824,45 @@ export default {
 				}
 			}
 
-			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
+			this.form_beneficiario.fecha_nac = this.form_beneficiario.fecha_nac
+				? new Date(this.form_beneficiario.fecha_nac).toISOString()
+				: null;
 			for (var clave in this.form_beneficiario) {
 				if (this.form_beneficiario.hasOwnProperty(clave)) {
-					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+					formData.append(
+						"beneficiario_" + clave,
+						this.form_beneficiario[clave]
+					);
 				}
 			}
 
-			formData.append('beneficiario_control', this.beneficiario_control)
+			formData.append("beneficiario_control", this.beneficiario_control);
 
 			try {
 				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
-					setTimeout(()=> { 
-						response.data.idTramites.forEach(element => {
-							console.log(element)
-							window.open(route('pdf.acusepdf',element), '_blank');
-						});
-					}, 1000)
 					setTimeout(() => {
-						window.location.href = '/genero';
-					}, 3100)
+						response.data.idTramites.forEach((element) => {
+							console.log(element);
+							window.open(
+								route("pdf.acusepdf", element),
+								"_blank"
+							);
+						});
+					}, 1000);
+					setTimeout(() => {
+						window.location.href = "/genero";
+					}, 3100);
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
+					this.btnGuardar = false
 				}
 			} catch (error) {
-				console.log(error)
+				console.log(error);
 			}
-
 		},
 		async getPerson() {
 			this.form_temp.num_documento = this.form.num_documento;
@@ -767,76 +872,95 @@ export default {
 			this.form_temp.canal_atencion_id = this.form.canal_atencion_id;
 			this.form_temp.observacion = this.form.observacion;
 
-			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
-			const response = await fetch(get, { method: 'GET' })
-			let data = await response.json()
+			const get = `${route(
+				"persons.getPersonDni",
+				this.form.num_documento
+			)}`;
+			const response = await fetch(get, { method: "GET" });
+			let data = await response.json();
 			if (!data.data.length == 0) {
 				this.labelType = "success";
 				this.toastMessage = "El DNI indicado se encuentra registrado";
 
-				data = data.data[0].person
+				data = data.data[0].person;
 				/// Recuperar datos.
-				this.form.tipo_documento_id = data.tipo_documento_id
-				this.form.num_cuit = data.num_cuit
-				this.form.fecha_nac = data.fecha_nac
-				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
-				this.form.name = data.name
-				this.form.lastname = data.lastname
-				this.form.email = data.contact[0].email
-				this.form.phone = data.contact[0].phone
-				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
-				this.form.cant_hijos = data.aditional[0].cant_hijos
-				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
-				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
-				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
-				this.form.tipo_pension_id = data.social[0].tipo_pension_id
-				this.form.subsidio = data.social[0].subsidio
-				this.form.beca = data.education[0].beca
-				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
-				this.form.estado_educativo_id = data.education[0].estado_educativo_id
-				this.form.calle = data.address[0].calle
-				this.form.number = data.address[0].number
-				this.form.piso = data.address[0].piso
-				this.form.dpto = data.address[0].dpto
+				this.form.tipo_documento_id = data.tipo_documento_id;
+				this.form.num_cuit = data.num_cuit;
+				this.form.fecha_nac = data.fecha_nac;
+				this.form.fecha_nac = new Date(
+					this.form.fecha_nac + "T00:00:00.000-03:00"
+				);
+				this.form.name = data.name;
+				this.form.lastname = data.lastname;
+				this.form.email = data.contact[0].email;
+				this.form.phone = data.contact[0].phone;
+				this.form.celular = data.contact[0].celular;
+				this.form.cant_hijos = data.aditional[0].cant_hijos;
+				this.form.situacion_conyugal_id =
+					data.aditional[0].situacion_conyugal_id;
+				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id;
+				this.form.cobertura_medica_id =
+					data.social[0].cobertura_medica_id;
+				this.form.programa_social_id = data.social[0].programa_social_id
+				this.form.tipo_pension_id = data.social[0].tipo_pension_id;
+				this.form.subsidio = data.social[0].subsidio;
+				this.form.beca = data.education[0].beca;
+				this.form.nivel_educativo_id =
+					data.education[0].nivel_educativo_id;
+				this.form.estado_educativo_id =
+					data.education[0].estado_educativo_id;
+				this.form.calle = data.address[0].calle;
+				this.form.number = data.address[0].number;
+				this.form.piso = data.address[0].piso;
+				this.form.dpto = data.address[0].dpto;
 				if (data.address[0].latitude && data.address[0].longitude) {
-					this.form.latitude = data.address[0].latitude
-					this.form.longitude = data.address[0].longitude
+					this.form.latitude = data.address[0].latitude;
+					this.form.longitude = data.address[0].longitude;
 
 					// Carga de datos para visualizar el mapa.
-					this.form_temp = {}
-					this.form_temp.latitude = parseInt(data.address[0].latitude)
-					this.form_temp.longitude = parseInt(data.address[0].longitude)
-					this.form_temp.route = data.address[0].google_address
-					this.form_google = this.form_temp
-           			this.showMap = true
+					this.form_temp = {};
+					this.form_temp.latitude = parseInt(
+						data.address[0].latitude
+					);
+					this.form_temp.longitude = parseInt(
+						data.address[0].longitude
+					);
+					this.form_temp.route = data.address[0].google_address;
+					this.form_google = this.form_temp;
+					this.showMap = true;
 				}
 
-				this.form.google_address = data.address[0].google_address
-				this.form.pais_id = data.address[0].pais_id
-				this.form.localidad_id = data.address[0].localidad_id
-				this.form.get_barrio_id = data.address[0].barrio_id
+				this.form.google_address = data.address[0].google_address;
+				this.form.pais_id = data.address[0].pais_id;
+				this.form.localidad_id = data.address[0].localidad_id;
+				this.form.barrio_id = data.address[0].barrio_id;
+				this.form = this.removeNullValues(this.form);
 			} else {
 				this.labelType = "info";
-				this.toastMessage = "El DNI indicado no se encuentra registrado";
-				this.form = {}
-				this.form = this.form_temp
-				this.form_temp = {}
+				this.toastMessage =
+					"El DNI indicado no se encuentra registrado";
+				this.form = {};
+				this.form = this.form_temp;
+				this.form_temp = {};
 			}
 		},
-		addBeneficiario(){
-			if(this.showBenef){
-				this.textBtnBenef = 'Agregar Beneficiario'
-				this.form_beneficiario = {}
-				this.beneficiario_control = false
-			}else{
-				this.beneficiario_control = true
-				this.textBtnBenef = 'Borrar Beneficiario'
-			}
-			this.showBenef = !this.showBenef
+		removeNullValues(data) {
+			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
-	/* ***********************
-	** * MANEJO DE GOOGLE MAPS
-	*/ 
+		addBeneficiario() {
+			if (this.showBenef) {
+				this.textBtnBenef = "Agregar Beneficiario";
+				this.form_beneficiario = {};
+				this.beneficiario_control = false;
+			} else {
+				this.beneficiario_control = true;
+				this.textBtnBenef = "Borrar Beneficiario";
+			}
+			this.showBenef = !this.showBenef;
+		},
+		/* ***********************
+		 ** * MANEJO DE GOOGLE MAPS
+		 */
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData["formatted_address"];
 			this.form.latitude = addressData["latitude"];
@@ -847,22 +971,21 @@ export default {
 			this.showMap = true;
 		},
 		coord_google($coord) {
-			this.form.latitude = $coord.position.lat
-			this.form.longitude = $coord.position.lng
-			this.form.google_address = $coord.address
-
+			this.form.latitude = $coord.position.lat;
+			this.form.longitude = $coord.position.lng;
+			this.form.google_address = $coord.address;
 		},
-	/* 
-	** * FIN MANEJO DE GOOGLE MAPS
-	******************************
-	*/ 
+		/*
+		 ** * FIN MANEJO DE GOOGLE MAPS
+		 ******************************
+		 */
 
-	/* ********************
-	** * MANEJO DE ARCHIVOS
-	*/ 
-	handleFileChange(event) {
+		/* ********************
+		 ** * MANEJO DE ARCHIVOS
+		 */
+		handleFileChange(event) {
 			//this.selectedFile = event.target.files[0];
-			const file =  event.target.files[0];
+			const file = event.target.files[0];
 			const reader = new FileReader();
 
 			reader.onload = () => {
@@ -874,79 +997,88 @@ export default {
 
 		addFile() {
 			if (this.selectedFile && this.form.description_file) {
-				this.files.push(
-					{
-						description: this.form.description_file,
-						file: this.selectedFile,
-					}
-				)
-				this.selectedFile = null
-				this.form.description_file = ''
+				this.files.push({
+					description: this.form.description_file,
+					file: this.selectedFile,
+				});
+				this.selectedFile = null;
+				this.form.description_file = "";
 				/* const inputfile = this.$refs.inputfile;
 				inputfile.value = ''; */
-			}else{
+			} else {
 				this.labelType = "danger";
-                this.toastMessage = "Debe completar completar los datos del archivo";
+				this.toastMessage =
+					"Debe completar completar los datos del archivo";
 			}
 		},
 		deleteFile(index) {
 			this.files.splice(index, 1);
 		},
 
-	/* 
-	** * FIN MANEJO DE ARCHIVOS
-	***************************
-	*/ 
-		
-	/* ***************************
-	** * MANEJO DE TIPO DE TRAMITE
-	*/ 
+		/*
+		 ** * FIN MANEJO DE ARCHIVOS
+		 ***************************
+		 */
+
+		/* ***************************
+		 ** * MANEJO DE TIPO DE TRAMITE
+		 */
 		addTramite() {
-			if(this.tramites.find( tramite => tramite.id === this.form.tipo_tramite_id )){
+			if (
+				this.tramites.find(
+					(tramite) => tramite.id === this.form.tipo_tramite_id
+				)
+			) {
 				this.labelType = "danger";
-                this.toastMessage = "El tipo de tramite ya se ha ingresado previamente";
-			}else{
-				if(this.form.tipo_tramite_id != '' && this.form.observacion != ''){
-					this.tramites.push(
-						{
-							id: this.form.tipo_tramite_id,
-							titulo: this.tiposTramite.find( tramite => tramite.id === this.form.tipo_tramite_id ).description,
-							observacion: this.form.observacion,
-						}
-					)
-				}else{
+				this.toastMessage =
+					"El tipo de tramite ya se ha ingresado previamente";
+			} else {
+				if (
+					this.form.tipo_tramite_id != "" &&
+					this.form.observacion != ""
+				) {
+					this.tramites.push({
+						id: this.form.tipo_tramite_id,
+						titulo: this.tiposTramite.find(
+							(tramite) =>
+								tramite.id === this.form.tipo_tramite_id
+						).description,
+						observacion: this.form.observacion,
+					});
+				} else {
 					this.labelType = "danger";
-                	this.toastMessage = "Debe completar todos los datos";
+					this.toastMessage = "Debe completar todos los datos";
 				}
 			}
-			this.form.tipo_tramite_id = ''
-			this.form.observacion = ''
+			this.form.tipo_tramite_id = "";
+			this.form.observacion = "";
 		},
 		deleteTramite(index) {
 			this.tramites.splice(index, 1);
 		},
-	/* 
-	** * FIN MANEJO DE TIPO DE TRAMITE
-	**********************************
-	*/ 
+		/*
+		 ** * FIN MANEJO DE TIPO DE TRAMITE
+		 **********************************
+		 */
 
-		beneficiario(data){
+		beneficiario(data) {
 			this.form_beneficiario = data;
-		}
-		
+		},
 	},
 	created() { },
 	computed: {
 		barriosComputed: function () {
-			this.form.barrio_id = this.form.get_barrio_id
-			this.form.get_barrio_id = null
-			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
-		}
+			/* this.form.barrio_id = this.form.get_barrio_id;
+			this.form.get_barrio_id = null; */
+			return this.barrios.filter(
+				(barrio) => barrio.localidad_id == this.form.localidad_id
+			);
+		},
 	},
 
-	mounted(){
-		this.form.tipo_tramite_id = ''
-		this.form.observacion = ''
-	}
+	mounted() {
+		this.form.tipo_tramite_id = "";
+		this.form.observacion = "";
+	},
 };
 </script>

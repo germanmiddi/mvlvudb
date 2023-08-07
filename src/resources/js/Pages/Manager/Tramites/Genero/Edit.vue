@@ -11,14 +11,25 @@
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
-					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					@click="submit">
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+					:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
+					@click="submit" :disabled="btnGuardar">
 					Guardar
 				</button>
 			</div>
 		</div>
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
+
+		<div v-if="v$.form.$error" class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+				role="alert">
+				<p class="font-bold">Campos requeridos</p>
+				<p v-for="error of v$.form.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
+			</div>
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST" enctype="multipart/form-data">
@@ -36,8 +47,10 @@
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:format="format">
+									:format="format" :style="v$.form.fecha.$error ? datepickerStyle : ''">
 								</Datepicker>
+								<span v-if="v$.form.fecha.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-5">
@@ -45,13 +58,16 @@
 									Tramite</label>
 								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
 									autocomplete="tipo_tramite_id_name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un tipo de tramite</option>
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.tipo_tramite_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Selecciones un tipo de tramite</option>
 									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
 										:value="tipoTramite.id">{{
 											tipoTramite.description
 										}}</option>
 								</select>
+								<span v-if="v$.form.tipo_tramite_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
@@ -59,13 +75,16 @@
 									Atención</label>
 								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
 									autocomplete="canal_atencion-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un canal de atencion</option>
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.canal_atencion_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Selecciones un canal de atencion</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
 										:value="canalAtencion.id">{{
 											canalAtencion.description
 										}}</option>
 								</select>
+								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
@@ -104,13 +123,16 @@
 									Documento</label>
 								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
 									autocomplete="tipo_documento_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de documento</option>
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Seleccione un tipo de documento</option>
 									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
 										:value="tipoDocumento.id">{{
 											tipoDocumento.description
 										}}</option>
 								</select>
+								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
@@ -118,14 +140,36 @@
 									Documento</label>
 								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
 									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" :disabled="true"/>
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:class="v$.form.num_documento.$error ? 'border-red-500' : ''" :disabled="true" />
+								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-								<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit"
-									autocomplete="num_cuit-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.name.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.lastname.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+
+
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
@@ -137,23 +181,6 @@
 								</Datepicker>
 							</div>
 
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2"
@@ -163,6 +190,12 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
+								<input v-model="form.celular" type="text" name="celular" id="celular"
+									autocomplete="phone-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
@@ -186,7 +219,8 @@
 					</div>
 				</div>
 
-				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :dni="form_beneficiario.num_documento"
+					@data_beneficiario="beneficiario"></FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -195,19 +229,7 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Vivienda</label>
-								<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id"
-									autocomplete="tipo_vivienda-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de vivienda</option>
-									<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-										:value="tipoVivienda.id">{{
-											tipoVivienda.description
-										}}</option>
-								</select>
-							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
@@ -412,7 +434,7 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive
+								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
 									Jubilación / Pensión</label>
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
 									autocomplete="tipo_pension_id-name"
@@ -449,15 +471,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe
-									Subsidio</label>
-								<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
@@ -472,15 +486,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="beca" class="block text-sm font-medium text-gray-700">Recibe Beca
-									Educativa</label>
-								<select v-model="form.beca" id="beca" name="beca" autocomplete="beca-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+
 						</div>
 					</div>
 				</div>
@@ -526,7 +532,7 @@
 											</th>
 										</tr>
 									</thead>
-									<tbody  class="bg-white divide-y divide-gray-200">
+									<tbody class="bg-white divide-y divide-gray-200">
 										<tr v-for="archivo in form_archivo " :key="archivo.id">
 											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 												{{ archivo.description }}
@@ -538,7 +544,7 @@
 													Descargar
 												</a>
 												<a class="ml-2 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-													@click="deleteFile(archivo.id)" title="Eliminar Archivo" >
+													@click="deleteFile(archivo.id)" title="Eliminar Archivo">
 													Eliminar
 												</a>
 											</td>
@@ -554,8 +560,9 @@
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
-				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				@click="submit">
+				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
+				:disabled="btnGuardar">
 				Guardar
 			</button>
 		</div>
@@ -566,6 +573,8 @@
 <script>
 
 import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers, minLength } from '@vuelidate/validators'
 //import { Inertia } from '@inertiajs/inertia'
 import { ArrowLeftCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline';
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
@@ -588,7 +597,6 @@ export default {
 		tiposDocumento: Object,
 		tiposOcupacion: Object,
 		tiposPension: Object,
-		tiposVivienda: Object,
 		situacionesConyugal: Object,
 		rolesTramite: Object,
 		tiposTramite: Object,
@@ -603,7 +611,11 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario
+		FormBeneficiario,
+		required,
+		useVuelidate,
+		helpers,
+		minLength,
 	},
 	data() {
 		return {
@@ -619,7 +631,12 @@ export default {
 			file: "",
 			form_archivo: {},
 			form_beneficiario: {},
-			showBenef: false
+			showBenef: false,
+			btnGuardar: false,
+			datepickerStyle: {
+				color: 'red',
+				border: '1px solid red',
+			}
 		}
 	},
 	setup() {
@@ -633,6 +650,21 @@ export default {
 
 		return {
 			format,
+			v$: useVuelidate()
+		}
+	},
+	validations() {
+		return {
+			form: {
+				fecha: { required: helpers.withMessage('El campo Fecha es Obligatorio', required) },
+				canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
+				tipo_tramite_id: { required: helpers.withMessage('El campo Tipo de tramite es Obligatorio', required) },
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento es Obligatorio', required) },
+				num_documento: { required: helpers.withMessage('El campo N° de documento es Obligatorio', required) }, // Matches this.contact.email
+				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
+			},
 		}
 	},
 	methods: {
@@ -640,11 +672,16 @@ export default {
 			this.toastMessage = "";
 		},
 		async submit() {
+			const result = await this.v$.$validate()
+			if (!result) {
+				return
+			}
+			this.btnGuardar = true
 			let rt = route('genero.update', this.form.tramite_id);
 
 			const formData = new FormData();
 			formData.append('file', this.file);
-			
+
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
 			** Output: 2023-06-22T01:33:00.000Z
@@ -663,23 +700,24 @@ export default {
 			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
 			for (var clave in this.form_beneficiario) {
 				if (this.form_beneficiario.hasOwnProperty(clave)) {
-					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+					formData.append('beneficiario_' + clave, this.form_beneficiario[clave]);
 				}
 			}
 
 			formData.append('beneficiario_control', this.beneficiario_control)
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-					this.toastMessage = response.data.message; 
-					setTimeout(()=> { 
+					this.toastMessage = response.data.message;
+					setTimeout(() => {
 						window.location.href = '/genero';
 					}, 1000)
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
+					this.btnGuardar = false
 				}
 			} catch (error) {
 				console.log(error)
@@ -704,14 +742,13 @@ export default {
 				this.form.lastname = data.lastname
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
-				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
+				this.form.celular = data.contact[0].celular
 				this.form.cant_hijos = data.aditional[0].cant_hijos
 				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
 				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
 				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
+				this.form.programa_social_id = data.social[0].programa_social_id
 				this.form.tipo_pension_id = data.social[0].tipo_pension_id
-				this.form.subsidio = data.social[0].subsidio
-				this.form.beca = data.education[0].beca
 				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
 				this.form.estado_educativo_id = data.education[0].estado_educativo_id
 				this.form.calle = data.address[0].calle
@@ -734,7 +771,8 @@ export default {
 				this.form.google_address = data.address[0].google_address
 				this.form.pais_id = data.address[0].pais_id
 				this.form.localidad_id = data.address[0].localidad_id
-				this.form.get_barrio_id = data.address[0].barrio_id
+				this.form.barrio_id = data.address[0].barrio_id
+				this.form = this.removeNullValues(this.form);
 			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";
@@ -742,6 +780,9 @@ export default {
 				this.form = this.form_temp
 				this.form_temp = {}
 			}
+		},
+		removeNullValues(data) {
+			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData['formatted_address']
@@ -764,30 +805,30 @@ export default {
 			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
 		},
 
-		beneficiario(data){
+		beneficiario(data) {
 			this.form_beneficiario = data;
 		},
-		async deleteFile(id){
+		async deleteFile(id) {
 
 			let rt = route('file.delete', id);
 
 			try {
-				const response = await axios.delete(rt); 
+				const response = await axios.delete(rt);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
-					this.form_archivo = this.form_archivo .filter(function(file) {
+					this.toastMessage = response.data.message;
+					this.form_archivo = this.form_archivo.filter(function (file) {
 						return file.id !== id;
 					});
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
 			}
 		},
-		async uploadFile(){
+		async uploadFile() {
 
 			let rt = route('file.upload');
 			const formData = new FormData();
@@ -795,18 +836,18 @@ export default {
 			formData.append('file', this.file);
 			formData.append('tramite_id', this.form.tramite_id);
 			formData.append('description', this.form.description_file);
-		
+
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
+					this.toastMessage = response.data.message;
 					this.form_archivo.push(response.data.archivo)
 					this.form.description_file = ''
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
@@ -819,8 +860,8 @@ export default {
 	},
 	computed: {
 		barriosComputed: function () {
-			this.form.barrio_id = this.form.get_barrio_id
-			this.form.get_barrio_id = null
+			/* this.form.barrio_id = this.form.get_barrio_id
+			this.form.get_barrio_id = null */
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
 		}
 	},
@@ -841,12 +882,12 @@ export default {
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos
 
-		if(beneficiario != ''){
+		if (beneficiario != '') {
 			this.form_beneficiario.num_documento = beneficiario[0].num_documento
 			this.showBenef = true
 			this.beneficiario_control = true
 		}
-		
+
 		this.getPerson()
 
 	},

@@ -29,8 +29,11 @@
         "@headlessui/vue": "^1.7.14",
         "@heroicons/vue": "^2.0.16",
         "@suadelabs/vue3-multiselect": "^1.0.2",
+        "@vuelidate/core": "^2.0.3",
+        "@vuelidate/validators": "^2.0.3",
         "@vuepic/vue-datepicker": "^3.6.8",
         "vue-google-autocomplete": "^1.1.4",
+        "vue-multiselect": "^2.1.7",
         "vue-pdf-embed": "^1.1.6",
         "vue-toastification": "^2.0.0-rc.5",
         "vue3-google-map": "^0.15.0"

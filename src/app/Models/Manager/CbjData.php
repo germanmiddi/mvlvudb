@@ -9,6 +9,7 @@ class CbjData extends Model
 {
     protected $table = 'cbj_data';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
     
     protected $fillable = [
         'anio_inicio',

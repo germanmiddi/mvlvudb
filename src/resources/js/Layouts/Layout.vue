@@ -187,6 +187,22 @@
 
               </Disclosure>
 
+              <Disclosure as="div">
+                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Configuraciones</button>
+                </DisclosureButton>
+
+                <!-- Render a `ul` for the `DisclosurePanel` component -->
+                  <DisclosurePanel as="ul" class="pl-4">
+                    <a :href="route('logs')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Registro de Logs
+                      </li>
+                    </a>
+                  </DisclosurePanel>
+
+              </Disclosure>
               <!-- <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']" :aria-current="item.current ? 'page' : undefined">
                 <component :is="item.icon" :class="[item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500', 'mr-3 flex-shrink-0 h-6 w-6']" aria-hidden="true" />
                 {{ item.name }}

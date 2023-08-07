@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('address_data', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('person_id');
-            $table->unsignedBigInteger('localidad_id');
-            $table->unsignedBigInteger('pais_id');
+            $table->unsignedBigInteger('localidad_id')->nullable();
+            $table->unsignedBigInteger('pais_id')->nullable();
             $table->unsignedBigInteger('barrio_id')->nullable();
             $table->string('calle',100)->nullable();
             $table->string('number', 100)->nullable();

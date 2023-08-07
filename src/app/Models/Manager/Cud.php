@@ -9,6 +9,7 @@ class Cud extends Model
 {
     protected $table = 'cud';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
     
     protected $fillable = [
         'codigo',

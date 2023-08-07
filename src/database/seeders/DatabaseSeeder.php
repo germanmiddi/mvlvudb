@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            /* LocalidadesSeeder::class,
+            LocalidadesSeeder::class,
             BarriosSeeder::class,
             CanalAtencionSeeder::class,
             CoberturaMedicaSeeder::class,
@@ -44,12 +44,12 @@ class DatabaseSeeder extends Seeder
             ComedoresSeeder::class,
             EstadoCbjSeeder::class,
             ActividadesCbjSeeder::class,
-            AcompanamientosCbjSeeder::class, */
+            AcompanamientosCbjSeeder::class,
             EscuelasOrientacionesSeeder::class
 
         ]);
 
-        /* User::create([
+        User::create([
             'name' => 'German Middi',
             'email' => 'g@gmail.com',
             'password' => bcrypt('Inicio123')
@@ -57,8 +57,18 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Testing',
             'email' => 'test@test.com',
-            'password' => bcrypt('Test123')
-        ]); */
+            'password' => bcrypt('Testing123')
+        ]);
+        User::create([
+            'name' => 'Veronica',
+            'email' => 'veronica@test.com',
+            'password' => bcrypt('Vero123')
+        ]);
+        User::create([
+            'name' => 'Monica',
+            'email' => 'monica@test.com',
+            'password' => bcrypt('Moni123')
+        ]);
 
         
 

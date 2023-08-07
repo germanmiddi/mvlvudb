@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 //Model
 use App\Models\Manager\Person;
 use App\Models\Manager\AditionalData;
+use App\Models\Manager\SaludData;
 
 class PersonController extends Controller
 {
@@ -50,6 +51,14 @@ class PersonController extends Controller
         //getPersonDni
         public function getPersonDni($dni)
         {
+            /* return  Person::where('num_documento', $dni)->orderBy("created_at", 'DESC')
+            ->paginate(999)
+            ->withQueryString()
+            ->through(fn ($person) => [
+                'person'   => $person,
+                'data'   => $person->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud')->where('num_documento',$dni)->first()
+            ]); */
+
             return  Person::where('num_documento', $dni)->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud')->orderBy("created_at", 'DESC')
             ->paginate(999)
             ->withQueryString()

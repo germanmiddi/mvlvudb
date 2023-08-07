@@ -27,6 +27,7 @@ class TipoOcupacionSeeder extends Seeder
             ['id' => 10, 'description' => 'OTROS'],
             ['id' => 11, 'description' => 'NS/NR'],
             ['id' => 12, 'description' => 'AMA DE CASA'],
+            ['id' => 13, 'description' => 'ESTUDIANTE'],
         ];
 
         DB::table('tipo_ocupacion')->insert($data);

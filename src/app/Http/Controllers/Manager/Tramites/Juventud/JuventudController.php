@@ -29,6 +29,7 @@ use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\EscuelaDependencia;
+use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\EstadoEducativo;
@@ -213,12 +214,12 @@ class JuventudController extends Controller
                     'person_id' => $beneficiario_id
                 ],
                 [
-                    'calle' => $request['beneficiario_calle'],
-                    'number' => $request['beneficiario_number'],
-                    'piso' => $request['beneficiario_piso'],
-                    'dpto' => $request['beneficiario_dpto'],
-                    'localidad_id' => $request['beneficiario_localidad_id'],
-                    'barrio_id' => $request['beneficiario_barrio_id'],
+                    'calle' => $request['calle'],
+                    'number' => $request['number'],
+                    'piso' => $request['piso'],
+                    'dpto' => $request['dpto'],
+                    'localidad_id' => $request['localidad_id'],
+                    'barrio_id' => $request['barrio_id'],
 
                 ]
             );
@@ -401,11 +402,53 @@ class JuventudController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Juventud:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
+
+    //edit
+    public function edit($id)
+    {
+        return Inertia::render(
+            'Manager/Tramites/Juventud/Edit',
+            [
+                'paises' => Pais::all(),
+                'barrios' => Barrio::all(),
+                'localidades' => Localidad::all(),
+                'canalesAtencion' => CanalAtencion::all(),
+                'coberturasMedica' => CoberturaMedica::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'nivelesEducativo' => NivelEducativo::all(),
+                'tiposDocumento' => TipoDocumento::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
+                'tiposPension' => TipoPension::all(),
+                'tiposVivienda' => TipoVivienda::all(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'rolesTramite' => RolTramite::all(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
+                'programasSocial' => ProgramaSocial::all(),
+                'parentescos' => Parentesco::all(),
+                'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
+                'comedores' => Comedor::where('activo', true)->get(),
+                'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
+                'estadosCbj' => EstadoCbj::where('activo', true)->get(),
+                'sedes' => Sede::all(),
+                'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
+                'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
+                'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
+                'orientaciones' => OrientacionEscuela::where('activo', true)->get(),
+                'escuelasTurnos' => EscuelaTurno::all(),
+                'escuelasDependencias' => EscuelaDependencia::all(),
+                'centrosSalud' => CentroSalud::where('activo', true)->get(),
+                'estadosSalud' => EstadoSalud::where('activo', true)->get(),
+                'tramite' => Tramite::where('id', $id)->with('contactos', 'familiares', 'cbi_data', 'persons', 'persons.address','persons.salud','persons.education','persons.contact','persons.social','persons.aditional', 'archivos', 'familiares.person', 'familiares.parentesco', 'contactos.person', 'contactos.parentesco', 'contactos.person.contact')->get()
+            ]
+        );
+    }
+
 
     public function list()
     {

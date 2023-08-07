@@ -240,7 +240,12 @@ p {
                         <div class="mt-10">{{$fecha}}</div>
                         <div class="mt-10">{{$titular}}</div>
                         <div class="mt-10">{{$num_documento}}</div>
-                        <div class="mt-10">{{$domicilio}}</div>
+                        @if ($domicilio)
+                            <div class="mt-10">{{$num_documento}}</div>
+                        @else
+                            <div class="mt-10">-</div>
+                        @endif
+
                         <div class="mt-10">{{$dependencia}}</div>
                         <div class="mt-10">{{$tipo_tramite}}</div> 
                         <div class="mt-10">{{$observacion}}</div> 

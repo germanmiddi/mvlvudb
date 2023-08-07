@@ -9,6 +9,7 @@ class CbiData extends Model
 {
     protected $table = 'cbi_data';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
     
     protected $fillable = [
         'anio_inicio',

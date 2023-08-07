@@ -380,7 +380,7 @@
 							</select>
 						</div>  
 						<div class="col-span-12 sm:col-span-3">
-							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive Jubilación / Pensión</label>
+							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe Jubilación / Pensión</label>
 							<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 								<option disabled value="" selected>Selecciones un tipo de pension</option>
 								<option v-for="tipoPension in tiposPension" :key="tipoPension.id"

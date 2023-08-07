@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('education_data', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('beca')->nullable();
             $table->unsignedBigInteger('person_id');
-            $table->unsignedBigInteger('nivel_educativo_id');
-            $table->unsignedBigInteger('estado_educativo_id');
+            $table->unsignedBigInteger('nivel_educativo_id')->nullable();
+            $table->unsignedBigInteger('estado_educativo_id')->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')

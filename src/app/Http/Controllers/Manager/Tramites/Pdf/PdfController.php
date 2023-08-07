@@ -20,6 +20,8 @@ class PdfController extends Controller
             'domicilio' => $tramite->persons[0]->address[0]->google_address,
             'num_documento' => $tramite->persons[0]->num_documento,
             'dependencia' => $tramite->tipoTramite->dependencia->description,
+            'phone' => $tramite->persons[0]->contact[0]->phone,
+            'celular' => $tramite->persons[0]->contact[0]->celular,
             'tipo_tramite' => $tramite->tipoTramite->description,
             'observacion' => $tramite->observacion
         ];

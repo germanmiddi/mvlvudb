@@ -268,18 +268,6 @@
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-								<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="off"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
-									autocomplete="off"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id"

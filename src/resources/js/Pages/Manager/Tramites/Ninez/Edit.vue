@@ -27,6 +27,9 @@
 				<p v-for="error of v$.form.$errors" :key="error.$uid">
 					{{ error.$message }}
 				</p>
+				<p v-for="error of v$.form_beneficiario.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
 			</div>
 		</div>
 
@@ -490,6 +493,71 @@
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+						<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+							<div class="">
+								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Niño</h3>
+							</div>
+							<!-- <div class="flex-shrink-0">
+								<button type="button"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
+									Beneficiario</button>
+							</div> -->
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Documento</label>
+								<select v-model="form_beneficiario.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form_beneficiario.tipo_documento_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Seleccione un tipo de documento</option>
+									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+										:value="tipoDocumento.id">{{
+											tipoDocumento.description
+										}}</option>
+								</select>
+								<span v-if="v$.form_beneficiario.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+									Documento</label>
+								<input v-model="form_beneficiario.num_documento" type="text" name="num_documento"
+									id="num_documento" autocomplete="address-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:disabled="true" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_beneficiario.name" type="text" name="name" id="name" autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form_beneficiario.name.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form_beneficiario.name.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_beneficiario.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form_beneficiario.lastname.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form_beneficiario.lastname.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
@@ -681,6 +749,7 @@ export default {
 			form_archivo: {},
 			form_familiares: {},
 			form_beneficiario: {},
+			beneficiario_control: false,
 			showBenef: false,
 			btnGuardar: false,
 			datepickerStyle: {
@@ -714,6 +783,12 @@ export default {
 				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
 				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
 				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
+			},
+			form_beneficiario: {
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento del Niño es Obligatorio', required) },
+				name: { required: helpers.withMessage('El campo Nombre del Niño es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido del Niño es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento del Niño es Obligatorio', required) },
 			},
 		}
 	},
@@ -796,6 +871,7 @@ export default {
 				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
 				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
 				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
+				this.form.programa_social_id = data.social[0].programa_social_id
 				this.form.tipo_pension_id = data.social[0].tipo_pension_id
 				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
 				this.form.estado_educativo_id = data.education[0].estado_educativo_id
@@ -827,6 +903,23 @@ export default {
 				this.form = {}
 				this.form = this.form_temp
 				this.form_temp = {}
+			}
+		},
+		async getBeneficiario() {
+
+			const get = `${route('persons.getPersonDni', this.form_beneficiario.num_documento)}`
+			const response = await fetch(get, { method: 'GET' })
+			let data = await response.json()
+			if (!data.data.length == 0) {
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form_beneficiario.person_id = data.id
+				this.form_beneficiario.tipo_documento_id = data.tipo_documento_id
+				this.form_beneficiario.fecha_nac = data.fecha_nac
+				this.form_beneficiario.fecha_nac = new Date(this.form_beneficiario.fecha_nac + "T00:00:00.000-03:00")
+				this.form_beneficiario.name = data.name
+				this.form_beneficiario.lastname = data.lastname
+				this.form_beneficiario = this.removeNullValues(this.form_beneficiario);
 			}
 		},
 		removeNullValues(data) {
@@ -933,11 +1026,12 @@ export default {
 		this.form_archivo = this.tramite[0].archivos
 
 		if(beneficiario != ''){
-			this.form_beneficiario.num_documento = beneficiario[0].num_documento
-			this.showBenef = true
 			this.beneficiario_control = true
+			this.form_beneficiario.num_documento = beneficiario[0].num_documento
 		}
+
 		this.getPerson()
+		this.getBeneficiario()
 	},
 }
 </script>

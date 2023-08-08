@@ -112,7 +112,8 @@ class NinezController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id']
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
@@ -160,67 +161,12 @@ class NinezController extends Controller
                 ]
             );
 
-            /**
-             * Registro de Beneficiario
-             */
-            
-             /* if ($request['beneficiario_control'] == 'true') {
-                $beneficiario = Person::updateOrCreate(
-                    [
-                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento']
-                    ],
-                    [
-                        'lastname' => $request['beneficiario_lastname'],
-                        'name' => $request['beneficiario_name'],
-                        'fecha_nac' => $request['beneficiario_fecha_nac'],
-                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento'],
-                    ]
-                );
-    
-                ContactData::updateOrCreate(
-                    [
-                        'person_id' => $beneficiario->id
-                    ],
-                    [
-                        'phone' => $request['beneficiario_phone'],
-                        'email' => $request['beneficiario_email']
-                    ]
-                );
-    
-            } */
-
-            /**
-             * FIN Registro de Beneficiario
-             */
-
             $list_tramites_id = array();
 
-            // tramite
             if($request['tramites_id'] != null){
 
                 foreach ($request['tramites_id'] as $indice => $valor) {
                     
-                    // Obtengo ID de la dependencia.
-                    /* $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
-    
-                    $tramite_data = Tramite::Create(
-                        [
-                            'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
-                            'observacion' => $request['tramites_observacion'][$indice],
-        
-                            'canal_atencion_id' => $request['canal_atencion_id'],
-                            'tipo_tramite_id' => $request['tramites_id'][$indice],
-                            'dependencia_id' => $dependencia['dependencia_id'],
-                            'parentesco_id' => $request['parentesco_id'],
-                        ]
-                    ); */
-                    //$person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-
-                    /* if (isset($beneficiario)) {
-                        $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-                    } */
                     // Verifico si hay niño asociado..
                     if($request['ninos_id'] != null){
                         foreach ($request['ninos_id'] as $indice_nino => $valor) {
@@ -397,7 +343,8 @@ class NinezController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id']
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
@@ -440,11 +387,9 @@ class NinezController extends Controller
              * Registro de Beneficiario
              */
 
-            /*  if ($request['beneficiario_control'] == 'true') {
+             if ($request['beneficiario_control'] == 'true') {
                 Person::where('id',$request['beneficiario_id'])->update(
                     [
-                        'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento'],
                         'lastname' => $request['beneficiario_lastname'],
                         'name' => $request['beneficiario_name'],
                         'fecha_nac' => $request['beneficiario_fecha_nac'],
@@ -452,16 +397,8 @@ class NinezController extends Controller
                         'num_documento' => $request['beneficiario_num_documento'],
                     ]
                 );
-
-                ContactData::where('person_id', $request['beneficiario_id'])->update(
-                    [
-                        'phone' => $request['beneficiario_phone'],
-                        'email' => $request['beneficiario_email']
-                    ]
-                );
     
-            } */
-
+            }
 
             /**
              * FIN Registro de Beneficiario
@@ -509,8 +446,7 @@ class NinezController extends Controller
     {
         //
     }
-    //list
-    //list
+    
     public function list()
     {
         $length = request('length');

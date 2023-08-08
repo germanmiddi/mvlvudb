@@ -1079,6 +1079,7 @@ export default {
 
 			this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id;
 			this.form.cobertura_medica_id = data.social[0].cobertura_medica_id;
+			this.form.programa_social_id = data.social[0].programa_social_id
 			this.form.tipo_pension_id = data.social[0].tipo_pension_id;
 			this.form.nivel_educativo_id = data.education[0].nivel_educativo_id;
 			this.form.estado_educativo_id =

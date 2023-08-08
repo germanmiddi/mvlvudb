@@ -91,8 +91,7 @@ class NinezController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
@@ -102,7 +101,6 @@ class NinezController extends Controller
                 ],
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -114,8 +112,7 @@ class NinezController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'tipo_pension_id' => $request['tipo_pension_id']
                 ]
             );
 
@@ -124,7 +121,6 @@ class NinezController extends Controller
                     'person_id' => $person->id
                 ],
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -159,6 +155,7 @@ class NinezController extends Controller
                 ],
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
@@ -167,7 +164,7 @@ class NinezController extends Controller
              * Registro de Beneficiario
              */
             
-             if ($request['beneficiario_control'] == 'true') {
+             /* if ($request['beneficiario_control'] == 'true') {
                 $beneficiario = Person::updateOrCreate(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
@@ -192,7 +189,7 @@ class NinezController extends Controller
                     ]
                 );
     
-            }
+            } */
 
             /**
              * FIN Registro de Beneficiario
@@ -206,7 +203,7 @@ class NinezController extends Controller
                 foreach ($request['tramites_id'] as $indice => $valor) {
                     
                     // Obtengo ID de la dependencia.
-                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
+                    /* $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
     
                     $tramite_data = Tramite::Create(
                         [
@@ -218,13 +215,67 @@ class NinezController extends Controller
                             'dependencia_id' => $dependencia['dependencia_id'],
                             'parentesco_id' => $request['parentesco_id'],
                         ]
-                    );
-                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+                    ); */
+                    //$person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
 
-                    if (isset($beneficiario)) {
+                    /* if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-                    }
+                    } */
+                    // Verifico si hay niño asociado..
+                    if($request['ninos_id'] != null){
+                        foreach ($request['ninos_id'] as $indice_nino => $valor) {
 
+                            $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
+    
+                            $tramite_data = Tramite::Create(
+                                [
+                                    'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                                    'observacion' => $request['tramites_observacion'][$indice],
+                
+                                    'canal_atencion_id' => $request['canal_atencion_id'],
+                                    'tipo_tramite_id' => $request['tramites_id'][$indice],
+                                    'dependencia_id' => $dependencia['dependencia_id'],
+                                    'parentesco_id' => $request['parentesco_id'],
+                                ]
+                            );
+
+                            $nino = Person::updateOrCreate(
+                                [
+                                    'tipo_documento_id' => $request['ninos_tipo_documento_id'][$indice_nino],
+                                    'num_documento' => $request['ninos_num_documento'][$indice_nino]
+                                ],
+                                [
+                                    'lastname' => $request['ninos_lastname'][$indice_nino],
+                                    'name' => $request['ninos_name'][$indice_nino],
+                                    'fecha_nac' => $request['ninos_fecha_nac'][$indice_nino],
+                                    'tipo_documento_id' => $request['ninos_tipo_documento_id'][$indice_nino],
+                                    'num_documento' => $request['ninos_num_documento'][$indice_nino],
+                                    ]
+                                );
+
+                            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);   
+                            $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+
+                            $list_tramites_id[] = $tramite_data['id'];
+                        }
+                    }else{
+                        $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
+    
+                        $tramite_data = Tramite::Create(
+                            [
+                                'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
+                                'observacion' => $request['tramites_observacion'][$indice],
+            
+                                'canal_atencion_id' => $request['canal_atencion_id'],
+                                'tipo_tramite_id' => $request['tramites_id'][$indice],
+                                'dependencia_id' => $dependencia['dependencia_id'],
+                                'parentesco_id' => $request['parentesco_id'],
+                            ]
+                        );
+
+                        $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+                        $list_tramites_id[] = $tramite_data['id'];
+                    }
                     // Verifico si existe familiar asociado.
                   
                     if($request['familiar_id']){
@@ -269,8 +320,7 @@ class NinezController extends Controller
                     }
 
                     
-                    $list_tramites_id[] = $tramite_data['id'];
-                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
                 }
             }else{
                 // Se verifica que se haya enviado tipos de tramite
@@ -281,7 +331,7 @@ class NinezController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
-           // dd($th);
+            //dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
@@ -332,15 +382,13 @@ class NinezController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
             AditionalData::where('person_id',$request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -349,14 +397,12 @@ class NinezController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'tipo_pension_id' => $request['tipo_pension_id']
                 ]
             );
 
             EducationData::where('person_id', $request['person_id'])->update(
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -385,6 +431,7 @@ class NinezController extends Controller
             ContactData::where('person_id', $request['person_id'])->update(
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
@@ -393,7 +440,7 @@ class NinezController extends Controller
              * Registro de Beneficiario
              */
 
-             if ($request['beneficiario_control'] == 'true') {
+            /*  if ($request['beneficiario_control'] == 'true') {
                 Person::where('id',$request['beneficiario_id'])->update(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
@@ -413,7 +460,7 @@ class NinezController extends Controller
                     ]
                 );
     
-            }
+            } */
 
 
             /**

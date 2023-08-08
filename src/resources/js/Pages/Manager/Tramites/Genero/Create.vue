@@ -287,8 +287,6 @@
 					</div>
 				</div>
 
-
-
 				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" @data_beneficiario="beneficiario">
 				</FormBeneficiario>
 

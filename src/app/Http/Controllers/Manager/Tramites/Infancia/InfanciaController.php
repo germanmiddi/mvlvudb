@@ -119,8 +119,7 @@ class InfanciaController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
@@ -130,7 +129,6 @@ class InfanciaController extends Controller
                 ],
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -143,7 +141,7 @@ class InfanciaController extends Controller
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
                     'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
@@ -152,7 +150,6 @@ class InfanciaController extends Controller
                     'person_id' => $person->id
                 ],
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -187,6 +184,7 @@ class InfanciaController extends Controller
                 ],
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
@@ -208,8 +206,7 @@ class InfanciaController extends Controller
                     'name' => $request['nino_name'],
                     'fecha_nac' => $request['nino_fecha_nac'],
                     'tipo_documento_id' => $request['nino_tipo_documento_id'],
-                    'num_documento' => $request['nino_num_documento'],
-                    'num_cuit' => $request['nino_num_cuit'] ?? null
+                    'num_documento' => $request['nino_num_documento']
                 ]
             );
 
@@ -475,15 +472,13 @@ class InfanciaController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
             AditionalData::where('person_id',$request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -493,13 +488,12 @@ class InfanciaController extends Controller
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
                     'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
             EducationData::where('person_id', $request['person_id'])->update(
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -528,6 +522,7 @@ class InfanciaController extends Controller
             ContactData::where('person_id', $request['person_id'])->update(
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
@@ -542,8 +537,7 @@ class InfanciaController extends Controller
                     'name' => $request['nino_name'],
                     'fecha_nac' => $request['nino_fecha_nac'],
                     'tipo_documento_id' => $request['nino_tipo_documento_id'],
-                    'num_documento' => $request['nino_num_documento'],
-                    'num_cuit' => $request['nino_num_cuit'] ?? null
+                    'num_documento' => $request['nino_num_documento']
                 ]
             );
 
@@ -640,7 +634,6 @@ class InfanciaController extends Controller
             Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
             return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
         } catch (\Throwable $th) {
-            //dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Infancia:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);

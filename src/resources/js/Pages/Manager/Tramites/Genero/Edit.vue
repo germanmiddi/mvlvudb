@@ -664,7 +664,7 @@ export default {
 				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
 				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
 				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
-			},
+			}
 		}
 	},
 	methods: {

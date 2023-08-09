@@ -1469,8 +1469,8 @@ export default {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
 		async getPersonNino() {
-			let numDoc = this.form.num_documento;
-			let tipoDoc = this.form.tipo_documento_id;
+			let numDoc = this.form_nino.num_documento;
+			let tipoDoc = this.form_nino.tipo_documento_id;
 
 			const get = `${route('persons.getPersonDni', this.form_nino.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })

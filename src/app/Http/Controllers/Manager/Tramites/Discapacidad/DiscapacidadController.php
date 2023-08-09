@@ -154,6 +154,7 @@ class DiscapacidadController extends Controller
                 ],
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );

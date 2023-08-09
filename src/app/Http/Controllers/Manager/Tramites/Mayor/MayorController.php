@@ -89,8 +89,7 @@ class MayorController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
@@ -100,7 +99,6 @@ class MayorController extends Controller
                 ],
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -112,8 +110,7 @@ class MayorController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'tipo_pension_id' => $request['tipo_pension_id']
                 ]
             );
 
@@ -122,7 +119,6 @@ class MayorController extends Controller
                     'person_id' => $person->id
                 ],
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -157,6 +153,7 @@ class MayorController extends Controller
                 ],
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
@@ -299,15 +296,13 @@ class MayorController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
             AditionalData::where('person_id',$request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
-                    'tipo_vivienda_id' => $request['tipo_vivienda_id'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
                 ]
             );
@@ -316,14 +311,12 @@ class MayorController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
+                    'tipo_pension_id' => $request['tipo_pension_id']
                 ]
             );
 
             EducationData::where('person_id', $request['person_id'])->update(
                 [
-                    'beca' => $request['beca'],
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -352,6 +345,7 @@ class MayorController extends Controller
             ContactData::where('person_id', $request['person_id'])->update(
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );

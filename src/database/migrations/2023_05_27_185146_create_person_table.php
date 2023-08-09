@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('lastname', 100);
             $table->string('name', 100);
-            $table->date('fecha_nac')->nullable();
+            $table->date('fecha_nac');
             $table->integer('num_documento');
-            $table->string('num_cuit',15)->nullable();
             $table->foreignId('tipo_documento_id')->constrained('tipo_documento');
             $table->timestamps();
         });

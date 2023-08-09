@@ -21,12 +21,26 @@
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
+		<div v-if="v$.form.$error" class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+				role="alert">
+				<p class="font-bold">Campos requeridos</p>
+				<p v-for="error of v$.form.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
+				<p v-for="error of v$.form_nino.$errors" :key="error.$uid">
+					{{ error.$message }}
+				</p>
+			</div>
+		</div>
+
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST" enctype="multipart/form-data">
 				<div class="shadow sm:rounded-md sm:overflow-hidden">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
+							<!-- <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -36,8 +50,27 @@
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:format="format">
+									:format="format" :style="v$.form.fecha.$error ? datepickerStyle : ''">
 								</Datepicker>
+								<span v-if="v$.form.fecha.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+							<div class="col-span-12 sm:col-span-5">
+								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Tramite</label>
+								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+									autocomplete="tipo_tramite_id_name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.tipo_tramite_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Selecciones un tipo de tramite</option>
+									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
+										:value="tipoTramite.id">{{
+											tipoTramite.description
+										}}</option>
+								</select>
+								<span v-if="v$.form.tipo_tramite_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
@@ -45,31 +78,20 @@
 									Atención</label>
 								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
 									autocomplete="canal_atencion-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un canal de atencion</option>
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.canal_atencion_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Selecciones un canal de atencion</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
 										:value="canalAtencion.id">{{
 											canalAtencion.description
 										}}</option>
 								</select>
+								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Tramite</label>
-								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-									autocomplete="tipo_tramite_id_name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un tipo de tramite</option>
-									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-										:value="tipoTramite.id">{{
-											tipoTramite.description
-										}}</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-9">
+							<div class="col-span-12 sm:col-span-8">
 								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
@@ -79,53 +101,7 @@
 								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
 							</div>
 						</div>
-						<div class="flex items-center justify-end flex-wrap sm:flex-nowrap ">
-							<div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-									@click="addTramite()">Agregar Tramite</button>
-							</div>
-						</div>
-						<div class="grid grid-cols-12 gap-12">
-							<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
-								<thead class="bg-gray-50">
-									<tr>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-											Tramite
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
-											Observacion
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
-											Accion
-										</th>
-									</tr>
-								</thead>
-								<tbody class="bg-white divide-y divide-gray-200">
-									<tr v-for="(tramite, index) in tramites" :key="index">
-										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{{ tramite.titulo }}
-										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{{ tramite.observacion }}
-										</td>
-										<td class="px-6 py-4 text-center text-sm font-medium">
-											<button type="button"
-												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-												@click="deleteTramite(tramite)">
-												Borrar
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-						</div>
 					</div>
-
 				</div>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
@@ -255,10 +231,18 @@
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+						<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 							</div>
+							<!-- <div class="flex-shrink-0">
+								<button type="button"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
+									Beneficiario</button>
+							</div> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -267,13 +251,16 @@
 									Documento</label>
 								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
 									autocomplete="tipo_documento_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de documento</option>
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Seleccione un tipo de documento</option>
 									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
 										:value="tipoDocumento.id">{{
 											tipoDocumento.description
 										}}</option>
 								</select>
+								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
@@ -281,14 +268,36 @@
 									Documento</label>
 								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
 									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:class="v$.form.num_documento.$error ? 'border-red-500' : ''" :disabled="true" />
+								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-								<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit"
-									autocomplete="num_cuit-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.name.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form.lastname.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+
+
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
@@ -300,23 +309,6 @@
 								</Datepicker>
 							</div>
 
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2"
@@ -326,6 +318,12 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
+								<input v-model="form.celular" type="text" name="celular" id="celular"
+									autocomplete="phone-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
@@ -356,19 +354,6 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Vivienda</label>
-								<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id"
-									autocomplete="tipo_vivienda-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de vivienda</option>
-									<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-										:value="tipoVivienda.id">{{
-											tipoVivienda.description
-										}}</option>
-								</select>
-							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
@@ -573,7 +558,7 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive
+								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
 									Jubilación / Pensión</label>
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
 									autocomplete="tipo_pension_id-name"
@@ -611,15 +596,6 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe
-									Subsidio</label>
-								<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
 								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
@@ -633,15 +609,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="beca" class="block text-sm font-medium text-gray-700">Recibe Beca
-									Educativa</label>
-								<select v-model="form.beca" id="beca" name="beca" autocomplete="beca-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -659,36 +627,65 @@
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Niño</h3>
 							</div>
+							<!-- <div class="flex-shrink-0">
+								<button type="button"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
+									Beneficiario</button>
+							</div> -->
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
-								<select v-model="form_nino.tipo_documento_id" id="tipo_documento_id"
-									name="tipo_documento_id" autocomplete="tipo_documento_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de documento</option>
+								<select v-model="form_nino.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+									autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+									:class="v$.form_nino.tipo_documento_id.$error ? 'border-red-500' : ''">
+									<option value="" disabled>Seleccione un tipo de documento</option>
 									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
 										:value="tipoDocumento.id">{{
 											tipoDocumento.description
 										}}</option>
 								</select>
+								<span v-if="v$.form_nino.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
-								<input v-model="form_nino.num_documento" @focusout="getPersonNino()" type="text"
-									name="num_documento" id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<input v-model="form_nino.num_documento" @focusout="getPerson()" type="text" name="num_documento"
+									id="num_documento" autocomplete="address-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
+									:disabled="true" />
+								
 							</div>
+
 							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-								<input v-model="form_nino.num_cuit" type="text" name="num_cuit" id="num_cuit"
-									autocomplete="num_cuit-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_nino.name" type="text" name="name" id="name" autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form_nino.name.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form_nino.name.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_nino.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									:class="v$.form_nino.lastname.$error ? 'border-red-500' : ''" />
+								<span v-if="v$.form_nino.lastname.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
+
+
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
@@ -700,37 +697,26 @@
 								</Datepicker>
 							</div>
 
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form_nino.name" type="text" name="name" id="name" autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form_nino.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form_nino.email" type="text" name="email" id="email"
-									autocomplete="email-level2"
+								<input v-model="form_nino.email" type="text" name="email" id="email" autocomplete="email-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form_nino.phone" type="text" name="phone" id="phone"
+								<input v-model="form_nino.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
+								<input v-model="form_nino.celular" type="text" name="celular" id="celular"
 									autocomplete="phone-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
+
 						</div>
+
 					</div>
 				</div>
 
@@ -741,19 +727,7 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Vivienda</label>
-								<select v-model="form_nino.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id"
-									autocomplete="tipo_vivienda-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de vivienda</option>
-									<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-										:value="tipoVivienda.id">{{
-											tipoVivienda.description
-										}}</option>
-								</select>
-							</div>
+							
 							<div class="col-span-12 sm:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form_nino.localidad_id" id="localidad_id" name="localidad_id"
@@ -996,16 +970,6 @@
 
 						<div class="grid grid-cols-12 gap-6">
 
-							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Apto médico
-									presentado</label>
-								<select v-model="form_nino.apto_medico" id="apto_medico" name="apto_medico"
-									autocomplete="off"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="libreta_vacunacion" class="block text-sm font-medium text-gray-700">Libreta de
 									vacunación
@@ -1256,6 +1220,8 @@
 <script>
 
 import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers, minLength } from '@vuelidate/validators'
 import { ArrowLeftCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outline';
 import VueGoogleAutocomplete from "vue-google-autocomplete"
 import GoogleMap from '@/Layouts/Components/GoogleMap.vue'
@@ -1301,7 +1267,10 @@ export default {
 		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario
+		FormBeneficiario,required,
+		useVuelidate,
+		helpers,
+		minLength,
 	},
 	data() {
 		return {
@@ -1323,7 +1292,31 @@ export default {
 			form_familiares: {},
 			form_contactos: {},
 			form_beneficiario: {},
-			showBenef: false
+			showBenef: false,btnGuardar: false,
+			datepickerStyle: {
+				color: 'red',
+				border: '1px solid red',
+			}
+		}
+	},
+	validations() {
+		return {
+			form: {
+				fecha: { required: helpers.withMessage('El campo Fecha es Obligatorio', required) },
+				canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
+				tipo_tramite_id: { required: helpers.withMessage('El campo Tipo de tramite es Obligatorio', required) },
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento es Obligatorio', required) },
+				num_documento: { required: helpers.withMessage('El campo N° de documento es Obligatorio', required) }, // Matches this.contact.email
+				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
+			},
+			form_nino: {
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento del Niño es Obligatorio', required) },
+				name: { required: helpers.withMessage('El campo Nombre del Niño es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido del Niño es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento del Niño es Obligatorio', required) },
+			},
 		}
 	},
 	setup() {
@@ -1337,6 +1330,7 @@ export default {
 
 		return {
 			format,
+			v$: useVuelidate()
 		}
 	},
 	methods: {
@@ -1344,6 +1338,11 @@ export default {
 			this.toastMessage = "";
 		},
 		async submit() {
+			const result = await this.v$.$validate()
+			if (!result) {
+				return
+			}
+			this.btnGuardar = true
 			let rt = route('infancia.update', this.form.tramite_id);
 
 			const formData = new FormData();
@@ -1377,6 +1376,7 @@ export default {
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
+					this.btnGuardar = false
 				}
 			} catch (error) {
 				console.log(error)
@@ -1402,7 +1402,6 @@ export default {
 				this.form.diagnostico = data.cud.diagnostico
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
-				this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
 				this.form.cant_hijos = data.aditional[0].cant_hijos
 				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
 				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
@@ -1509,7 +1508,10 @@ export default {
 			} catch (error) {
 				console.log(error)
 			}
-		}
+		},
+		removeNullValues(data) {
+			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
+		},
 
 	},
 	created() {
@@ -1517,8 +1519,8 @@ export default {
 	},
 	computed: {
 		barriosComputed: function () {
-			this.form.barrio_id = this.form.get_barrio_id
-			this.form.get_barrio_id = null
+			/* this.form.barrio_id = this.form.get_barrio_id
+			this.form.get_barrio_id = null */
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
 		}
 	},
@@ -1551,11 +1553,13 @@ export default {
 		this.form.observacion = this.tramite[0].observacion
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form.sede_id = this.tramite[0].sede_id
+		this.form.parentesco_id = this.tramite[0].parentesco_id
 		if(this.tramite[0].cbi_data){
 			this.form.anio_inicio = this.tramite[0].cbi_data.anio_inicio
 			this.form.estado_cbi_id = this.tramite[0].cbi_data.estado_cbi_id
 			this.form.aut_firmada = this.tramite[0].cbi_data.aut_firmada
 			this.form.aut_retirarse = this.tramite[0].cbi_data.aut_retirarse
+			this.form.act_esporadicas = this.tramite[0].cbi_data.act_esporadicas
 			this.form.aut_uso_imagen = this.tramite[0].cbi_data.aut_uso_imagen
 			this.form.act_varias = this.tramite[0].cbi_data.act_varias
 			this.form.comedor = this.tramite[0].cbi_data.comedor
@@ -1581,14 +1585,11 @@ export default {
 		this.form.lastname = titular[0].lastname
 		this.form.email = titular[0].contact[0].email
 		this.form.phone = titular[0].contact[0].phone
-		this.form.tipo_vivienda_id = titular[0].aditional[0].tipo_vivienda_id
 		this.form.cant_hijos = titular[0].aditional[0].cant_hijos
 		this.form.situacion_conyugal_id = titular[0].aditional[0].situacion_conyugal_id
 		this.form.tipo_ocupacion_id = titular[0].social[0].tipo_ocupacion_id
 		this.form.cobertura_medica_id = titular[0].social[0].cobertura_medica_id
 		this.form.tipo_pension_id = titular[0].social[0].tipo_pension_id
-		this.form.subsidio = titular[0].social[0].subsidio
-		this.form.beca = titular[0].education[0].beca
 		this.form.nivel_educativo_id = titular[0].education[0].nivel_educativo_id
 		this.form.estado_educativo_id = titular[0].education[0].estado_educativo_id
 		this.form.calle = titular[0].address[0].calle
@@ -1611,7 +1612,7 @@ export default {
 		this.form.google_address = titular[0].address[0].google_address
 		this.form.pais_id = titular[0].address[0].pais_id
 		this.form.localidad_id = titular[0].address[0].localidad_id
-		this.form.get_barrio_id = titular[0].address[0].barrio_id
+		this.form.barrio_id = titular[0].address[0].barrio_id
 		/**
 		 * Fin Datos del Titular
 		 */
@@ -1629,14 +1630,11 @@ export default {
 		this.form_nino.lastname = beneficiario[0].lastname
 		this.form_nino.email = beneficiario[0].contact[0].email
 		this.form_nino.phone = beneficiario[0].contact[0].phone
-		this.form_nino.tipo_vivienda_id = beneficiario[0].aditional[0].tipo_vivienda_id
 		this.form_nino.cant_hijos = beneficiario[0].aditional[0].cant_hijos
 		this.form_nino.situacion_conyugal_id = beneficiario[0].aditional[0].situacion_conyugal_id
 		this.form_nino.tipo_ocupacion_id = beneficiario[0].social[0].tipo_ocupacion_id
 		this.form_nino.cobertura_medica_id = beneficiario[0].social[0].cobertura_medica_id
 		this.form_nino.tipo_pension_id = beneficiario[0].social[0].tipo_pension_id
-		this.form_nino.subsidio = beneficiario[0].social[0].subsidio
-		this.form_nino.beca = beneficiario[0].education[0].beca
 		this.form_nino.nivel_educativo_id = beneficiario[0].education[0].nivel_educativo_id
 		this.form_nino.estado_educativo_id = beneficiario[0].education[0].estado_educativo_id
 
@@ -1662,10 +1660,12 @@ export default {
 		this.form_nino.piso = beneficiario[0].address[0].piso
 		this.form_nino.dpto = beneficiario[0].address[0].dpto
 		this.form_nino.localidad_id = beneficiario[0].address[0].localidad_id
-		this.form_nino.get_barrio_id = beneficiario[0].address[0].barrio_id
+		this.form_nino.barrio_id = beneficiario[0].address[0].barrio_id
 		/**
 		 * Fin Datos del Beneficiario
 		 */
+		 this.form = this.removeNullValues(this.form);
+		 this.form_nino = this.removeNullValues(this.form_nino);
 	},
 }
 </script>

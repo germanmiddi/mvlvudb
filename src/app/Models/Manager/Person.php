@@ -11,6 +11,7 @@ class Person extends Model
     protected $table = 'person';
     protected $primaryKey = 'id';
     public $timestamps = true;
+    protected $hidden = ['created_at', 'updated_at'];
     
     protected $fillable = [
         'lastname',

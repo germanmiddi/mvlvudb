@@ -10,6 +10,7 @@ class AditionalData extends Model
     protected $table = 'aditional_data';
     protected $primaryKey = 'id';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
 
     protected $fillable = [
         'person_id',

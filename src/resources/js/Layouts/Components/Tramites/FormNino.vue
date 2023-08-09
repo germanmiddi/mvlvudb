@@ -14,7 +14,7 @@
                     <div class="flex-shrink-0">
                         <button type="button" @click="addMenor()"
                             class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-                            :class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">Agregar Familiar</button>
+                            :class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">Agregar Niño</button>
                     </div>
                 </div>
             </div>
@@ -192,7 +192,7 @@ export default ({
 		** * MANEJO DE ninos
 		*/
 		addMenor() {
-			if (this.ninos.find(familiar => familiar.id === this.form_nino.id)) {
+			if (this.ninos.find(familiar => familiar.num_documento === this.form_nino.num_documento)) {
 				this.labelType = "danger";
 				this.toastMessage = "La persona ya se ha ingresado previamente";
 			} else {

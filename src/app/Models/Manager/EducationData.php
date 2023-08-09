@@ -10,6 +10,7 @@ class EducationData extends Model
     protected $table = 'education_data';
     protected $primaryKey = 'id';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
 
     protected $fillable = [
         'beca',

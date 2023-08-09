@@ -1,569 +1,1040 @@
 
 <template>
 	<main class="flex-1 bg-gray-50 pb-40">
-		<!-- Page title & actions -->
-		<div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-			<div class="flex-1 min-w-0 flex items-center">
+        <!-- Page title & actions -->
+        <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
+            <div class="flex-1 min-w-0 flex items-center">
 				<a class="btn-blue" :href="route('juventud')">
-					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
-				</a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar Tramite Centros Barriales Juventud | CBJ</h1>
-			</div>
-			<div class="mt-4 flex sm:mt-0 sm:ml-4">
-				<button
-					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					@click="submit">
+                    <ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
+                </a>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Nuevo Tramite Centros Barriales Juventud | CBJ</h1>
+            </div>
+            <div class="mt-4 flex sm:mt-0 sm:ml-4">
+              	<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
 					Guardar
 				</button>
-			</div>
-		</div>
+            </div>
+        </div>
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
-
-		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+		
+        <div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST" enctype="multipart/form-data">
-				<div class="shadow sm:rounded-md sm:overflow-hidden">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
-							<!-- <p class="mt-1 text-sm text-gray-500">This information will be displayed publicly so be careful what you share.</p> -->
+			<div class="shadow sm:rounded-md sm:overflow-hidden">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Declaración Jurada</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="true" 
+										autoApply :format="format">
+							</Datepicker>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-								<Datepicker
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:format="format">
-								</Datepicker>
-							</div>
-
-							<div class="col-span-12 sm:col-span-5">
-								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Tramite</label>
-								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-									autocomplete="tipo_tramite_id_name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un tipo de tramite</option>
-									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-										:value="tipoTramite.id">{{
-											tipoTramite.description
-										}}</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
-									Atención</label>
-								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
-									autocomplete="canal_atencion-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Selecciones un canal de atencion</option>
-									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
-										:value="canalAtencion.id">{{
+						<div class="col-span-12 sm:col-span-3">
+							<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
+							<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion" autocomplete="canal_atencion-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Selecciones un canal de atencion</option>
+								<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
+									:value="canalAtencion.id">{{
 											canalAtencion.description
-										}}</option>
-								</select>
+									}}</option>
+							</select>
+						</div>   
+					</div>
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de Tramite</label>
+							<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id" autocomplete="tipo_tramite_id_name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Selecciones un tipo de tramite</option>
+								<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
+									:value="tipoTramite.id">{{
+											tipoTramite.description
+									}}</option>
+							</select>
+						</div>  
+
+						<div class="col-span-12 sm:col-span-9">
+							<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones </label>
+							<div class="mt-1">
+								<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 							</div>
-						</div>
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-8">
-								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
-								</label>
-								<div class="mt-1">
-									<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3"
-										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
-								</div>
-								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
-							</div>
+							<p class="mt-2 text-sm text-gray-500">Ingrese información adicional del tramite.</p>
 						</div>
 					</div>
+					<div class="flex items-center justify-end flex-wrap sm:flex-nowrap ">
+						<div class="flex-shrink-0">
+							<button type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="addTramite()">Agregar Tramite</button>
+						</div>
+					</div>
+					<div class="grid grid-cols-12 gap-12">
+						<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+                                        Tramite
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
+                                        Observacion
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                                        Accion
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+								<tr v-for="(tramite, index) in tramites" :key="index">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                     	{{tramite.titulo}}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    	{{tramite.observacion}}
+                                    </td>
+                                    <td type="button" class="px-6 py-4 text-center text-sm font-medium">
+										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteTramite(tramite)">
+											Borrar
+										</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+						
+					</div> 
 				</div>
+				
+			</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<!-- <div>
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<!-- <div>
 						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
 					</div> -->
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
-							</div>
-							<!-- <div class="flex-shrink-0">
-								<button type="button"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar
-									Beneficiario</button>
-							</div> -->
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Centro Barrial Juventud | CBJ</h3>
 						</div>
+					</div>
 
-						<div class="grid grid-cols-12 gap-6">
+					<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Documento</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="tipo_documento_id-name"
+								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
+								<select v-model="form.sede_id" id="sede_id" name="sede_id"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de documento</option>
-									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
-										:value="tipoDocumento.id">{{
-											tipoDocumento.description
-										}}</option>
+									<option value="" selected>Seleccione una sede</option>
+									<option v-for="sede in sedes" :key="sede.id"
+										:value="sede.id">{{
+											sede.description
+									}}</option>
+									
 								</select>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
-									id="num_documento" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100"
-									:disabled="true" />
-							</div>
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
-								<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit"
-									autocomplete="num_cuit-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<Datepicker
+								<label for="anio_inicio" class="block text-sm font-medium text-gray-700">Año de
+									inicio CBJ</label>
+									<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
-									autoApply :format="format">
+									v-model="form.anio_inicio" auto-apply
+									year-picker>
 								</Datepicker>
 							</div>
 
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-								<input v-model="form.codigo" type="text" name="codigo" id="codigo"
-									autocomplete="codigo-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
-									autocomplete="diagnostico-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-
-						</div>
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_vivienda_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Vivienda</label>
-								<select v-model="form.tipo_vivienda_id" id="tipo_vivienda_id" name="tipo_vivienda_id"
-									autocomplete="tipo_vivienda-name"
+								<label for="estado_cbj_id" class="block text-sm font-medium text-gray-700">Estado en CBJ</label>
+								<select v-model="form.estado_cbj_id" id="estado_cbj_id" name="estado_cbj_id"
+									autocomplete="estado_cbj_id"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un tipo de vivienda</option>
-									<option v-for="tipoVivienda in tiposVivienda" :key="tipoVivienda.id"
-										:value="tipoVivienda.id">{{
-											tipoVivienda.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
-								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
-									autocomplete="localidad_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una localidad</option>
-									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">{{
-										localidad.description
-									}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
-									autocomplete="barrio_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un barrio</option>
-									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
-										barrio.description
+									<option value="" selected>Seleccione un estado</option>
+									<option v-for="estadocbj in estadosCbj" :key="estadocbj.id"
+										:value="estadocbj.id">{{
+											estadocbj.description
 									}}</option>
 								</select>
 							</div>
 
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-4 ">
-								<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
-								<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="calle-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
-								<input v-model="form.number" type="text" name="number" id="number"
-									autocomplete="number-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-
-						</div>
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-6 ">
-								<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección
-									Google</label>
-								<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
-								<vue-google-autocomplete ref="address" id="map"
-									classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									placeholder="Ingrese la dirección" v-on:placechanged="getAddressData">
-								</vue-google-autocomplete>
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-								<input v-model="form.latitude" type="text" name="latitude" id="latitude"
-									autocomplete="latitude-level2" disabled
-									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-2 ">
-								<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
-								<input v-model="form.longitude" type="text" name="longitude" id="longitude"
-									autocomplete="longitude-level2" disabled
-									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-2 ">
-								<label class="block text-transparent ">Button</label>
-								<a @click="this.showMap = !this.showMap"
-									class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver
-									Mapa</a>
-							</div>
-							<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}
-							</p>
-							<div class="col-span-12 sm:col-span-12 ">
-								<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
-
-								</GoogleMap>
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Social</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
-								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"
+								<label for="comedor_id" class="block text-sm font-medium text-gray-700">Inscripcion a Comedor</label>
+								<select v-model="form.comedor_id" id="comedor_id" name="comedor_id"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un pais</option>
-									<option v-for="pais in paises" :key="pais.id" :value="pais.id"
-										:bind:select="pais.id == form.pais_id">{{
-											pais.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación
-									Conyugal</label>
-								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
-									name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una situacion conyugal</option>
-									<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
-										:value="situacionConyugal.id"
-										:bind:select="situacionConyugal.id == form.situacion_conyugal_id">{{
-											situacionConyugal.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-4 ">
-								<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad
-									Hijos</label>
-								<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos"
-									autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
-									educativo en curso</label>
-								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id"
-									autocomplete="nivel_educativo_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un nivel educativo</option>
-									<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
-										:value="nivelEducativo.id"
-										:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
-											nivelEducativo.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
-									educativo alcanzado</label>
-								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un estado educativo</option>
-									<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
-										:value="estadoEducativo.id"
-										:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
-											estadoEducativo.description
-										}}</option>
+									<option value="" selected>Seleccione un Comedor</option>
+									<option v-for="comedor in comedores" :key="comedor.id"
+										:value="comedor.id">{{
+											comedor.description
+									}}</option>
 								</select>
 							</div>
 
-						</div>
-
-					</div>
-				</div>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Laboral</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_ocupacion_id"
-									class="block text-sm font-medium text-gray-700">Ocupación</label>
-								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
-									autocomplete="tipo_ocupacion_id-name"
+								<label for="actividad_cbj_id" class="block text-sm font-medium text-gray-700">Actividades en CBJ</label>
+								<select v-model="form.actividad_cbj_id" id="actividad_cbj_id" name="actividad_cbj_id"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una ocupacion</option>
-									<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
-										:value="tipoOcupacion.id" :bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">
-										{{
-											tipoOcupacion.description
-										}}</option>
+									<option value="" selected>Seleccione una actividad</option>
+									<option v-for="actividadCbj in actividadesCbj" :key="actividadCbj.id"
+										:value="actividadCbj.id">{{
+											actividadCbj.description
+									}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive
-									Jubilación / Pensión</label>
-								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
-									autocomplete="tipo_pension_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un tipo de pension</option>
-									<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
-										:value="tipoPension.id" :bind:select="tipoPension.id == form.tipo_pension_id">{{
-											tipoPension.description
-										}}</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="cobertura_medica_id" class="block text-sm font-medium text-gray-700">Cobertura
-									de Salud</label>
-								<select v-model="form.cobertura_medica_id" id="cobertura_medica_id"
-									name="cobertura_medica_id" autocomplete="cobertura_medica_id-name"
+								<label for="apoyo_escolar_id" class="block text-sm font-medium text-gray-700">Apoyo Escolar</label>
+								<select v-model="form.apoyo_escolar_id" id="apoyo_escolar_id" name="apoyo_escolar_id"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un tipo de cobertura medica</option>
-									<option v-for="coberturaMedica in coberturasMedica" :key="coberturaMedica.id"
-										:value="coberturaMedica.id"
-										:bind:select="coberturaMedica.id == form.cobertura_medica_id">{{
-											coberturaMedica.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe
-									Subsidio</label>
-								<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una opcion</option>
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
-									Programa Social</label>
-								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
-									autocomplete="programa_social_id-name"
+								<label for="act_empleo" class="block text-sm font-medium text-gray-700">Actividades por area de empleo</label>
+								<select v-model="form.act_empleo" id="act_empleo" name="act_empleo"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un programa social</option>
-									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
-										:value="programaSocial.id"
-										:bind:select="programaSocial.id == form.programa_social_id">{{
-											programaSocial.description
-										}}</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="beca" class="block text-sm font-medium text-gray-700">Recibe Beca
-									Educativa</label>
-								<select v-model="form.beca" id="beca" name="beca" autocomplete="beca-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione una opcion</option>
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
 							</div>
-						</div>
-					</div>
-				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="acompanamiento_cbj_id" class="block text-sm font-medium text-gray-700">Acompañamiento CBJ</label>
+								<select v-model="form.acompanamiento_cbj_id" id="acompanamiento_cbj_id" name="acompanamiento_cbj_id"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>Seleccione un Acompañamiento</option>
+									<option v-for="acompanamientoCbj in acompanamientosCbj" :key="acompanamientoCbj.id"
+										:value="acompanamientoCbj.id">{{
+											acompanamientoCbj.description
+									}}</option>
+								</select>
 							</div>
-
 						</div>
+				</div>
+			</div>
 
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-8 ">
-								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-								<div class="flex ">
-									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
-										autocomplete="descripcion-level2"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileUpload" type="file" name="file" id="file" ref="file"
-										autocomplete="file-level2"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
-									<div class="flex-shrink-0">
-										<button @click="uploadFile()" type="button"
-											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
-											Subir Archivo</button>
-									</div>
+			<!-- DATOS DEL TITULAR.. -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<!-- <div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900"></h3>
+					</div> -->
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
+						</div>
+						<div class="flex-shrink-0">
+								<div class="flex-shrink-0">
+									<button type="button" @click="addBeneficiario()" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{this.textBtnBenef}}</button>
 								</div>
 							</div>
-							<div class="col-span-6 sm:col-span-6 ">
-								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
-									<thead class="bg-gray-50">
-										<tr>
-											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
-												Observacion
-											</th>
-											<th scope="col"
-												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
-												Accion
-											</th>
-										</tr>
-									</thead>
-									<tbody  class="bg-white divide-y divide-gray-200">
-										<tr v-for="archivo in form_archivo " :key="archivo.id">
-											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-												{{ archivo.description }}
-											</td>
-											<td class="px-6 py-4 text-center text-sm font-medium">
-												<a class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-blue-200 text-blue-900 hover:bg-blue-600 hover:text-white"
-													:href="'/file/download/' + archivo.id" target="_blank"
-													title="Descargar Archivo">
-													Descargar
-												</a>
-												<a class="ml-2 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-													@click="deleteFile(archivo.id)" title="Eliminar Archivo" >
-													Eliminar
-												</a>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de Documento</label>
+							<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id" autocomplete="tipo_documento_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un tipo de documento</option>
+								<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+									:value="tipoDocumento.id">{{
+											tipoDocumento.description
+									}}</option>
+							</select>
+						</div>  
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form.fecha_nac" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="false" 
+										autoApply :format="format">
+							</Datepicker>
+						</div> 
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+							<input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
+							<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+							<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
 							</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Titular</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
+							<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="localidad_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione una localidad</option>
+								<option v-for="localidad in localidades" :key="localidad.id"
+									:value="localidad.id">{{
+											localidad.description
+									}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
+							<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un barrio</option>
+								<option v-for="barrio in barriosComputed" :key="barrio.id"
+									:value="barrio.id">{{
+											barrio.description
+									}}</option>
+							</select>
+						</div>  
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-4 ">
+							<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
+							<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="calle-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
+							<input v-model="form.number" type="text" name="number" id="number" autocomplete="number-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
+							<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
+							<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+
+					</div>
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-6 ">
+							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
+							<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
+							<vue-google-autocomplete ref="address" id="map"
+								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+								placeholder="Ingrese la dirección"
+								v-on:placechanged="getAddressData">
+							</vue-google-autocomplete>
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+							<input v-model="form.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label class="block text-transparent ">Button</label>
+							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
+						</div> 
+						<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}</p>
+						<div class="col-span-12 sm:col-span-12 ">
+							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
+								
+							</GoogleMap>
+						</div> 
+						
+					</div>
+
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Social | Titular</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
+							<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un pais</option>
+								<option v-for="pais in paises" :key="pais.id"
+								:value="pais.id"
+								:bind:select="pais.id == form.pais_id">{{
+									pais.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación Conyugal</label>
+							<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id" name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una situacion conyugal</option>
+								<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
+								:value="situacionConyugal.id"
+								:bind:select="situacionConyugal.id == form.situacion_conyugal_id">{{
+									situacionConyugal.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-4 ">
+							<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad Hijos</label>
+							<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+					</div>
+
+				</div>
+			</div>
+
+			<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | Titular</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo en curso</label>
+							<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id" autocomplete="nivel_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un nivel educativo</option>
+								<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
+								:value="nivelEducativo.id"
+								:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
+									nivelEducativo.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo alcanzado</label>
+							<select  v-model="form.estado_educativo_id" id="estado_educativo_id" name="estado_educativo_id" autocomplete="estado_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un estado educativo</option>
+								<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
+								:value="estadoEducativo.id"
+								:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
+									estadoEducativo.description
+								}}</option>
+							</select>
+						</div>  
+
+					</div>
+
+				</div>
+			</div> -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Laboral | Titular</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ocupación</label>
+							<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id" autocomplete="tipo_ocupacion_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una ocupacion</option>
+								<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
+								:value="tipoOcupacion.id"
+								:bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">{{
+									tipoOcupacion.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe Jubilación / Pensión</label>
+							<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un tipo de pension</option>
+								<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
+								:value="tipoPension.id"
+								:bind:select="tipoPension.id == form.tipo_pension_id">{{
+									tipoPension.description
+								}}</option>
+							</select>
+						</div>  
+					</div>
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Datos | Titular</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="cobertura_medica_id" class="block text-sm font-medium text-gray-700">Cobertura de Salud</label>
+							<select v-model="form.cobertura_medica_id" id="cobertura_medica_id" name="cobertura_medica_id" autocomplete="cobertura_medica_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un tipo de cobertura medica</option>
+								<option v-for="coberturaMedica in coberturasMedica" :key="coberturaMedica.id"
+								:value="coberturaMedica.id"
+								:bind:select="coberturaMedica.id == form.cobertura_medica_id">{{
+									coberturaMedica.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe Subsidio</label>
+							<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe Programa Social</label>
+							<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id" autocomplete="programa_social_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un programa social</option>
+								<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
+								:value="programaSocial.id"
+								:bind:select="programaSocial.id == form.programa_social_id">{{
+									programaSocial.description
+								}}</option>
+							</select>
+						</div>  
+					</div>
+				</div>
+			</div>
+
+			<!-- FIN DATOS DEL TITULAR.. -->
+
+			<!-- DATOS DEL NIÑO.. -->
+
+			<div v-if="showBenef" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Beneficiario</h3>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de Documento</label>
+							<select v-model="form_beneficiario.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id" autocomplete="tipo_documento_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un tipo de documento</option>
+								<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+									:value="tipoDocumento.id">{{
+											tipoDocumento.description
+									}}</option>
+							</select>
+						</div>  
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
+							<input v-model="form_beneficiario.num_documento" @focusout="getPersonBenef()" type="text" name="num_documento" id="num_documento" autocomplete="address-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="num_cuit" class="block text-sm font-medium text-gray-700">CUIT / CUIL</label>
+							<input v-model="form_beneficiario.num_cuit" type="text" name="num_cuit" id="num_cuit" autocomplete="num_cuit-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
+							<Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="form_beneficiario.fecha_nac" 
+										:enableTimePicker="false"
+										:monthChangeOnScroll="false" 
+										autoApply :format="format">
+							</Datepicker>
+						</div> 
+
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+							<input v-model="form_beneficiario.name" type="text" name="name" id="name" autocomplete="name-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+							<input v-model="form_beneficiario.lastname" type="text" name="lastname" id="lastname" autocomplete="lastname-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
+							<input v-model="form_beneficiario.email" type="text" name="email" id="email" autocomplete="email-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+							<input v-model="form_beneficiario.phone" type="text" name="phone" id="phone" autocomplete="phone-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+					</div>
+				</div>
+			</div>
+
+			<div v-if="showBenef" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Beneficiario</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
+							<select v-model="form_beneficiario.localidad_id" id="localidad_id" name="localidad_id" autocomplete="localidad_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione una localidad</option>
+								<option v-for="localidad in localidades" :key="localidad.id"
+									:value="localidad.id">{{
+											localidad.description
+									}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
+							<select v-model="form_beneficiario.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="" selected>Seleccione un barrio</option>
+								<option v-for="barrio in barriosBenefComputed" :key="barrio.id"
+									:value="barrio.id">{{
+											barrio.description
+									}}</option>
+							</select>
+						</div>  
+
+						<div class="col-span-12 sm:col-span-4 ">
+							<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
+							<input v-model="form_beneficiario.calle" type="text" name="calle" id="calle" autocomplete="calle-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
+							<input v-model="form_beneficiario.number" type="text" name="number" id="number" autocomplete="number-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
+							<input v-model="form_beneficiario.piso" type="text" name="piso" id="piso" autocomplete="piso-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
+							<input v-model="form_beneficiario.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+
+					</div>
+					<!-- <div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-6 ">
+							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
+							
+							<vue-google-autocomplete ref="address" id="map"
+								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+								placeholder="Ingrese la dirección"
+								v-on:placechanged="getAddressData">
+							</vue-google-autocomplete>
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
+							<input v-model="form_nino.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+
+						<div class="col-span-12 sm:col-span-2 ">
+							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
+							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-2 ">
+							<label class="block text-transparent ">Button</label>
+							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
+						</div> 
+						<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}</p>
+						<div class="col-span-12 sm:col-span-12 ">
+							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
+								
+							</GoogleMap>
+						</div> 
+						
+					</div> -->
+
+				</div>
+			</div>
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | {{this.textBenef}}</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo en curso</label>
+							<select v-model="form_beneficiario.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id" autocomplete="nivel_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un nivel educativo</option>
+								<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
+								:value="nivelEducativo.id"
+								:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
+									nivelEducativo.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo alcanzado</label>
+							<select  v-model="form_beneficiario.estado_educativo_id" id="estado_educativo_id" name="estado_educativo_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un estado educativo</option>
+								<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
+								:value="estadoEducativo.id"
+								:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
+									estadoEducativo.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="escuela_primaria_id" class="block text-sm font-medium text-gray-700">Escuela Primaria</label>
+							<select  v-model="form_beneficiario.escuela_primaria_id" id="escuela_primaria_id" name="escuela_primaria_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuela</option>
+								<option v-for="escuelaPrimaria in escuelasPrimarias" :key="escuelaPrimaria.id"
+								:value="escuelaPrimaria.id"
+								:bind:select="escuelaPrimaria.id == form.escuela_primaria_id">{{
+									escuelaPrimaria.description
+								}}</option>
+							</select>
+						</div>  
+					</div>
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="escuela_secundaria_id" class="block text-sm font-medium text-gray-700">Escuela Secundaria</label>
+							<select  v-model="form_beneficiario.escuela_secundaria_id" id="escuela_secundaria_id" name="escuela_secundaria_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuela</option>
+								<option v-for="escuelaSecundaria in escuelasSecundarias" :key="escuelaSecundaria.id"
+								:value="escuelaSecundaria.id"
+								:bind:select="escuelaSecundaria.id == form.escuela_secundaria_id">{{
+									escuelaSecundaria.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="orientacion_secundario_id" class="block text-sm font-medium text-gray-700">Orientación</label>
+							<select  v-model="form_beneficiario.orientacion_secundario_id" id="orientacion_secundario_id" name="orientacion_secundario_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una orientacion</option>
+								<option v-for="orientacion in orientaciones" :key="orientacion.id"
+								:value="orientacion.id"
+								:bind:select="orientacion.id == form.orientacion_secundario_id">{{
+									orientacion.description
+								}}</option>
+							</select>
+						</div> 
+						<div class="col-span-12 sm:col-span-3">
+							<label for="nivel_secundario_id" class="block text-sm font-medium text-gray-700">Nivel en Curso</label>
+							<select  v-model="form_beneficiario.nivel_secundario_id" id="nivel_secundario_id" name="nivel_secundario_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuela</option>
+								<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
+								:value="estadoEducativo.id"
+								:bind:select="estadoEducativo.id == form.nivel_secundario_id">{{
+									estadoEducativo.description
+								}}</option>
+							</select>
+						</div>  
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="escuela_nocturna_id" class="block text-sm font-medium text-gray-700">Terminalidad Educativa</label>
+							<select  v-model="form_beneficiario.escuela_nocturna_id" id="escuela_nocturna_id" name="escuela_nocturna_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuela</option>
+								<option v-for="escuelaNocturna in escuelasNocturnas" :key="escuelaNocturna.id"
+								:value="escuelaNocturna.id"
+								:bind:select="escuelaNocturna.id == form.escuela_nocturna_id">{{
+									escuelaNocturna.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="dependencia_nocturno_id" class="block text-sm font-medium text-gray-700">Dependencia</label>
+							<select  v-model="form_beneficiario.dependencia_nocturno_id" id="dependencia_nocturno_id" name="dependencia_nocturno_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuelaDependencia</option>
+								<option v-for="escuelaDependencia in escuelasDependencias" :key="escuelaDependencia.id"
+								:value="escuelaDependencia.id"
+								:bind:select="escuelaDependencia.id == form.escuelaDependencia">{{
+									escuelaDependencia.description
+								}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="turno_nocturno_id" class="block text-sm font-medium text-gray-700">Turno</label>
+							<select  v-model="form_beneficiario.turno_nocturno_id" id="turno_nocturno_id" name="turno_nocturno_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones una escuela</option>
+								<option v-for="escuelaTurno in escuelasTurnos" :key="escuelaTurno.id"
+								:value="escuelaTurno.id"
+								:bind:select="escuelaTurno.id == form.turno_nocturno_id">{{
+									escuelaTurno.description
+								}}</option>
+							</select>
+						</div>  
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="terciario" class="block text-sm font-medium text-gray-700">Estudios Terciarios</label>
+							<select  v-model="form_beneficiario.terciario" id="terciario" name="terciario" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name_terciaria" class="block text-sm font-medium text-gray-700">Nombre Institución</label>
+							<input v-model="form_beneficiario.name_terciaria" type="text" name="name_terciaria" id="name_terciaria" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="carrera_terciaria" class="block text-sm font-medium text-gray-700">Nombre Carrera</label>
+							<input v-model="form_beneficiario.carrera_terciaria" type="text" name="carrera_terciaria" id="carrera_terciaria" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="anio_terciario" class="block text-sm font-medium text-gray-700">Año Cursada</label>
+							<input v-model="form_beneficiario.anio_terciario" type="text" name="anio_terciario" id="anio_terciario" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-3">
+							<label for="universitario" class="block text-sm font-medium text-gray-700">Estudios Universitarios</label>
+							<select  v-model="form_beneficiario.universitario" id="universitario" name="universitario" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name_universitaria" class="block text-sm font-medium text-gray-700">Nombre Institución</label>
+							<input v-model="form_beneficiario.name_universitaria" type="text" name="name_universitaria" id="name_universitaria" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="carrera_universitaria" class="block text-sm font-medium text-gray-700">Nombre Carrera</label>
+							<input v-model="form_beneficiario.carrera_universitaria" type="text" name="carrera_universitaria" id="carrera_universitaria" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="anio_universitario" class="block text-sm font-medium text-gray-700">Año Cursada</label>
+							<input v-model="form_beneficiario.anio_universitario" type="text" name="anio_universitario" id="anio_universitario" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Salud | {{this.textBenef}}</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<div class="col-span-12 sm:col-span-3">
+							<label for="apto_medico" class="block text-sm font-medium text-gray-700">Apto médico presentado</label>
+							<select v-model="form_beneficiario.apto_medico" id="apto_medico" name="apto_medico" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="fecha_apto_medico" class="block text-sm font-medium text-gray-700">Fecha Apto Médico</label>
+							<Datepicker
+								class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+								v-model="form_beneficiario.fecha_apto_medico" :enableTimePicker="false" :monthChangeOnScroll="false"
+								autoApply :format="format">
+							</Datepicker>
+						</div>
+						<div class="col-span-12 sm:col-span-3">
+							<label for="electrocardiograma" class="block text-sm font-medium text-gray-700">Electrocardiograma presentado</label>
+							<select v-model="form_beneficiario.electrocardiograma" id="electrocardiograma" name="electrocardiograma" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="fecha_electrocardiograma" class="block text-sm font-medium text-gray-700">Fecha Electrocardiograma</label>
+							<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form_beneficiario.fecha_electrocardiograma" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
+						</div>
+
+
+						<div class="col-span-12 sm:col-span-3">
+							<label for="libreta_vacunacion" class="block text-sm font-medium text-gray-700">Libreta de vacunación presentada</label>
+							<select v-model="form_beneficiario.libreta_vacunacion" id="libreta_vacunacion" name="libreta_vacunacion" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="centro_salud_id" class="block text-sm font-medium text-gray-700">Lugar de Atención</label>
+							<select v-model="form_beneficiario.centro_salud_id" id="centro_salud_id" name="centro_salud_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un programa social</option>
+								<option v-for="centroSalud in centrosSalud" :key="centroSalud.id"
+										:value="centroSalud.id">{{
+											centroSalud.description
+										}}</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="estado_salud_id" class="block text-sm font-medium text-gray-700">Estado de salud (A tener presente)</label>
+							<select v-model="form_beneficiario.estado_salud_id" id="estado_salud_id" name="estado_salud_id" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option disabled value="" selected>Selecciones un programa social</option>
+								<option v-for="estadoSalud in estadosSalud" :key="estadoSalud.id"
+										:value="estadoSalud.id">{{
+											estadoSalud.description
+										}}</option>
+							</select>							
+						</div>  
+						<div class="col-span-12 sm:col-span-3">
+							<label for="medicacion" class="block text-sm font-medium text-gray-700">Medicación</label>
+							<select  v-model="form_beneficiario.medicacion" id="medicacion" name="medicacion" autocomplete="off" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<option value="1" selected>Si</option>
+								<option value="0" selected>No</option>
+							</select>
+						</div>  
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="name_medicacion" class="block text-sm font-medium text-gray-700">Nombre Medicamento</label>
+							<input v-model="form_beneficiario.name_medicacion" type="text" name="name_medicacion" id="name_medicacion" autocomplete="name_medicacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						<div class="col-span-12 sm:col-span-3 ">
+							<label for="dosis" class="block text-sm font-medium text-gray-700">Dosis Diaria</label>
+							<input v-model="form_beneficiario.dosis" type="text" name="dosis" id="dosis" autocomplete="off" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+						</div> 
+						
+					</div>
+					<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-9">
+								<label for="observacion_salud" class="block text-sm font-medium text-gray-700">Observaciones
+								</label>
+								<div class="mt-1">
+									<textarea v-model="form_beneficiario.observacion_salud" id="observacion_salud" name="observacion_salud" rows="3"
+										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
+								</div>
+								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional sobre la salud del joven.</p>
+							</div>
+						</div>
+				</div>
+			</div>
+
+			<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" @data_familiares="familiares_data"></FormFamiliar>
+
+			<!-- FIN DATOS DEL NIÑO -->
+
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+
+					<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="">
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Archivos Adjuntos</h3>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+						<div class="col-span-12 sm:col-span-8 ">
+							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+							<div class="flex ">
+								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
+								<input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+								<div class="flex-shrink-0">
+									<button @click="addFile()" type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo</button>
+								</div>
+							</div>
+						</div> 
+						<div class="col-span-6 sm:col-span-6">
+							<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+										Descripcion
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                                        Accion
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+								<tr v-for="(file, index) in files" :key="index">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    	{{file.description}}
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-sm font-medium">
+										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
+											Eliminar
+										</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 						</div>
 					</div>
 				</div>
+			</div>
 			</form>
-		</div>
+        </div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
-			<button
-				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				@click="submit">
+			<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3" @click="submit">
 				Guardar
 			</button>
 		</div>
-
-	</main>
+    </main>
 </template>
 
 <script>
@@ -580,21 +1051,35 @@ import '@vuepic/vue-datepicker/dist/main.css'
 export default {
 
 	props: {
-		paises: Object,
-		barrios: Object,
-		localidades: Object,
-		canalesAtencion: Object,
-		coberturasMedica: Object,
-		estadosEducativo: Object,
-		nivelesEducativo: Object,
-		tiposDocumento: Object,
-		tiposOcupacion: Object,
-		tiposPension: Object,
-		tiposVivienda: Object,
-		situacionesConyugal: Object,
-		rolesTramite: Object,
-		tiposTramite: Object,
-		programasSocial: Object,
+		paises : Object,
+		barrios : Object,
+		localidades : Object,
+		canalesAtencion : Object,
+		coberturasMedica  : Object,
+		estadosEducativo  : Object,
+		nivelesEducativo : Object,
+		tiposDocumento  : Object,
+		tiposOcupacion : Object,
+		tiposPension : Object,
+		tiposVivienda : Object,
+		situacionesConyugal : Object,
+		rolesTramite : Object,
+		tiposTramite : Object,
+		programasSocial  : Object,
+		parentescos: Object,
+		comedores: Object,
+		estadosCbj: Object,
+		actividadesCbj: Object,
+		acompanamientosCbj: Object,
+		sedes: Object,
+		escuelasPrimarias: Object,
+		escuelasSecundarias: Object,
+		escuelasNocturnas: Object,
+		orientaciones: Object,
+		escuelasTurnos: Object,
+		escuelasDependencias: Object,
+		centrosSalud: Object,
+		estadosSalud: Object,
 		tramite: Object,
 	},
 	components: {

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Manager\DashboardController;
+use App\Http\Controllers\Manager\Logs\LogController;
 use App\Http\Controllers\Manager\Persons\PersonController;
 use App\Http\Controllers\Manager\Tramite\TramiteController;
 use App\Http\Controllers\Manager\Tramites\Discapacidad\DiscapacidadController;
@@ -30,6 +31,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
+
+    // LOGS
+    Route::get('/logs', [LogController::class, 'index'])->name('logs');  
+    Route::get('/logs/listLast', [LogController::class, 'listLast'])->name('logs.listLast');    
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');

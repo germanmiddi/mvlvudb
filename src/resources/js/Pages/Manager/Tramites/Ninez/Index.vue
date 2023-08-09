@@ -90,6 +90,10 @@
                                         DNI
                                     </th>
                                     <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tramite
+                                    </th>
+                                    <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
                                         <span>Acciones</span>
                                     </th>
@@ -107,7 +111,7 @@
                                         <div v-html=" dniPersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
                                         <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">

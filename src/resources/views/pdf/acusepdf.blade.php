@@ -229,6 +229,12 @@ p {
                         <div class="mt-10"><strong>Titular: </strong> </div>
                         <div class="mt-10"><strong>N° de Documento: </strong>  </div>
                         <div class="mt-10"><strong>Domicilio: </strong>  </div>
+                        @if ($phone)
+                            <div class="mt-10"><strong>Telefono: </strong>  </div>
+                        @endif
+                        @if ($celular)
+                            <div class="mt-10"><strong>Celular: </strong>  </div>
+                        @endif
                         <div class="mt-10"><strong>Dependencia: </strong>  </div>
                         <div class="mt-10"><strong>Tipo de Tramite: </strong>  </div>
                         <div class="mt-10"><strong>Observación: </strong>  </div>
@@ -240,7 +246,17 @@ p {
                         <div class="mt-10">{{$fecha}}</div>
                         <div class="mt-10">{{$titular}}</div>
                         <div class="mt-10">{{$num_documento}}</div>
-                        <div class="mt-10">{{$domicilio}}</div>
+                        @if ($domicilio)
+                            <div class="mt-10">{{$domicilio}}</div>
+                        @else
+                            <div class="mt-10">-</div>
+                        @endif
+                        @if ($phone)
+                            <div class="mt-10">{{$phone}}</div>
+                        @endif
+                        @if ($celular)
+                            <div class="mt-10">{{$celular}}</div>
+                        @endif
                         <div class="mt-10">{{$dependencia}}</div>
                         <div class="mt-10">{{$tipo_tramite}}</div> 
                         <div class="mt-10">{{$observacion}}</div> 

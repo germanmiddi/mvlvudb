@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('social_data', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('person_id');
-            $table->unsignedBigInteger('tipo_ocupacion_id');
-            $table->unsignedBigInteger('cobertura_medica_id');
-            $table->tinyInteger('subsidio')->nullable()->default(0);
-            $table->unsignedBigInteger('tipo_pension_id');
+            $table->unsignedBigInteger('tipo_ocupacion_id')->nullable();
+            $table->unsignedBigInteger('cobertura_medica_id')->nullable();
+            $table->unsignedBigInteger('tipo_pension_id')->nullable();
+            $table->unsignedBigInteger('programa_social_id')->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')
@@ -43,6 +43,12 @@ return new class extends Migration
             $table->foreign('tipo_pension_id')
                 ->references('id')
                 ->on('tipo_pension')
+                ->onDelete('NO ACTION')
+                ->onUpdate('NO ACTION');
+
+            $table->foreign('programa_social_id')
+                ->references('id')
+                ->on('programa_social')
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
         });

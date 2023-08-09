@@ -9,6 +9,7 @@ class SaludData extends Model
 {
     protected $table = 'salud_data';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
     
     protected $fillable = [
         'apto_medico',

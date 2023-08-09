@@ -10,6 +10,7 @@ class ContactData extends Model
     protected $table = 'contact_data';
     protected $primaryKey = 'id';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
 
     protected $fillable = [
         'phone',

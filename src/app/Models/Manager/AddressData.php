@@ -10,6 +10,7 @@ class AddressData extends Model
     protected $table = 'address_data';
     protected $primaryKey = 'id';
     public $timestamps = true;
+    protected $hidden = ['id','created_at', 'updated_at'];
 
     protected $fillable = [
         'person_id',

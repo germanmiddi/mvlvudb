@@ -501,7 +501,7 @@
 							</select>
 						</div>  
 						<div class="col-span-12 sm:col-span-3">
-							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Persive Jubilación / Pensión</label>
+							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe Jubilación / Pensión</label>
 							<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 								<option disabled value="" selected>Selecciones un tipo de pension</option>
 								<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
@@ -1195,7 +1195,7 @@ export default {
 						});
 					}, 1000)
 					setTimeout(()=> { 
-						window.location.href = '/discapacidad';
+						window.location.href = '/juventud';
 					}, 3100)
 				} else {
 					this.labelType = "danger";
@@ -1264,18 +1264,19 @@ export default {
 					this.form_beneficiario.anio_universitario = data.education[0].anio_universitario
 				}
 
-				if(data.salud[0]){
-					this.form_beneficiario.apto_medico = data.salud[0].apto_medico
-					this.form_beneficiario.libreta_vacunacion = data.salud[0].libreta_vacunacion
-					this.form_beneficiario.observacion = data.salud[0].observacion_salud
-					this.form_beneficiario.fecha_apto_medico = data.salud[0].fecha_apto_medico
-					this.form_beneficiario.electrocardiograma = data.salud[0].electrocardiograma
-					this.form_beneficiario.fecha_electrocardiograma = data.salud[0].fecha_electrocardiograma
-					this.form_beneficiario.medicacion = data.salud[0].medicacion
-					this.form_beneficiario.name_medicacion = data.salud[0].name_medicacion
-					this.form_beneficiario.dosis = data.salud[0].dosis
-					this.form_beneficiario.centro_salud_id = data.salud[0].centro_salud_id
-					this.form_beneficiario.estado_salud_id = data.salud[0].estado_salud_id
+				if(data.salud != null){
+					this.form_beneficiario.apto_medico = data.salud.apto_medico
+					this.form_beneficiario.libreta_vacunacion = data.salud.libreta_vacunacion
+					this.form_beneficiario.observacion = data.salud.observacion_salud
+					this.form_beneficiario.fecha_apto_medico = data.salud.fecha_apto_medico
+					this.form_beneficiario.electrocardiograma = data.salud.electrocardiograma
+					this.form_beneficiario.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+					this.form_beneficiario.medicacion = data.salud.medicacion
+					this.form_beneficiario.name_medicacion = data.salud.name_medicacion
+					this.form_beneficiario.dosis = data.salud.dosis
+					this.form_beneficiario.centro_salud_id = data.salud.centro_salud_id
+					this.form_beneficiario.estado_salud_id = data.salud.estado_salud_id
+					this.form_beneficiario.observacion_salud = data.salud.observacion
 				}
 				if(data.address[0]){
 					this.form.calle = data.address[0].calle
@@ -1294,6 +1295,7 @@ export default {
 						this.form_google = this.form_temp
 						   this.showMap = true
 					}
+					this.form.google_address = data.address[0].google_address
 					this.form.localidad_id = data.address[0].localidad_id
 					this.form.get_barrio_id = data.address[0].barrio_id		
 					this.form.pais_id = data.address[0].pais_id	
@@ -1324,7 +1326,7 @@ export default {
 				this.form_beneficiario.tipo_documento_id = data.tipo_documento_id
 				this.form_beneficiario.num_cuit = data.num_cuit
 				this.form_beneficiario.fecha_nac = data.fecha_nac
-				this.form_beneficiario.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
+				this.form_beneficiario.fecha_nac = new Date(this.form_beneficiario.fecha_nac + "T00:00:00.000-03:00")
 				this.form_beneficiario.name = data.name
 				this.form_beneficiario.lastname = data.lastname
 				this.form_beneficiario.email = data.contact[0].email
@@ -1351,17 +1353,17 @@ export default {
 				}
 
 				if(data.salud != null){
-					this.form_beneficiario.apto_medico = data.salud[0].apto_medico
-					this.form_beneficiario.libreta_vacunacion = data.salud[0].libreta_vacunacion
-					this.form_beneficiario.observacion = data.salud[0].observacion_salud
-					this.form_beneficiario.fecha_apto_medico = data.salud[0].fecha_apto_medico
-					this.form_beneficiario.electrocardiograma = data.salud[0].electrocardiograma
-					this.form_beneficiario.fecha_electrocardiograma = data.salud[0].fecha_electrocardiograma
-					this.form_beneficiario.medicacion = data.salud[0].medicacion
-					this.form_beneficiario.name_medicacion = data.salud[0].name_medicacion
-					this.form_beneficiario.dosis = data.salud[0].dosis
-					this.form_beneficiario.centro_salud_id = data.salud[0].centro_salud_id
-					this.form_beneficiario.estado_salud_id = data.salud[0].estado_salud_id
+					this.form_beneficiario.apto_medico = data.salud.apto_medico
+					this.form_beneficiario.libreta_vacunacion = data.salud.libreta_vacunacion
+					this.form_beneficiario.observacion = data.salud.observacion_salud
+					this.form_beneficiario.fecha_apto_medico = data.salud.fecha_apto_medico
+					this.form_beneficiario.electrocardiograma = data.salud.electrocardiograma
+					this.form_beneficiario.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+					this.form_beneficiario.medicacion = data.salud.medicacion
+					this.form_beneficiario.name_medicacion = data.salud.name_medicacion
+					this.form_beneficiario.dosis = data.salud.dosis
+					this.form_beneficiario.centro_salud_id = data.salud.centro_salud_id
+					this.form_beneficiario.estado_salud_id = data.salud.estado_salud_id
 				}
 				if(data.address[0]){
 					this.form_beneficiario.calle = data.address[0].calle
@@ -1384,7 +1386,7 @@ export default {
 			if(this.showBenef){
 				this.textBtnBenef = 'Agregar Beneficiario'
 				this.textBenef = 'Titular'
-				this.form_beneficiario = {}
+				//this.form_beneficiario = {}
 				this.beneficiario_control = false
 			}else{
 				this.beneficiario_control = true

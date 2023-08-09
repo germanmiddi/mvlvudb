@@ -20,6 +20,8 @@ use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
 use App\Http\Controllers\Manager\Tramites\Vivienda\ViviendaController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
+use App\Http\Controllers\Manager\Masterdata\MasterdataController;
+
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
@@ -123,4 +125,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/vivienda/store', [ViviendaController::class, 'store'])->name('vivienda.store');   
     Route::post('/vivienda/update/{id}', [ViviendaController::class, 'update'])->name('vivienda.update');    
     Route::get('/vivienda/list', [ViviendaController::class, 'list'])->name('vivienda.list'); 
+
+    // Masterdata
+
+    Route::get('/masterdata', [MasterdataController::class, 'index'])->name('masterdata');
+    Route::get('/masterdata/get_discapacidad_tipo_tramite', [MasterdataController::class, 'create'])
+           ->name('masterdata.get_discapacidad_tipo_tramite');
 });

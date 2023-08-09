@@ -832,7 +832,6 @@ export default {
 					this.toastMessage = response.data.message;
 					setTimeout(() => {
 						response.data.idTramites.forEach((element) => {
-							console.log(element);
 							window.open(
 								route("pdf.acusepdf", element),
 								"_blank"

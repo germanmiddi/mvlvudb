@@ -221,7 +221,7 @@ export default ({
 		** * MANEJO DE FAMILIARES
 		*/
 		addFamiliar() {
-			if (this.familiares.find(familiar => familiar.id === this.form_familiar.id)) {
+			if (this.familiares.find(familiar => familiar.num_documento === this.form_familiar.num_documento)) {
 				this.labelType = "danger";
 				this.toastMessage = "La persona ya se ha ingresado previamente";
 			} else {

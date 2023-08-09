@@ -113,6 +113,34 @@
 				
 			</div>
 
+			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+					<div>
+						<h3 class="text-lg leading-6 font-medium text-gray-900">El Beneficiario se presenta:</h3>
+					</div>
+
+					<div class="grid grid-cols-12 gap-6">
+
+						<fieldset class="col-span-12 sm:col-span-3">
+							
+							<div class="mt-6 space-y-6">
+								<div class="flex items-center gap-x-3">
+								<input id="push-everything" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+								<label for="push-everything" class="block text-sm font-medium leading-6 text-gray-900">Solo</label>
+								</div>
+								<div class="flex items-center gap-x-3">
+								<input id="push-email" name="push-notifications" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+								<label for="push-email" class="block text-sm font-medium leading-6 text-gray-900">Acompañado por un Tutor</label>
+								</div>
+							</div>
+						</fieldset>
+
+					</div>
+
+				</div>
+				
+			</div>
+
 			<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 				<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<!-- <div>

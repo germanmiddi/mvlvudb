@@ -233,7 +233,7 @@ export default ({
 		** * MANEJO DE contactos
 		*/
 		addcontacto() {
-			if (this.contactos.find(contacto => contacto.id === this.form_contacto.id)) {
+			if (this.contactos.find(contacto => contacto.num_documento === this.form_contacto.num_documento)) {
 				this.labelType = "danger";
 				this.toastMessage = "La persona ya se ha ingresado previamente";
 			} else {

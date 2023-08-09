@@ -1385,9 +1385,11 @@ export default {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
 					setTimeout(() => {
-						response.data.idTramites.forEach(element => {
-							console.log(element)
-							window.open(route('pdf.acusepdf', element), '_blank');
+						response.data.idTramites.forEach((element) => {
+							window.open(
+								route("pdf.acusepdf", element),
+								"_blank"
+							);
 						});
 					}, 1000)
 					setTimeout(() => {

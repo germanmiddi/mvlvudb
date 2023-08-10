@@ -68,6 +68,11 @@ class Tramite extends Model
     {
         return $this->hasOne(CbiData::class, 'tramite_id', 'id');
     }
+
+    public function cbj_data()
+    {
+        return $this->hasOne(CbjData::class, 'tramite_id', 'id');
+    }
     
     /* protected $casts = [
         'fecha' => 'datetime:d-m-Y',

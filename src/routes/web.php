@@ -120,8 +120,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/juventud/store', [JuventudController::class, 'store'])->name('juventud.store');   
     Route::post('/juventud/update/{id}', [JuventudController::class, 'update'])->name('juventud.update');    
     Route::get('/juventud/list', [JuventudController::class, 'list'])->name('juventud.list'); 
-    Route::get('/juventud/getDataFormMenor', [JuventudController::class, 'getDataFormMenor'])->name('juventud.getDataFormMenor'); 
-    Route::get('/juventud/getDataFormMayor', [JuventudController::class, 'getDataFormMayor'])->name('juventud.getDataFormMayor'); 
 
     // Vivienda
     Route::get('/vivienda', [ViviendaController::class, 'index'])->name('vivienda');    

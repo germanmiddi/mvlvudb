@@ -72,8 +72,7 @@
 										? 'border-red-500'
 										: ''
 										">
-									<option value="" selected></option>
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un canal de atencion
 									</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
@@ -93,7 +92,7 @@
 									autocomplete="tipo_tramite_id_name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.tramites.$error ? 'border-red-500' : ''">
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un tipo de tramite
 									</option>
 									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
@@ -178,9 +177,9 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+								<select v-model="form_tramite.sede_id" id="sede_id" name="sede_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una sede</option>
+									<option value="" disabled>Seleccione una sede</option>
 									<option v-for="sede in sedes" :key="sede.id" :value="sede.id">{{
 										sede.description
 									}}</option>
@@ -193,17 +192,17 @@
 									inicio CBJ</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.anio_inicio" auto-apply year-picker>
+									v-model="form_tramite.anio_inicio" auto-apply year-picker>
 								</Datepicker>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_cbj_id" class="block text-sm font-medium text-gray-700">Estado en
 									CBJ</label>
-								<select v-model="form.estado_cbj_id" id="estado_cbj_id" name="estado_cbj_id"
+								<select v-model="form_tramite.estado_cbj_id" id="estado_cbj_id" name="estado_cbj_id"
 									autocomplete="estado_cbj_id"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un estado</option>
+									<option value="" disabled>Seleccione un estado</option>
 									<option v-for="estadocbj in estadosCbj" :key="estadocbj.id" :value="estadocbj.id">{{
 										estadocbj.description
 									}}</option>
@@ -213,9 +212,9 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="comedor_id" class="block text-sm font-medium text-gray-700">Inscripcion a
 									Comedor</label>
-								<select v-model="form.comedor_id" id="comedor_id" name="comedor_id" autocomplete="off"
+								<select v-model="form_tramite.comedor_id" id="comedor_id" name="comedor_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un Comedor</option>
+									<option value="" disabled>Seleccione un Comedor</option>
 									<option v-for="comedor in comedores" :key="comedor.id" :value="comedor.id">{{
 										comedor.description
 									}}</option>
@@ -225,10 +224,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="actividad_cbj_id" class="block text-sm font-medium text-gray-700">Actividades en
 									CBJ</label>
-								<select v-model="form.actividad_cbj_id" id="actividad_cbj_id" name="actividad_cbj_id"
+								<select v-model="form_tramite.actividad_cbj_id" id="actividad_cbj_id" name="actividad_cbj_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una actividad</option>
+									<option value="" disabled>Seleccione una actividad</option>
 									<option v-for="actividadCbj in actividadesCbj" :key="actividadCbj.id"
 										:value="actividadCbj.id">{{
 											actividadCbj.description
@@ -237,12 +236,12 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="apoyo_escolar_id" class="block text-sm font-medium text-gray-700">Apoyo
+								<label for="apoyo_escolar" class="block text-sm font-medium text-gray-700">Apoyo
 									Escolar</label>
-								<select v-model="form.apoyo_escolar_id" id="apoyo_escolar_id" name="apoyo_escolar_id"
+								<select v-model="form_tramite.apoyo_escolar" id="apoyo_escolar" name="apoyo_escolar"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una opcion</option>
+									<option value="" disabled>Seleccione una opcion</option>
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
@@ -251,9 +250,9 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="act_empleo" class="block text-sm font-medium text-gray-700">Actividades por area
 									de empleo</label>
-								<select v-model="form.act_empleo" id="act_empleo" name="act_empleo" autocomplete="off"
+								<select v-model="form_tramite.act_empleo" id="act_empleo" name="act_empleo" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una opcion</option>
+									<option value="" disabled>Seleccione una opcion</option>
 									<option value="1" selected>Si</option>
 									<option value="0" selected>No</option>
 								</select>
@@ -262,16 +261,57 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="acompanamiento_cbj_id"
 									class="block text-sm font-medium text-gray-700">Acompañamiento CBJ</label>
-								<select v-model="form.acompanamiento_cbj_id" id="acompanamiento_cbj_id"
+								<select v-model="form_tramite.acompanamiento_cbj_id" id="acompanamiento_cbj_id"
 									name="acompanamiento_cbj_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un Acompañamiento</option>
+									<option value="" disabled>Seleccione un Acompañamiento</option>
 									<option v-for="acompanamientoCbj in acompanamientosCbj" :key="acompanamientoCbj.id"
 										:value="acompanamientoCbj.id">{{
 											acompanamientoCbj.description
 										}}</option>
 								</select>
 							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Autorizacion Firmada</label>
+								<select v-model="form_tramite.aut_firmada" id="aut_firmada" name="aut_firmada"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1">Si</option>
+									<option value="0">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="aut_retirarse" class="block text-sm font-medium text-gray-700">Autorizacion para retirarse solo</label>
+								<select v-model="form_tramite.aut_retirarse" id="aut_retirarse" name="aut_retirarse"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1">Si</option>
+									<option value="0">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="aut_uso_imagen" class="block text-sm font-medium text-gray-700">Autorizacion uso de imagen</label>
+								<select v-model="form_tramite.aut_uso_imagen" id="aut_uso_imagen" name="aut_uso_imagen"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1">Si</option>
+									<option value="0">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="certificado_escolar" class="block text-sm font-medium text-gray-700">Certificado Escolar año en curso</label>
+								<select v-model="form_tramite.certificado_escolar" id="certificado_escolar" name="certificado_escolar"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1">Si</option>
+									<option value="0">No</option>
+								</select>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -285,14 +325,14 @@
 							<fieldset class="col-span-12 sm:col-span-12">
 								<div class="mt-4 space-y-6">
 									<div class="flex items-center gap-x-3">
-										<input @click="isMayor = 'Mayor'" id="push-everything" name="push-notifications"
+										<input @click="changeForm('Mayor')" id="push-everything" name="push-notifications"
 											type="radio"
 											class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
 										<label for="push-everything"
 											class="block text-sm font-medium leading-6 text-gray-900">Solo</label>
 									</div>
 									<div class="flex items-center gap-x-3">
-										<input @click="isMayor = 'Menor'" id="push-email" name="push-notifications"
+										<input @click="changeForm('Menor')" id="push-email" name="push-notifications"
 											type="radio"
 											class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
 										<label for="push-email"
@@ -314,16 +354,6 @@
 								<h3 class="text-lg leading-6 font-medium text-gray-900">
 									Datos del Titular
 								</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showBenef
-										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
-										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
-										">
-									{{ this.textBtnBenef }}
-								</button>
 							</div>
 						</div>
 
@@ -423,7 +453,7 @@
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
 									autocomplete="localidad_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una localidad</option>
+									<option value="" disabled>Seleccione una localidad</option>
 									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">{{
 										localidad.description
 									}}</option>
@@ -434,7 +464,7 @@
 								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
 									autocomplete="barrio_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un barrio</option>
+									<option value="" disabled>Seleccione un barrio</option>
 									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
 										barrio.description
 									}}</option>
@@ -525,7 +555,7 @@
 								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
 								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un pais</option>
+									<option disabled value="">Selecciones un pais</option>
 									<option v-for="pais in paises" :key="pais.id" :value="pais.id"
 										:bind:select="pais.id == form.pais_id">{{
 											pais.description
@@ -538,7 +568,7 @@
 								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
 									name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una situacion conyugal</option>
+									<option disabled value="">Selecciones una situacion conyugal</option>
 									<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
 										:value="situacionConyugal.id"
 										:bind:select="situacionConyugal.id == form.situacion_conyugal_id">{{
@@ -572,7 +602,7 @@
 								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
 									autocomplete="tipo_ocupacion_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una ocupacion</option>
+									<option disabled value="">Selecciones una ocupacion</option>
 									<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
 										:value="tipoOcupacion.id" :bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">
 										{{
@@ -586,7 +616,7 @@
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
 									autocomplete="tipo_pension_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un tipo de pension</option>
+									<option disabled value="">Selecciones un tipo de pension</option>
 									<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
 										:value="tipoPension.id" :bind:select="tipoPension.id == form.tipo_pension_id">{{
 											tipoPension.description
@@ -610,7 +640,7 @@
 								<select v-model="form.cobertura_medica_id" id="cobertura_medica_id"
 									name="cobertura_medica_id" autocomplete="cobertura_medica_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un tipo de cobertura medica</option>
+									<option disabled value="">Selecciones un tipo de cobertura medica</option>
 									<option v-for="coberturaMedica in coberturasMedica" :key="coberturaMedica.id"
 										:value="coberturaMedica.id"
 										:bind:select="coberturaMedica.id == form.cobertura_medica_id">{{
@@ -625,7 +655,7 @@
 								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
 									autocomplete="programa_social_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un programa social</option>
+									<option disabled value="">Selecciones un programa social</option>
 									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
 										:value="programaSocial.id"
 										:bind:select="programaSocial.id == form.programa_social_id">{{
@@ -706,7 +736,7 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form_beneficiario.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:style="v$.form_beneficiario.fecha_nac.$error ? datepickerStyle : ''" v-model="form_beneficiario.fecha_nac"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 								<span v-if="v$.form_beneficiario.fecha_nac.$error" class="text-red-500 text-xs">Campo
@@ -745,7 +775,7 @@
 								<select v-model="form_beneficiario.localidad_id" id="localidad_id" name="localidad_id"
 									autocomplete="localidad_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione una localidad</option>
+									<option value="" disabled>Seleccione una localidad</option>
 									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">{{
 										localidad.description
 									}}</option>
@@ -756,7 +786,7 @@
 								<select v-model="form_beneficiario.barrio_id" id="barrio_id" name="barrio_id"
 									autocomplete="barrio_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>Seleccione un barrio</option>
+									<option value="" disabled>Seleccione un barrio</option>
 									<option v-for="barrio in barriosBenefComputed" :key="barrio.id" :value="barrio.id">{{
 										barrio.description
 									}}</option>
@@ -809,13 +839,12 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo en curso</label>
-								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id"
+								<select v-model="form_education.nivel_educativo_id" id="nivel_educativo_id"
 									name="nivel_educativo_id" autocomplete="nivel_educativo_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un nivel educativo</option>
+									<option disabled value="">Selecciones un nivel educativo</option>
 									<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
-										:value="nivelEducativo.id"
-										:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
+										:value="nivelEducativo.id">{{
 											nivelEducativo.description
 										}}</option>
 								</select>
@@ -823,10 +852,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo alcanzado</label>
-								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
+								<select v-model="form_education.estado_educativo_id" id="estado_educativo_id"
 									name="estado_educativo_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un estado educativo</option>
+									<option disabled value="">Selecciones un estado educativo</option>
 									<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
 										:value="estadoEducativo.id"
 										:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
@@ -837,10 +866,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="escuela_primaria_id" class="block text-sm font-medium text-gray-700">Escuela
 									Primaria</label>
-								<select v-model="form.escuela_primaria_id" id="escuela_primaria_id"
+								<select v-model="form_education.escuela_primaria_id" id="escuela_primaria_id"
 									name="escuela_primaria_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuela</option>
+									<option disabled value="">Selecciones una escuela</option>
 									<option v-for="escuelaPrimaria in escuelasPrimarias" :key="escuelaPrimaria.id"
 										:value="escuelaPrimaria.id"
 										:bind:select="escuelaPrimaria.id == form.escuela_primaria_id">{{
@@ -853,10 +882,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="escuela_secundaria_id" class="block text-sm font-medium text-gray-700">Escuela
 									Secundaria</label>
-								<select v-model="form.escuela_secundaria_id" id="escuela_secundaria_id"
+								<select v-model="form_education.escuela_secundaria_id" id="escuela_secundaria_id"
 									name="escuela_secundaria_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuela</option>
+									<option disabled value="">Selecciones una escuela</option>
 									<option v-for="escuelaSecundaria in escuelasSecundarias" :key="escuelaSecundaria.id"
 										:value="escuelaSecundaria.id"
 										:bind:select="escuelaSecundaria.id == form.escuela_secundaria_id">{{
@@ -867,10 +896,10 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="orientacion_secundario_id"
 									class="block text-sm font-medium text-gray-700">Orientación</label>
-								<select v-model="form.orientacion_secundario_id" id="orientacion_secundario_id"
+								<select v-model="form_education.orientacion_secundario_id" id="orientacion_secundario_id"
 									name="orientacion_secundario_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una orientacion</option>
+									<option disabled value="">Selecciones una orientacion</option>
 									<option v-for="orientacion in orientaciones" :key="orientacion.id"
 										:value="orientacion.id"
 										:bind:select="orientacion.id == form.orientacion_secundario_id">{{
@@ -881,13 +910,12 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="nivel_secundario_id" class="block text-sm font-medium text-gray-700">Nivel en
 									Curso</label>
-								<select v-model="form.nivel_secundario_id" id="nivel_secundario_id"
+								<select v-model="form_education.nivel_secundario_id" id="nivel_secundario_id"
 									name="nivel_secundario_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuela</option>
+									<option disabled value="">Selecciones una escuela</option>
 									<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
-										:value="estadoEducativo.id"
-										:bind:select="estadoEducativo.id == form.nivel_secundario_id">{{
+										:value="estadoEducativo.id">{{
 											estadoEducativo.description
 										}}</option>
 								</select>
@@ -898,10 +926,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="escuela_nocturna_id"
 									class="block text-sm font-medium text-gray-700">Terminalidad Educativa</label>
-								<select v-model="form.escuela_nocturna_id" id="escuela_nocturna_id"
+								<select v-model="form_education.escuela_nocturna_id" id="escuela_nocturna_id"
 									name="escuela_nocturna_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuela</option>
+									<option disabled value="">Selecciones una escuela</option>
 									<option v-for="escuelaNocturna in escuelasNocturnas" :key="escuelaNocturna.id"
 										:value="escuelaNocturna.id"
 										:bind:select="escuelaNocturna.id == form.escuela_nocturna_id">{{
@@ -912,10 +940,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="dependencia_nocturno_id"
 									class="block text-sm font-medium text-gray-700">Dependencia</label>
-								<select v-model="form.dependencia_nocturno_id" id="dependencia_nocturno_id"
+								<select v-model="form_education.dependencia_nocturno_id" id="dependencia_nocturno_id"
 									name="dependencia_nocturno_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuelaDependencia</option>
+									<option disabled value="">Selecciones una escuelaDependencia</option>
 									<option v-for="escuelaDependencia in escuelasDependencias" :key="escuelaDependencia.id"
 										:value="escuelaDependencia.id"
 										:bind:select="escuelaDependencia.id == form.escuelaDependencia">{{
@@ -925,10 +953,10 @@
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="turno_nocturno_id" class="block text-sm font-medium text-gray-700">Turno</label>
-								<select v-model="form.turno_nocturno_id" id="turno_nocturno_id"
+								<select v-model="form_education.turno_nocturno_id" id="turno_nocturno_id"
 									name="turno_nocturno_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones una escuela</option>
+									<option disabled value="">Selecciones una escuela</option>
 									<option v-for="escuelaTurno in escuelasTurnos" :key="escuelaTurno.id"
 										:value="escuelaTurno.id" :bind:select="escuelaTurno.id == form.turno_nocturno_id">{{
 											escuelaTurno.description
@@ -941,7 +969,7 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="terciario" class="block text-sm font-medium text-gray-700">Estudios
 									Terciarios</label>
-								<select v-model="form.terciario" id="terciario" name="terciario"
+								<select v-model="form_education.terciario" id="terciario" name="terciario"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -951,21 +979,21 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="name_terciaria" class="block text-sm font-medium text-gray-700">Nombre
 									Institución</label>
-								<input v-model="form.name_terciario" type="text" name="name_terciaria"
+								<input v-model="form_education.name_terciario" type="text" name="name_terciaria"
 									id="name_terciaria" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="carrera_terciaria" class="block text-sm font-medium text-gray-700">Nombre
 									Carrera</label>
-								<input v-model="form.carrera_terciario" type="text" name="carrera_terciaria"
+								<input v-model="form_education.carrera_terciario" type="text" name="carrera_terciaria"
 									id="carrera_terciaria" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="anio_terciario" class="block text-sm font-medium text-gray-700">Año
 									Cursada</label>
-								<input v-model="form.anio_terciario" type="text" name="anio_terciario"
+								<input v-model="form_education.anio_terciario" type="text" name="anio_terciario"
 									id="anio_terciario" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -975,31 +1003,31 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="universitario" class="block text-sm font-medium text-gray-700">Estudios
 									Universitarios</label>
-								<select v-model="form.universitario" id="universitario" name="universitario"
+								<select v-model="form_education.universitario" id="universitario" name="universitario"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1">Si</option>
+									<option value="0">No</option>
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="name_universitaria" class="block text-sm font-medium text-gray-700">Nombre
 									Institución</label>
-								<input v-model="form.name_universitario" type="text" name="name_universitaria"
+								<input v-model="form_education.name_universitario" type="text" name="name_universitaria"
 									id="name_universitaria" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="carrera_universitaria" class="block text-sm font-medium text-gray-700">Nombre
 									Carrera</label>
-								<input v-model="form.carrera_universitario" type="text"
+								<input v-model="form_education.carrera_universitario" type="text"
 									name="carrera_universitaria" id="carrera_universitaria" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="anio_universitario" class="block text-sm font-medium text-gray-700">Año
 									Cursada</label>
-								<input v-model="form.anio_universitario" type="text" name="anio_universitario"
+								<input v-model="form_education.anio_universitario" type="text" name="anio_universitario"
 									id="anio_universitario" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -1020,11 +1048,11 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="apto_medico" class="block text-sm font-medium text-gray-700">Apto médico
 									presentado</label>
-								<select v-model="form.apto_medico" id="apto_medico" name="apto_medico"
+								<select v-model="form_salud.apto_medico" id="apto_medico" name="apto_medico"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1">Si</option>
+									<option value="0">No</option>
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
@@ -1032,18 +1060,18 @@
 									Médico</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha_apto_medico" :enableTimePicker="false"
+									v-model="form_salud.fecha_apto_medico" :enableTimePicker="false"
 									:monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="electrocardiograma"
 									class="block text-sm font-medium text-gray-700">Electrocardiograma presentado</label>
-								<select v-model="form.electrocardiograma" id="electrocardiograma"
+								<select v-model="form_salud.electrocardiograma" id="electrocardiograma"
 									name="electrocardiograma" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1">Si</option>
+									<option value="0">No</option>
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
@@ -1051,7 +1079,7 @@
 									Electrocardiograma</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.fecha_electrocardiograma" :enableTimePicker="false"
+									v-model="form_salud.fecha_electrocardiograma" :enableTimePicker="false"
 									:monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 							</div>
@@ -1060,20 +1088,20 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="libreta_vacunacion" class="block text-sm font-medium text-gray-700">Libreta de
 									vacunación presentada</label>
-								<select v-model="form.libreta_vacunacion" id="libreta_vacunacion"
+								<select v-model="form_salud.libreta_vacunacion" id="libreta_vacunacion"
 									name="libreta_vacunacion" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1">Si</option>
+									<option value="0">No</option>
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="centro_salud_id" class="block text-sm font-medium text-gray-700">Lugar de
 									Atención</label>
-								<select v-model="form.centro_salud_id" id="centro_salud_id"
+								<select v-model="form_salud.centro_salud_id" id="centro_salud_id"
 									name="centro_salud_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un programa social</option>
+									<option disabled value="">Selecciones un programa social</option>
 									<option v-for="centroSalud in centrosSalud" :key="centroSalud.id"
 										:value="centroSalud.id">{{
 											centroSalud.description
@@ -1083,10 +1111,10 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_salud_id" class="block text-sm font-medium text-gray-700">Estado de salud
 									(A tener presente)</label>
-								<select v-model="form.estado_salud_id" id="estado_salud_id"
+								<select v-model="form_salud.estado_salud_id" id="estado_salud_id"
 									name="estado_salud_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>Selecciones un programa social</option>
+									<option disabled value="">Selecciones un programa social</option>
 									<option v-for="estadoSalud in estadosSalud" :key="estadoSalud.id"
 										:value="estadoSalud.id">{{
 											estadoSalud.description
@@ -1095,7 +1123,7 @@
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="medicacion" class="block text-sm font-medium text-gray-700">Medicación</label>
-								<select v-model="form.medicacion" id="medicacion" name="medicacion"
+								<select v-model="form_salud.medicacion" id="medicacion" name="medicacion"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -1105,13 +1133,13 @@
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="name_medicacion" class="block text-sm font-medium text-gray-700">Nombre
 									Medicamento</label>
-								<input v-model="form.name_medicacion" type="text" name="name_medicacion"
+								<input v-model="form_salud.name_medicacion" type="text" name="name_medicacion"
 									id="name_medicacion" autocomplete="name_medicacion"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="dosis" class="block text-sm font-medium text-gray-700">Dosis Diaria</label>
-								<input v-model="form.dosis" type="text" name="dosis" id="dosis"
+								<input v-model="form_salud.dosis" type="text" name="dosis" id="dosis"
 									autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -1122,7 +1150,7 @@
 								<label for="observacion_salud" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
-									<textarea v-model="form.observacion_salud" id="observacion_salud"
+									<textarea v-model="form_salud.observacion_salud" id="observacion_salud"
 										name="observacion_salud" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
@@ -1225,8 +1253,6 @@ import FormFamiliar from '@/Layouts/Components/Tramites/FormFamiliar.vue'
 import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import FormCbjMayor from './Components/FormCbjMayor.vue'
-import FormCbjMenor from './Components/FormCbjMenor.vue'
 
 
 export default {
@@ -1270,8 +1296,6 @@ export default {
 		Datepicker,
 		FormBeneficiario,
 		FormFamiliar,
-		FormCbjMayor,
-		FormCbjMenor,
 		required,
 		useVuelidate,
 		helpers,
@@ -1280,6 +1304,9 @@ export default {
 	data() {
 		return {
 			form: {},
+			form_salud: {},
+			form_education: {},
+			form_tramite: {},
 			form_temp: {},
 			form_google: "",
 			form_beneficiario: {},
@@ -1355,10 +1382,6 @@ export default {
 			this.toastMessage = "";
 		},
 		async submit() {
-			
-			/* if (!result) {
-				return
-			} */
 
 			if(this.isMayor == 'Menor'){
 				const result = await this.v$.$validate()
@@ -1392,6 +1415,16 @@ export default {
 				formData.append('files_descripcion[]', valor.description);
 			});
 
+			Object.entries(this.form_familiares).forEach(([clave, valor]) => {
+				formData.append('familiar_id[]', valor.id);
+				formData.append('familiar_name[]', valor.name);
+				formData.append('familiar_lastname[]', valor.lastname);
+				formData.append('familiar_num_documento[]', valor.num_documento);
+				formData.append('familiar_tipo_documento_id[]', valor.tipo_documento_id);
+				formData.append('familiar_fecha_nac[]', valor.fecha_nac);
+				formData.append('familiar_parentesco_id[]', valor.parentesco_id);
+			});
+
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 
 			** Output: 2023-06-22T01:33:00.000Z
@@ -1400,6 +1433,8 @@ export default {
 
 			this.form.fecha = (this.form.fecha) ? new Date(this.form.fecha).toISOString() : null;
 			this.form.fecha_nac = (this.form.fecha_nac) ? new Date(this.form.fecha_nac).toISOString() : null;
+			this.form_salud.fecha_apto_medico = (this.isValidDate(this.form_salud.fecha_apto_medico)) ? new Date(this.form_salud.fecha_apto_medico).toISOString() : null;
+			this.form_salud.fecha_electrocardiograma = (this.isValidDate(this.form_salud.fecha_electrocardiograma)) ? new Date(this.form_salud.fecha_electrocardiograma).toISOString() : null;
 
 			for (var clave in this.form) {
 				if (this.form.hasOwnProperty(clave)) {
@@ -1407,11 +1442,27 @@ export default {
 				}
 			}
 
+			for (var clave in this.form_salud) {
+				if (this.form_salud.hasOwnProperty(clave)) {
+					formData.append(clave, this.form_salud[clave]);
+				}
+			}
+
+			for (var clave in this.form_education) {
+				if (this.form_education.hasOwnProperty(clave)) {
+					formData.append(clave, this.form_education[clave]);
+				}
+			}
+
+			for (var clave in this.form_tramite) {
+				if (this.form_tramite.hasOwnProperty(clave)) {
+					formData.append(clave, this.form_tramite[clave]);
+				}
+			}
+
 			if(this.isMayor == 'Menor'){
 				this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
-				this.form_beneficiario.fecha_apto_medico = (this.form_beneficiario.fecha_apto_medico) ? new Date(this.form_beneficiario.fecha_apto_medico).toISOString() : null;
-				this.form_beneficiario.fecha_electrocardiograma = (this.form_beneficiario.fecha_electrocardiograma) ? new Date(this.form_beneficiario.fecha_electrocardiograma).toISOString() : null;
-	
+				
 				for (var clave in this.form_beneficiario) {
 					if (this.form_beneficiario.hasOwnProperty(clave)) {
 						formData.append('beneficiario_' + clave, this.form_beneficiario[clave]);
@@ -1462,7 +1513,6 @@ export default {
 				data = data.data[0].person
 				/// Recuperar datos.
 				this.form.tipo_documento_id = data.tipo_documento_id
-				this.form.num_cuit = data.num_cuit
 				this.form.fecha_nac = data.fecha_nac
 				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
@@ -1479,48 +1529,51 @@ export default {
 					this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
 					this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
 					this.form.tipo_pension_id = data.social[0].tipo_pension_id
+					this.form.programa_social_id = data.social[0].programa_social_id
 				}
 
-				if (data.education[0]) {
-					this.form_beneficiario.nivel_educativo_id = data.education[0].nivel_educativo_id
-					this.form_beneficiario.estado_educativo_id = data.education[0].estado_educativo_id
-					this.form_beneficiario.escuela_primaria_id = data.education[0].escuela_primaria_id
-					this.form_beneficiario.escuela_secundaria_id = data.education[0].escuela_secundaria_id
-					this.form_beneficiario.escuela_nocturna_id = data.education[0].escuela_nocturna_id
-					this.form_beneficiario.orientacion_secundario_id = data.education[0].orientacion_secundario_id
-					this.form_beneficiario.nivel_secundario_id = data.education[0].nivel_secundario_id
-					this.form_beneficiario.turno_nocturno_id = data.education[0].turno_nocturno_id
-					this.form_beneficiario.dependencia_nocturno_id = data.education[0].dependencia_nocturno_id
-					this.form_beneficiario.terciario = data.education[0].terciario
-					this.form_beneficiario.name_terciaria = data.education[0].name_terciaria
-					this.form_beneficiario.carrera_terciaria = data.education[0].carrera_terciaria
-					this.form_beneficiario.anio_terciario = data.education[0].anio_terciario
-					this.form_beneficiario.universitario = data.education[0].universitario
-					this.form_beneficiario.name_universitaria = data.education[0].name_universitaria
-					this.form_beneficiario.carrera_universitaria = data.education[0].carrera_universitaria
-					this.form_beneficiario.anio_universitario = data.education[0].anio_universitario
+				if (data.education[0] && this.isMayor == 'Mayor') {
+					this.form_education.nivel_educativo_id = data.education[0].nivel_educativo_id
+					this.form_education.estado_educativo_id = data.education[0].estado_educativo_id
+					this.form_education.escuela_primaria_id = data.education[0].escuela_primaria_id
+					this.form_education.escuela_secundaria_id = data.education[0].escuela_secundaria_id
+					this.form_education.escuela_nocturna_id = data.education[0].escuela_nocturna_id
+					this.form_education.orientacion_secundario_id = data.education[0].orientacion_secundario_id
+					this.form_education.nivel_secundario_id = data.education[0].nivel_secundario_id
+					this.form_education.turno_nocturno_id = data.education[0].turno_nocturno_id
+					this.form_education.dependencia_nocturno_id = data.education[0].dependencia_nocturno_id
+					this.form_education.terciario = data.education[0].terciario
+					this.form_education.name_terciario = data.education[0].name_terciario
+					this.form_education.carrera_terciario = data.education[0].carrera_terciario
+					this.form_education.anio_terciario = data.education[0].anio_terciario
+					this.form_education.universitario = data.education[0].universitario
+					this.form_education.name_universitario = data.education[0].name_universitario
+					this.form_education.carrera_universitario = data.education[0].carrera_universitario
+					this.form_education.anio_universitario = data.education[0].anio_universitario
 				}
 
-				if (data.salud != null) {
-					this.form_beneficiario.apto_medico = data.salud.apto_medico
-					this.form_beneficiario.libreta_vacunacion = data.salud.libreta_vacunacion
-					this.form_beneficiario.observacion = data.salud.observacion_salud
-					this.form_beneficiario.fecha_apto_medico = data.salud.fecha_apto_medico
-					this.form_beneficiario.electrocardiograma = data.salud.electrocardiograma
-					this.form_beneficiario.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
-					this.form_beneficiario.medicacion = data.salud.medicacion
-					this.form_beneficiario.name_medicacion = data.salud.name_medicacion
-					this.form_beneficiario.dosis = data.salud.dosis
-					this.form_beneficiario.centro_salud_id = data.salud.centro_salud_id
-					this.form_beneficiario.estado_salud_id = data.salud.estado_salud_id
-					this.form_beneficiario.observacion_salud = data.salud.observacion
+				if (data.salud != null && this.isMayor == 'Mayor') {
+					this.form_salud.apto_medico = data.salud.apto_medico
+					this.form_salud.libreta_vacunacion = data.salud.libreta_vacunacion
+					this.form_salud.observacion = data.salud.observacion_salud
+					this.form_salud.fecha_apto_medico = data.salud.fecha_apto_medico
+					this.form_salud.fecha_apto_medico = new Date(this.form_salud.fecha_apto_medico + "T00:00:00.000-03:00")
+					this.form_salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+					this.form_salud.fecha_electrocardiograma = new Date(this.form_salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+					this.form_salud.electrocardiograma = data.salud.electrocardiograma
+					this.form_salud.medicacion = data.salud.medicacion
+					this.form_salud.name_medicacion = data.salud.name_medicacion
+					this.form_salud.dosis = data.salud.dosis
+					this.form_salud.centro_salud_id = data.salud.centro_salud_id
+					this.form_salud.estado_salud_id = data.salud.estado_salud_id
+					this.form_salud.observacion_salud = data.salud.observacion
 				}
 				if (data.address[0]) {
 					this.form.calle = data.address[0].calle
 					this.form.number = data.address[0].number
 					this.form.piso = data.address[0].piso
 					this.form.dpto = data.address[0].dpto
-					if (data.address[0].latitude && data.address[0].longitude) {
+					if (data.address[0].latitude && data.address[0].longitude && this.isMayor == 'Mayor') {
 						this.form.latitude = data.address[0].latitude
 						this.form.longitude = data.address[0].longitude
 
@@ -1534,10 +1587,12 @@ export default {
 					}
 					this.form.google_address = data.address[0].google_address
 					this.form.localidad_id = data.address[0].localidad_id
-					this.form.get_barrio_id = data.address[0].barrio_id
+					this.form.barrio_id = data.address[0].barrio_id
 					this.form.pais_id = data.address[0].pais_id
 				}
 				this.form = this.removeNullValues(this.form);
+				this.form_salud = this.removeNullValues(this.form_salud);
+				this.form_education = this.removeNullValues(this.form_education);
 
 			} else {
 				this.labelType = "info";
@@ -1572,40 +1627,43 @@ export default {
 				this.form_beneficiario.lastname = data.lastname
 				this.form_beneficiario.email = data.contact[0].email
 				this.form_beneficiario.phone = data.contact[0].phone
-				this.form.celular = data.contact[0].celular
+				this.form_beneficiario.celular = data.contact[0].celular
 
 				if (data.education[0]) {
-					this.form_beneficiario.nivel_educativo_id = data.education[0].nivel_educativo_id
-					this.form_beneficiario.estado_educativo_id = data.education[0].estado_educativo_id
-					this.form_beneficiario.escuela_primaria_id = data.education[0].escuela_primaria_id
-					this.form_beneficiario.escuela_secundaria_id = data.education[0].escuela_secundaria_id
-					this.form_beneficiario.escuela_nocturna_id = data.education[0].escuela_nocturna_id
-					this.form_beneficiario.orientacion_secundario_id = data.education[0].orientacion_secundario_id
-					this.form_beneficiario.nivel_secundario_id = data.education[0].nivel_secundario_id
-					this.form_beneficiario.turno_nocturno_id = data.education[0].turno_nocturno_id
-					this.form_beneficiario.dependencia_nocturno_id = data.education[0].dependencia_nocturno_id
-					this.form_beneficiario.terciario = data.education[0].terciario
-					this.form_beneficiario.name_terciaria = data.education[0].name_terciaria
-					this.form_beneficiario.carrera_terciaria = data.education[0].carrera_terciaria
-					this.form_beneficiario.anio_terciario = data.education[0].anio_terciario
-					this.form_beneficiario.universitario = data.education[0].universitario
-					this.form_beneficiario.name_universitaria = data.education[0].name_universitaria
-					this.form_beneficiario.carrera_universitaria = data.education[0].carrera_universitaria
-					this.form_beneficiario.anio_universitario = data.education[0].anio_universitario
+					this.form_education.nivel_educativo_id = data.education[0].nivel_educativo_id
+					this.form_education.estado_educativo_id = data.education[0].estado_educativo_id
+					this.form_education.escuela_primaria_id = data.education[0].escuela_primaria_id
+					this.form_education.escuela_secundaria_id = data.education[0].escuela_secundaria_id
+					this.form_education.escuela_nocturna_id = data.education[0].escuela_nocturna_id
+					this.form_education.orientacion_secundario_id = data.education[0].orientacion_secundario_id
+					this.form_education.nivel_secundario_id = data.education[0].nivel_secundario_id
+					this.form_education.turno_nocturno_id = data.education[0].turno_nocturno_id
+					this.form_education.dependencia_nocturno_id = data.education[0].dependencia_nocturno_id
+					this.form_education.terciario = data.education[0].terciario
+					this.form_education.name_terciario = data.education[0].name_terciario
+					this.form_education.carrera_terciario = data.education[0].carrera_terciario
+					this.form_education.anio_terciario = data.education[0].anio_terciario
+					this.form_education.universitario = data.education[0].universitario
+					this.form_education.name_universitario = data.education[0].name_universitario
+					this.form_education.carrera_universitario = data.education[0].carrera_universitario
+					this.form_education.anio_universitario = data.education[0].anio_universitario
 				}
 
 				if (data.salud != null) {
-					this.form_beneficiario.apto_medico = data.salud.apto_medico
-					this.form_beneficiario.libreta_vacunacion = data.salud.libreta_vacunacion
-					this.form_beneficiario.observacion = data.salud.observacion_salud
-					this.form_beneficiario.fecha_apto_medico = data.salud.fecha_apto_medico
-					this.form_beneficiario.electrocardiograma = data.salud.electrocardiograma
-					this.form_beneficiario.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
-					this.form_beneficiario.medicacion = data.salud.medicacion
-					this.form_beneficiario.name_medicacion = data.salud.name_medicacion
-					this.form_beneficiario.dosis = data.salud.dosis
-					this.form_beneficiario.centro_salud_id = data.salud.centro_salud_id
-					this.form_beneficiario.estado_salud_id = data.salud.estado_salud_id
+					this.form_salud.apto_medico = data.salud.apto_medico
+					this.form_salud.libreta_vacunacion = data.salud.libreta_vacunacion
+					this.form_salud.observacion = data.salud.observacion_salud
+					this.form_salud.fecha_apto_medico = data.salud.fecha_apto_medico
+					this.form_salud.fecha_apto_medico = new Date(this.form_salud.fecha_apto_medico + "T00:00:00.000-03:00")
+					this.form_salud.electrocardiograma = data.salud.electrocardiograma
+					this.form_salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+					this.form_salud.fecha_electrocardiograma = new Date(this.form_salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+					this.form_salud.medicacion = data.salud.medicacion
+					this.form_salud.name_medicacion = data.salud.name_medicacion
+					this.form_salud.dosis = data.salud.dosis
+					this.form_salud.centro_salud_id = data.salud.centro_salud_id
+					this.form_salud.estado_salud_id = data.salud.estado_salud_id
+					this.form_salud.observacion_salud = data.salud.observacion
 				}
 				if (data.address[0]) {
 					this.form_beneficiario.calle = data.address[0].calle
@@ -1629,7 +1687,6 @@ export default {
 			if (this.showBenef) {
 				this.textBtnBenef = 'Agregar Beneficiario'
 				this.textBenef = 'Titular'
-				//this.form_beneficiario = {}
 				this.beneficiario_control = false
 			} else {
 				this.beneficiario_control = true
@@ -1637,6 +1694,20 @@ export default {
 				this.textBenef = 'Beneficiario'
 			}
 			this.showBenef = !this.showBenef
+		},
+		changeForm($type){
+			this.form_education = {}
+			this.form_salud = {}
+			if($type === 'Mayor'){
+				this.isMayor = 'Mayor'
+				this.beneficiario_control = false
+			}else{
+				this.isMayor = 'Menor'
+				this.beneficiario_control = true
+			}
+		},
+		isValidDate(date) {
+			return date instanceof Date && !isNaN(date);
 		},
 
 		/* ***********************
@@ -1736,14 +1807,12 @@ export default {
 		** * FIN MANEJO DE TIPO DE TRAMITE
 		**********************************
 		*/
-
 		beneficiario(data) {
 			this.form_beneficiario = data;
 		},
 		familiares_data(data) {
 			this.form_familiares = data;
 		}
-
 	},
 	computed: {
 		barriosComputed: function () {
@@ -1757,13 +1826,9 @@ export default {
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form_beneficiario.localidad_id)
 		}
 	},
-
 	mounted() {
 		this.form.tipo_tramite_id = ''
 		this.form.observacion = ''
 	}
 }
 </script>
-
-
-

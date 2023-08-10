@@ -23,6 +23,7 @@ class CbjData extends Model
         'comedor_id',
         'tramite_id',
         'acompanamiento_cbj_id',
+        'actividad_cbj_id'
 
     ];
 
@@ -44,6 +45,11 @@ class CbjData extends Model
     public function acompanamiento ()
     {
         return $this->belongsTo(AcompanamientoCbj::class, 'acompanamiento_cbj_id');
+    }
+
+    public function actividadCbj()
+    {
+        return $this->belongsTo(ActividadCbj::class, 'actividad_cbj_id');
     }
 
 }

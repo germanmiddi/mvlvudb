@@ -223,8 +223,6 @@ export default {
                     element.totalTramites = 0
                 }
             });
-
- 
         },
     },
     mounted() {

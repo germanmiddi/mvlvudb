@@ -112,14 +112,12 @@ class JuventudController extends Controller
     //store
     public function store(Request $request)
     {
-
         DB::beginTransaction();
         try {
 
             /**
              * Datos Genericos del tramite.
              */
-
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -130,8 +128,7 @@ class JuventudController extends Controller
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento'],
-                    'num_cuit' => $request['num_cuit'] ?? null
+                    'num_documento' => $request['num_documento']
                 ]
             );
 
@@ -154,6 +151,18 @@ class JuventudController extends Controller
                 ]
             );
 
+            SocialData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
+                    'cobertura_medica_id' => $request['cobertura_medica_id'],
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'programa_social_id' => $request['programa_social_id'],
+                ]
+            );
+
             AditionalData::updateOrCreate(
                 [
                     'person_id' => $person->id
@@ -164,30 +173,65 @@ class JuventudController extends Controller
                 ]
             );
 
-            SocialData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
-                    'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id'],
-                    'subsidio' => $request['subsidio']
-                ]
-            );
-
             ContactData::updateOrCreate(
                 [
                     'person_id' => $person->id
                 ],
                 [
                     'phone' => $request['phone'],
+                    'celular' => $request['celular'],
                     'email' => $request['email']
                 ]
             );
 
-            if ($request['beneficiario_control'] == 'true') {
-                // Datos del Beneficiario
+             if ($request['beneficiario_control'] == 'false') {
+
+                EducationData::updateOrCreate(
+                    [
+                        'person_id' => $person->id
+                    ],
+                    [
+                        'nivel_educativo_id' => $request['nivel_educativo_id'],
+                        'estado_educativo_id' => $request['estado_educativo_id'],
+                        'escuela_primaria_id' => $request['escuela_primaria_id'],
+                        'escuela_secundaria_id' => $request['escuela_secundaria_id'],
+                        'escuela_nocturna_id' => $request['escuela_nocturna_id'],
+                        'orientacion_secundario_id' => $request['orientacion_secundario_id'],
+                        'nivel_secundario_id' => $request['nivel_secundario_id'],
+                        'turno_nocturno_id' => $request['turno_nocturno_id'],
+                        'dependencia_nocturno_id' => $request['dependencia_nocturno_id'],
+                        'terciario' => $request['terciario'],
+                        'name_terciario' => $request['name_terciario'],
+                        'carrera_terciario' => $request['carrera_terciario'],
+                        'anio_terciario' => $request['anio_terciario'],
+                        'universitario' => $request['universitario'],
+                        'name_universitario' => $request['name_universitario'],
+                        'carrera_universitario' => $request['carrera_universitario'],
+                        'anio_universitario' => $request['anio_universitario']
+                    ]
+                );
+    
+                SaludData::updateOrCreate(
+                    [
+                        'person_id' => $person->id
+                    ],
+                    [
+                        'apto_medico' => $request['apto_medico'],
+                        'libreta_vacunacion' => $request['libreta_vacunacion'],
+                        'centro_salud_id' => $request['centro_salud_id'],
+                        'estado_salud_id' => $request['estado_salud_id'],
+                        'observacion' => $request['observacion_salud'],
+                        'fecha_apto_medico' => $request['fecha_apto_medico'],
+                        'electrocardiograma' => $request['electrocardiograma'],
+                        'fecha_electrocardiograma' => $request['fecha_electrocardiograma'],
+                        'medicacion' => $request['medicacion'],
+                        'name_medicacion' => $request['name_medicacion'],
+                        'dosis' => $request['dosis'],
+                    ]
+                );
+
+             }else{
+
                 $beneficiario = Person::updateOrCreate(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
@@ -198,75 +242,84 @@ class JuventudController extends Controller
                         'name' => $request['beneficiario_name'],
                         'fecha_nac' => $request['beneficiario_fecha_nac'],
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
-                        'num_documento' => $request['beneficiario_num_documento'],
-                        'num_cuit' => $request['beneficiario_num_cuit'] ?? null
+                        'num_documento' => $request['beneficiario_num_documento']
                     ]
                 );
 
-                $beneficiario_id = $beneficiario->id;
-            } else {
-                // Datos adicionales del Titular
-                $beneficiario_id = $person->id;
-            }
+                ContactData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'phone' => $request['beneficiario_phone'],
+                        'celular' => $request['beneficiario_celular'],
+                        'email' => $request['beneficiario_email']
+                    ]
+                );
 
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $beneficiario_id
-                ],
-                [
-                    'calle' => $request['calle'],
-                    'number' => $request['number'],
-                    'piso' => $request['piso'],
-                    'dpto' => $request['dpto'],
-                    'localidad_id' => $request['localidad_id'],
-                    'barrio_id' => $request['barrio_id'],
+                EducationData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'nivel_educativo_id' => $request['nivel_educativo_id'],
+                        'estado_educativo_id' => $request['estado_educativo_id'],
+                        'escuela_primaria_id' => $request['escuela_primaria_id'],
+                        'escuela_secundaria_id' => $request['escuela_secundaria_id'],
+                        'escuela_nocturna_id' => $request['escuela_nocturna_id'],
+                        'orientacion_secundario_id' => $request['orientacion_secundario_id'],
+                        'nivel_secundario_id' => $request['nivel_secundario_id'],
+                        'turno_nocturno_id' => $request['turno_nocturno_id'],
+                        'dependencia_nocturno_id' => $request['dependencia_nocturno_id'],
+                        'terciario' => $request['terciario'],
+                        'name_terciario' => $request['name_terciario'],
+                        'carrera_terciario' => $request['carrera_terciario'],
+                        'anio_terciario' => $request['anio_terciario'],
+                        'universitario' => $request['universitario'],
+                        'name_universitario' => $request['name_universitario'],
+                        'carrera_universitario' => $request['carrera_universitario'],
+                        'anio_universitario' => $request['anio_universitario']
+                    ]
+                );
+    
+                SaludData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'apto_medico' => $request['apto_medico'],
+                        'libreta_vacunacion' => $request['libreta_vacunacion'],
+                        'centro_salud_id' => $request['centro_salud_id'],
+                        'estado_salud_id' => $request['estado_salud_id'],
+                        'observacion' => $request['observacion_salud'],
+                        'fecha_apto_medico' => $request['fecha_apto_medico'],
+                        'electrocardiograma' => $request['electrocardiograma'],
+                        'fecha_electrocardiograma' => $request['fecha_electrocardiograma'],
+                        'medicacion' => $request['medicacion'],
+                        'name_medicacion' => $request['name_medicacion'],
+                        'dosis' => $request['dosis'],
+                    ]
+                );
 
-                ]
-            );
+                AddressData::updateOrCreate(
+                    [
+                        'person_id' => $beneficiario->id
+                    ],
+                    [
+                        'calle' => $request['beneficiario_calle'],
+                        'number' => $request['beneficiario_number'],
+                        'piso' => $request['beneficiario_piso'],
+                        'dpto' => $request['beneficiario_dpto'],
+                        'pais_id' => $request['beneficiario_pais_id'],
+                        'localidad_id' => $request['beneficiario_localidad_id'],
+                        'barrio_id' => $request['beneficiario_barrio_id'],
+    
+                    ]
+                );
 
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $beneficiario_id
-                ],
-                [
-                    'nivel_educativo_id' => $request['beneficiario_nivel_educativo_id'],
-                    'estado_educativo_id' => $request['beneficiario_estado_educativo_id'],
-                    'escuela_primaria_id' => $request['beneficiario_escuela_primaria_id'],
-                    'escuela_secundaria_id' => $request['beneficiario_escuela_secundaria_id'],
-                    'escuela_nocturna_id' => $request['beneficiario_escuela_nocturna_id'],
-                    'orientacion_secundario_id' => $request['beneficiario_orientacion_secundario_id'],
-                    'nivel_secundario_id' => $request['beneficiario_nivel_secundario_id'],
-                    'turno_nocturno_id' => $request['beneficiario_turno_nocturno_id'],
-                    'dependencia_nocturno_id' => $request['beneficiario_dependencia_nocturno_id'],
-                    'terciario' => $request['beneficiario_terciario'],
-                    'name_terciaria' => $request['beneficiario_name_terciaria'],
-                    'carrera_terciaria' => $request['beneficiario_carrera_terciaria'],
-                    'anio_terciario' => $request['beneficiario_anio_terciario'],
-                    'universitario' => $request['beneficiario_universitario'],
-                    'name_universitaria' => $request['beneficiario_name_universitaria'],
-                    'carrera_universitaria' => $request['beneficiario_carrera_universitaria'],
-                    'anio_universitario' => $request['beneficiario_anio_universitario']
-                ]
-            );
 
-            SaludData::updateOrCreate(
-                [
-                    'person_id' => $beneficiario_id
-                ],
-                [
-                    'apto_medico' => $request['beneficiario_apto_medico'],
-                    'libreta_vacunacion' => $request['beneficiario_libreta_vacunacion'],
-                    'centro_salud_id' => $request['beneficiario_centro_salud_id'],
-                    'estado_salud_id' => $request['beneficiario_estado_salud_id'],
-                    'observacion' => $request['beneficiario_observacion_salud'],
-                    'fecha_apto_medico' => $request['beneficiario_fecha_apto_medico'],
-                    'electrocardiograma' => $request['beneficiario_electrocardiograma'],
-                    'fecha_electrocardiograma' => $request['beneficiario_fecha_electrocardiograma'],
-                    'medicacion' => $request['beneficiario_medicacion'],
-                    'name_medicacion' => $request['beneficiario_name_medicacion'],
-                    'dosis' => $request['beneficiario_dosis'],
-                ]
-            );
+                
+             }
 
             $list_tramites_id = array();
 
@@ -504,5 +557,73 @@ class JuventudController extends Controller
                 'rol_tramite' => $tramite->rol_tramite[0]['description'],
                 'tipo_tramite' => $tramite->tipoTramite
             ]);
+    }
+
+    public function getDataFormMenor(){
+        return [
+            'paises' => Pais::all(),
+            'barrios' => Barrio::all(),
+            'localidades' => Localidad::all(),
+            'canalesAtencion' => CanalAtencion::all(),
+            'coberturasMedica' => CoberturaMedica::all(),
+            'estadosEducativo' => EstadoEducativo::all(),
+            'nivelesEducativo' => NivelEducativo::all(),
+            'tiposDocumento' => TipoDocumento::all(),
+            'tiposOcupacion' => TipoOcupacion::all(),
+            'tiposPension' => TipoPension::all(),
+            'tiposVivienda' => TipoVivienda::all(),
+            'situacionesConyugal' => SituacionConyugal::all(),
+            'rolesTramite' => RolTramite::all(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
+            'programasSocial' => ProgramaSocial::all(),
+            'parentescos' => Parentesco::all(),
+            'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
+            'comedores' => Comedor::where('activo', true)->get(),
+            'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
+            'estadosCbj' => EstadoCbj::where('activo', true)->get(),
+            'sedes' => Sede::all(),
+            'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
+            'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
+            'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
+            'orientaciones' => OrientacionEscuela::where('activo', true)->get(),
+            'escuelasTurnos' => EscuelaTurno::all(),
+            'escuelasDependencias' => EscuelaDependencia::all(),
+            'centrosSalud' => CentroSalud::where('activo', true)->get(),
+            'estadosSalud' => EstadoSalud::where('activo', true)->get(),
+        ];
+    }
+
+    public function getDataFormMayor(){
+        return [
+            'paises' => Pais::all(),
+            'barrios' => Barrio::all(),
+            'localidades' => Localidad::all(),
+            'canalesAtencion' => CanalAtencion::all(),
+            'coberturasMedica' => CoberturaMedica::all(),
+            'estadosEducativo' => EstadoEducativo::all(),
+            'nivelesEducativo' => NivelEducativo::all(),
+            'tiposDocumento' => TipoDocumento::all(),
+            'tiposOcupacion' => TipoOcupacion::all(),
+            'tiposPension' => TipoPension::all(),
+            'tiposVivienda' => TipoVivienda::all(),
+            'situacionesConyugal' => SituacionConyugal::all(),
+            'rolesTramite' => RolTramite::all(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
+            'programasSocial' => ProgramaSocial::all(),
+            'parentescos' => Parentesco::all(),
+            'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
+            'comedores' => Comedor::where('activo', true)->get(),
+            'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
+            'estadosCbj' => EstadoCbj::where('activo', true)->get(),
+            'sedes' => Sede::all(),
+            'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
+            'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
+            'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
+            'orientaciones' => OrientacionEscuela::where('activo', true)->get(),
+            'escuelasTurnos' => EscuelaTurno::all(),
+            'escuelasDependencias' => EscuelaDependencia::all(),
+            'centrosSalud' => CentroSalud::where('activo', true)->get(),
+            'estadosSalud' => EstadoSalud::where('activo', true)->get(),
+        ];
     }
 }

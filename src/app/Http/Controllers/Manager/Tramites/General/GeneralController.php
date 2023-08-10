@@ -17,7 +17,7 @@ class GeneralController extends Controller
     {
         return Inertia::render('Manager/Tramites/General/Index',
         [
-            'tiposTramite' => TipoTramite::all(),
+            'tiposTramite' => TipoTramite::active()->get(),
             'dependencias' => Dependencia::all(),
             'toast' => Session::get('toast')
         ]);

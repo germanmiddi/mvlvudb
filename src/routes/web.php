@@ -21,6 +21,8 @@ use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
 use App\Http\Controllers\Manager\Tramites\Vivienda\ViviendaController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
+use App\Http\Controllers\Manager\Masterdata\MasterdataController;
+
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
@@ -130,4 +132,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/vivienda/store', [ViviendaController::class, 'store'])->name('vivienda.store');   
     Route::post('/vivienda/update/{id}', [ViviendaController::class, 'update'])->name('vivienda.update');    
     Route::get('/vivienda/list', [ViviendaController::class, 'list'])->name('vivienda.list'); 
+
+    // Masterdata
+
+    Route::get('/masterdata', [MasterdataController::class, 'index'])->name('masterdata');
+    Route::get('/masterdata/get_tipo_tramite/{d}', [MasterdataController::class, 'get_tipo_tramite'])->name('masterdata.get_tipo_tramite');
+    Route::post('/masterdata/store_tipo_tramite/', [MasterdataController::class, 'store_tipo_tramite'])->name('masterdata.store_tipo_tramite');     
+    Route::post('/masterdata/update_tipo_tramite/', [MasterdataController::class, 'update_tipo_tramite'])->name('masterdata.update_tipo_tramite');     
+    Route::post('/masterdata/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
+    Route::post('/masterdata/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
+
+
 });

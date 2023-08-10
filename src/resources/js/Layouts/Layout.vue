@@ -115,21 +115,21 @@
           <!-- Navigation -->
           <nav class="px-3 mt-6">
             <div class="space-y-1">
-              
+              <a :href="route('general')">
+                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
+                  <InboxIcon class="w-5 h-5 mr-3" /> <label> Bandeja General</label>
+                </div>
+              </a>
               <!-- Render a `div` for the root `Disclosure` component -->
               <Disclosure as="div">
                 <!-- Don't render any element (only children) for the `DisclosureButton` component -->
                 <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Formularios Alta</button>
+                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Entidades</button>
                 </DisclosureButton>
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
-                    <a :href="route('general')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Bandeja General
-                      </li>
-                    </a>
+
                     <a :href="route('infancia')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
@@ -195,6 +195,16 @@
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
+                    
+                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                      Usuarios y Permisos
+                    </li>
+                    
+                    <a :href="route('masterdata')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Datos Maestros
+                      </li>
+                    </a>
                     <a :href="route('logs')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Registro de Logs
@@ -304,7 +314,7 @@
     TransitionRoot,
   } from '@headlessui/vue'
 
-  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon } from '@heroicons/vue/24/outline'
   import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid'
 
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
@@ -383,7 +393,8 @@
       XMarkIcon,
       Disclosure, 
       DisclosureButton, 
-      DisclosurePanel
+      DisclosurePanel, 
+      InboxIcon
     },
     setup() {
       const sidebarOpen = ref(false)

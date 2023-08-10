@@ -25,4 +25,10 @@ class TipoTramite extends Model
     public function tramites(){
         return $this->hasMany(Tramite::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('activo', '1');
+    }    
+
 }

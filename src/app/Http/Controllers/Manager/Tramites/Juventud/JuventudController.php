@@ -64,7 +64,7 @@ class JuventudController extends Controller
         return Inertia::render(
             'Manager/Tramites/Juventud/Index',
             [
-                'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 13)->active()->get(),
                 'toast' => Session::get('toast')
             ]
         );
@@ -89,7 +89,7 @@ class JuventudController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 13)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::all(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),

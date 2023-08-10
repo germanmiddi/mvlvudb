@@ -47,7 +47,7 @@ class DiscapacidadController extends Controller
     {
         return Inertia::render('Manager/Tramites/Discapacidad/Index',
         [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -69,7 +69,7 @@ class DiscapacidadController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
                 'programasSocial' => ProgramaSocial::all()
             ]
         );

@@ -199,21 +199,6 @@
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_documento_id"
-									class="block text-sm font-medium text-gray-700">Parentesco</label>
-								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
-									autocomplete="parentesco_id-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un tipo de documento
-									</option>
-									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
-										{{ parentesco.description }}
-									</option>
-								</select>
-							</div>
-
 						</div>
 
 					</div>
@@ -739,6 +724,7 @@ export default {
 				this.form.name = data.name
 				this.form.lastname = data.lastname
 				this.form.email = data.contact[0].email
+				this.form.phone = data.contact[0].phone
 				this.form.celular = data.contact[0].celular
 				this.form.cant_hijos = data.aditional[0].cant_hijos
 				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id

@@ -18,59 +18,62 @@
 
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
 
-<div class="shadow sm:rounded-md sm:overflow-hidden">
-    <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-            <div class="">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
-            </div>
-            <div class="flex-shrink-0">
-                <button type="button"
-                    class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
-                    Filtro</button>
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                    <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                        <div class="">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <button type="button"
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                                @click="getTramites()">Aplicar
+                                Filtro</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-6">
+                        <div class="col-span-12 sm:col-span-3 ">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-3 ">
+                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+                                Documento</label>
+                            <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
+                                autocomplete="address-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-3 ">
+                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+                            <!-- <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.date" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+                                :format="format">
+                            </Datepicker> -->
+                            <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
+                                :enableTimePicker="false" :format="customFormat"></Datepicker>
+                        </div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
+                                Tramite</label>
+                            <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+                                autocomplete="tipo_tramite_id_name"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" selected>Selecciones un tipo de tramite</option>
+                                <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
+                                    tipoTramite.description
+                                }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
-        <div class="grid grid-cols-12 gap-6">
-            <div class="col-span-12 sm:col-span-3 ">
-                <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
-                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-            </div>
-            <div class="col-span-12 sm:col-span-3 ">
-                <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-                    Documento</label>
-                <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
-                    autocomplete="address-level2"
-                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-            </div>
-            <div class="col-span-12 sm:col-span-3 ">
-                <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-                <!-- <Datepicker
-                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                    v-model="filter.date" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-                    :format="format">
-                </Datepicker> -->
-                <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
-                        :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
-            </div>
-            <div class="col-span-12 sm:col-span-3">
-                <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-                    Tramite</label>
-                <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-                    autocomplete="tipo_tramite_id_name"
-                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="" selected>Selecciones un tipo de tramite</option>
-                    <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
-                        tipoTramite.description
-                    }}</option>
-                </select>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-</div>
 
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

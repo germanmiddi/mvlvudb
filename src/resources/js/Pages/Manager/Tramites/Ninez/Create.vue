@@ -388,101 +388,6 @@
 					</div>
 				</div>
 
-				<!-- DATOS DE LOS TUTORES -->
-
-				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos de los Tutores/Padres</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<div class="flex-shrink-0">
-									<button type="button" @click="addFamiliar()"
-										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-										:class="showBenef ? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white' : 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'">{{ this.textBtnBenef }}</button>
-								</div>
-							</div>
-						</div>
-
-						<hr>
-						<span for="name" class="block text-sm font-medium text-gray-700">Datos de la Turora/Madre </span>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="name_madre" class="block text-sm font-medium text-gray-700">Nombre </label>
-								<input v-model="form.name_madre" type="text" name="name_madre" id="name_madre"
-									autocomplete="name-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="lastname_madre" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_madre" type="text" name="lastname_madre" id="lastname_madre"
-									autocomplete="lastname-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="num_documento_madre" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<input v-model="form.num_documento_madre" type="text" name="num_documento_madre"
-									id="num_documento_madre" autocomplete="address-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3 ">
-								<label for="fecha_nac_madre" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<input v-model="form.fecha_nac_madre" type="text" name="fecha_nac_madre"
-									id="fecha_nac_madre" autocomplete="fecha_nac-level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-						</div>
-
-						<hr>
-
-						<div class="grid grid-cols-12 gap-12">
-							<table class="min-w-full divide-y divide-gray-200 w-full col-span-12 ">
-								<thead class="bg-gray-50">
-									<tr>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-											Tramite
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-8/12">
-											Observacion
-										</th>
-										<th scope="col"
-											class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
-											Accion
-										</th>
-									</tr>
-								</thead>
-								<tbody class="bg-white divide-y divide-gray-200">
-									<tr v-for="(familiar, index) in familiares" :key="index">
-										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{{ familiar.titulo }}
-										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{{ familiar.observacion }}
-										</td>
-										<td class="px-6 py-4 text-center text-sm font-medium">
-											<button
-												class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-												@click="deleteTramite(tramite)">
-												Borrar
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div> -->
-
 				<!-- DIRECCION -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -1089,12 +994,18 @@ export default {
 			this.form.number = data.address[0].number;
 			this.form.piso = data.address[0].piso;
 			this.form.dpto = data.address[0].dpto;
-			this.form.latitude = data.address[0].latitude;
-			this.form.longitude = data.address[0].longitude;
-			this.form.google_address = data.address[0].google_address;
-			//address.data.autocompleteText = data.address[0].google_address
-			//this.address.data.autocompleteText = 'New value';
+			if(data.address[0].latitude && data.address[0].longitude){
+				this.form.latitude = data.address[0].latitude
+				this.form.longitude = data.address[0].longitude
 
+				// Carga de datos para visualizar el mapa.
+				this.form_temp = {}
+				this.form_temp.latitude = parseFloat(data.address[0].latitude)
+				this.form_temp.longitude = parseFloat(data.address[0].longitude)
+				this.form_temp.route = data.address[0].google_address
+				this.form_google = this.form_temp
+				this.showMap = true
+			}
 			this.form.pais_id = data.address[0].pais_id;
 			this.form.localidad_id = data.address[0].localidad_id;
 			this.form.barrio_id = data.address[0].barrio_id;

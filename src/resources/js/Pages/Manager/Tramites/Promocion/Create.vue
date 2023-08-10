@@ -172,16 +172,6 @@
 									Datos del Titular
 								</h3>
 							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showBenef
-										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
-										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
-										">
-									{{ this.textBtnBenef }}
-								</button>
-							</div>
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -558,18 +548,14 @@
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
-					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
-					@click="submit" :disabled="btnGuardar">
-					Guardar
-				</button>
+				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
+				@click="submit" :disabled="btnGuardar">
+				Guardar
+			</button>
 		</div>
-     
     </main>
-
-
 </template>
-
 <script>
 
 import { ref } from 'vue'
@@ -622,7 +608,6 @@ export default {
 			form_beneficiario: {},
 			address: "",
 			/* BENEFICIARIO */
-			textBtnBenef: "Agregar Beneficiario",
 			showBenef: false,
 			beneficiario_control: false,
 			/* MAPA */
@@ -812,17 +797,6 @@ export default {
 		},
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
-		},
-		addBeneficiario(){
-			if(this.showBenef){
-				this.textBtnBenef = 'Agregar Beneficiario'
-				this.form_beneficiario = {}
-				this.beneficiario_control = false
-			}else{
-				this.beneficiario_control = true
-				this.textBtnBenef = 'Borrar Beneficiario'
-			}
-			this.showBenef = !this.showBenef
 		},
 	
 	/* ***********************

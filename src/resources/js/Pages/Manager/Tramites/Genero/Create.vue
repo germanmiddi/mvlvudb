@@ -69,8 +69,7 @@
 										? 'border-red-500'
 										: ''
 										">
-									<option value="" selected></option>
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un canal de atencion
 									</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
@@ -90,7 +89,7 @@
 									autocomplete="tipo_tramite_id_name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.tramites.$error ? 'border-red-500' : ''">
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un tipo de tramite
 									</option>
 									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
@@ -275,7 +274,7 @@
 								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
 									autocomplete="parentesco_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
+									<option value="" disabled>
 										Seleccione un tipo de documento
 									</option>
 									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
@@ -304,7 +303,7 @@
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
 									autocomplete="localidad_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
+									<option value="" disabled>
 										Seleccione una localidad
 									</option>
 									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
@@ -317,7 +316,7 @@
 								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
 									autocomplete="barrio_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
+									<option value="" disabled>
 										Seleccione un barrio
 									</option>
 									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">
@@ -405,7 +404,7 @@
 								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
 								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un pais
 									</option>
 									<option v-for="pais in paises" :key="pais.id" :value="pais.id"
@@ -420,7 +419,7 @@
 								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
 									name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones una situacion conyugal
 									</option>
 									<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
@@ -459,7 +458,7 @@
 								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id"
 									autocomplete="nivel_educativo_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un nivel educativo
 									</option>
 									<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
@@ -476,7 +475,7 @@
 								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
 									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un estado educativo
 									</option>
 									<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
@@ -506,7 +505,7 @@
 								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
 									autocomplete="tipo_ocupacion_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones una ocupacion
 									</option>
 									<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
@@ -523,7 +522,7 @@
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
 									autocomplete="tipo_pension_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un tipo de pension
 									</option>
 									<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
@@ -553,7 +552,7 @@
 								<select v-model="form.cobertura_medica_id" id="cobertura_medica_id"
 									name="cobertura_medica_id" autocomplete="cobertura_medica_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un tipo de cobertura medica
 									</option>
 									<option v-for="coberturaMedica in coberturasMedica" :key="coberturaMedica.id"
@@ -571,7 +570,7 @@
 								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
 									autocomplete="programa_social_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" selected>
+									<option disabled value="">
 										Selecciones un programa social
 									</option>
 									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
@@ -889,8 +888,6 @@ export default {
 					data.social[0].cobertura_medica_id;
 				this.form.programa_social_id = data.social[0].programa_social_id
 				this.form.tipo_pension_id = data.social[0].tipo_pension_id;
-				this.form.subsidio = data.social[0].subsidio;
-				this.form.beca = data.education[0].beca;
 				this.form.nivel_educativo_id =
 					data.education[0].nivel_educativo_id;
 				this.form.estado_educativo_id =

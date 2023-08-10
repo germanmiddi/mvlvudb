@@ -618,15 +618,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="subsidio" class="block text-sm font-medium text-gray-700">Recibe
-									Subsidio</label>
-								<select v-model="form.subsidio" id="subsidio" name="subsidio" autocomplete="subsidio-name"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
-								</select>
-							</div>
+							
 							<div class="col-span-12 sm:col-span-3">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
@@ -1477,8 +1469,8 @@ export default {
 				this.form.lastname = data.lastname
 				this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
+				this.form.celular = data.contact[0].celular
 				if (data.aditional[0]) {
-					this.form.tipo_vivienda_id = data.aditional[0].tipo_vivienda_id
 					this.form.cant_hijos = data.aditional[0].cant_hijos
 					this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
 
@@ -1487,7 +1479,6 @@ export default {
 					this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
 					this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
 					this.form.tipo_pension_id = data.social[0].tipo_pension_id
-					this.form.subsidio = data.social[0].subsidio
 				}
 
 				if (data.education[0]) {
@@ -1581,6 +1572,7 @@ export default {
 				this.form_beneficiario.lastname = data.lastname
 				this.form_beneficiario.email = data.contact[0].email
 				this.form_beneficiario.phone = data.contact[0].phone
+				this.form.celular = data.contact[0].celular
 
 				if (data.education[0]) {
 					this.form_beneficiario.nivel_educativo_id = data.education[0].nivel_educativo_id

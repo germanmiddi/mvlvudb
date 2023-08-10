@@ -61,7 +61,7 @@ class InfanciaController extends Controller
     {
         return Inertia::render('Manager/Tramites/Infancia/Index',
         [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 12)->get(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -84,7 +84,7 @@ class InfanciaController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 12)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::all(),
                 'sedes' => Sede::all(),

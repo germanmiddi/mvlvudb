@@ -69,7 +69,7 @@ class NinezController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 8)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::all(),
             ]

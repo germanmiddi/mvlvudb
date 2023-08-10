@@ -47,7 +47,7 @@ class MayorController extends Controller
     {
         return Inertia::render('Manager/Tramites/Mayor/Index',
         [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 14)->get(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -69,7 +69,7 @@ class MayorController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 14)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
                 'programasSocial' => ProgramaSocial::all()
             ]
         );

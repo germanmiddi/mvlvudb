@@ -47,7 +47,7 @@ class HabitatController extends Controller
    {
        return Inertia::render('Manager/Tramites/Habitat/Index',
        [
-           'tiposTramite' => TipoTramite::where('dependencia_id', 5)->get(),
+           'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
            'toast' => Session::get('toast')
        ]);
    }
@@ -69,7 +69,7 @@ class HabitatController extends Controller
                'tiposVivienda' => TipoVivienda::all(),
                'situacionesConyugal' => SituacionConyugal::all(),
                'rolesTramite' => RolTramite::all(),
-               'tiposTramite' => TipoTramite::where('dependencia_id', 7)->get(),
+               'tiposTramite' => TipoTramite::where('dependencia_id', 7)->active()->get(),
                'programasSocial' => ProgramaSocial::all()
            ]
        );

@@ -46,7 +46,7 @@ class GeneroController extends Controller
     {
         return Inertia::render('Manager/Tramites/Genero/Index',
         [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -69,7 +69,7 @@ class GeneroController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::all(),
             ]

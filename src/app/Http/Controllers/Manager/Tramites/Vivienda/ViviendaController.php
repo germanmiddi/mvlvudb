@@ -47,7 +47,7 @@ class ViviendaController extends Controller
     {
         return Inertia::render('Manager/Tramites/Vivienda/Index',
         [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 11)->get(),
+            'tiposTramite' => TipoTramite::where('dependencia_id', 11)->active()->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -69,7 +69,7 @@ class ViviendaController extends Controller
                 'tiposVivienda' => TipoVivienda::all(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
-                'tiposTramite' => TipoTramite::where('dependencia_id', 11)->get(),
+                'tiposTramite' => TipoTramite::where('dependencia_id', 11)->active()->get(),
                 'programasSocial' => ProgramaSocial::all()
             ]
         );

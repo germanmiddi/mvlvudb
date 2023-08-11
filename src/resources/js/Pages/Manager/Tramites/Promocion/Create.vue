@@ -68,8 +68,7 @@
 										? 'border-red-500'
 										: ''
 										">
-									<option value="" selected></option>
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un canal de atencion
 									</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
@@ -89,7 +88,7 @@
 									autocomplete="tipo_tramite_id_name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.tramites.$error ? 'border-red-500' : ''">
-									<option value="" selected>
+									<option value="" disabled>
 										Selecciones un tipo de tramite
 									</option>
 									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
@@ -172,16 +171,6 @@
 								<h3 class="text-lg leading-6 font-medium text-gray-900">
 									Datos del Titular
 								</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showBenef
-										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
-										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
-										">
-									{{ this.textBtnBenef }}
-								</button>
 							</div>
 						</div>
 
@@ -282,7 +271,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 							<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="localidad_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" selected>Seleccione una localidad</option>
+								<option value="" disabled>Seleccione una localidad</option>
 								<option v-for="localidad in localidades" :key="localidad.id"
 									:value="localidad.id">{{
 											localidad.description
@@ -292,7 +281,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
 							<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" selected>Seleccione un barrio</option>
+								<option value="" disabled>Seleccione un barrio</option>
 								<option v-for="barrio in barriosComputed" :key="barrio.id"
 									:value="barrio.id">{{
 											barrio.description
@@ -371,7 +360,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
 							<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un pais</option>
+								<option disabled value="">Selecciones un pais</option>
 								<option v-for="pais in paises" :key="pais.id"
 								:value="pais.id"
 								:bind:select="pais.id == form.pais_id">{{
@@ -382,7 +371,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación Conyugal</label>
 							<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id" name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones una situacion conyugal</option>
+								<option disabled value="">Selecciones una situacion conyugal</option>
 								<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
 								:value="situacionConyugal.id"
 								:bind:select="situacionConyugal.id == form.situacion_conyugal_id">{{
@@ -410,7 +399,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo en curso</label>
 							<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id" autocomplete="nivel_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un nivel educativo</option>
+								<option disabled value="">Selecciones un nivel educativo</option>
 								<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
 								:value="nivelEducativo.id"
 								:bind:select="nivelEducativo.id == form.nivel_educativo_id">{{
@@ -421,7 +410,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel educativo alcanzado</label>
 							<select  v-model="form.estado_educativo_id" id="estado_educativo_id" name="estado_educativo_id" autocomplete="estado_educativo_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un estado educativo</option>
+								<option disabled value="">Selecciones un estado educativo</option>
 								<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
 								:value="estadoEducativo.id"
 								:bind:select="estadoEducativo.id == form.estado_educativo_id">{{
@@ -445,7 +434,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ocupación</label>
 							<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id" autocomplete="tipo_ocupacion_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones una ocupacion</option>
+								<option disabled value="">Selecciones una ocupacion</option>
 								<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
 								:value="tipoOcupacion.id"
 								:bind:select="tipoOcupacion.id == form.tipo_ocupacion_id">{{
@@ -456,7 +445,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe Jubilación / Pensión</label>
 							<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un tipo de pension</option>
+								<option disabled value="">Selecciones un tipo de pension</option>
 								<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
 								:value="tipoPension.id"
 								:bind:select="tipoPension.id == form.tipo_pension_id">{{
@@ -478,7 +467,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="cobertura_medica_id" class="block text-sm font-medium text-gray-700">Cobertura de Salud</label>
 							<select v-model="form.cobertura_medica_id" id="cobertura_medica_id" name="cobertura_medica_id" autocomplete="cobertura_medica_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un tipo de cobertura medica</option>
+								<option disabled value="">Selecciones un tipo de cobertura medica</option>
 								<option v-for="coberturaMedica in coberturasMedica" :key="coberturaMedica.id"
 								:value="coberturaMedica.id"
 								:bind:select="coberturaMedica.id == form.cobertura_medica_id">{{
@@ -490,7 +479,7 @@
 						<div class="col-span-12 sm:col-span-3">
 							<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe Programa Social</label>
 							<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id" autocomplete="programa_social_id-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option disabled value="" selected>Selecciones un programa social</option>
+								<option disabled value="">Selecciones un programa social</option>
 								<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
 								:value="programaSocial.id"
 								:bind:select="programaSocial.id == form.programa_social_id">{{
@@ -559,18 +548,14 @@
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
-					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
-					@click="submit" :disabled="btnGuardar">
-					Guardar
-				</button>
+				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
+				@click="submit" :disabled="btnGuardar">
+				Guardar
+			</button>
 		</div>
-     
     </main>
-
-
 </template>
-
 <script>
 
 import { ref } from 'vue'
@@ -623,7 +608,6 @@ export default {
 			form_beneficiario: {},
 			address: "",
 			/* BENEFICIARIO */
-			textBtnBenef: "Agregar Beneficiario",
 			showBenef: false,
 			beneficiario_control: false,
 			/* MAPA */
@@ -813,17 +797,6 @@ export default {
 		},
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
-		},
-		addBeneficiario(){
-			if(this.showBenef){
-				this.textBtnBenef = 'Agregar Beneficiario'
-				this.form_beneficiario = {}
-				this.beneficiario_control = false
-			}else{
-				this.beneficiario_control = true
-				this.textBtnBenef = 'Borrar Beneficiario'
-			}
-			this.showBenef = !this.showBenef
 		},
 	
 	/* ***********************

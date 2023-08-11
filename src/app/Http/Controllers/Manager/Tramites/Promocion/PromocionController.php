@@ -111,7 +111,8 @@ class PromocionController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id']
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
@@ -312,7 +313,8 @@ class PromocionController extends Controller
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
-                    'tipo_pension_id' => $request['tipo_pension_id']
+                    'tipo_pension_id' => $request['tipo_pension_id'],
+                    'programa_social_id' => $request['programa_social_id']
                 ]
             );
 

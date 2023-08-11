@@ -91,10 +91,6 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tramite
                                     </th>
                                     <th scope="col"
@@ -109,14 +105,10 @@
                                         {{ fechaFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].lastname }},
-                                        {{ data.tramite.persons[0].name }}
+                                        <div v-html=" namePersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].num_documento }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.rol_tramite[0].description }}
+                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.tipo_tramite.description }}
@@ -129,7 +121,7 @@
                                             <div>
                                                 <MenuButton class="btn-blue h-7">
                                                     <EllipsisVerticalIcon name="options-vertical"
-                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
+                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600 hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
                                                 </MenuButton>
                                             </div>
                                             <transition enter-active-class="transition ease-out duration-100"
@@ -142,8 +134,13 @@
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route('juventud.edit', data.tramite.id)"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a :href="route(
+                                                            'juventud.edit',
+                                                            data
+                                                                .tramite
+                                                                .id
+                                                        )
+                                                            " class="block px-4 py-2 text-sm">
                                                             Editar</a>
                                                         </MenuItem>
 
@@ -152,8 +149,13 @@
                                                             Ver</a>
                                                         </MenuItem>
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a :href="route(
+                                                            'pdf.acusepdf',
+                                                            data
+                                                                .tramite
+                                                                .id
+                                                        )
+                                                            " target="_blank" class="block px-4 py-2 text-sm">
                                                             Imprimir</a>
                                                         </MenuItem>
                                                     </div>
@@ -168,7 +170,6 @@
                                                 </div>
 
                                                 -->
-
                                                 </MenuItems>
                                             </transition>
                                         </Menu>
@@ -299,6 +300,30 @@ export default {
 
             return fecha;
         },
+        namePersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.lastname + ', '+element.name
+                }else{
+                    name_benef = element.lastname + ', '+element.name
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        },
+        dniPersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.num_documento
+                }else{
+                    name_benef = element.num_documento
+                }
+            });
+            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        }
     },
     mounted() {
         if (this.toast) {

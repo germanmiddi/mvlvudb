@@ -33,12 +33,12 @@ class EducationData extends Model
         'turno_nocturno_id',
         'dependencia_nocturno_id',
         'terciario',
-        'name_terciaria',
-        'carrera_terciaria',
+        'name_terciario',
+        'carrera_terciario',
         'anio_terciario',
         'universitario',
-        'name_universitaria',
-        'carrera_universitaria',
+        'name_universitario',
+        'carrera_universitario',
         'anio_universitario'
 
     ];

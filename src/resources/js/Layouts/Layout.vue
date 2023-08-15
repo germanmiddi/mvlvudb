@@ -145,8 +145,11 @@
                         Discapacidad
                       </li>
                     </a>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Intermedias</li>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" >Entidades Form 2.0</li>
+                    <a :href="route('entidad')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Entidades
+                      </li>
+                    </a>
                     <a :href="route('fortalecimiento')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Fortalecimiento Comunitario

@@ -45,7 +45,10 @@ class DatabaseSeeder extends Seeder
             EstadoCbjSeeder::class,
             ActividadesCbjSeeder::class,
             AcompanamientosCbjSeeder::class,
-            EscuelasOrientacionesSeeder::class
+            EscuelasOrientacionesSeeder::class,
+            CargosAutoridadesSeeder::class,
+            TiposEntidadesSeeder::class,
+            TiposActividadesSeeder::class
 
         ]);
 
@@ -55,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Inicio123')
         ]);
         
-        /* User::create([
+        User::create([
             'name' => 'Testing',
             'email' => 'test@test.com',
             'password' => bcrypt('Testing123')

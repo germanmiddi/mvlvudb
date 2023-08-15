@@ -19,6 +19,7 @@ use App\Http\Controllers\Manager\Tramites\Infancia\InfanciaController;
 use App\Http\Controllers\Manager\Tramites\Juventud\JuventudController;
 use App\Http\Controllers\Manager\Tramites\Pdf\PdfController;
 use App\Http\Controllers\Manager\Tramites\Vivienda\ViviendaController;
+use App\Http\Controllers\Manager\Tramites\Entidad\EntidadController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
 use App\Http\Controllers\Manager\Masterdata\MasterdataController;
@@ -130,6 +131,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/vivienda/store', [ViviendaController::class, 'store'])->name('vivienda.store');   
     Route::post('/vivienda/update/{id}', [ViviendaController::class, 'update'])->name('vivienda.update');    
     Route::get('/vivienda/list', [ViviendaController::class, 'list'])->name('vivienda.list'); 
+
+    // Entidad
+    Route::get('/entidad', [EntidadController::class, 'index'])->name('entidad');    
+    Route::get('/entidad/create', [EntidadController::class, 'create'])->name('entidad.create');  
+    Route::get('/entidad/edit/{id}', [EntidadController::class, 'edit'])->name('entidad.edit');    
+    Route::post('/entidad/store', [EntidadController::class, 'store'])->name('entidad.store');   
+    Route::post('/entidad/update/{id}', [EntidadController::class, 'update'])->name('entidad.update');    
+    Route::get('/entidad/list', [EntidadController::class, 'list'])->name('entidad.list'); 
 
     // Masterdata
 

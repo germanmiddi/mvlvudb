@@ -59,7 +59,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Person
     Route::get('/persons/getPersonDni/{dni}', [PersonController::class, 'getPersonDni'])->name('persons.getPersonDni');
-    Route::post('/persons/destroy_autoridad/', [PersonController::class, 'destroyFamiliar'])->name('persons.destroyFamiliar');
+    Route::post('/persons/destroyFamiliar/', [PersonController::class, 'destroyFamiliar'])->name('persons.destroyFamiliar');
+    Route::post('/persons/addFamiliar/', [PersonController::class, 'addFamiliar'])->name('persons.addFamiliar');
+    Route::post('/persons/updateFamiliar/', [PersonController::class, 'updateFamiliar'])->name('persons.updateFamiliar');
 
     // Genero
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    

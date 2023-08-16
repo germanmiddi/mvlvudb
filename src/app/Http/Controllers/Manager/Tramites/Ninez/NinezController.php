@@ -244,7 +244,7 @@ class NinezController extends Controller
                                 ]
                             );
 
-                            Familiar::updateOrCreate(
+                            Familiar::create(
                                 [
                                     'person_id' => $familiar['id'],
                                     'tramite_id' => $tramite_data['id'],
@@ -314,6 +314,7 @@ class NinezController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 8)->get(),
                 'programasSocial' => ProgramaSocial::all(),
+                'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'familiares', 'familiares.person', 'familiares.parentesco')->get()
             ]
         );

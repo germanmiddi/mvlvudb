@@ -1142,11 +1142,100 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Familiares</h3>
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Familiares
+								</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<button type="button" @click="addFamiliar()"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showFamiliar
+										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
+										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
+										">
+									{{ this.textBtnFamiliar }}
+								</button>
 							</div>
 						</div>
+
+
+
+						<hr v-if="showFamiliar">
+						<div v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Documento</label>
+								<select v-model="form_familiar.tipo_documento_id" id="tipo_documento_id"
+									name="tipo_documento_id" autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+										:value="tipoDocumento.id">{{
+											tipoDocumento.description
+										}}</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+									Documento</label>
+								<input v-model="form_familiar.num_documento" @focusout="getPersonFamiliar()" type="text"
+									name="num_documento" id="num_documento" autocomplete="address-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_familiar.name" type="text" name="name" id="name"
+									autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_familiar.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+						</div>
+
+						<div v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
+									Nacimiento</label>
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form_familiar.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
+							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form_familiar.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un tipo de parentesco
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<button type="button" @click="storeFamiliar()"
+									class="mt-7 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+									Agregar Familiar
+								</button>
+							</div>
+						</div>
+
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-12">
@@ -1169,29 +1258,24 @@
 												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Parentesco
 											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Acciones
+											</th>
 										</tr>
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
-										<tr v-for="(familiar, index) in form_familiares" :key="index">
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.num_documento }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.name }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.lastname }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.parentesco.description }}
-											</td>
-										</tr>
+										<ListFamiliar v-for="familiar in this.form_familiares" :parentescos=parentescos :key="familiar.id"
+											:item=familiar @edit-item="editItem" @hide-item="hideItem"
+											@destroy-item="destroyItem" />
+
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
 				</div>
+
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
@@ -1281,6 +1365,7 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import ListFamiliar from '@/Layouts/Components/Tramites/ListFamiliar.vue';
 
 export default {
 
@@ -1328,6 +1413,7 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		ListFamiliar
 	},
 	data() {
 		return {
@@ -1340,6 +1426,7 @@ export default {
 			form_beneficiario: {},
 			form_nino: {},
 			form_archivo: {},
+			form_familiar: {},
 			form_familiares: [],
 			address: "",
 			/* BENEFICIARIO */
@@ -1367,7 +1454,9 @@ export default {
 			datepickerStyle: {
 				color: 'red',
 				border: '1px solid red',
-			}
+			},
+			textBtnFamiliar: "Agregar Familiar",
+			showFamiliar: false
 		}
 	},
 	validations() {
@@ -1607,6 +1696,30 @@ export default {
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
+		async getPersonFamiliar() {
+			let num_documento = this.form_familiar.num_documento;
+			let tipo_documento_id = this.form_familiar.tipo_documento_id;
+
+			const get = `${route('persons.getPersonDni', this.form_familiar.num_documento)}`
+			const response = await fetch(get, { method: 'GET' })
+			let data = await response.json()
+			if (!data.data.length == 0) {
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form_familiar.person_id = data.id
+				this.form_familiar.tipo_documento_id = data.tipo_documento_id
+				this.form_familiar.fecha_nac = data.fecha_nac
+				this.form_familiar.fecha_nac = new Date(this.form_familiar.fecha_nac + "T00:00:00.000-03:00")
+				this.form_familiar.name = data.name
+				this.form_familiar.lastname = data.lastname
+			} else {
+				this.labelType = "info";
+				this.toastMessage = "El DNI indicado no se encuentra registrado";
+				this.form_familiar = {}
+				this.form_familiar.num_documento = num_documento
+				this.form_familiar.tipo_documento_id = tipo_documento_id
+			}
+		},
 		async getPersonBenef() {
 			let numDoc = this.form_beneficiario.num_documento;
 			let tipoDoc = this.form_beneficiario.tipo_documento_id;
@@ -1757,7 +1870,91 @@ export default {
 			} catch (error) {
 				console.log(error)
 			}
-		}
+		},
+		async destroyItem(id) {
+			const response = await axios.post(route('persons.destroyFamiliar'), { id: id });
+
+			if (response.status == 200) {
+				this.labelType = "success";
+				this.toastMessage = response.data.message;
+
+				this.form_familiares = this.form_familiares.filter(item => item.id != id)
+
+			} else {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+			}
+		},
+		async storeFamiliar() {
+			if (this.form_familiares.find(familiar => familiar.person.num_documento === parseInt(this.form_familiar.num_documento,10))) {
+				this.labelType = "danger";
+				this.toastMessage = "La persona ya se ha ingresado previamente";
+			} else {
+				if (this.form_familiar.name && this.form_familiar.lastname && this.form_familiar.num_documento && this.form_familiar.fecha_nac && this.form_familiar.parentesco_id) {
+					try {
+						this.form_familiar.tramite_id = this.form.tramite_id
+						this.form_familiar.fecha_nac = (this.form_familiar.fecha_nac) ? new Date(this.form_familiar.fecha_nac).toISOString() : null;
+
+						const response = await axios.post(route('persons.addFamiliar'), this.form_familiar);
+
+						if (response.status == 200) {
+							this.labelType = "success";
+							this.toastMessage = response.data.message;
+							let data = response.data.familiar
+							data.person= response.data.person
+							data.parentesco= response.data.parentesco
+							this.form_familiares.push(data)
+							this.showFamiliar = false
+							this.textBtnFamiliar = "Agregar Familiar"
+
+						} else {
+							this.labelType = "danger";
+							this.toastMessage = response.data.message;
+						}
+					} catch (error) {
+						console.log(error)
+					}
+
+					this.form_familiar = {}
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = "Debe completar todos los datos";
+				}
+			}
+		},
+		addFamiliar() {
+			if (this.showFamiliar) {
+				this.textBtnFamiliar = "Agregar Familiar";
+				this.form_familiar = {};
+			} else {
+				this.textBtnFamiliar = "Borrar Familiar";
+			}
+			this.showFamiliar = !this.showFamiliar;
+		},
+		async editItem(item) {
+			console.log(item)
+			let formData = new FormData();
+			formData.append('familiar_id', item.id);
+			formData.append('person_id', item.person_id);
+			formData.append('parentesco_id', item.parentesco.id);
+			formData.append('name', item.person.name);
+			formData.append('lastname', item.person.lastname);
+			try {
+				const response = await axios.post(route('persons.updateFamiliar'), formData);
+
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.description = this.parentescos.find(parentesco => parentesco.id === item.parentesco.id).description
+					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.id = item.parentesco.id
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			} 
+		},
 
 	},
 	created() {

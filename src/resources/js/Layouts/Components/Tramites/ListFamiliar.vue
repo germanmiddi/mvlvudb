@@ -18,7 +18,7 @@
                 {{ item.person.lastname }}
             </div>
             <div v-else class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <input v-model="temp.phone" class="border rounded py-1 pl-2" />
+                <input v-model="temp.lastname" class="border rounded py-1 pl-2" />
             </div>
         </td>
         <td>
@@ -26,7 +26,16 @@
                 {{ item.parentesco.description }}
             </div>
             <div v-else class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <input v-model="temp.phone" class="border rounded py-1 pl-2" />
+                <select v-model="temp.parentesco_id" id="parentesco_id" name="parentesco_id"
+                    autocomplete="parentesco_id-name"
+                    class="px-6 whitespace-nowrap text-sm text-gray-500 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled>
+                        Seleccione un tipo de documento
+                    </option>
+                    <option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+                        {{ parentesco.description }}
+                    </option>
+                </select>
             </div>
         </td>
 
@@ -62,7 +71,7 @@ export default {
             type: Object,
             required: true
         },
-        cargos: Object
+        parentescos: Object
     },
     components: {
         TrashIcon,
@@ -82,8 +91,9 @@ export default {
             this.$emit('delete-item', this.item)
         },
         editItem() {
-            this.item.name = this.temp.name
-            this.item.phone = this.temp.phone
+            this.item.person.name = this.temp.name
+            this.item.person.lastname = this.temp.lastname
+            this.item.parentesco.id = this.temp.parentesco_id
             this.$emit('edit-item', this.item)
             this.editMode = false
         },
@@ -92,7 +102,9 @@ export default {
         }
     },
     created() {
-       
+        this.temp.name = this.item.person.name
+        this.temp.lastname = this.item.person.lastname
+        this.temp.parentesco_id = this.item.parentesco.id
     }
 }
 </script>

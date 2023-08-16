@@ -584,7 +584,7 @@
 
 
 						<hr v-if="showFamiliar">
-						<div  v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+						<div v-if="showFamiliar" class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
@@ -625,7 +625,7 @@
 
 						</div>
 
-						<div  v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+						<div v-if="showFamiliar" class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
 									Nacimiento</label>
@@ -641,8 +641,8 @@
 								<select v-model="form_familiar.parentesco_id" id="parentesco_id" name="parentesco_id"
 									autocomplete="parentesco_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" selected>
-										Seleccione un tipo de documento
+									<option value="" disabled>
+										Seleccione un tipo de parentesco
 									</option>
 									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
 										{{ parentesco.description }}
@@ -686,7 +686,7 @@
 										</tr>
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
-										<ListFamiliar v-for="familiar in this.form_familiares" :key="familiar.id"
+										<ListFamiliar v-for="familiar in this.form_familiares" :parentescos=parentescos :key="familiar.id"
 											:item=familiar @edit-item="editItem" @hide-item="hideItem"
 											@destroy-item="destroyItem" />
 
@@ -807,6 +807,7 @@ export default {
 		rolesTramite: Object,
 		tiposTramite: Object,
 		programasSocial: Object,
+		parentescos: Object,
 		tramite: Object,
 	},
 	components: {
@@ -1013,7 +1014,6 @@ export default {
 				this.form_familiar.fecha_nac = new Date(this.form_familiar.fecha_nac + "T00:00:00.000-03:00")
 				this.form_familiar.name = data.name
 				this.form_familiar.lastname = data.lastname
-				this.form_familiar.email = data.contact[0].email
 			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";
@@ -1125,6 +1125,43 @@ export default {
 				this.toastMessage = response.data.message;
 			}
 		},
+		async storeFamiliar() {
+			if (this.form_familiares.find(familiar => familiar.person.num_documento === parseInt(this.form_familiar.num_documento,10))) {
+				this.labelType = "danger";
+				this.toastMessage = "La persona ya se ha ingresado previamente";
+			} else {
+				if (this.form_familiar.name && this.form_familiar.lastname && this.form_familiar.num_documento && this.form_familiar.fecha_nac && this.form_familiar.parentesco_id) {
+					try {
+						this.form_familiar.tramite_id = this.form.tramite_id
+						this.form_familiar.fecha_nac = (this.form_familiar.fecha_nac) ? new Date(this.form_familiar.fecha_nac).toISOString() : null;
+
+						const response = await axios.post(route('persons.addFamiliar'), this.form_familiar);
+
+						if (response.status == 200) {
+							this.labelType = "success";
+							this.toastMessage = response.data.message;
+							let data = response.data.familiar
+							data.person= response.data.person
+							data.parentesco= response.data.parentesco
+							this.form_familiares.push(data)
+							this.showFamiliar = false
+							this.textBtnFamiliar = "Agregar Familiar"
+
+						} else {
+							this.labelType = "danger";
+							this.toastMessage = response.data.message;
+						}
+					} catch (error) {
+						console.log(error)
+					}
+
+					this.form_familiar = {}
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = "Debe completar todos los datos";
+				}
+			}
+		},
 		addFamiliar() {
 			if (this.showFamiliar) {
 				this.textBtnFamiliar = "Agregar Familiar";
@@ -1133,7 +1170,31 @@ export default {
 				this.textBtnFamiliar = "Borrar Familiar";
 			}
 			this.showFamiliar = !this.showFamiliar;
-		}
+		},
+		async editItem(item) {
+			console.log(item)
+			let formData = new FormData();
+			formData.append('familiar_id', item.id);
+			formData.append('person_id', item.person_id);
+			formData.append('parentesco_id', item.parentesco.id);
+			formData.append('name', item.person.name);
+			formData.append('lastname', item.person.lastname);
+			try {
+				const response = await axios.post(route('persons.updateFamiliar'), formData);
+
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.description = this.parentescos.find(parentesco => parentesco.id === item.parentesco.id).description
+					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.id = item.parentesco.id
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			} 
+		},
 
 	},
 	created() {

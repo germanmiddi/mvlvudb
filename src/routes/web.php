@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Person
     Route::get('/persons/getPersonDni/{dni}', [PersonController::class, 'getPersonDni'])->name('persons.getPersonDni');
+    Route::post('/persons/destroy_autoridad/', [PersonController::class, 'destroyFamiliar'])->name('persons.destroyFamiliar');
 
     // Genero
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    
@@ -139,6 +140,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/entidad/store', [EntidadController::class, 'store'])->name('entidad.store');   
     Route::post('/entidad/update/{id}', [EntidadController::class, 'update'])->name('entidad.update');    
     Route::get('/entidad/list', [EntidadController::class, 'list'])->name('entidad.list'); 
+    Route::post('/entidad/destroy_autoridad/', [EntidadController::class, 'destroyAutoridad'])->name('entidad.destroyAutoridad');
+    Route::post('/entidad/update_autoridad/', [EntidadController::class, 'updateAutoridad'])->name('entidad.updateAutoridad');
+    Route::post('/entidad/add_autoridad/', [EntidadController::class, 'addAutoridad'])->name('entidad.addAutoridad');
 
     // Masterdata
 

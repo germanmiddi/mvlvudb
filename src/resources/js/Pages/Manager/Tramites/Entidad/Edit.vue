@@ -249,11 +249,59 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Autoridades</h3>
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Autoridades
+								</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<button type="button" @click="addAutoridad()"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showAutoridad
+										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
+										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
+										">
+									{{ this.textBtnAutoridad }}
+								</button>
 							</div>
 						</div>
+						<hr v-if="this.showAutoridad">
+						<div class="grid grid-cols-12 gap-6" v-if="this.showAutoridad">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="cargo_id" class="block text-sm font-medium text-gray-700">Cargo de
+									Autoridad</label>
+								<select v-model="form_temp.cargo_id" id="cargo_id" name="cargo_id" autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="cargo in cargos" :key="cargo.id" :value="cargo.id">{{
+										cargo.description
+									}}</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_temp.name" type="text" name="name" id="name" autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
+								<input v-model="form_temp.phone" type="text" name="phone" id="phone" autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<button type="button" @click="storeAutoridad()"
+									class="mt-7 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+									Agregar Autoridad
+								</button>
+							</div>
+
+						</div>
+
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-12">
@@ -272,20 +320,17 @@
 												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Telefono
 											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Acciones
+											</th>
 										</tr>
 									</thead>
-									<tbody class="bg-white divide-y divide-gray-200">
-										<tr v-for="(autoridad, index) in form_autoridades" :key="index">
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ autoridad.cargo.description }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ autoridad.name }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ autoridad.phone }}
-											</td>
-										</tr>
+									<tbody>
+										<ListItem v-for="autoridad in this.form_autoridades" :key="autoridad.id"
+											:item=autoridad :cargos=cargos @edit-item="editItem" @hide-item="hideItem"
+											@destroy-item="destroyItem" />
+
 									</tbody>
 								</table>
 							</div>
@@ -316,6 +361,7 @@ import { ArrowLeftCircleIcon, ArrowDownCircleIcon } from '@heroicons/vue/24/outl
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import ListItem from './ListItem.vue';
 
 export default {
 
@@ -335,17 +381,21 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		ListItem
 	},
 	data() {
 		return {
 			form: {},
 			form_autoridades: [],
+			form_temp: {},
 			/* MENSAJERIA */
 			toastMessage: "",
 			labelType: "info",
 			message: "",
 			showToast: false,
 			btnGuardar: false,
+			textBtnAutoridad: "Agregar Autoridad",
+			showAutoridad: false
 		}
 	},
 	setup() {
@@ -403,6 +453,85 @@ export default {
 				console.log(error)
 			}
 
+		},
+		async storeAutoridad() {
+			if (this.form_autoridades.find(autoridad => autoridad.cargo_id === this.form_temp.cargo_id)) {
+				this.labelType = "danger";
+				this.toastMessage = "El cargo ya se ha ingresado previamente";
+			} else {
+				try {
+					this.form_temp.id_entidad = this.form.id
+
+					const response = await axios.post(route('entidad.addAutoridad'), this.form_temp);
+
+					if (response.status == 200) {
+						this.labelType = "success";
+						this.toastMessage = response.data.message;
+						let data
+						data = response.data.autoridad
+						data.cargo = response.data.cargo
+						this.form_autoridades.push(data)
+						this.form_temp = {}
+						this.showAutoridad = false
+						this.textBtnAutoridad = "Agregar Autoridad"
+
+					} else {
+						this.labelType = "danger";
+						this.toastMessage = response.data.message;
+					}
+				} catch (error) {
+					console.log(error)
+				}
+			}
+
+		},
+		async editItem(item) {
+			let formData = new FormData();
+			formData.append('id', item.id);
+			formData.append('name', item.name);
+			formData.append('phone', item.phone);
+
+			try {
+				const response = await axios.post(route('entidad.updateAutoridad'), formData);
+
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+
+					this.autoridades = this.form_autoridades.find(item => item.id != id)
+					this.autoridades.name = item.name
+					this.autoridades.phone = item.phone
+
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		async destroyItem(id) {
+			const response = await axios.post(route('entidad.destroyAutoridad'), { id: id });
+
+			if (response.status == 200) {
+				this.labelType = "success";
+				this.toastMessage = response.data.message;
+
+				this.form_autoridades = this.form_autoridades.filter(item => item.id != id)
+
+			} else {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+			}
+		},
+		addAutoridad() {
+			if (this.showAutoridad) {
+				this.textBtnAutoridad = "Agregar Autoridad";
+				this.form_temp = {};
+			} else {
+				this.textBtnAutoridad = "Borrar Autoridad";
+			}
+			this.showAutoridad = !this.showAutoridad;
 		},
 	},
 	mounted() {

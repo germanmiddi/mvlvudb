@@ -210,5 +210,58 @@ class EntidadController extends Controller
                 'tipo_entidad' => $entidad->tipoEntidad
             ]);
     }
+
+    public function updateAutoridad(Request $request){
+        $autoridad = AutoridadEntidad::find($request->id);
+    
+        if (!$autoridad) {
+            Log::error("No se ha encontrado la autoridad que desea actualizar", ["Modulo" => "Entidad:updateAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "Id no encontrado ".$request->id ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de eliminar la autoridad.'], 203);
+        }
+        
+        $autoridad->update([
+            'name'      => $request->name,
+            'phone'     => $request->phone,
+            'updated_at' => Carbon::now()
+        ]);
+        Log::error("Se ha actualizado correctamente la autoridad", ["Modulo" => "Entidad:updateAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $request->id ]);
+        return response()->json(['message' => 'Se ha eliminado correctamente la autoridad'], 200);
+    }
+
+    public function addAutoridad(Request $request){
+        DB::beginTransaction();
+        try {    
+
+            $autoridad = AutoridadEntidad::Create(
+                [
+                    'name' => $request['name'],
+                    'phone' =>$request['phone'],
+
+                    'cargo_id' => $request['cargo_id'],
+                    'entidad_id' => $request['id_entidad'],
+                ]);
+            
+            DB::commit();
+            Log::info("Se ha almacenado una nueva autoridad", ["Modulo" => "Entidad:addAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $autoridad->id ]);
+            return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idAutoridad' => $autoridad->id, 'autoridad' => $autoridad, 'cargo' => $autoridad->cargo], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Se ha generado un error al momento de almacenar la autoridad", ["Modulo" => "Entidad:addAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la autoridad. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+    public function destroyAutoridad(Request $request){
+        $autoridad = AutoridadEntidad::find($request->id);
+    
+        if (!$autoridad) {
+            Log::error("No se ha encontrado la autoridad que desea eliminar", ["Modulo" => "Entidad:destoryAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "Id no encontrado ".$request->id ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de eliminar la autoridad.'], 203);
+        }
+        
+        $autoridad->delete();
+        Log::error("Se ha actualizado correctamente la autoridad", ["Modulo" => "Entidad:destoryAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $request->id ]);
+        return response()->json(['message' => 'Se ha actualizado correctamente la autoridad'], 200);
+    }
 }
 

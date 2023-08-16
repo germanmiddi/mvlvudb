@@ -7,7 +7,8 @@
 				<a class="btn-blue" :href="route('ninez')">
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
-				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar tramite de Niñez y Adolescencia</h1>
+				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Editar tramite de Niñez y Adolescencia
+				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
@@ -221,7 +222,8 @@
 					</div>
 				</div>
 
-				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true" :dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
+				<FormBeneficiario v-show="showBenef" :tiposDocumento="tiposDocumento" :showCud="true"
+					:dni="form_beneficiario.num_documento" @data_beneficiario="beneficiario"></FormBeneficiario>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -471,14 +473,14 @@
 										}}</option>
 								</select>
 							</div>
-							
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
 								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
 									autocomplete="programa_social_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" >Selecciones un programa social</option>
+									<option disabled value="">Selecciones un programa social</option>
 									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
 										:value="programaSocial.id"
 										:bind:select="programaSocial.id == form.programa_social_id">{{
@@ -486,7 +488,7 @@
 										}}</option>
 								</select>
 							</div>
-							
+
 						</div>
 					</div>
 				</div>
@@ -511,8 +513,8 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
-								<select v-model="form_beneficiario.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
+								<select v-model="form_beneficiario.tipo_documento_id" id="tipo_documento_id"
+									name="tipo_documento_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.form_beneficiario.tipo_documento_id.$error ? 'border-red-500' : ''">
 									<option value="" disabled>Seleccione un tipo de documento</option>
@@ -521,7 +523,8 @@
 											tipoDocumento.description
 										}}</option>
 								</select>
-								<span v-if="v$.form_beneficiario.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form_beneficiario.tipo_documento_id.$error"
+									class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
@@ -536,7 +539,8 @@
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form_beneficiario.name" type="text" name="name" id="name" autocomplete="name-level2"
+								<input v-model="form_beneficiario.name" type="text" name="name" id="name"
+									autocomplete="name-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form_beneficiario.name.$error ? 'border-red-500' : ''" />
 								<span v-if="v$.form_beneficiario.name.$error" class="text-red-500 text-xs">Campo
@@ -559,11 +563,100 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Familiares</h3>
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Familiares
+								</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<button type="button" @click="addFamiliar()"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showFamiliar
+										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
+										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
+										">
+									{{ this.textBtnFamiliar }}
+								</button>
 							</div>
 						</div>
+
+
+
+						<hr v-if="showFamiliar">
+						<div  v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Documento</label>
+								<select v-model="form_familiar.tipo_documento_id" id="tipo_documento_id"
+									name="tipo_documento_id" autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+										:value="tipoDocumento.id">{{
+											tipoDocumento.description
+										}}</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+									Documento</label>
+								<input v-model="form_familiar.num_documento" @focusout="getPersonFamiliar()" type="text"
+									name="num_documento" id="num_documento" autocomplete="address-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_familiar.name" type="text" name="name" id="name"
+									autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_familiar.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+						</div>
+
+						<div  v-if="showFamiliar" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
+									Nacimiento</label>
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form_familiar.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
+							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form_familiar.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" selected>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<button type="button" @click="storeFamiliar()"
+									class="mt-7 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+									Agregar Familiar
+								</button>
+							</div>
+						</div>
+
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-12">
@@ -586,23 +679,17 @@
 												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Parentesco
 											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Acciones
+											</th>
 										</tr>
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
-										<tr v-for="(familiar, index) in form_familiares" :key="index">
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.num_documento }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.name }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.person.lastname }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ familiar.parentesco.description }}
-											</td>
-										</tr>
+										<ListFamiliar v-for="familiar in this.form_familiares" :key="familiar.id"
+											:item=familiar @edit-item="editItem" @hide-item="hideItem"
+											@destroy-item="destroyItem" />
+
 									</tbody>
 								</table>
 							</div>
@@ -651,7 +738,7 @@
 											</th>
 										</tr>
 									</thead>
-									<tbody  class="bg-white divide-y divide-gray-200">
+									<tbody class="bg-white divide-y divide-gray-200">
 										<tr v-for="archivo in form_archivo " :key="archivo.id">
 											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 												{{ archivo.description }}
@@ -663,7 +750,7 @@
 													Descargar
 												</a>
 												<a class="ml-2 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-													@click="deleteFile(archivo.id)" title="Eliminar Archivo" >
+													@click="deleteFile(archivo.id)" title="Eliminar Archivo">
 													Eliminar
 												</a>
 											</td>
@@ -700,6 +787,7 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import ListFamiliar from '@/Layouts/Components/Tramites/ListFamiliar.vue';
 
 export default {
 
@@ -729,6 +817,7 @@ export default {
 		Toast,
 		Datepicker,
 		FormBeneficiario,
+		ListFamiliar,
 		required,
 		useVuelidate,
 		helpers,
@@ -738,6 +827,7 @@ export default {
 		return {
 			form: {},
 			form_temp: {},
+			form_familiar: {},
 			form_google: "",
 			address: "",
 			showMap: false,
@@ -755,7 +845,9 @@ export default {
 			datepickerStyle: {
 				color: 'red',
 				border: '1px solid red',
-			}
+			},
+			textBtnFamiliar: "Agregar Familiar",
+			showFamiliar: false
 		}
 	},
 	setup() {
@@ -825,7 +917,7 @@ export default {
 			this.form_beneficiario.fecha_nac = (this.form_beneficiario.fecha_nac) ? new Date(this.form_beneficiario.fecha_nac).toISOString() : null;
 			for (var clave in this.form_beneficiario) {
 				if (this.form_beneficiario.hasOwnProperty(clave)) {
-					formData.append('beneficiario_'+clave, this.form_beneficiario[clave]);
+					formData.append('beneficiario_' + clave, this.form_beneficiario[clave]);
 				}
 			}
 
@@ -905,6 +997,31 @@ export default {
 				this.form_temp = {}
 			}
 		},
+		async getPersonFamiliar() {
+			let num_documento = this.form_familiar.num_documento;
+			let tipo_documento_id = this.form_familiar.tipo_documento_id;
+
+			const get = `${route('persons.getPersonDni', this.form_familiar.num_documento)}`
+			const response = await fetch(get, { method: 'GET' })
+			let data = await response.json()
+			if (!data.data.length == 0) {
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form_familiar.person_id = data.id
+				this.form_familiar.tipo_documento_id = data.tipo_documento_id
+				this.form_familiar.fecha_nac = data.fecha_nac
+				this.form_familiar.fecha_nac = new Date(this.form_familiar.fecha_nac + "T00:00:00.000-03:00")
+				this.form_familiar.name = data.name
+				this.form_familiar.lastname = data.lastname
+				this.form_familiar.email = data.contact[0].email
+			} else {
+				this.labelType = "info";
+				this.toastMessage = "El DNI indicado no se encuentra registrado";
+				this.form_familiar = {}
+				this.form_familiar.num_documento = num_documento
+				this.form_familiar.tipo_documento_id = tipo_documento_id
+			}
+		},
 		async getBeneficiario() {
 
 			const get = `${route('persons.getPersonDni', this.form_beneficiario.num_documento)}`
@@ -946,30 +1063,30 @@ export default {
 			// TODO: Mapa: Ver como cargar el nombre de la calle en el Auto-complete-google
 		},
 
-		beneficiario(data){
+		beneficiario(data) {
 			this.form_beneficiario = data;
 		},
-		async deleteFile(id){
+		async deleteFile(id) {
 
 			let rt = route('file.delete', id);
 
 			try {
-				const response = await axios.delete(rt); 
+				const response = await axios.delete(rt);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
-					this.form_archivo = this.form_archivo .filter(function(file) {
+					this.toastMessage = response.data.message;
+					this.form_archivo = this.form_archivo.filter(function (file) {
 						return file.id !== id;
 					});
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
 			}
 		},
-		async uploadFile(){
+		async uploadFile() {
 
 			let rt = route('file.upload');
 			const formData = new FormData();
@@ -977,22 +1094,45 @@ export default {
 			formData.append('file', this.file);
 			formData.append('tramite_id', this.form.tramite_id);
 			formData.append('description', this.form.description_file);
-		
+
 
 			try {
-				const response = await axios.post(rt, formData); 
+				const response = await axios.post(rt, formData);
 				if (response.status == 200) {
 					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
+					this.toastMessage = response.data.message;
 					this.form_archivo.push(response.data.archivo)
 					this.form.description_file = ''
 				} else {
 					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+					this.toastMessage = response.data.message;
 				}
 			} catch (error) {
 				console.log(error)
 			}
+		},
+		async destroyItem(id) {
+			const response = await axios.post(route('persons.destroyFamiliar'), { id: id });
+
+			if (response.status == 200) {
+				this.labelType = "success";
+				this.toastMessage = response.data.message;
+
+				this.form_familiares = this.form_familiares.filter(item => item.id != id)
+
+			} else {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+			}
+		},
+		addFamiliar() {
+			if (this.showFamiliar) {
+				this.textBtnFamiliar = "Agregar Familiar";
+				this.form_familiar = {};
+			} else {
+				this.textBtnFamiliar = "Borrar Familiar";
+			}
+			this.showFamiliar = !this.showFamiliar;
 		}
 
 	},
@@ -1015,7 +1155,7 @@ export default {
 		titular = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 1))
 		beneficiario = (this.tramite[0].persons.filter(person => person.pivot.rol_tramite_id == 2))
 
-			// Familiares
+		// Familiares
 		this.form_familiares = this.tramite[0].familiares
 
 		this.form.num_documento = titular[0].num_documento
@@ -1025,7 +1165,7 @@ export default {
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos
 
-		if(beneficiario != ''){
+		if (beneficiario != '') {
 			this.beneficiario_control = true
 			this.form_beneficiario.num_documento = beneficiario[0].num_documento
 		}

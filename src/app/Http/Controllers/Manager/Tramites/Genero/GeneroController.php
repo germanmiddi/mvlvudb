@@ -40,6 +40,10 @@ use Illuminate\Support\Facades\Redirect;
 
 class GeneroController extends Controller
 {
+    protected $notFamiliares = ['Hermanastra/o Mayor de Edad',
+                            'Hermana/o Mayor de Edad', 
+                            'Adulto/a Responsable'
+                        ];
     //index
 
     public function index()
@@ -71,7 +75,7 @@ class GeneroController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
+                'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
             ]
         );
     }
@@ -281,7 +285,7 @@ class GeneroController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
+                'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
             ]
         );

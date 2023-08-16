@@ -26,7 +26,7 @@
                     <select v-model="form_contacto.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
                         autocomplete="tipo_documento_id-name"
                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" selected>
+                        <option value="" disabled>
                             Seleccione un tipo de documento
                         </option>
                         <option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
@@ -82,7 +82,7 @@
                     <select v-model="form_contacto.parentesco_id" id="parentesco_id" name="parentesco_id"
                         autocomplete="parentesco_id-name"
                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" selected>
+                        <option value="" disabled>
                             Seleccione un tipo de documento
                         </option>
                         <option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
@@ -167,7 +167,11 @@ export default ({
     },
     components: {
         Toast,
-        Datepicker
+        Datepicker,
+        txtFamiliar: {
+            type: String,
+            default: 'Parentesco'
+        }
     },
     data() {
         return {

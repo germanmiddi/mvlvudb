@@ -57,6 +57,11 @@ use Illuminate\Support\Facades\Storage;
 
 class JuventudController extends Controller
 {
+    protected $sedesAvailables = ['Munro','Villa Martelli', 'La Loma', 'El Ceibo'];
+    protected $notFamiliares = ['Hermanastra/o Mayor de Edad',
+                            'Hermana/o Mayor de Edad', 
+                            'Adulto/a Responsable'
+                        ];
     //index
 
     public function index()
@@ -91,12 +96,12 @@ class JuventudController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 13)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
+                'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'estadosCbj' => EstadoCbj::where('activo', true)->get(),
-                'sedes' => Sede::all(),
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
                 'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
                 'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
@@ -446,12 +451,12 @@ class JuventudController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 13)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
+                'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'estadosCbj' => EstadoCbj::where('activo', true)->get(),
-                'sedes' => Sede::all(),
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
                 'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
                 'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),

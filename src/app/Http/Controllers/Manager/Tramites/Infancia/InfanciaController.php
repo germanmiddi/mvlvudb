@@ -55,6 +55,8 @@ use Illuminate\Support\Facades\Storage;
 
 class InfanciaController extends Controller
 {
+    protected $sedesAvailables = ['La Loma', 'El Ceibo', 'Habana', 'Las Flores', 'Sivori'];
+    protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
     //index
 
     public function index()
@@ -86,8 +88,8 @@ class InfanciaController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
-                'sedes' => Sede::all(),
+                'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'estadosCbi' => EstadoCbi::all(),
                 'estadosGabinete' => EstadoGabinete::all(),
                 'escuelas' => Escuela::where('primaria', true)->get(),
@@ -444,8 +446,8 @@ class InfanciaController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
-                'sedes' => Sede::all(),
+                'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'estadosCbi' => EstadoCbi::all(),
                 'estadosGabinete' => EstadoGabinete::all(),
                 'escuelas' => Escuela::where('primaria', true)->get(),

@@ -653,7 +653,7 @@
 
 				<FormNino :tiposDocumento="tiposDocumento" @data_ninos="ninos_data"></FormNino>
 
-				<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento"
+				<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" :txtFamiliar="'Vinculo con el Menor'"
 					@data_familiares="familiares_data"></FormFamiliar>
 
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">

@@ -242,8 +242,8 @@
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una opcion</option>
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1" selected>Activo</option>
+									<option value="0" selected>Inactivo</option>
 								</select>
 							</div>
 
@@ -253,8 +253,8 @@
 								<select v-model="form_tramite.act_empleo" id="act_empleo" name="act_empleo" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una opcion</option>
-									<option value="1" selected>Si</option>
-									<option value="0" selected>No</option>
+									<option value="1" selected>Activo</option>
+									<option value="0" selected>Inactivo</option>
 								</select>
 							</div>
 

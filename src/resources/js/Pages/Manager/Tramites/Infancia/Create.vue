@@ -388,12 +388,12 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_documento_id"
-									class="block text-sm font-medium text-gray-700">Parentesco</label>
+									class="block text-sm font-medium text-gray-700">Vinculo con el Menor</label>
 								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
 									autocomplete="parentesco_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
-										Seleccione un tipo de documento
+										Seleccione un tipo de vinculo
 									</option>
 									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
 										{{ parentesco.description }}
@@ -1082,7 +1082,7 @@
 					</div>
 				</div>
 
-				<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" @data_familiares="familiares_data"></FormFamiliar>
+				<FormFamiliar :parentescos="parentescos" :tiposDocumento="tiposDocumento" :txtFamiliar="'Vinculo con el Menor'" @data_familiares="familiares_data"></FormFamiliar>
 
 				<FormContacto :parentescos="parentescos" :tiposDocumento="tiposDocumento" @data_contactos="contactos_data"></FormContacto>
 

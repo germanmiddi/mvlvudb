@@ -110,7 +110,7 @@
 					</div> -->
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
 							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
+								<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Denunciante</h3>
 							</div>
 							<!-- <div class="flex-shrink-0">
 								<button type="button"
@@ -182,12 +182,12 @@
 									autoApply :format="format">
 								</Datepicker>
 							</div>
-
+							<!-- GMIDDI
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
+							</div> -->
 
 							<div class="col-span-12 sm:col-span-3 ">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
@@ -245,6 +245,8 @@
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
 								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
 									autocomplete="barrio_id-name"
+									:disabled="barriosComputed.length === 0"
+									:class="{'bg-gray-100': barriosComputed.length === 0}"									
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione un barrio</option>
 									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
@@ -864,7 +866,7 @@ export default {
 				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
 				this.form.name = data.name
 				this.form.lastname = data.lastname
-				this.form.email = data.contact[0].email
+				// this.form.email = data.contact[0].email
 				this.form.phone = data.contact[0].phone
 				this.form.celular = data.contact[0].celular
 				this.form.cant_hijos = data.aditional[0].cant_hijos

@@ -71,7 +71,8 @@ class NinezController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'parentescos' => Parentesco::all(),
+                // 'parentescos' => Parentesco::all(),
+                'parentescos' => Parentesco::whereIn('description', ['Madre/Padre', 'Hermana/o', 'Otro Familiar', 'Otro no Familiar'])->get()
             ]
         );
     }
@@ -157,7 +158,7 @@ class NinezController extends Controller
                 [
                     'phone' => $request['phone'],
                     'celular' => $request['celular'],
-                    'email' => $request['email']
+                    // 'email' => $request['email']GMIDDI
                 ]
             );
 
@@ -379,7 +380,7 @@ class NinezController extends Controller
                 [
                     'phone' => $request['phone'],
                     'celular' => $request['celular'],
-                    'email' => $request['email']
+                    // 'email' => $request['email']
                 ]
             );
 

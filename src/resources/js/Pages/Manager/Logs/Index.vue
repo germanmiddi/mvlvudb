@@ -6,10 +6,6 @@
                     Vista Logs
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
-                <a :href="route('discapacidad.create')"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
-            </div>
         </div>
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
         <div class="px-4 mt-6 sm:px-6 lg:px-8">

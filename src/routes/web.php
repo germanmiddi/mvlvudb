@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Manager\DashboardController;
+use App\Http\Controllers\Manager\Import\ImportController;
 use App\Http\Controllers\Manager\Logs\LogController;
 use App\Http\Controllers\Manager\Persons\PersonController;
 use App\Http\Controllers\Manager\Tramite\TramiteController;
@@ -37,6 +38,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logs', [LogController::class, 'index'])->name('logs');  
     Route::get('/logs/listLast', [LogController::class, 'listLast'])->name('logs.listLast');    
 
+    // IMPORTADOR
+    Route::get('/import', [ImportController::class, 'index'])->name('import');  
+    Route::post('/import/entidad', [ImportController::class, 'importEntidad'])->name('import.entidad');  
+    Route::post('/import/dependencia', [ImportController::class, 'importDependencia'])->name('import.dependencia');  
+
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
     Route::post('/file/updoad', [FileController::class, 'uploadfile'])->name('file.upload');
@@ -62,6 +68,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/persons/destroyFamiliar/', [PersonController::class, 'destroyFamiliar'])->name('persons.destroyFamiliar');
     Route::post('/persons/addFamiliar/', [PersonController::class, 'addFamiliar'])->name('persons.addFamiliar');
     Route::post('/persons/updateFamiliar/', [PersonController::class, 'updateFamiliar'])->name('persons.updateFamiliar');
+    Route::post('/persons/destroyContacto/', [PersonController::class, 'destroyContacto'])->name('persons.destroyContacto');
+    Route::post('/persons/addContacto/', [PersonController::class, 'addContacto'])->name('persons.addContacto');
+    Route::post('/persons/updateContacto/', [PersonController::class, 'updateContacto'])->name('persons.updateContacto');
 
     // Genero
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    

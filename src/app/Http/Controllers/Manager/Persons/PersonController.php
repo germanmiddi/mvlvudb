@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 //Model
 use App\Models\Manager\Person;
 use App\Models\Manager\AditionalData;
+use App\Models\Manager\ContactData;
+use App\Models\Manager\ContactoEmergencia;
 use App\Models\Manager\Familiar;
 use App\Models\Manager\SaludData;
 use Illuminate\Support\Facades\Auth;
@@ -140,5 +142,99 @@ class PersonController extends Controller
             }
         }
 
+
+        /* CONTACTO DE EMERGENCIA */
+        public function destroyContacto(Request $request){
+            $contacto = ContactoEmergencia::find($request->id);
+        
+            if (!$contacto) {
+                Log::error("No se ha encontrado el contacto de emergencia que desea eliminar", ["Modulo" => "Person:destroyContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "Id no encontrado ".$request->id ]);
+                return response()->json(['message' => 'Se ha producido un error al momento de eliminar el Contacto de emergencia.'], 203);
+            }
+            
+            $contacto->delete();
+            Log::error("Se ha eliminado correctamente el contacto de emergencia", ["Modulo" => "Person:destroyContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Contacto" => $request->id ]);
+            return response()->json(['message' => 'Se ha eliminado correctamente el contacto de emergencia'], 200);
+        }
+
+        public function addContacto(Request $request)
+        {
+
+            DB::beginTransaction();
+            try {
+                $person = Person::updateOrCreate(
+                    [
+                        'tipo_documento_id' => $request['tipo_documento_id'],
+                        'num_documento' => $request['num_documento']
+                    ],
+                    [
+                        'lastname' => $request['lastname'],
+                        'name' => $request['name'],
+                        'fecha_nac' => $request['fecha_nac'],
+                        'tipo_documento_id' => $request['tipo_documento_id'],
+                        'num_documento' => $request['num_documento']
+                    ]
+                );
+
+                ContactData::updateOrCreate(
+                    [
+                        'person_id' => $request['person_id'],
+                    ],
+                    [
+                        'person_id' => $request['person_id'],
+                        'phone' => $request['phone'],
+                    ]
+                );
+    
+                $contacto = ContactoEmergencia::create(
+                    [
+                        'person_id' => $person['id'],
+                        'tramite_id' => $request['tramite_id'],
+                        'parentesco_id' => $request['parentesco_id']
+                    ]
+                );
+                DB::commit();
+                Log::info("Se ha almacenado un nuevo contacto de emergencia", ["Modulo" => "Person:addContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
+                return response()->json(['message' => 'Se agregado correctamente el contacto de emergencia al tramite.', 'contacto' => $contacto, 'person' => $contacto->person, 'parentesco' => $contacto->parentesco, 'contactData' => $contacto->person->contact], 200);
+            } catch (\Throwable $th) {
+                dd($th);
+                DB::rollBack();
+                Log::error("Se ha generado un error al momento de almacenar el contacto de emergencia", ["Modulo" => "Person:addContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+                return response()->json(['message' => 'Se ha producido un error al momento de actualizar el contacto de emergencia. Verifique los datos ingresados.'], 203);
+            }
+        }
+
+        public function updateContacto(Request $request)
+        {
+            DB::beginTransaction();
+            try {
+                Person::where('id',$request['person_id'])->update(
+                    [
+                        'lastname' => $request['lastname'],
+                        'name' => $request['name'],
+                    ]
+                );
+
+                ContactData::where('person_id',$request['person_id'])->update(
+                    [
+                        'phone' => $request['phone'],
+                    ]
+                );
+    
+                ContactoEmergencia::where('id',$request['contacto_id'])->update(
+                    [
+                        'parentesco_id' => $request['parentesco_id']
+                    ]
+                );
+                DB::commit();
+                Log::info("Se ha actualizado correctamente el contacto de emergencia", ["Modulo" => "Person:updateContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['contacto_id'] ]);
+                return response()->json(['message' => 'Se actualizado correctamente el contacto de emergencia.'], 200);
+            } catch (\Throwable $th) {
+                dd($th);
+                DB::rollBack();
+                Log::error("Se ha generado un error al momento de actualizar el contacto de emergencia", ["Modulo" => "Person:updateContacto","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+                return response()->json(['message' => 'Se ha producido un error al momento de actualizar el contacto de emergencia. Verifique los datos ingresados.'], 203);
+            }
+        }
 
 }

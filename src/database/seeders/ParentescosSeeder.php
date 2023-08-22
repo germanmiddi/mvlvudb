@@ -26,7 +26,7 @@ class ParentescosSeeder extends Seeder
             ['id' => 8, 'description' => 'Hermanastra/o Mayor de Edad'],
             ['id' => 9, 'description' => 'Hermana/o Menor de Edad'],
             ['id' => 10, 'description' => 'Hija/o - Hijastro/a'],
-            ['id' => 11, 'description' => 'Abuela/a'],
+            ['id' => 11, 'description' => 'Abuela/o'],
             ['id' => 12, 'description' => 'Suegra/o'],
             ['id' => 13, 'description' => 'Tia/o'],
             ['id' => 14, 'description' => 'Nuera/Yerno'],
@@ -34,6 +34,7 @@ class ParentescosSeeder extends Seeder
             ['id' => 16, 'description' => 'Adulto/a Responsable'],
             ['id' => 17, 'description' => 'Hermana/o Menor de Edad'],
             ['id' => 18, 'description' => 'Otro Familiar'],
+            ['id' => 19, 'description' => 'Otro No Familiar'],
         ];
 
         DB::table('parentescos')->insert($data);

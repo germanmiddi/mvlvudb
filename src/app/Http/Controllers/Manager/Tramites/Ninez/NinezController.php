@@ -161,7 +161,7 @@ class NinezController extends Controller
                 [
                     'phone' => $request['phone'],
                     'celular' => $request['celular'],
-                    'email' => $request['email']
+                    // 'email' => $request['email']GMIDDI
                 ]
             );
 
@@ -384,7 +384,7 @@ class NinezController extends Controller
                 [
                     'phone' => $request['phone'],
                     'celular' => $request['celular'],
-                    'email' => $request['email']
+                    // 'email' => $request['email']
                 ]
             );
 

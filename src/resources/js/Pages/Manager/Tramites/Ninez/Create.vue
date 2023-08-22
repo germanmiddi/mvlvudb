@@ -7,7 +7,7 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
 				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-					Nuevo tramite de Niñez y Adolescencia..
+					Nuevo tramite de Niñez y Adolescencia.
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -157,7 +157,7 @@
 								</tbody>
 							</table>
 						</div>
-						<span v-if="v$.tramites.$error" class="text-red-500 text-xs">No ha seleccionado tramites</span>
+						<span v-if="v$.tramites.$error" class="text-red-500 text-xs">No ha seleccionado trámites</span>
 					</div>
 				</div>
 
@@ -169,18 +169,18 @@
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Datos del Titular
+									Datos del Denunciante
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"
+								<!-- <button type="button" @click="addBeneficiario()"
 									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
 									:class="showBenef
 										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
 										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
 										">
 									{{ this.textBtnBenef }}
-								</button>
+								</button> -->
 							</div>
 						</div>
 
@@ -199,8 +199,7 @@
 										{{ tipoDocumento.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
@@ -210,8 +209,7 @@
 									id="num_documento" autocomplete="level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.num_documento.$error ? 'border-red-500' : ''" />
-								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 
 							</div>
 
@@ -220,8 +218,7 @@
 								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.name.$error ? 'border-red-500' : ''" />
-								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
@@ -229,8 +226,7 @@
 								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.lastname.$error ? 'border-red-500' : ''" />
-								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
 						</div>
 
@@ -244,15 +240,15 @@
 									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
-								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
 
-							<div class="col-span-12 sm:col-span-3">
+							<!-- 
+								<div class="col-span-12 sm:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
+							</div> -->
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
@@ -307,10 +303,13 @@
 									</option>
 								</select>
 							</div>
+
 							<div class="col-span-12 sm:col-span-3">
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
 								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
 									autocomplete="barrio_id-name"
+									:disabled="barriosComputed.length === 0"
+									:class="{'bg-gray-100': barriosComputed.length === 0}"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione un barrio
@@ -388,8 +387,8 @@
 					</div>
 				</div>
 
-				<!-- DIRECCION -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<!-- DIRECCION //Esta duplicado GMIDDI--> 
+				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -452,7 +451,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<!-- SITUACION SOCIAL -->
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
@@ -975,7 +974,7 @@ export default {
 			);
 			this.form.name = data.name;
 			this.form.lastname = data.lastname;
-			this.form.email = data.contact[0].email;
+			// this.form.email = data.contact[0].email; //GMIDDI
 			this.form.phone = data.contact[0].phone;
 			this.form.celular = data.contact[0].celular;
 			this.form.cant_hijos = data.aditional[0].cant_hijos;

@@ -199,9 +199,11 @@
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
                     
-                    <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                      Usuarios y Permisos
-                    </li>
+                    <a :href="route('users')" >
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Usuarios y Permisos
+                      </li>
+                    </a>
                     
                     <a :href="route('masterdata')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >

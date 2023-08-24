@@ -1,5 +1,6 @@
 <template>
-    <TransitionRoot as="template" :show="store.mobileSidebar">
+<!-- eslint-disable -->
+  <TransitionRoot as="template" :show="store.mobileSidebar">
       <Dialog as="div" class="fixed inset-0 flex z-40 lg:hidden" @close="store.mobileSidebar = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-600 bg-opacity-75" />

@@ -23,6 +23,8 @@ use App\Http\Controllers\Manager\Tramites\Entidad\EntidadController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
 use App\Http\Controllers\Manager\Masterdata\MasterdataController;
+use App\Http\Controllers\Manager\Users\UserController;
+
 
 Route::middleware(['auth'])->group(function () {
 
@@ -154,6 +156,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/masterdata/update_tipo_tramite/', [MasterdataController::class, 'update_tipo_tramite'])->name('masterdata.update_tipo_tramite');     
     Route::post('/masterdata/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
     Route::post('/masterdata/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
+
+    // Users
+
+    Route::get('/users', [UserController::class, 'index'])->name('users');
 
 
 });

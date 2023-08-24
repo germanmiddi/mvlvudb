@@ -21,7 +21,8 @@ class Tramite extends Model
         'tipo_institucion_id',
         'person_id',
         'dependencia_id',
-        'parentesco_id'
+        'parentesco_id',
+        'num_tramite_legacy'
     ];
 
     public function sede()

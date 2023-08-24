@@ -30,6 +30,41 @@ class EntidadImport implements ToModel,WithHeadingRow
         ++$this->rows;  
             try {
                 if(!Entidad::where('num_entidad', $row['numero'])->first()){
+
+                    /**
+                     * Conversion de id_localidad "DETALLE EN SEEDER LocalidadesSeeder
+                     */
+
+                    switch ($row['id_localidad']) {
+                        case 3:
+                            $row['id_localidad'] = 5;
+                            break;
+                        case 5:
+                            $row['id_localidad'] = 9;
+                            break;
+                        case 6:
+                            $row['id_localidad'] = 10;
+                            break;
+                        case 7:
+                            $row['id_localidad'] = 14;
+                            break;
+                        case 8:
+                            $row['id_localidad'] = 12;
+                            break;
+                        case 9:
+                            $row['id_localidad'] = 6;
+                            break;
+                        case 10:
+                            $row['id_localidad'] = 4;
+                            break;
+                        case 16:
+                            $row['id_localidad'] = 14;
+                            break;
+                        case 14:
+                            $row['id_localidad'] = 16;
+                            break;
+                    }
+
                     $entidad = new Entidad([
                         'num_entidad' => $row['numero'],
                         'name' => $row['nombre'],

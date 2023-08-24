@@ -2,6 +2,13 @@
 
 namespace App\Imports;
 
+use App\Models\Manager\AddressData;
+use App\Models\Manager\AditionalData;
+use App\Models\Manager\ContactData;
+use App\Models\Manager\Cud;
+use App\Models\Manager\EducationData;
+use App\Models\Manager\Person;
+use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +33,107 @@ class DiscapacidadImport implements ToModel,WithHeadingRow
     {
         ++$this->rows;  
             try {
-                if(!Tramite::where('id', 1)->first()){
+                if(!Tramite::where('num_tramite_legacy', $row['tramite_num_tramite_legacy'])->first()){
+                    $person = Person::updateOrCreate(
+                        [
+                            'tipo_documento_id' => $row['person_tipo_documento_id'],
+                            'num_documento' => $row['person_num_documento']
+                        ],
+                        [
+                            'lastname' => $row['person_lastname'],
+                            'name' => $row['person_name'],
+                            'fecha_nac' => $row['person_fecha_nac'],
+                            'tipo_documento_id' => $row['person_tipo_documento_id'],
+                            'num_documento' => $row['person_num_documento']
+                        ]
+                    );
+        
+                    AditionalData::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'cant_hijos' => $row['aditional_cant_hijos'],
+                            'situacion_conyugal_id' => $row['aditional_situacion_conyugal_id'] !== 'NULL' ? $row['aditional_situacion_conyugal_id'] : null
+                        ]
+                    );
+        
+                    SocialData::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' ? $row['social_tipo_ocupacion_id'] : null,
+                            'cobertura_medica_id' => $row['social_cobertura_medica_id'] !== 'NULL' ? $row['social_cobertura_medica_id'] : null,
+                            'tipo_pension_id' => $row['social_tipo_pension_id'] !== 'NULL' ? $row['social_tipo_pension_id'] : null,
+                            /* 'programa_social_id' => $row['social_programa_social_id'] */
+                        ]
+                    );
+        
+                    EducationData::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'nivel_educativo_id' => $row['education_nivel_educativo_id'] !== 'NULL' ? $row['education_nivel_educativo_id'] : null,
+                            'estado_educativo_id' => $row['education_estado_educativo_id'] !== 'NULL' ? $row['education_estado_educativo_id'] : null
+                        ]
+                    );
+        
+                    // address_data
+        
+                    AddressData::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'calle' => $row['address_calle'] !== 'NULL' ? $row['address_calle'] : null,
+                            'number' => $row['address_number'] !== 'NULL' ? $row['address_number'] : null,
+                            'piso' => $row['address_piso'] !== 'NULL' ? $row['address_piso'] : null,
+                            'dpto' => $row['address_dpto'] !== 'NULL' ? $row['address_dpto'] : null,
+                            'latitude' => $row['address_latitude'] !== 'NULL' ? $row['address_latitude'] : null,
+                            'longitude' => $row['address_longitude'] !== 'NULL' ? $row['address_longitude'] : null,
+                            'google_address' => $row['address_google_address'] !== 'NULL' ? $row['address_google_address'] : null,
+                            'pais_id' => $row['address_pais_id'] !== 'NULL' ? $row['address_pais_id'] : null,
+                            'localidad_id' => $row['address_localidad_id'] !== 'NULL' ? $row['address_localidad_id'] : null,
+                            'barrio_id' => $row['address_barrio_id'] !== 'NULL' ? $row['address_barrio_id'] : null
+        
+                        ]
+                    );
+        
+                    // contact_data
+        
+                    ContactData::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'phone' => $row['contact_phone'] !== 'NULL' ? $row['contact_phone'] : null,
+                            'email' => $row['contact_email'] !== 'NULL' ? $row['contact_email'] : null
+                        ]
+                    );
+        
+                    //cud
+                    Cud::updateOrCreate(
+                        [
+                            'person_id' => $person->id
+                        ],
+                        [
+                            'codigo' => $row['cud_codigo'] !== 'NULL' ? $row['cud_codigo'] : null,
+                            'diagnostico' => $row['cud_diagnostico'] !== 'NULL' ? $row['cud_diagnostico'] : null
+                        ]
+                    );
+
+                    $tramite_data = Tramite::Create(
+                        [
+                            'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
+                            'canal_atencion_id' => $row['tramite_canal_atencion_id'],
+                            'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
+                            'dependencia_id' => $row['tramite_dependencia_id'],
+                            'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
+                        ]
+                    );
+                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                     ++$this->rowsSuccess; 
                     Log::info("Se ha importado correctamente la entidad N° , bajo el ID de entidad N° ", ["Modulo" => "ImportEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name]);

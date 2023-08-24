@@ -24,9 +24,9 @@ class TipoOcupacionSeeder extends Seeder
             ['id' => 6, 'description' => 'DESEMPLEADO'],
             ['id' => 7, 'description' => 'JUBILADO/PENSIONADO'],
             ['id' => 8, 'description' => 'CHANGAS/TRABAJO INFORMAL'],
+            ['id' => 9, 'description' => 'AMA DE CASA'],
             ['id' => 10, 'description' => 'OTROS'],
             ['id' => 11, 'description' => 'NS/NR'],
-            ['id' => 12, 'description' => 'AMA DE CASA'],
             ['id' => 13, 'description' => 'ESTUDIANTE'],
         ];
 

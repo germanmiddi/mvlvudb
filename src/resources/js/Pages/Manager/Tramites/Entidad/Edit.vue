@@ -231,10 +231,10 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-9">
-								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
+								<label for="observation" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
-									<textarea v-model="form.observacion" id="observacion" name="observacion" rows="3"
+									<textarea v-model="form.observation" id="observation" name="observation" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
 								<p class="mt-2 text-sm text-gray-500">

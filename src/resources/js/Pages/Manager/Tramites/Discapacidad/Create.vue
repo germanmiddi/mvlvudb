@@ -914,42 +914,6 @@ export default {
 				this.form.get_barrio_id = data.address[0].barrio_id
 
 				this.form = this.removeNullValues(this.form);
-
-				/* this.labelType = "success";
-				this.toastMessage = "El DNI indicado se encuentra registrado";
-				data = data.data[0];
-				this.form = Object.assign({}, 
-					data.person, 
-					data.data.address,
-					data.data.contact,
-					data.data.cud,
-					data.data.education,
-					data.data.salud,
-					data.data.social,
-					);
-				// Formateo de las fechas
-				this.form.fecha_nac = new Date(
-					this.form.fecha_nac + "T00:00:00.000-03:00"
-				);
-				
-
-				//Carga del Mapa
-				if (this.form.latitude && this.form.longitude) {
-					// Carga de datos para visualizar el mapa.
-					this.form_temp = {};
-					this.form_temp.latitude = parseFloat(
-						this.form.latitude
-					);
-					this.form_temp.longitude = parseFloat(
-						this.form.longitude
-					);
-					this.form_temp.route = this.form.google_address;
-					this.form_google = this.form_temp;
-					this.showMap = true;
-				}else{
-					this.showMap = false;
-				} */
-				this.form = this.removeNullValues(this.form);
 			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";

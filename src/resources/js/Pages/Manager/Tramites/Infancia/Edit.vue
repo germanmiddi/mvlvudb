@@ -782,38 +782,6 @@
 
 
 						</div>
-						<!-- <div class="grid grid-cols-12 gap-6">
-
-						<div class="col-span-12 sm:col-span-6 ">
-							<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección Google</label>
-							
-							<vue-google-autocomplete ref="address" id="map"
-								classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-								placeholder="Ingrese la dirección"
-								v-on:placechanged="getAddressData">
-							</vue-google-autocomplete>
-						</div> 
-						<div class="col-span-12 sm:col-span-2 ">
-							<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-							<input v-model="form_nino.latitude" type="text" name="latitude" id="latitude" autocomplete="latitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-
-						<div class="col-span-12 sm:col-span-2 ">
-							<label for="longitude" class="block text-sm font-medium text-gray-700">Longitud</label>
-							<input v-model="form.longitude" type="text" name="longitude" id="longitude" autocomplete="longitude-level2" disabled class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-						</div> 
-						<div class="col-span-12 sm:col-span-2 ">
-							<label class="block text-transparent ">Button</label>
-							<a @click="this.showMap = !this.showMap" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ver Mapa</a>
-						</div> 
-						<p class="mt-2 text-sm text-gray-500 col-span-12 sm:col-span-12">{{ this.form.google_address }}</p>
-						<div class="col-span-12 sm:col-span-12 ">
-							<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
-								
-							</GoogleMap>
-						</div> 
-						
-					</div> -->
 
 					</div>
 				</div>
@@ -1152,8 +1120,8 @@
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
 										<ListFamiliar v-for="familiar in this.form_familiares" :parentescos=parentescos :key="familiar.id"
-											:item=familiar @edit-item="editItem" @hide-item="hideItem"
-											@destroy-item="destroyItem" />
+											:item=familiar @edit-item="editFamiliar" 
+											@destroy-item="destroyFamiliar" />
 
 									</tbody>
 								</table>
@@ -1166,11 +1134,109 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">Contactos de Emergencia</h3>
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Contactos de Emergencias
+								</h3>
+							</div>
+							<div class="flex-shrink-0">
+								<button type="button" @click="addContacto()"
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
+									:class="showContacto
+										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
+										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
+										">
+									{{ this.textBtnContacto }}
+								</button>
 							</div>
 						</div>
+
+
+
+						<hr v-if="showContacto">
+						<div v-if="showContacto" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
+									Documento</label>
+								<select v-model="form_contacto.tipo_documento_id" id="tipo_documento_id"
+									name="tipo_documento_id" autocomplete="tipo_documento_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un tipo de documento
+									</option>
+									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
+										:value="tipoDocumento.id">{{
+											tipoDocumento.description
+										}}</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+									Documento</label>
+								<input v-model="form_contacto.num_documento" @focusout="getPersonContacto()" type="text"
+									name="num_documento" id="num_documento" autocomplete="address-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+								<input v-model="form_contacto.name" type="text" name="name" id="name"
+									autocomplete="name-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_contacto.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+						</div>
+
+						<div v-if="showContacto" class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
+									Nacimiento</label>
+								<Datepicker
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+									v-model="form_contacto.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
+									autoApply :format="format">
+								</Datepicker>
+							</div>
+							
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_documento_id"
+									class="block text-sm font-medium text-gray-700">Parentesco</label>
+								<select v-model="form_contacto.parentesco_id" id="parentesco_id" name="parentesco_id"
+									autocomplete="parentesco_id-name"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un tipo de parentesco
+									</option>
+									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+										{{ parentesco.description }}
+									</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
+								<input v-model="form_contacto.phone" type="text" name="phone" id="phone"
+									autocomplete="lastname-level2"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<button type="button" @click="storeContacto()"
+									class="mt-7 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+									Agregar Contacto
+								</button>
+							</div>
+						</div>
+
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-12">
@@ -1178,45 +1244,36 @@
 									<thead class="bg-gray-50">
 										<tr>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Dni
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Nombre
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Apellido
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Parentesco
 											</th>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
 												Telefono
+											</th>
+											<th scope="col"
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+												Acciones
 											</th>
 										</tr>
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
-										<tr v-for="(contacto, index) in form_contactos" :key="index">
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ contacto.person.num_documento }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ contacto.person.name }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ contacto.person.lastname }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ contacto.parentesco.description }}
-											</td>
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ contacto.person.contact[0].phone }}
-											</td>
-										</tr>
+										<ListContacto v-for="contacto in this.form_contactos" :parentescos=parentescos :key="contacto.id"
+											:item=contacto @edit-item="editContacto"
+											@destroy-item="destroyContacto" />
+
 									</tbody>
 								</table>
 							</div>
@@ -1314,6 +1371,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import ListFamiliar from '@/Layouts/Components/Tramites/ListFamiliar.vue';
+import ListContacto from '@/Layouts/Components/Tramites/ListContacto.vue';
 
 export default {
 
@@ -1356,7 +1414,8 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
-		ListFamiliar
+		ListFamiliar,
+		ListContacto
 	},
 	data() {
 		return {
@@ -1376,7 +1435,7 @@ export default {
 			file: "",
 			form_archivo: {},
 			form_familiar: {},
-			form_contactos: {},
+			form_contacto: {},
 			form_beneficiario: {},
 			showBenef: false,btnGuardar: false,
 			datepickerStyle: {
@@ -1384,7 +1443,9 @@ export default {
 				border: '1px solid red',
 			},
 			textBtnFamiliar: "Agregar Familiar",
-			showFamiliar: false
+			showFamiliar: false,
+			textBtnContacto: "Agregar Contacto",
+			showContacto: false
 		}
 	},
 	validations() {
@@ -1494,64 +1555,32 @@ export default {
 				this.form_familiar.tipo_documento_id = tipo_documento_id
 			}
 		},
-		/* async getPerson() {
-			this.form_temp.num_documento = this.form.num_documento;
+		async getPersonContacto() {
+			let num_documento = this.form_contacto.num_documento;
+			let tipo_documento_id = this.form_contacto.tipo_documento_id;
 
-			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
+			const get = `${route('persons.getPersonDni', this.form_contacto.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
 			if (!data.data.length == 0) {
 				data = data.data[0].person
 				/// Recuperar datos.
-				this.form.person_id = data.id
-				this.form.tipo_documento_id = data.tipo_documento_id
-				this.form.num_cuit = data.num_cuit
-				this.form.fecha_nac = data.fecha_nac
-				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
-				this.form.name = data.name
-				this.form.lastname = data.lastname
-				this.form.codigo = data.cud.codigo
-				this.form.diagnostico = data.cud.diagnostico
-				this.form.email = data.contact[0].email
-				this.form.phone = data.contact[0].phone
-				this.form.cant_hijos = data.aditional[0].cant_hijos
-				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
-				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
-				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
-				this.form.tipo_pension_id = data.social[0].tipo_pension_id
-				
-				
-				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
-				this.form.estado_educativo_id = data.education[0].estado_educativo_id
-				this.form.calle = data.address[0].calle
-				this.form.number = data.address[0].number
-				this.form.piso = data.address[0].piso
-				this.form.dpto = data.address[0].dpto
-				if (data.address[0].latitude && data.address[0].longitude) {
-					this.form.latitude = data.address[0].latitude
-					this.form.longitude = data.address[0].longitude
-
-					// Carga de datos para visualizar el mapa.
-					this.form_temp = {}
-					this.form_temp.latitude = parseFloat(data.address[0].latitude)
-					this.form_temp.longitude = parseFloat(data.address[0].longitude)
-					this.form_temp.route = data.address[0].google_address
-					this.form_google = this.form_temp
-					this.showMap = true
-				}
-
-				this.form.google_address = data.address[0].google_address
-				this.form.pais_id = data.address[0].pais_id
-				this.form.localidad_id = data.address[0].localidad_id
-				this.form.get_barrio_id = data.address[0].barrio_id
+				this.form_contacto.person_id = data.id
+				this.form_contacto.tipo_documento_id = data.tipo_documento_id
+				this.form_contacto.fecha_nac = data.fecha_nac
+				this.form_contacto.fecha_nac = new Date(this.form_contacto.fecha_nac + "T00:00:00.000-03:00")
+				this.form_contacto.name = data.name
+				this.form_contacto.lastname = data.lastname
+				this.form_contacto.phone = data.contact[0].phone
 			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";
-				this.form = {}
-				this.form = this.form_temp
-				this.form_temp = {}
+				this.form_contacto = {}
+				this.form_contacto.num_documento = num_documento
+				this.form_contacto.tipo_documento_id = tipo_documento_id
 			}
-		}, */
+		},
+		
 		getAddressData: function (addressData, placeResultData, id) {
 			this.form.google_address = placeResultData['formatted_address']
 			this.form.latitude = addressData['latitude']
@@ -1624,7 +1653,7 @@ export default {
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
-		async destroyItem(id) {
+		async destroyFamiliar(id) {
 			const response = await axios.post(route('persons.destroyFamiliar'), { id: id });
 
 			if (response.status == 200) {
@@ -1684,10 +1713,10 @@ export default {
 			}
 			this.showFamiliar = !this.showFamiliar;
 		},
-		async editItem(item) {
+		async editFamiliar(item) {
 			console.log(item)
 			let formData = new FormData();
-			formData.append('familiar_id', item.id);
+			formData.append('contacto_id', item.id);
 			formData.append('person_id', item.person_id);
 			formData.append('parentesco_id', item.parentesco.id);
 			formData.append('name', item.person.name);
@@ -1700,6 +1729,89 @@ export default {
 					this.toastMessage = response.data.message;
 					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.description = this.parentescos.find(parentesco => parentesco.id === item.parentesco.id).description
 					this.form_familiares.find(familiar => familiar.id === item.id).parentesco.id = item.parentesco.id
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			} 
+		},
+		async destroyContacto(id) {
+			const response = await axios.post(route('persons.destroyContacto'), { id: id });
+
+			if (response.status == 200) {
+				this.labelType = "success";
+				this.toastMessage = response.data.message;
+
+				this.form_contactos = this.form_contactos.filter(item => item.id != id)
+
+			} else {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+			}
+		},
+		async storeContacto() {
+			if (this.form_contactos.find(contacto => contacto.person.num_documento === parseInt(this.form_contacto.num_documento,10))) {
+				this.labelType = "danger";
+				this.toastMessage = "La persona ya se ha ingresado previamente";
+			} else {
+				if (this.form_contacto.name && this.form_contacto.lastname && this.form_contacto.num_documento && this.form_contacto.fecha_nac && this.form_contacto.parentesco_id && this.form_contacto.phone) {
+					try {
+						this.form_contacto.tramite_id = this.form.tramite_id
+						this.form_contacto.fecha_nac = (this.form_contacto.fecha_nac) ? new Date(this.form_contacto.fecha_nac).toISOString() : null;
+
+						const response = await axios.post(route('persons.addContacto'), this.form_contacto);
+						if (response.status == 200) {
+
+							this.labelType = "success";
+							///
+							this.toastMessage = response.data.message;
+							this.form_contactos.push(response.data.contacto) 
+							this.showContacto = false
+							this.textBtnContacto = "Agregar Contacto"
+
+						} else {
+							console.log('NO')
+							this.labelType = "danger";
+							this.toastMessage = response.data.message;
+						}
+					} catch (error) {
+						console.log(error)
+					}
+
+					this.form_contacto = {}
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = "Debe completar todos los datos";
+				}
+			}
+		},
+		addContacto() {
+			if (this.showContacto) {
+				this.textBtnContacto = "Agregar Contacto";
+				this.form_contacto = {};
+			} else {
+				this.textBtnContacto = "Borrar Contacto";
+			}
+			this.showContacto = !this.showContacto;
+		},
+		async editContacto(item) {
+			let formData = new FormData();
+			formData.append('contacto_id', item.id);
+			formData.append('person_id', item.person_id);
+			formData.append('parentesco_id', item.parentesco.id);
+			formData.append('name', item.person.name);
+			formData.append('lastname', item.person.lastname);
+			formData.append('phone', item.person.contact[0].phone);
+			try {
+				const response = await axios.post(route('persons.updateContacto'), formData);
+
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.form_contactos.find(contacto => contacto.id === item.id).parentesco.description = this.parentescos.find(parentesco => parentesco.id === item.parentesco.id).description
+					this.form_contactos.find(contacto => contacto.id === item.id).parentesco.id = item.parentesco.id
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
@@ -1721,20 +1833,6 @@ export default {
 		}
 	},
 	mounted() {
-
-		// Obtengo los datos del Titular - Beneficiario
-		/* this.tramite.person.forEach(element => {
-			switch (element.pivot.rol_tramite_id) {
-				case 1:
-					console.log('TITULAR: '+element.lastname)
-					break;
-			
-				case 2:
-					console.log('BENEFICIARIO: '+element.lastname)
-					break;
-			}
-		});
- */
 		this.form.tramite_id = this.tramite[0].id
 
 		//console.log(this.tramite[0].persons[0].pivot.rol_tramite_id)

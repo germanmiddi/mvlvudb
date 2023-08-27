@@ -7,16 +7,64 @@
                     Gestión de Usuarios
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
+        <div class="mt-4 flex sm:mt-0 sm:ml-4">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
-                <a :href="route('ninez.create')"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+                <button @click="showNewUserCard = !showNewUserCard"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Nuevo Usuario</button>
             </div>
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
-        <div class="px-4 mt-6 sm:px-6 lg:px-8">
+        <!-- Card Nuevo usuario -->
+        <div v-if="showNewUserCard" class="px-4 mt-6 sm:px-6 lg:px-8">
+
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                    <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                        <div class="">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Nuevo Usuarios</h3>
+                        </div>
+
+                    </div>
+                    <div class="grid grid-cols-12 gap-6">
+                        <div class="col-span-12 sm:col-span-8 ">
+                            <label for="newUserName" class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input v-model="newUserName" type="text" name="newUserName" id="newUserName"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-3/5  shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-8 ">
+                            <label for="newUserEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input v-model="newUserEmail" type="text" name="newUserEmail" id="newUserEmail"
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-3/5  shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="w-full bg-gray-50 rounded-b  px-4 py-4 border-t border-gray-200">
+                    <div class="flex justify-between">
+                        <button type="button"
+                            class="flex item-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                            @click="createUser()">
+                            <svg v-if="newUserLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-green-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Agregar Usuario </button>
+                        <button type="button"
+                            class="px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-100 
+                                hover:bg-gray-200 "
+                            >Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Card Nuevo Usurio -->
+
+        <!-- Card Ver grupos de usuario -->
+        <!-- <div class="px-4 mt-6 sm:px-6 lg:px-8">
 
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
@@ -44,9 +92,6 @@
                                 </div>
                                 <h4 class="text-lg font-bold pb-4 ml-2">Grupos</h4>
                                 <div class="list-groups ml-12 flex w-4/5 flex-wrap gap-3">
-                                    <!-- <li v-for="group in userGroups" :key="group.id">
-                                        {{ group.name }}
-                                    </li> -->
                                     <div class="mb-5"><span class="rounded-md uppercase text-sm py-2 px-3 bg-white border b-green-500 text-green-800">Administrador</span></div>
                                     <div class="mb-5"><span class="rounded-md uppercase text-sm py-2 px-3 bg-white border b-green-500 text-green-800">Cbj</span></div>
                                     <div class="mb-5"><span class="rounded-md uppercase text-sm py-2 px-3 bg-white border b-green-500 text-green-800">Discapacidad</span></div>
@@ -80,8 +125,8 @@
                 </div>
 
             </div>
-        </div>
-
+        </div> -->
+        <!-- Fin Card Ver grupos de usuario -->
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -190,14 +235,52 @@ export default {
             customFormat: 'd-M-Y',
             userEmail:"",
             userGroups: [],
+            showNewUserCard: false,
+            newUserName: "",
+            newUserEmail: "",
+            newUserLoading: false,
+
         };
     },
     setup() {
     },
     methods: {
-        async checkUser(){
 
-        },
+		async createUser(){
+            this.newUserLoading = true;
+
+			let rt = route('user.store');
+
+            let data = new FormData();
+
+            data.append('name', this.newUserName);
+            data.append('email', this.newUserEmail);
+
+			try {
+				
+                const response = await axios.post(rt, data);
+
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					console.log(response.data)
+                    this.newUserName = "";
+                    this.newUserEmail = "";
+                    this.showNewUserCard = false;
+                    this.newUserLoading = false;
+                    this.getUsers();
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+                    this.newUserLoading = false;
+				}
+			} catch (error) {
+				console.log(error)
+			}
+
+		},
+
+
         clearMessage() {
             this.toastMessage = "";
         },

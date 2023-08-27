@@ -56,20 +56,6 @@
         <div class="mt-6 h-0 flex-1 flex flex-col overflow-y-auto">
           <!-- User account dropdown -->
           <Menu as="div" class="px-3 relative inline-block text-left">
-            <!-- <div>
-              <MenuButton class="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500">
-                <span class="flex w-full justify-between items-center">
-                  <span class="flex min-w-0 items-center justify-between space-x-3">
-                    <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" alt="" />
-                    <span class="flex-1 flex flex-col min-w-0">
-                      <span class="text-gray-900 text-sm font-medium truncate">Jessy Schwarz</span>
-                      <span class="text-gray-500 text-sm truncate">@jessyschwarz</span>
-                    </span>
-                  </span>
-                  <ChevronUpDownIcon class="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                </span>
-              </MenuButton>
-            </div> -->
 
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="z-10 mx-3 origin-top absolute right-0 left-0 mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
@@ -195,7 +181,7 @@
               <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                 <!-- Don't render any element (only children) for the `DisclosureButton` component -->
                 <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Configuraciones</button>
+                  <button class="flex items-center" ><Cog6ToothIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Configuraciones</button>
                 </DisclosureButton>
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
@@ -225,24 +211,14 @@
                   </DisclosurePanel>
 
               </Disclosure>
-              <!-- <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']" :aria-current="item.current ? 'page' : undefined">
-                <component :is="item.icon" :class="[item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500', 'mr-3 flex-shrink-0 h-6 w-6']" aria-hidden="true" />
-                {{ item.name }}
-              </a> -->
-<span @click="logout" class="text-sm font-medium text-gray-500 group-hover:text-red-600">Cerrar Sesión</span>
+
+              <div class="flex items-center px-2 py-2 hover:text-red-600 hover:bg-gray cursor-pointer text-gray-500 hover:bg-gray-200 rounded-md">
+                <PowerIcon class="mr-3 flex-shrink-0 h-5 w-5" />
+                <span @click="logout" class="text-sm font-medium ">Cerrar Sesión</span>
+
+              </div>   
             </div>
-            <div class="mt-8">
-              <!-- Secondary navigation -->
-              <!-- <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider" id="desktop-teams-headline">Teams</h3>
-              <div class="mt-1 space-y-1" role="group" aria-labelledby="desktop-teams-headline">
-                <a v-for="team in teams" :key="team.name" :href="team.href" class="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                  <span :class="[team.bgColorClass, 'w-2.5 h-2.5 mr-4 rounded-full']" aria-hidden="true" />
-                  <span class="truncate">
-                    {{ team.name }}
-                  </span>
-                </a>
-              </div> -->
-            </div>
+
           </nav>
         </div>
       </div>
@@ -328,7 +304,7 @@
     TransitionRoot,
   } from '@headlessui/vue'
 
-  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon } from '@heroicons/vue/24/outline'
+  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon } from '@heroicons/vue/24/outline'
   import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid'
 
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
@@ -349,46 +325,46 @@
     { name: 'Customer Success', href: '#', bgColorClass: 'bg-yellow-500' },
   ]
 
-  const projects = [
-    {
-      id: 1,
-      title: 'GraphQL API',
-      initials: 'GA',
-      team: 'Engineering',
-      members: [
-        {
-          name: 'Dries Vincent',
-          handle: 'driesvincent',
-          imageUrl:
-            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        {
-          name: 'Lindsay Walton',
-          handle: 'lindsaywalton',
-          imageUrl:
-            'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        {
-          name: 'Courtney Henry',
-          handle: 'courtneyhenry',
-          imageUrl:
-            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        {
-          name: 'Tom Cook',
-          handle: 'tomcook',
-          imageUrl:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-      ],
-      totalMembers: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
-      bgColorClass: 'bg-pink-600',
-    },
-    // More projects...
-  ]
-  const pinnedProjects = projects.filter((project) => project.pinned)
+  // const projects = [
+  //   {
+  //     id: 1,
+  //     title: 'GraphQL API',
+  //     initials: 'GA',
+  //     team: 'Engineering',
+  //     members: [
+  //       {
+  //         name: 'Dries Vincent',
+  //         handle: 'driesvincent',
+  //         imageUrl:
+  //           'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  //       },
+  //       {
+  //         name: 'Lindsay Walton',
+  //         handle: 'lindsaywalton',
+  //         imageUrl:
+  //           'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  //       },
+  //       {
+  //         name: 'Courtney Henry',
+  //         handle: 'courtneyhenry',
+  //         imageUrl:
+  //           'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  //       },
+  //       {
+  //         name: 'Tom Cook',
+  //         handle: 'tomcook',
+  //         imageUrl:
+  //           'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  //       },
+  //     ],
+  //     totalMembers: 12,
+  //     lastUpdated: 'March 17, 2020',
+  //     pinned: true,
+  //     bgColorClass: 'bg-pink-600',
+  //   },
+  //   // More projects...
+  // ]
+  // const pinnedProjects = projects.filter((project) => project.pinned)
 
   export default {
     components: {
@@ -412,6 +388,8 @@
       DisclosurePanel, 
       InboxIcon,
       Inertia,
+      Cog6ToothIcon,
+      PowerIcon
       
     },
     setup() {
@@ -421,8 +399,8 @@
 
         navigation,
         teams,
-        projects,
-        pinnedProjects,
+        // projects,
+        // pinnedProjects,
         sidebarOpen,
         store
         

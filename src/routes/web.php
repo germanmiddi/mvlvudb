@@ -173,6 +173,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/users/list', [UserController::class, 'list'])->name('users.list');
+    Route::get('/users/checkuser', [UserController::class, 'checkUser'])->name('users.checkUser');
+    Route::post('/users/store', [UserController::class, 'store'])->name('user.store');
 
     // Details View
 

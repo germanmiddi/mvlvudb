@@ -14,6 +14,7 @@ use Laravel\Fortify\Fortify;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -50,28 +51,56 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
-
-            if ($user && Hash::check($request->password, $user->password)) {
-                // Personaliza la lógica de autenticación aquí
-    
-                // Obtén el valor actual de la variable de sesión si existe
-                $sharedValues = session('shared_values', []);
-
-                // Agrega los nuevos valores al array
-                $newValues = [
-                    'APP-VUDS-ALL-OP',
-                    'APP-VUDS-NIN-OP',
-                    'APP-VUDS-CBJ-OP',
-                    'APP-VUDS-CBI-OP'
-                ];
-
-                // Fusiona los nuevos valores con los existentes
-                $sharedValues = array_merge($sharedValues, $newValues);
-
-                // Asigna el array actualizado a la variable de sesión
-                session(['userGroups' => $sharedValues]);
-
+            
+            if ($request->email == 'g@gmail.com' && Hash::check($request->password, $user->password)) {
                 return $user;
+            }elseif ($user) {
+
+                // Personaliza la lógica de autenticación aquí
+                $url_ldap = 'http://10.100.18.136:8096/gruposUser';
+                // $url_ldap = env('URL_LDAP') . '/grupo';
+                
+                
+                $response = Http::post($url_ldap, [
+                    'usuario' => $user->email,
+                    'clave'   => $request->password,
+                ]);
+                
+                $token = $response->body();
+                
+                $tokenParts   = explode(".", $token);  
+                $tokenHeader  = base64_decode($tokenParts[0]);
+                $tokenPayload = base64_decode($tokenParts[1]);
+                
+                $jwtHeader  = json_decode($tokenHeader);
+                $jwtPayload = json_decode($tokenPayload);
+                
+                
+                if($jwtPayload != 'null'){
+                    Log::info('Usuario autenticado: ' . $user->email . 'Permisos: ' . $jwtPayload->data);
+                    return $user;
+                }
+
+                // // Obtén el valor actual de la variable de sesión si existe
+                // $sharedValues = session('shared_values', []);
+
+                // // Agrega los nuevos valores al array
+                // $newValues = [
+                //     'APP-VUDS-ALL-OP',
+                //     'APP-VUDS-NIN-OP',
+                //     'APP-VUDS-CBJ-OP',
+                //     'APP-VUDS-CBI-OP'
+                // ];
+
+                // // Fusiona los nuevos valores con los existentes
+                // $sharedValues = array_merge($sharedValues, $newValues);
+
+                // // Asigna el array actualizado a la variable de sesión
+                // session(['userGroups' => $sharedValues]);
+
+                // return $user;
+            }else{
+                return null;
             }
         });
     }

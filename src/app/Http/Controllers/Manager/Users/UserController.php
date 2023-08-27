@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -48,6 +48,39 @@ class UserController extends Controller
         // return Inertia::render('Manager/Users/List', [
         //     'users' => $users
         // ]);
+    }
+
+    public function store(Request $request){
+    
+        $randomPassword = Str::random(10); 
+
+        $user = User::create([
+            'name' => request()->input('name'),
+            'email' => request()->input('email'),
+            // 'group' => request()->input('group'),
+            'password' => bcrypt($randomPassword) 
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'user' => $user
+        ]);
+    }
+
+    public function checkUser(){
+        $user = User::where('email', request()->input('email'))->first();
+        if($user){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email already exists'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email is available'
+            ]);
+        }
     }
 
 }

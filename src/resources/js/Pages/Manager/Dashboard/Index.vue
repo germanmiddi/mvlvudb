@@ -12,7 +12,7 @@
         <!-- Pinned projects -->
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
             <h2 class="text-gray-500 text-xs font-medium uppercase tracking-wide">Destacados</h2>
-            <ul role="list" class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-4 mt-3">
+            <ul role="list" class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-3 mt-3">
                 <li v-for="project in data" :key="project.id" class="relative col-span-1 flex shadow-sm rounded-md" v-show="store.userCan(project.module, $page.props.userGroups)">
                     <div :class="[project.bgColorClass, 'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md']">{{ project.initials }}
                     </div>

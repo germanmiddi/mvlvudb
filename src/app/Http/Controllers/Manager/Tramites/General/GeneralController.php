@@ -26,6 +26,10 @@ class GeneralController extends Controller
     //list
     public function list()
     {
+        // $ids = $this->_get_id_entidades();
+
+        // dd($ids);
+
         $length = request('length');
         
         $result = Tramite::query();
@@ -82,5 +86,34 @@ class GeneralController extends Controller
                 'tipo_tramite' => $tramite->tipoTramite,
                 'dependencia' => $tramite->dependencia
             ]);
+    }
+
+    public function _get_id_entidades(){
+
+        $roles_entidades = [[ 'id' => '2', 'name' => 'DISCAPACIDAD',                'rol' => '-DIS-'],
+                            [ 'id' => '3', 'name' => 'ENTIDADES INTERMEDIAS',       'rol' => '-ENT-'],
+                            [ 'id' => '5', 'name' => 'FORTALECIMIENTO COMUNITARIO', 'rol' => '-FOR-'],
+                            [ 'id' => '6', 'name' => 'GÉNERO Y DIVERSIDAD',         'rol' => '-GEN-'],
+                            [ 'id' => '7', 'name' => 'HÁBITAT',                     'rol' => '-HAB-'],
+                            ['id' => '8',  'name' => 'NIÑEZ Y ADOLESCENCIA',        'rol' => '-NIN-'],
+                            ['id' => '10', 'name' => 'VENTANILLA ÚNICA',            'rol' => '-VU-'],
+                            ['id' => '12', 'name' => 'CENTROS BARRIALES INFANCIA',  'rol' => '-CBI-'],
+                            ['id' => '13', 'name' => 'CENTROS BARRIALES JUVENTUD',  'rol' => '-CBJ-'],
+                            ['id' => '14', 'name' => 'PERSONAS MAYORES',            'rol' => '-PM-'] ];
+
+        $userGroups = session('userGroups');
+        
+        $filteredEntityIds = array_map(function ($userGroup) use ($roles_entidades) {
+            $matchingRole = array_filter($roles_entidades, function ($roleEntidad) use ($userGroup) {
+                return strpos($userGroup, $roleEntidad['rol']) !== false;
+            });
+        
+            return $matchingRole ? reset($matchingRole)['id'] : null;
+        }, $userGroups->toArray());
+
+        $filteredEntityIds = array_filter($filteredEntityIds); // Remove null values
+        
+        return $filteredEntityIds;
+
     }
 }

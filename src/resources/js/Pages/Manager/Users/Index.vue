@@ -38,7 +38,6 @@
                             <input v-model="newUserEmail" type="text" name="newUserEmail" id="newUserEmail"
                                     class="focus:ring-indigo-500 focus:border-indigo-500 block w-3/5  shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-
                     </div>
 
 
@@ -54,9 +53,9 @@
                             </svg>
                             Agregar Usuario </button>
                         <button type="button"
-                            class="px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-100 
-                                hover:bg-gray-200 "
-                            >Cerrar</button>
+                                class="px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-100 hover:bg-gray-200 "
+                                @click="showNewUserCard = !showNewUserCard" >
+                                Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -161,7 +160,9 @@
                                         {{ user.email }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                       
+                                       <span v-for="r in user.roles" :key="r.id"
+                                             class="bg-gray-50 border b-gray-700 mx-2 text-xs px-2 py-1 text-gray-800" >
+                                                {{ r }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                        

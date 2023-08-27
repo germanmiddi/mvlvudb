@@ -98,81 +98,81 @@ class DashboardController extends Controller
         return ($data);
     }
 
-    public function getstatisticsFiltered(){
-        $roles_entidades = [
-            [
-                'id' => '2',
-                'name' => 'DISCAPACIDAD',
-                'rol' => '-DIS-',
-            ],
-            [
-                'id' => '3',
-                'name' => 'ENTIDADES INTERMEDIAS',
-                'rol' => '-ENT-',
-            ],
-            [
-                'id' => '5',
-                'name' => 'FORTALECIMIENTO COMUNITARIO',
-                'rol' => '-FOR-',
-            ],
-            [
-                'id' => '6',
-                'name' => 'GÉNERO Y DIVERSIDAD',
-                'rol' => '-GEN-',
-            ],
-            [
-                'id' => '7',
-                'name' => 'HÁBITAT',
-                'rol' => '-HAB-',
-            ],
-            [
-                'id' => '8',
-                'name' => 'NIÑEZ Y ADOLESCENCIA',
-                'rol' => '-NIN-',
-            ],
-            [
-                'id' => '10',
-                'name' => 'VENTANILLA ÚNICA',
-                'rol' => '-VU-',
-            ],
-            [
-                'id' => '12',
-                'name' => 'CENTROS BARRIALES INFANCIA',
-                'rol' => '-CBI-',
-            ],
-            [
-                'id' => '13',
-                'name' => 'CENTROS BARRIALES JUVENTUD',
-                'rol' => '-CBJ-',
-            ],
-            [
-                'id' => '14',
-                'name' => 'PERSONAS MAYORES',
-                'rol' => '-PM-',
-            ],
-        ];
+    // public function getstatisticsFiltered(){
+    //     $roles_entidades = [
+    //         [
+    //             'id' => '2',
+    //             'name' => 'DISCAPACIDAD',
+    //             'rol' => '-DIS-',
+    //         ],
+    //         [
+    //             'id' => '3',
+    //             'name' => 'ENTIDADES INTERMEDIAS',
+    //             'rol' => '-ENT-',
+    //         ],
+    //         [
+    //             'id' => '5',
+    //             'name' => 'FORTALECIMIENTO COMUNITARIO',
+    //             'rol' => '-FOR-',
+    //         ],
+    //         [
+    //             'id' => '6',
+    //             'name' => 'GÉNERO Y DIVERSIDAD',
+    //             'rol' => '-GEN-',
+    //         ],
+    //         [
+    //             'id' => '7',
+    //             'name' => 'HÁBITAT',
+    //             'rol' => '-HAB-',
+    //         ],
+    //         [
+    //             'id' => '8',
+    //             'name' => 'NIÑEZ Y ADOLESCENCIA',
+    //             'rol' => '-NIN-',
+    //         ],
+    //         [
+    //             'id' => '10',
+    //             'name' => 'VENTANILLA ÚNICA',
+    //             'rol' => '-VU-',
+    //         ],
+    //         [
+    //             'id' => '12',
+    //             'name' => 'CENTROS BARRIALES INFANCIA',
+    //             'rol' => '-CBI-',
+    //         ],
+    //         [
+    //             'id' => '13',
+    //             'name' => 'CENTROS BARRIALES JUVENTUD',
+    //             'rol' => '-CBJ-',
+    //         ],
+    //         [
+    //             'id' => '14',
+    //             'name' => 'PERSONAS MAYORES',
+    //             'rol' => '-PM-',
+    //         ],
+    //     ];
 
 
-        $userGroups = session('userGroups');
+    //     $userGroups = session('userGroups');
         
-        $filteredEntityIds = array_map(function ($userGroup) use ($roles_entidades) {
-            $matchingRole = array_filter($roles_entidades, function ($roleEntidad) use ($userGroup) {
-                return strpos($userGroup, $roleEntidad['rol']) !== false;
-            });
+    //     $filteredEntityIds = array_map(function ($userGroup) use ($roles_entidades) {
+    //         $matchingRole = array_filter($roles_entidades, function ($roleEntidad) use ($userGroup) {
+    //             return strpos($userGroup, $roleEntidad['rol']) !== false;
+    //         });
         
-            return $matchingRole ? reset($matchingRole)['id'] : null;
-        }, $userGroups);
+    //         return $matchingRole ? reset($matchingRole)['id'] : null;
+    //     }, $userGroups);
 
-        $filteredEntityIds = array_filter($filteredEntityIds); // Remove null values
+    //     $filteredEntityIds = array_filter($filteredEntityIds); // Remove null values
         
 
-        $data = Tramite::whereIn('dependencia_id', $filteredEntityIds)
-            ->select('dependencia_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('dependencia_id')
-            ->get();
+    //     $data = Tramite::whereIn('dependencia_id', $filteredEntityIds)
+    //         ->select('dependencia_id', DB::raw('COUNT(*) as count'))
+    //         ->groupBy('dependencia_id')
+    //         ->get();
             
-        return ($data);
-    }    
+    //     return ($data);
+    // }    
 
 
 }

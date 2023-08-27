@@ -123,7 +123,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.dependencia.description }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500">
                                         {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
@@ -156,6 +156,13 @@
                                                         <a href="#" class="block px-4 py-2 text-sm">
                                                             Ver</a>
                                                         </MenuItem> -->
+                                                        
+                                                        <MenuItem v-slot="{ active }">
+                                                            <a :href="route('detail.view', data.tramite.id)"
+                                                                class="block px-4 py-2 text-sm">
+                                                                Detalle</a>
+                                                        </MenuItem>
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
                                                             class="block px-4 py-2 text-sm">

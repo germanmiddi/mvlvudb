@@ -11,10 +11,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+
 use App\Models\User;
+use App\Models\Manager\Role;
+
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -60,26 +64,42 @@ class FortifyServiceProvider extends ServiceProvider
                 $url_ldap = 'http://10.100.18.136:8096/gruposUser';
                 // $url_ldap = env('URL_LDAP') . '/grupo';
                 
-                
-                $response = Http::post($url_ldap, [
-                    'usuario' => $user->email,
-                    'clave'   => $request->password,
-                ]);
-                
-                $token = $response->body();
-                
-                $tokenParts   = explode(".", $token);  
-                $tokenHeader  = base64_decode($tokenParts[0]);
-                $tokenPayload = base64_decode($tokenParts[1]);
-                
-                $jwtHeader  = json_decode($tokenHeader);
-                $jwtPayload = json_decode($tokenPayload);
-                
-                
-                if($jwtPayload != 'null'){
-                    Log::info('Usuario autenticado: ' . $user->email . 'Permisos: ' . $jwtPayload->data);
-                    return $user;
+                try{
+                    
+                    $response = Http::post($url_ldap, [
+                        'usuario' => $user->email,
+                        'clave'   => $request->password,
+                    ]);
+                    
+                    $token = $response->body();
+                    // $token = "eyJhbGciOiJIUzI1NiJ9.WyJBUFAtVlVEUy1BTEwtQURNIiwiQVBQLVZVRFMtQUxMLURJUiIsIkZXX1ZQTl9PTk1FRElBIiwiR0RfQ05ZX01WTCIsImFwcF9yZWRiaWJsaW90ZWNhc19hZG1pbiJd.5WZnD6AiXJ0HKMjbpU8FwihgtzaC_ILn48PuoL32yro";
+                    $tokenParts   = explode(".", $token);  
+                    $tokenHeader  = base64_decode($tokenParts[0]);
+                    $tokenPayload = base64_decode($tokenParts[1]);
+                    
+                    $jwtHeader  = json_decode($tokenHeader);
+                    $jwtPayload = json_decode($tokenPayload);
+                    
+                    if($jwtPayload != null){
+                        // Convertir descripciones en IDs de roles
+                        $grupoIds = Role::whereIn('name', $jwtPayload)->pluck('id');
+                        $grupoNames = Role::whereIn('name', $jwtPayload)->pluck('name');
+
+                        // Guardar los IDs en la tabla pivot
+                        $user->roles()->sync($grupoIds);
+
+                        // Asigna el array actualizado a la variable de sesión
+                        session(['userGroups' => $grupoNames]);
+
+                        Log::info('Usuario autenticado: ' . $user->email . ' Permisos: ' . print_r($grupoNames, true));
+                        return $user;
+                    }
+
+                }   catch (\Exception $e) {
+                    Log::error('Error al autenticar usuario: ' . $user->email . ' ' . $e->getMessage());
+                    return null;
                 }
+
 
                 // // Obtén el valor actual de la variable de sesión si existe
                 // $sharedValues = session('shared_values', []);
@@ -95,8 +115,7 @@ class FortifyServiceProvider extends ServiceProvider
                 // // Fusiona los nuevos valores con los existentes
                 // $sharedValues = array_merge($sharedValues, $newValues);
 
-                // // Asigna el array actualizado a la variable de sesión
-                // session(['userGroups' => $sharedValues]);
+
 
                 // return $user;
             }else{

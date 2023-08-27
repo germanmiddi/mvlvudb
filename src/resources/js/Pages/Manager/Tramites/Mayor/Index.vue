@@ -140,9 +140,11 @@
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
-                                                            Ver</a>
+                                                            <a :href="route('detail.view', data.tramite.id)"
+                                                                class="block px-4 py-2 text-sm">
+                                                                Detalle</a>
                                                         </MenuItem>
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
                                                             class="block px-4 py-2 text-sm">

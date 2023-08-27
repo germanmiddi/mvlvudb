@@ -114,6 +114,8 @@
           </div> -->
           <!-- Navigation -->
           <nav class="px-3 mt-6">
+            <!-- {{ user.grupos }} -->
+
             <div class="space-y-1">
               <a :href="route('general')">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
@@ -124,58 +126,58 @@
               <Disclosure as="div">
                 <!-- Don't render any element (only children) for the `DisclosureButton` component -->
                 <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Entidades</button>
+                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Dependencias</button>
                 </DisclosureButton>
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
 
-                    <a :href="route('infancia')">
+                    <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
                       </li>
                     </a>
-                    <a :href="route('juventud')">
+                    <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Juventud
                       </li>
                     </a>
-                    <a :href="route('discapacidad')">
+                    <a :href="route('discapacidad')" v-show="store.userCan('DIS', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Discapacidad
                       </li>
                     </a>
-                    <a :href="route('entidad')">
+                    <a :href="route('entidad')" v-show="store.userCan('ENT', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Entidades
                       </li>
                     </a>
-                    <a :href="route('fortalecimiento')">
+                    <a :href="route('fortalecimiento')" v-show="store.userCan('FOR', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Fortalecimiento Comunitario
                       </li>
                     </a>
-                    <a :href="route('genero')">
+                    <a :href="route('genero')" v-show="store.userCan('GEN', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Género y Diversidad
                       </li>
                     </a>
-                    <a :href="route('habitat')">
+                    <a :href="route('habitat')" v-show="store.userCan('HAB', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Hábitat
                       </li>
                     </a>
-                    <a :href="route('ninez')">
+                    <a :href="route('ninez')" v-show="store.userCan('NIN', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Niñez y Adolescencia
                       </li>
                     </a>
-                    <a :href="route('promocion')">
+                    <a :href="route('promocion')" v-show="store.userCan('PRO', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Promoción y Protección de derechos
                       </li>
                     </a>
-                    <a :href="route('mayores')">
+                    <a :href="route('mayores')" v-show="store.userCan('PM', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Personas Mayores
                       </li>
@@ -190,7 +192,7 @@
 
               </Disclosure>
 
-              <Disclosure as="div">
+              <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                 <!-- Don't render any element (only children) for the `DisclosureButton` component -->
                 <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
                   <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Configuraciones</button>
@@ -222,7 +224,7 @@
                 <component :is="item.icon" :class="[item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500', 'mr-3 flex-shrink-0 h-6 w-6']" aria-hidden="true" />
                 {{ item.name }}
               </a> -->
-
+<span @click="logout" class="text-sm font-medium text-gray-500 group-hover:text-red-600">Cerrar Sesión</span>
             </div>
             <div class="mt-8">
               <!-- Secondary navigation -->
@@ -307,6 +309,8 @@
   </template>
   
   <script>
+
+ import { Inertia } from '@inertiajs/inertia-vue3';
   import { ref } from 'vue'
   import {
     Dialog,
@@ -324,6 +328,8 @@
 
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
   import { ChevronUpIcon } from '@heroicons/vue/20/solid'
+
+  import store from '@/store.js'
 
   const navigation = [
     { name: 'Consultas', href: '#', icon: HomeIcon, current: true },
@@ -399,18 +405,36 @@
       Disclosure, 
       DisclosureButton, 
       DisclosurePanel, 
-      InboxIcon
+      InboxIcon,
+      Inertia,
+      
     },
     setup() {
       const sidebarOpen = ref(false)
   
       return {
+
         navigation,
         teams,
         projects,
         pinnedProjects,
         sidebarOpen,
+        store
+        
       }
     },
+    data() {
+      return {
+        
+      }
+    },
+    methods: {
+      logout() {
+          this.$inertia.post(route('logout'));
+      },
+      
+    },
+
+  
   }
   </script>

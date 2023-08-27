@@ -133,6 +133,7 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
+                                                        
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('discapacidad.edit', data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
@@ -140,9 +141,16 @@
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
+                                                        <a :href="route('detail.view', data.tramite.id)"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Detalle</a>
+                                                        </MenuItem>
+
+                                                        <!-- <MenuItem v-slot="{ active }">
                                                         <a href="#" class="block px-4 py-2 text-sm">
                                                             Ver</a>
-                                                        </MenuItem>
+                                                        </MenuItem> -->
+                                                        
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
                                                             class="block px-4 py-2 text-sm">

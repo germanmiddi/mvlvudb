@@ -25,6 +25,8 @@ use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Http\Controllers\Manager\Masterdata\MasterdataController;
 use App\Http\Controllers\Manager\Users\UserController;
 
+use App\Http\Controllers\Manager\Tramites\Details\DetailController;
+
 
 Route::middleware(['auth'])->group(function () {
 
@@ -54,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     // Discapacidad
     Route::get('/discapacidad', [DiscapacidadController::class, 'index'])->name('discapacidad');    
     Route::get('/discapacidad/create', [DiscapacidadController::class, 'create'])->name('discapacidad.create');  
+    // Route::get('/discapacidad/view/{id}', [DiscapacidadController::class, 'view'])->name('discapacidad.view');  
     Route::get('/discapacidad/edit/{id}', [DiscapacidadController::class, 'edit'])->name('discapacidad.edit');    
     Route::post('/discapacidad/store', [DiscapacidadController::class, 'store'])->name('discapacidad.store');   
     Route::post('/discapacidad/update/{id}', [DiscapacidadController::class, 'update'])->name('discapacidad.update');    
@@ -160,6 +163,14 @@ Route::middleware(['auth'])->group(function () {
     // Users
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/list', [UserController::class, 'list'])->name('users.list');
 
+    // Details View
+
+    Route::get('/tramites/detalles/{id}', [DetailController::class, 'view'])->name('detail.view');
+    Route::post('/detail/addcomment/', [DetailController::class, 'addComment'])->name('detail.addComment');
+    Route::get('/detail/getcomments/{tramite}', [DetailController::class, 'getComments'])->name('detail.getComments');
+    Route::post('/detail/changedependencia/', [DetailController::class, 'changeDependencia'])->name('detail.changeDependencia');
+    Route::post('/detail/changeEstado/', [DetailController::class, 'changeEstado'])->name('detail.changeEstado');
 
 });

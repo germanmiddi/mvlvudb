@@ -156,42 +156,21 @@
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'genero.edit',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " class="block px-4 py-2 text-sm">
-                                                            Editar</a>
+                                                            <a :href="route('genero.edit',data.tramite.id)" class="block px-4 py-2 text-sm">
+                                                                Editar</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
-                                                            Ver</a>
+                                                            <a :href="route('detail.view', data.tramite.id)" class="block px-4 py-2 text-sm">
+                                                                Detalle</a>
                                                         </MenuItem>
+
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'pdf.acusepdf',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " target="_blank" class="block px-4 py-2 text-sm">
-                                                            Imprimir</a>
+                                                            <a :href="route('pdf.acusepdf',data.tramite.id)" target="_blank" class="block px-4 py-2 text-sm">
+                                                                Imprimir</a>
                                                         </MenuItem>
                                                     </div>
 
-                                                    <!--  <div class="py-1 text-left">
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" @click="createInvoice(order.order)"
-                                                        :class="[(active ? 'bg-gray-100 text-gray-900 ' : 'text-gray-700 hover:bg-gray-50', 'block px-4 py-2 text-sm'),
-                                                        (order.bill_status != 'finished' ? 'hover:bg-blue-200' : 'pointer-events-none text-gray-400')]">
-                                                        Emitir Factura</a>
-                                                    </MenuItem>
-                                                </div>
-
-                                                -->
                                                 </MenuItems>
                                             </transition>
                                         </Menu>

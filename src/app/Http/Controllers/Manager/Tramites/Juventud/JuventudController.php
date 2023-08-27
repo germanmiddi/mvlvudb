@@ -341,6 +341,7 @@ class JuventudController extends Controller
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
                             'dependencia_id' => $dependencia['dependencia_id'],
                             'sede_id' => $request['sede_id'],
+                            'estado_id' => 1, // Estado Abierto
                         ]
                     );
 

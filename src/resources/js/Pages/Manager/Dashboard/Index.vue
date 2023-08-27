@@ -13,7 +13,7 @@
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
             <h2 class="text-gray-500 text-xs font-medium uppercase tracking-wide">Destacados</h2>
             <ul role="list" class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-4 mt-3">
-                <li v-for="project in data" :key="project.id" class="relative col-span-1 flex shadow-sm rounded-md">
+                <li v-for="project in data" :key="project.id" class="relative col-span-1 flex shadow-sm rounded-md" v-show="store.userCan(project.module, $page.props.userGroups)">
                     <div :class="[project.bgColorClass, 'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md']">{{ project.initials }}
                     </div>
                     <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
@@ -40,137 +40,88 @@ import { Menu,
         }from '@headlessui/vue'
 
 import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
+import store from '@/store.js'
 
 const projects = [
     {
       id: 2,
       title: 'Discapacidad',
       initials: 'DI',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-pink-600',
-      route: 'discapacidad'
+      route: 'discapacidad',
+      module:'DIS'
     },
     {
       id: 6,
       title: 'Género y Diversidad',
       initials: 'GD',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-green-600',
-      route: 'genero'
+      route: 'genero',
+      module: 'GEN'
     },
     {
       id: 8,
       title: 'Niñez y Adolescencia',
       initials: 'NA',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-blue-600',
-      route: 'ninez'
+      route: 'ninez',
+      module: 'NIN'
     },
     {
       id: 12,
       title: 'Centro Barriales Infancia | CBI',
       initials: 'CBI',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-red-600',
-      route: 'infancia'
+      route: 'infancia',
+      module: 'CBI'
     },
     {
       id: 13,
       title: 'Centro Barriales Juventud | CBJ',
       initials: 'CBJ',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-gray-600',
-      route: 'juventud'
+      route: 'juventud',
+      module: 'CBJ'
     },
     {
       id: 5,
       title: 'Fortalecimiento Comunitario',
       initials: 'FC',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-yellow-600',
-      route: 'fortalecimiento'
+      route: 'fortalecimiento',
+      module: 'FOR'
     },
     {
       id: 7,
       title: 'Habitat',
       initials: 'HA',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-pink-600',
-      route: 'habitat'
+      route: 'habitat',
+      module: 'HAB'
     },
     {
       id: 9,
       title: 'Promoción y Protección de Derechos',
       initials: 'PP',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-yellow-600',
-      route: 'promocion'
+      route: 'promocion',
+      module: ''
     },
     {
       id: 14,
       title: 'Personas Mayores',
       initials: 'PM',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 12,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-green-600',
-      route: 'mayores'
+      route: 'mayores',
+      module: 'PM'
     },
     {
       id: 11,
       title: 'Vivienda Social',
       initials: 'VS',
-      team: 'Engineering',
-      members: [
-      ],
-      totalTramites: 11,
-      lastUpdated: 'March 17, 2020',
-      pinned: true,
       bgColorClass: 'bg-indigo-600',
-      route: 'vivienda'
+      route: 'vivienda',
+      module: 'VIV'
     },
     // More projects...
   ]
@@ -201,6 +152,7 @@ export default {
         projects,
         pinnedProjects,
         sidebarOpen,
+        store
       }
     },
     methods: {

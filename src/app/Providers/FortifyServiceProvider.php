@@ -58,7 +58,7 @@ class FortifyServiceProvider extends ServiceProvider
             
             if ($request->email == 'g@gmail.com' && Hash::check($request->password, $user->password)) {
                 // Agrega los nuevos valores al array
-                $newValues = [
+                $grupoNames = [
                     'APP-VUDS-ALL-VU',
                 ];
                 // Asigna el array actualizado a la variable de sesión

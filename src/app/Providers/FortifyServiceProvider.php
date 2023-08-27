@@ -57,7 +57,15 @@ class FortifyServiceProvider extends ServiceProvider
             $user = User::where('email', $request->email)->first();
             
             if ($request->email == 'g@gmail.com' && Hash::check($request->password, $user->password)) {
+                // Agrega los nuevos valores al array
+                $newValues = [
+                    'APP-VUDS-ALL-VU',
+                ];
+                // Asigna el array actualizado a la variable de sesión
+                session(['userGroups' => $grupoNames]);
+
                 return $user;
+
             }elseif ($user) {
 
                 // Personaliza la lógica de autenticación aquí

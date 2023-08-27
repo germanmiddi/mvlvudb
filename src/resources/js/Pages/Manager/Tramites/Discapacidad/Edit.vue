@@ -518,7 +518,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-span-6 sm:col-span-6 ">
+							<div class="col-span-12 sm:col-span-10 ">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
 									<thead class="bg-gray-50">
 										<tr>

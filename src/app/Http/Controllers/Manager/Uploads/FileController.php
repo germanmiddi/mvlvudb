@@ -45,7 +45,7 @@ class FileController extends Controller
                 $extension = $request['file']->getClientOriginalExtension();
 
                 $tramite = Tramite::where('id', $request['tramite_id'])->first();
-                $fileName = $tramite->dependencia['description'].'-ID'.$request['tramite_id'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
+                $fileName = $tramite->dependencia['description'].'-ID'.$request['tramite_id'].'-'.Carbon::now()->timestamp.'.'.$extension; // Generar un nuevo nombre para el archivo
                 Storage::putFileAs('public', $request['file'], $fileName);
         
                 $archivo = Archivo::Create(
@@ -88,7 +88,23 @@ class FileController extends Controller
             */
 
             preg_match("/^data:image\/(.*);base64/i",$data['base64'], $extension); 
+            // preg_match("/^data:image\/(.*);base64/i", $data['base64'], $extensionMatches);
 
+            if (!isset($extension[1])) {
+
+                    $dataUri = $data['base64'];
+
+                    // Obtener el tipo de contenido y la extensión
+                    list($contentType, $base64Data) = explode(',', $dataUri, 2);
+
+                    if (strpos($contentType, 'image/') === 0) {
+                        $extension[1] = str_replace('image/', '', $contentType);
+                    } else {
+                        throw new \Exception("No se encontró una extensión válida en la cadena Data URI");
+                    }
+
+
+            }
 
             //$extension = $data['file']->getClientOriginalExtension();
             $fileName = $data['dependencia'].'-ID'.$data['tramite_id'].'-'.Carbon::now().''.Str::random(5).'.'.$extension[1]; // Generar un nuevo nombre para el archivo

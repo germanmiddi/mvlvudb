@@ -35,6 +35,10 @@ use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\Dependencia;
+use App\Models\Manager\TramiteEstado;
+
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -74,6 +78,7 @@ class DiscapacidadController extends Controller
             ]
         );
     }
+
     //store
     public function store(Request $request)
     {
@@ -234,7 +239,9 @@ class DiscapacidadController extends Controller
         
                             'canal_atencion_id' => $request['canal_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
-                            'dependencia_id' => $dependencia['dependencia_id']
+                            'dependencia_id' => $dependencia['dependencia_id'],
+
+                            'estado_id' => 1 // Abierto
                         ]
                     );
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
@@ -517,4 +524,46 @@ class DiscapacidadController extends Controller
                 'tipo_tramite' => $tramite->tipoTramite
             ]);
     }
+
+    // public function view($id){
+
+    //     return Inertia::render('Manager/Tramites/Discapacidad/Details',
+    //         [   
+    //             'estados' => TramiteEstado::all(),
+    //             'dependencias' => Dependencia::all(),
+    //             'tramite' => Tramite::where('id', $id)
+    //                                 ->with('persons',
+    //                                        'persons.contact',
+    //                                        'persons.address', 
+    //                                        'persons.address.localidad',
+    //                                        'archivos', 
+    //                                        'tipoTramite', 
+    //                                        'canalAtencion',
+    //                                        'sede',
+    //                                        'rol_tramite',
+    //                                        'dependencia',
+    //                                        'parentesco',
+    //                                        'persons.cud',
+    //                                        'cbi_data',
+    //                                        'cbj_data',
+    //                                        'familiares',
+    //                                        'contactos',
+    //                                        'persons.education',
+    //                                        'persons.education.nivelEducativo',
+    //                                        'persons.social',
+    //                                        'persons.social.tipoOcupacion',
+    //                                        'persons.social.coberturaMedica',
+    //                                        'persons.social.tipoPension',
+    //                                        'persons.social.programaSocial',
+    //                                        'comments',
+    //                                        'comments.dependencia',
+    //                                        'comments.user',
+    //                                        'estado',
+
+    //                                        )
+    //                                 ->get()
+    //         ]
+    //     );
+
+    // }
 }

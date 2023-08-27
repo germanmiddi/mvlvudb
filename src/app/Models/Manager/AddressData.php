@@ -33,7 +33,7 @@ class AddressData extends Model
 
     public function localidad()
     {
-        return $this->belongsTo(Localidades::class, 'localidad_id');
+        return $this->belongsTo(Localidad::class, 'localidad_id');
     }
 
     public function pais()

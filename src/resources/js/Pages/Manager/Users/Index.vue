@@ -91,19 +91,15 @@
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Fecha
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nombre
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        DNI
+                                        Email
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Tramite
+                                        Grupos
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
@@ -112,80 +108,18 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="data in tramites.data" :key="data.tramite.id">
+                                <tr v-for="user in users.data" :key="user.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ fechaFormateada(data.tramite.fecha) }}
+                                        {{ user.name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div v-html=" namePersons(data.tramite.persons) "></div>
+                                        {{ user.email }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
+                                       
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.tipo_tramite.description }}
-                                    </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium">
-                                        <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                            <PencilSquareIcon class="w-5 h-5 text-purple-700 mr-2" />
-                                        </a> -->
-                                        <Menu as="div" class="inline-node">
-                                            <div>
-                                                <MenuButton class="btn-blue h-7">
-                                                    <EllipsisVerticalIcon name="options-vertical"
-                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
-                                                </MenuButton>
-                                            </div>
-                                            <transition enter-active-class="transition ease-out duration-100"
-                                                enter-from-class="transform opacity-0 scale-95"
-                                                enter-to-class="transform opacity-100 scale-100"
-                                                leave-active-class="transition ease-in duration-75"
-                                                leave-from-class="transform opacity-100 scale-100"
-                                                leave-to-class="transform opacity-0 scale-95">
-                                                <MenuItems
-                                                    class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-                                                    <div class="py-1 text-left">
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'ninez.edit',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " class="block px-4 py-2 text-sm">
-                                                            Editar</a>
-                                                        </MenuItem>
-
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
-                                                            Ver</a>
-                                                        </MenuItem>
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route(
-                                                            'pdf.acusepdf',
-                                                            data
-                                                                .tramite
-                                                                .id
-                                                        )
-                                                            " target="_blank" class="block px-4 py-2 text-sm">
-                                                            Imprimir</a>
-                                                        </MenuItem>
-                                                    </div>
-
-                                                    <!--  <div class="py-1 text-left">
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" @click="createInvoice(order.order)"
-                                                        :class="[(active ? 'bg-gray-100 text-gray-900 ' : 'text-gray-700 hover:bg-gray-50', 'block px-4 py-2 text-sm'),
-                                                        (order.bill_status != 'finished' ? 'hover:bg-blue-200' : 'pointer-events-none text-gray-400')]">
-                                                        Emitir Factura</a>
-                                                    </MenuItem>
-                                                </div>
-
-                                                -->
-
-                                                </MenuItems>
-                                            </transition>
-                                        </Menu>
+                                       
                                     </td>
                                 </tr>
                             </tbody>
@@ -193,19 +127,19 @@
                         <hr>
                         <div class="flex justify-between mx-5 my-3 px-2 items-center">
                             <div>
-                                Mostrando: {{ this.tramites.from }} a {{ this.tramites.to }} - Entradas encontradas:
-                                {{ this.tramites.total }}
+                                <!-- Mostrando: {{ this.tramites.from }} a {{ this.tramites.to }} - Entradas encontradas:
+                                {{ this.tramites.total }} -->
                             </div>
 
                             <div class="flex flex-wrap -mb-1">
-                                <template v-for="link in tramites.links">
+                                <template v-for="link in users.links" :key="link.id">
                                     <div v-if="link.url === null"
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
                                         v-html="link.label"> </div>
                                     <div v-else
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
                                         :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
-                                        @click="getTramitesPaginate(link.url)" v-html="link.label"> </div>
+                                        @click="getUsersPaginate(link.url)" v-html="link.label"> </div>
                                 </template>
                             </div>
                         </div>
@@ -219,8 +153,7 @@
 <script>
 import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import Datepicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
+import { Inertia } from '@inertiajs/inertia-vue3';
 
 import {
     ChevronRightIcon,
@@ -243,12 +176,11 @@ export default {
         ChevronRightIcon,
         PencilSquareIcon,
         ArrowsPointingOutIcon,
-        Toast,
-        Datepicker
+        Toast
     },
     data() {
         return {
-            tramites: "",
+            users: "",
             toastMessage: "",
             labelType: "info",
             message: "",
@@ -256,7 +188,8 @@ export default {
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            userEmail:""
+            userEmail:"",
+            userGroups: [],
         };
     },
     setup() {
@@ -268,37 +201,26 @@ export default {
         clearMessage() {
             this.toastMessage = "";
         },
-        async getTramites() {
-            this.tramites = ''
+        async getUsers() {
+            this.users = ''
             let filter = `&length=${this.length}`
 
             if (this.filter.name) {
-                filter += `&name=${JSON.stringify(this.filter.name)}`
+                filter += `&search=${JSON.stringify(this.search)}`
             }
 
-            if (this.filter.num_documento) {
-                filter += `&num_documento=${JSON.stringify(this.filter.num_documento)}`
-            }
-
-            if (this.filter.date) {
-                filter += `&date=${JSON.stringify(this.filter.date)}`
-            }
-
-            if (this.filter.tipo_tramite_id) {
-                filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
-            }
-
-            const get = `${route('ninez.list')}?${filter}`
+            const get = `${route('users.list')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
-            this.tramites = await response.json();
+            this.users = await response.json();
+
         },
-        async getTramitesPaginate(link) {
+        async getUsersPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })
 
-            this.tramites = await response.json()
-            //console.log(this.orders)  
+            this.users = await response.json()
+            
         },
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
@@ -313,33 +235,8 @@ export default {
             const mesFormateado = mes < 10 ? `0${mes}` : mes;
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
+        },
 
-            return fecha;
-        },
-        namePersons(data){
-            let name_titular = ''
-            let name_benef = ''
-            data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
-                    name_titular = element.lastname + ', '+element.name
-                }else{
-                    name_benef = element.lastname + ', '+element.name
-                }
-            });
-            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
-        },
-        dniPersons(data){
-            let name_titular = ''
-            let name_benef = ''
-            data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
-                    name_titular = element.num_documento
-                }else{
-                    name_benef = element.num_documento
-                }
-            });
-            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
-        }
     },
     mounted() {
         if (this.toast) {
@@ -351,8 +248,8 @@ export default {
                 this.toastMessage = this.toast["message"];
             }
         }
-        this.getTramites();
-    },
+        this.getUsers();
+    }  
 };
 </script>
 

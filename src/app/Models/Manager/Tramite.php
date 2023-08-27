@@ -21,7 +21,8 @@ class Tramite extends Model
         'tipo_institucion_id',
         'person_id',
         'dependencia_id',
-        'parentesco_id'
+        'parentesco_id',
+        'estado_id',
     ];
 
     public function sede()
@@ -92,4 +93,14 @@ class Tramite extends Model
     {
         return $this->hasMany(ContactoEmergencia::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(TramiteComment::class);
+    }
+
+    public function estado()
+    {
+        return $this->belongsTo(TramiteEstado::class, 'estado_id');
+    }    
 }

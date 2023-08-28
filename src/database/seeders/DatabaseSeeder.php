@@ -73,7 +73,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'monica@test.com',
             'password' => bcrypt('Moni123')
         ]);
-        */
         
 
     }

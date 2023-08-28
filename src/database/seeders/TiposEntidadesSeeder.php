@@ -21,7 +21,7 @@ class TiposEntidadesSeeder extends Seeder
             ['id' => 3, 'description' => 'Discapacidad'],
             ['id' => 4, 'description' => 'Scouts'],
             ['id' => 5, 'description' => 'Culto y Colectividades'],
-            ['id' => 6, 'description' => 'Totarys y Leones'],
+            ['id' => 6, 'description' => 'Rotary y Leones'],
             ['id' => 7, 'description' => 'Salud'],
             ['id' => 8, 'description' => 'Entidades en Gral'],
         ];

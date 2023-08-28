@@ -16,12 +16,8 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class DiscapacidadImport implements ToModel,WithHeadingRow
+class FortalecimientoImport implements ToModel,WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
-
     private $rows = 0;
     private $rowsSuccess = 0;
     private $rowsError = 0;
@@ -55,7 +51,7 @@ class DiscapacidadImport implements ToModel,WithHeadingRow
                         ],
                         [
                             'cant_hijos' => $row['aditional_cant_hijos'],
-                            'situacion_conyugal_id' => $row['aditional_situacion_conyugal_id'] !== 'NULL' ? $row['aditional_situacion_conyugal_id'] : null
+                            'situacion_conyugal_id' => $row['aditional_situacion_conyugal_id'] !== 'NULL' && $row['aditional_situacion_conyugal_id'] !== -1 ? $row['aditional_situacion_conyugal_id'] : null
                         ]
                     );
         
@@ -97,7 +93,7 @@ class DiscapacidadImport implements ToModel,WithHeadingRow
                             'google_address' => $row['address_google_address'] !== 'NULL' ? $row['address_google_address'] : null,
                             'pais_id' => $row['address_pais_id'] !== 'NULL' && $row['address_pais_id'] !== -1 ? $row['address_pais_id'] : null,
                             'localidad_id' => $row['address_localidad_id'] !== 'NULL' && $row['address_localidad_id'] !== -1 ? $row['address_localidad_id'] : null,
-                            'barrio_id' => $row['address_barrio_id'] !== 'NULL' ? $row['address_barrio_id'] : null
+                            'barrio_id' => $row['address_barrio_id'] !== 'NULL' && $row['address_barrio_id'] !== -1 ? $row['address_barrio_id'] : null
         
                         ]
                     );
@@ -113,17 +109,6 @@ class DiscapacidadImport implements ToModel,WithHeadingRow
                             'email' => $row['contact_email'] !== 'NULL' ? $row['contact_email'] : null
                         ]
                     );
-        
-                    //cud
-                    Cud::updateOrCreate(
-                        [
-                            'person_id' => $person->id
-                        ],
-                        [
-                            'codigo' => $row['cud_codigo'] !== 'NULL' ? $row['cud_codigo'] : null,
-                            'diagnostico' => $row['cud_diagnostico'] !== 'NULL' ? $row['cud_diagnostico'] : null
-                        ]
-                    );
 
                     $tramite_data = Tramite::Create(
                         [
@@ -137,16 +122,17 @@ class DiscapacidadImport implements ToModel,WithHeadingRow
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                     ++$this->rowsSuccess; 
-                    Log::info("Se ha importado correctamente la entidad N° , bajo el ID de entidad N° ", ["Modulo" => "ImportEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                    Log::info("Se ha importado correctamente la entidad N° , bajo el ID de entidad N° ", ["Modulo" => "FortalecimientoEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
                 }else{
                     ++$this->rowsDuplicados; 
                     $this->registrosDuplidados .= ' - Entidad N° , correspondiente a la Linea N° '. strval($this->rows+1).' del archivo ha sido cargado previamente. <br>'; 
-                    Log::info("La entidad N° , ha sido cargado previamente", ["Modulo" => "ImportEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                    Log::info("La entidad N° , ha sido cargado previamente", ["Modulo" => "FortalecimientoEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
                 }
             }catch (\Throwable $th) {
+                dd($th);
                 ++$this->rowsError;
                 $this->entidadesNoRegistradas .= ' - Entidad N° , correspondiente a la Linea N° '. strval($this->rows+1).' del archivo no se ha sido almacenar. Error: '.strstr($th->getMessage(), "(SQL", true).'<br>'; 
-                Log::error("Se ha generado un error al momento de almacenar la entidad N° ", ["Modulo" => "ImportEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+                Log::error("Se ha generado un error al momento de almacenar la entidad N° ", ["Modulo" => "FortalecimientoEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             }
         return; 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager\Import;
 use App\Http\Controllers\Controller;
 use App\Imports\DiscapacidadImport;
 use App\Imports\EntidadImport;
+use App\Imports\FortalecimientoImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
 use Illuminate\Http\Request;
@@ -47,7 +48,9 @@ class ImportController extends Controller
                         case 2:
                             $import = new DiscapacidadImport();
                             break;
-                        
+                        case 5:
+                            $import = new FortalecimientoImport();
+                            break;
                         default:
                             return response()->json(['message' => 'No se ha podido detectar una Dependencia Valida'], 203);
                             break;

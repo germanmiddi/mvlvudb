@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class PromocionImport implements ToModel,WithHeadingRow, WithBatchInserts
+class MayoresImport implements ToModel,WithHeadingRow, WithBatchInserts
 {
     private $rows = 0;
     private $rowsSuccess = 0;
@@ -125,7 +125,7 @@ class PromocionImport implements ToModel,WithHeadingRow, WithBatchInserts
 
                 ++$this->rowsDuplicados;
                 $this->registrosDuplidados .= ' - Tramite correspondiente a la Linea N° ' . strval($this->rows + 1) . ' del archivo ha sido cargado previamente. <br>';
-                //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportPromocion:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             } else {
                 $tramite_data = Tramite::Create(
                     [
@@ -141,14 +141,14 @@ class PromocionImport implements ToModel,WithHeadingRow, WithBatchInserts
                 $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                 ++$this->rowsSuccess;
-                //Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportPromocion:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                //Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             }
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . strstr($th->getMessage(), "(SQL", true) . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "ImportPromocion:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }
@@ -168,7 +168,7 @@ class PromocionImport implements ToModel,WithHeadingRow, WithBatchInserts
             $retorno .= $this->entidadesNoRegistradas;
         }
 
-        Log::info("Importador de Tramite de Promocion, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+        Log::info("Importador de Tramite de Mayores de Edad, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
 
         if ($this->registrosDuplidados != '') {
             $retorno .= '<br>Registros Duplicados<br>';

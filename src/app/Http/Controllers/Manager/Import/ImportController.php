@@ -8,10 +8,12 @@ use App\Imports\EntidadImport;
 use App\Imports\FortalecimientoImport;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
+use App\Imports\MayoresImport;
 use App\Imports\PromocionImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -50,19 +52,28 @@ class ImportController extends Controller
                 
                     switch ($request['dependencia_id']) {
                         case 2:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite DISCAPACIDAD. <br>');
                             $import = new DiscapacidadImport();
                             break;
                         case 5:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite FORTALECIMIENTO. <br>');
                             $import = new FortalecimientoImport();
                             break;
                         case 6:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite GENERO. <br>');
                             $import = new GeneroImport();
                             break;
                         case 7:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite HABITAT. <br>');
                             $import = new HabitatImport();
                             break;
                         case 9:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite PROMOCIONES. <br>');
                             $import = new PromocionImport();
+                            break;
+                        case 14:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite MAYORES. <br>');
+                            $import = new MayoresImport();
                             break;
                         default:
                             return response()->json(['message' => 'No se ha podido detectar una Dependencia Valida'], 203);

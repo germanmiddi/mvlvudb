@@ -235,8 +235,8 @@ export default {
                     }
                 } catch (error) {
                     console.log(error);
-                    this.labelType = "danger";
-                    this.toastMessage = "No se ha podido finalizar el proceso de importación.";
+                    this.labelType = "info";
+                    this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
                 }
                 this.loadingDependencia = false
             }else{

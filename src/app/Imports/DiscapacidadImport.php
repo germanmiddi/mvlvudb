@@ -33,8 +33,6 @@ class DiscapacidadImport implements ToModel,WithHeadingRow, WithBatchInserts
 
     public function model(array $row)
     {
-        set_time_limit(600);
-        DB::beginTransaction();
         ++$this->rows;  
             try {
                     $person = Person::updateOrCreate(
@@ -142,7 +140,7 @@ class DiscapacidadImport implements ToModel,WithHeadingRow, WithBatchInserts
         
                         ++$this->rowsDuplicados;
                         $this->registrosDuplidados .= ' - Tramite correspondiente a la Linea N° ' . strval($this->rows + 1) . ' del archivo ha sido cargado previamente. <br>';
-                        Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportDiscapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                        //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportDiscapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
                     } else {
                         $tramite_data = Tramite::Create(
                             [
@@ -158,7 +156,7 @@ class DiscapacidadImport implements ToModel,WithHeadingRow, WithBatchInserts
                         $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
         
                         ++$this->rowsSuccess;
-                        Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportDiscapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                        //Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportDiscapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
                     }
                     DB::commit();
                 } catch (\Throwable $th) {
@@ -186,12 +184,15 @@ class DiscapacidadImport implements ToModel,WithHeadingRow, WithBatchInserts
             $retorno .= $this->entidadesNoRegistradas;
         }
 
+        Log::info("Importador de Tramite de Discapacidad, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+
         if($this->registrosDuplidados != ''){
             $retorno .= '<br>Registros Duplicados<br>';
             $retorno .= '=====================================<br>';
             $retorno .= $this->registrosDuplidados;
         }
 
+        Log::info($retorno);
         return $retorno;
     }
 

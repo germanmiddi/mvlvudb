@@ -16,9 +16,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
 
-class GeneroImport  implements ToModel,WithHeadingRow
+class GeneroImport  implements ToModel,WithHeadingRow, WithBatchInserts
 {
     private $rows = 0;
     private $rowsSuccess = 0;
@@ -29,8 +30,6 @@ class GeneroImport  implements ToModel,WithHeadingRow
 
     public function model(array $row)
     {
-        set_time_limit(60);
-        DB::beginTransaction();
         ++$this->rows;  
         try {
             $person = Person::updateOrCreate(
@@ -127,7 +126,7 @@ class GeneroImport  implements ToModel,WithHeadingRow
 
                 ++$this->rowsDuplicados;
                 $this->registrosDuplidados .= ' - Tramite correspondiente a la Linea N° ' . strval($this->rows + 1) . ' del archivo ha sido cargado previamente. <br>';
-                Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportGenero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+            //    Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportGenero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             } else {
                 $tramite_data = Tramite::Create(
                     [
@@ -143,7 +142,7 @@ class GeneroImport  implements ToModel,WithHeadingRow
                 $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                 ++$this->rowsSuccess;
-                Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportGenero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+            //    Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportGenero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             }
             DB::commit();
         } catch (\Throwable $th) {
@@ -170,12 +169,18 @@ class GeneroImport  implements ToModel,WithHeadingRow
             $retorno .= $this->entidadesNoRegistradas;
         }
 
+        Log::info("Importador de Tramite de Genero, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+
         if ($this->registrosDuplidados != '') {
             $retorno .= '<br>Registros Duplicados<br>';
             $retorno .= '=====================================<br>';
             $retorno .= $this->registrosDuplidados;
         }
-
         return $retorno;
+    }
+
+    public function batchSize(): int
+    {
+        return 1000;
     }
 }

@@ -215,7 +215,7 @@ export default {
             this.loadingEntidad = false
         },
         async importarDependencia() {
-            if(this.dependencia_id != ''){
+                if(this.dependencia_id != ''){
                 this.loadingDependencia = true
                 this.status = ''
                 let rt = route("import.dependencia");
@@ -235,6 +235,8 @@ export default {
                     }
                 } catch (error) {
                     console.log(error);
+                    this.labelType = "danger";
+                    this.toastMessage = "No se ha podido finalizar el proceso de importación.";
                 }
                 this.loadingDependencia = false
             }else{

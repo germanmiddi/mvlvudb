@@ -48,7 +48,8 @@ class DatabaseSeeder extends Seeder
             EscuelasOrientacionesSeeder::class,
             CargosAutoridadesSeeder::class,
             TiposEntidadesSeeder::class,
-            TiposActividadesSeeder::class
+            TiposActividadesSeeder::class,
+            TramiteEstadosSeeder::class
 
         ]);
 
@@ -74,6 +75,5 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Moni123')
         ]);
         
-
     }
 }

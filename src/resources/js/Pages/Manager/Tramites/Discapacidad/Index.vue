@@ -33,24 +33,41 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-12 sm:col-span-3 ">
+                        <div class="col-span-12 sm:col-span-1 ">
+                            <label for="tramite_id" class="block text-sm font-medium text-gray-700">N° Tramite</label>
+                            <input v-model="filter.tramite_id" type="number" name="tramite_id" id="tramite_id" autocomplete="name-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-2 ">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        <div class="col-span-12 sm:col-span-3 ">
+                        
+                        <div class="col-span-12 sm:col-span-2 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        <div class="col-span-12 sm:col-span-3 ">
+                        <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
                             <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
                                     :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
-                        <div class="col-span-12 sm:col-span-3">
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
+                            <select v-model="filter.estado_id" id="estado_id" name="estado_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">TODOS</option>
+                                <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
+                                    estado.description
+                                }}</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
                                 Tramite</label>
                             <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
@@ -77,6 +94,11 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
+                                        N° Tramite
+                                    </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Fecha
@@ -101,6 +123,9 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in tramites.data" :key="data.tramite.id">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-purple-500' : 'border-l-8 border-green-500' ">
+                                        {{ data.tramite.id }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ fechaFormateada(data.tramite.fecha) }}
                                     </td>
@@ -158,17 +183,6 @@
                                                         </MenuItem>
                                                     </div>
 
-                                                    <!--  <div class="py-1 text-left">
-                                                    <MenuItem v-slot="{ active }">
-                                                    <a href="#" @click="createInvoice(order.order)"
-                                                        :class="[(active ? 'bg-gray-100 text-gray-900 ' : 'text-gray-700 hover:bg-gray-50', 'block px-4 py-2 text-sm'),
-                                                        (order.bill_status != 'finished' ? 'hover:bg-blue-200' : 'pointer-events-none text-gray-400')]">
-                                                        Emitir Factura</a>
-                                                    </MenuItem>
-                                                </div>
-
-                                                -->
-
                                                 </MenuItems>
                                             </transition>
                                         </Menu>
@@ -219,7 +233,8 @@ import Toast from "@/Layouts/Components/Toast.vue";
 export default {
     props: {
         toast: Object,
-        tiposTramite: Object
+        tiposTramite: Object,
+        estados: Object
     },
     components: {
         Menu,
@@ -255,6 +270,10 @@ export default {
             this.tramites = ''
             let filter = `&length=${this.length}`
 
+            if (this.filter.tramite_id) {
+                filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
+            }
+
             if (this.filter.name) {
                 filter += `&name=${JSON.stringify(this.filter.name)}`
             }
@@ -265,6 +284,10 @@ export default {
 
             if (this.filter.date) {
                 filter += `&date=${JSON.stringify(this.filter.date)}`
+            }
+
+            if (this.filter.estado_id) {
+                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`
             }
 
             if (this.filter.tipo_tramite_id) {

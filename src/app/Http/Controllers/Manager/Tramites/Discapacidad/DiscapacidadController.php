@@ -52,6 +52,7 @@ class DiscapacidadController extends Controller
         return Inertia::render('Manager/Tramites/Discapacidad/Index',
         [
             'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
+            'estados' => TramiteEstado::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -477,6 +478,10 @@ class DiscapacidadController extends Controller
 
         $result->where('dependencia_id', 2);
 
+        if(request('tramite_id')){
+            $tramite_id = json_decode(request('tramite_id'));
+            $result->where('id', $tramite_id);
+        }
 
         if(request('name')){
             $name = json_decode(request('name'));  
@@ -513,6 +518,11 @@ class DiscapacidadController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
+        if(request('estado_id')){
+            $estado_id = json_decode(request('estado_id'));
+            $result->where('estado_id', $estado_id);
+        }
+
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
@@ -521,7 +531,8 @@ class DiscapacidadController extends Controller
                 'persons'   => $tramite->persons,
                 'contact_data' => $tramite->persons[0]->contact,
                 'rol_tramite' => $tramite->rol_tramite[0]['description'],
-                'tipo_tramite' => $tramite->tipoTramite
+                'tipo_tramite' => $tramite->tipoTramite,
+                'estado' => $tramite->estado
             ]);
     }
 

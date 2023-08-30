@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Imports\DiscapacidadImport;
 use App\Imports\EntidadImport;
 use App\Imports\FortalecimientoImport;
+use App\Imports\GeneroImport;
+use App\Imports\HabitatImport;
+use App\Imports\PromocionImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
 use Illuminate\Http\Request;
@@ -40,6 +43,7 @@ class ImportController extends Controller
 
     public function importDependencia(Request $request)
     {
+
         if( $request->file('file')){
             try {
                 $archivoCSV = $request->file('file');
@@ -51,12 +55,22 @@ class ImportController extends Controller
                         case 5:
                             $import = new FortalecimientoImport();
                             break;
+                        case 6:
+                            $import = new GeneroImport();
+                            break;
+                        case 7:
+                            $import = new HabitatImport();
+                            break;
+                        case 9:
+                            $import = new PromocionImport();
+                            break;
                         default:
                             return response()->json(['message' => 'No se ha podido detectar una Dependencia Valida'], 203);
                             break;
                     }
                     Excel::import($import, $archivoCSV);
                     $status = $import->getStatus();
+
                     return response()->json(['message' => 'Se ha finalizado el proceso de importacion de tramite.', 'status' => $status], 200);
                 
             } catch (\Throwable $th) {

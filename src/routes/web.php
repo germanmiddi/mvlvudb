@@ -183,5 +183,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/detail/getcomments/{tramite}', [DetailController::class, 'getComments'])->name('detail.getComments');
     Route::post('/detail/changedependencia/', [DetailController::class, 'changeDependencia'])->name('detail.changeDependencia');
     Route::post('/detail/changeEstado/', [DetailController::class, 'changeEstado'])->name('detail.changeEstado');
+    Route::post('/detail/changeAssigment/', [DetailController::class, 'changeAssigment'])->name('detail.changeAssigment');
+    
 
 });

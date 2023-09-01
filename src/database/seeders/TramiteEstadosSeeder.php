@@ -17,11 +17,18 @@ class TramiteEstadosSeeder extends Seeder
     public function run()
     {
         $estados = [ 
-                        [ 'description' => 'abierto',
+                        [ 'id'  => 1,
+                          'description' => 'abierto',
                           'created_at' => now(),
                           'updated_at' => now() ],
                         
-                        [ 'description' => 'cerrado',
+                        [ 'id'  => 2,
+                          'description' => 'cerrado',
+                          'created_at' => now(),
+                          'updated_at' => now()],
+
+                        [ 'id'  => 3,
+                          'description' => 'en proceso',
                           'created_at' => now(),
                           'updated_at' => now()],
         ];

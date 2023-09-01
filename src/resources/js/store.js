@@ -26,7 +26,31 @@ const store = reactive({
             return true; // Si hay un grupo que contiene 'ALL', permitimos el acceso sin verificar el módulo
         }          
         return groups.some(group => group.includes(module)); // Verificamos si el módulo está en el array de grupos
-    }
+    },
+
+    fechaFormateada(fecha) {
+        const fechaObjeto = new Date(fecha);
+        fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+
+        const dia = fechaObjeto.getDate();
+        const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
+        const anio = fechaObjeto.getFullYear();
+    
+        const horas = fechaObjeto.getHours();
+        const minutos = fechaObjeto.getMinutes();
+        const segundos = fechaObjeto.getSeconds();
+
+        // Agregar ceros iniciales si es necesario
+        const diaFormateado = dia < 10 ? `0${dia}` : dia;
+        const mesFormateado = mes < 10 ? `0${mes}` : mes;
+    
+        const horasFormateadas = horas < 10 ? `0${horas}` : horas;
+        const minutosFormateados = minutos < 10 ? `0${minutos}` : minutos;
+
+        return `${diaFormateado}/${mesFormateado}/${anio} ${horasFormateadas}:${minutosFormateados}`;
+    },
+
+
 
 })
 

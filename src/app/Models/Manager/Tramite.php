@@ -23,7 +23,8 @@ class Tramite extends Model
         'dependencia_id',
         'parentesco_id',
         'estado_id',
-        'num_tramite_legacy'
+        'num_tramite_legacy',
+        'assigned'
     ];
 
     public function sede()

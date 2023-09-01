@@ -1,0 +1,191 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
+
+class UsersMvlSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        User::create(['name' => 'LUCIANA CABRERA', 'email' => 	'luciana.caberra@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CLARA  BONAMICO ', 'email' => 	'clara.bonamico@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARCELA PALETTA', 'email' => 	'marcela.paletta@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DIEGO HERNAN PESA', 'email' => 	'diego.pesa@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MILAGROS BURKE', 'email' => 	'mmilagros.burke@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'elizabeth vila', 'email' => 	'elizabeth.vila@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA EUGENIA SAMOJEDEN', 'email' => 	'maria.samojeden@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NORA SCHESAK', 'email' => 	'nora.schesak@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SILVIA TEDESCO', 'email' => 	'silvia.tedesco@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'VALERIA CASTRO BENITEZ', 'email' => 	'daiana.castro@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'AILIN STRIZIC', 'email' => 	'ailin.strizic@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LAURA VAZQUEZ', 'email' => 	'mlaura.vazquez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JAVIER SAN MIGUEL', 'email' => 	'javier.sanmiguel@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'RAMON FERNANDEZ', 'email' => 	'ramon.fernandez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANTONELLA DEL PRETE', 'email' => 	'antonella.delprete@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JORGE NUVIOLA', 'email' => 	'jorge.nuviola@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANABELLA MOTTA', 'email' => 	'anabella.motta@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'Gian Franco   Covatta  ', 'email' => 	'gian.covatta@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LAURA CAJAL', 'email' => 	'laura.cajal@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'VERONICA FERNANDEZ MATTOS', 'email' => 	'veronica.fernandez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LAURA ALVAREZ', 'email' => 	'laura.alvarez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GABRIELA NIETO', 'email' => 	'gabriela.nieto@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'INES NOBREGA', 'email' => 	'ines.nobrega@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LAURA GALLIZI', 'email' => 	'laura.gallizi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALIA CARLE', 'email' => 	'natalia.carle@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA DOLORES PEREZ', 'email' => 	'mdolores.perez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SIXTA QUINTANA', 'email' => 	'sixta.quintana@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SYLVIA RODRIGUEZ', 'email' => 	'sylvian.rodriguez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FABIAN ZERON', 'email' => 	'fabian.zeron@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MONICA MENDOZA', 'email' => 	'monica.mendoza@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA CICCOLA', 'email' => 	'maria.ciccola@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CAROLINA PORTELA', 'email' => 	'carolina.portela@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ALEJANDRA LEZAMA', 'email' => 	'malejandra.lezana@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SANDRA DELL ORO', 'email' => 	'sandra.delloro@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SILVIA VIQUEIRA', 'email' => 	'silvia.viqueira@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LUCIANA RIVERO', 'email' => 	'luciana.rivero@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GASTON KIPERMAN', 'email' => 	'gaston.kiperman@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SANDRA SBERNA', 'email' => 	'sandra.sberna@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'BEATRIZ GAUNA', 'email' => 	'gabina.gauna@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GRACIELA LOZADA', 'email' => 	'graciela.losada@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALIA ARRIGONI', 'email' => 	'natalia.arrigoni@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'EUGENIA SEXTO', 'email' => 	'meugenia.sexto@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CLAUDIA PAOLANTONIO', 'email' => 	'claudia.paolantonio@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LUCIANO TERZANO', 'email' => 	'luciano.terzano@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GISELLE HUBERMAN', 'email' => 	'giselle.huberman@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LUCAS VIDART', 'email' => 	'lucas.vidart@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'IGNACIO ALBOR', 'email' => 	'ignacio.albor@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CARLOS LOPEZ', 'email' => 	'carlos.lopez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PILAR SANCHEZ ', 'email' => 	'pilar.sanchez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'KARINA CASTILLO GIMENZ', 'email' => 	'karina.castillo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DANIELA INTRIAGO', 'email' => 	'daniela.intriago@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'EDUARDO MANCILLA', 'email' => 	'nestor.mancilla@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALIA FOLGAR', 'email' => 	'natalia.folgar@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SOFIA VAZQUEZ', 'email' => 	'sofia.vasquez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NICOLAS  CANALE ', 'email' => 	'ncanale@gmail.com', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PAULA  COSTANTINO ', 'email' => 	'paula.costantino@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANA DEL BAO', 'email' => 	'ana.delbao@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PATRICIA  DEL AQUA ', 'email' => 	'patricia.dellacqua@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LUCRECIA  ANSALDI ', 'email' => 	'mlucrecia.ansaldi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SOFIA ORNELLA NESSI ', 'email' => 	'sofia.nessi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CARLA  FERRECCIO ', 'email' => 	'carla.ferreccio@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SABRINA RODRIGO', 'email' => 	'sabrina.rodrigo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'VANESA  CANSELMO ', 'email' => 	'vanesa.cancelmo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SILVIA  GARCIA MARTICH ', 'email' => 	'smarina.gmartich@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANTONIA  BALSALOBRE ', 'email' => 	'antonia.balsalobre@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LILIANA  CURA ', 'email' => 	'liliana.cura@mvl365.onmicrosoft.com', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ELISA  DROCCHI ', 'email' => 	'elisa.drocchi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARCELA  GARCIA ', 'email' => 	'marcela.garcia@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARTINA  DIAZ BALLESTER ', 'email' => 	'martina.dballester@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALIA  RIGAMONTI ', 'email' => 	'natalia.rigamonti@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SABRINA  ALBAREDA ', 'email' => 	'sabrina.albareda@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'AGATA  ONTIVEROS ', 'email' => 	'agata.ontiveros@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'IGNACIO GALERA', 'email' => 	'#N/A', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA PILAR MORENO', 'email' => 	'mpilar.moreno@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LUCIA  BRUNOTTO ', 'email' => 	'lucia.brunotto@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'patricia rosales', 'email' => 	'patricia.rosales@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ROBERTO SERRANO', 'email' => 	'rs9803512@gmail.com', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JORGE DANIEL ACOSTA', 'email' => 	'jorge.acosta@mvl365.onmicrosoft.com', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CARINA ALFONSO', 'email' => 	'carina.alfonso@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'VERONICA ZUCCONI', 'email' => 	'mveronica.zucconi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GABRIELA SALUSSO', 'email' => 	'gabriela.salusso@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PATRICIA MARINA FERNANDEZ', 'email' => 	'patricia.fernandez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LAURA  VALDIVIA ', 'email' => 	'laura.valdivia@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PATRICIA  CENTENO ', 'email' => 	'patricia.centeno@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        
+        User::create(['name' => 'FLORENCIA  SIVORI ', 'email' => 	'florencia.sivori@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NOELIA  SILVA ', 'email' => 	'noelia.silva@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JONATHAN  CAMPODONICO ', 'email' => 	'ESTA EN TRAMITE SU CONTRATO ', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DENISSE VIDART', 'email' => 	'stefania.vidart@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'Gabriel Beatriz', 'email' => 	'gabriel.beatriz@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MICAELA ALFARO', 'email' => 	'maria.alfaro@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DAIANA SERRANO', 'email' => 	'daiana.serrano@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SOFIA  LAURO ', 'email' => 	'sofia.lauro@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MAIRA  JIMENEZ ', 'email' => 	'msoledad.jimenez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ROCIO CAPDEPON', 'email' => 	'rocio.capdepon@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA  LADERECHE ', 'email' => 	'florencia.ladereche@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SILVINA JIMENA  VALES ', 'email' => 	'silvina.vales@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALIA SALUM', 'email' => 	'natalia.salum@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIANA    JUAREZ   ', 'email' => 	'mariana.juarez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FERNANDA MONCADA', 'email' => 	'mariafernandamoncada2@gmail.com', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'Verónica  CECCONI ', 'email' => 	'veronica.cecconi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ALEJANDRA  RETTA ', 'email' => 	'alejandra.retta@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANALIA VASQUEZ', 'email' => 	'analia.vasquez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANDREA VIEITES', 'email' => 	'andrea.vieites@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JUAN IGNACIO CAPECE', 'email' => 	'jignacio.capece@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NATALI ANDREA ZAMBRANO', 'email' => 	'natali.zambrano@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DANIELA  ASATO ', 'email' => 	'daniela.asato@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GONZALO SALVO', 'email' => 	'gonzalo.salvo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+    
+        User::create(['name' => 'HUGO ECHENIQUE ', 'email' => 	'hugo.echenique@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'DANIELA VILLABUENA', 'email' => 	'daniela.villabuena@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA RACH', 'email' => 	'florencia.rach@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'IGNACIO ULLUA', 'email' => 	'ignacio.ullua@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GABRIELA ESTRELLA LERMAN', 'email' => 	'gabriela.lerman@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIANA PEREZ', 'email' => 	'mariana.perez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA DEL ROSARIO  DE ANDRADE SOUTO ', 'email' => 	'mrosario.deandrade@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANALIA  CAMMARATA ', 'email' => 	'analia.cammarata@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ANALIA  POLISZCZUK ', 'email' => 	'analia.poliszczuk@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIANA  AZZARELLI ', 'email' => 	'mariana.azzarelli@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA AGUSTINA  SASTRE ', 'email' => 	'magustina.sastre@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LEANDRO  KOCZWARA', 'email' => 	'leandro.koczwara@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LIANA  ZARRELLI ', 'email' => 	'liana.zarrelli@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PAMELA  AYALA ', 'email' => 	'pamela.ayala@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'NICOLE NAGELKOP', 'email' => 	'nicole.nagelkop@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA  RIVIERI ', 'email' => 	'maria.rivieri@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ROCIO MAGARIÑOS', 'email' => 	'rocio.magarinos@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA VICTORIA  CAMPI ', 'email' => 	'maria.campi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA DEL ROSARIO  SIMIELE ', 'email' => 	'mrosario.simiele@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PATRICIA PERRI', 'email' => 	'patricia.perri@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MONICA POLITI', 'email' => 	'monica.politi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'RAQUEL LAGE', 'email' => 	'raquel.lage@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'Facundo Dallera', 'email' => 	'facundo.dallera@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MICAELA MERCADO', 'email' => 	'micaela.mercado@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'TOMAS PEREZ', 'email' => 	'tomas.perez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JOSEFINA QUEIJA', 'email' => 	'josefina.queija@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'LEONEL ESCALANTE', 'email' => 	'lionel.escalante@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GABRIELA ACOSTA', 'email' => 	'gabriela.acosta@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIANA VASALLU', 'email' => 	'mariana.vassallu@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'BETTINA VON ALVENSLEBEN', 'email' => 	'bettina.vonalvensleben@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MIRIAM MONTES', 'email' => 	'mirian.montes@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SABRINA ADAMO', 'email' => 	'sabrina.adamo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JONATHAN GUAMANTE', 'email' => 	'jonathan.guamante@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ELBA ZAPATA', 'email' => 	'elba.zapata@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CAROLINA VERRE', 'email' => 	'carolina.verre@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA ALEJANDRA DANGELO', 'email' => 	'malejandra.dangelo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'YAMILA BARRIOS', 'email' => 	'yamila.barrios@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JAVIERA POMIES', 'email' => 	'javiera.pomies@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CECILIA RIVAS', 'email' => 	'cecilia.rivas@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA DEL GUERCIO', 'email' => 	'florencia.delguercio@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'RAQUEL BUCCI', 'email' => 	'raquel.bucci@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GUSTAVO CEJAS', 'email' => 	'caterina.cejas@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'BRENDA ESCOBAR', 'email' => 	'brenda.escobar@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARCELA LUPI', 'email' => 	'marcela.lupi@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ROSSANA MUSSO', 'email' => 	'rosana.musso@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'SILVANA NOVO', 'email' => 	'silvana.novo@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'PAULA ORCURTO', 'email' => 	'mpaula.orcurto@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'CARLOS RODRIGUEZ', 'email' => 	'ezequiel.rodriguez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'GABRIEL RUBACHIN', 'email' => 	'gabriel.rubachin@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'VIOLETA RUZZANTE', 'email' => 	'violeta.ruzzante@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'AIXA  SUAREZ ', 'email' => 	'aixa.suarez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ALDANA  ELIZALDE ', 'email' => 	'aldana.elizalde@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'FLORENCIA  IÑIGUEZ ', 'email' => 	'florencia.iniguez@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'WANDA CLAVER ', 'email' => 	'wanda.claver@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'ROSALIA  LUNA ', 'email' => 	'rosalia.luna@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARIA VICTORIA CRETELLA', 'email' => 	'maria.cretella@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'MARISOL DALERA', 'email' => 	'marisol.dalera@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'TOMAS  SEGURA  ', 'email' => 	'tomas.segura@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+        User::create(['name' => 'JULIAN ZABALJAUREGUI', 'email' => 	'julian.zabaljauregui@vicentelopez.gov.ar', 'password' => Hash::make(Str::random(12))]);
+    }
+}

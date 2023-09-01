@@ -9,6 +9,7 @@ use App\Models\Manager\Tramite;
 use App\Models\Manager\TramiteEstado;
 use App\Models\Manager\TramiteComment;
 use App\Models\Manager\Dependencia;
+use App\Models\User;
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ class DetailController extends Controller
         return Inertia::render('Manager/Tramites/Detail/Details',
             [   
                 'estados' => TramiteEstado::all(),
+                'users' => User::all(),
                 'dependencias' => Dependencia::all(),
                 'tramite' => Tramite::where('id', $id)
                                     ->with('persons', 
@@ -157,5 +159,38 @@ class DetailController extends Controller
         }
     }
 
+    public function changeAssigment(Request $request){
+        
+        DB::beginTransaction();
+        try {
 
+        
+        //TODO: Confirmar si es necesario almacenar info en la tabla de tramite_assigment o con la de comentarios es suficiente
+            $tramite = Tramite::find($request->tramite_id);
+            $tramite->assigned = $request->user_id;
+            $tramite->estado_id = 3; //En proceso    
+            $tramite->save();
+
+            $user = User::find($request->user_id);
+
+            $comment = new TramiteComment();
+            $comment->tramite_id = $request->tramite_id;
+            $comment->user_id = Auth::user()->id;
+            $comment->dependencia_id = $tramite->dependencia_id;
+            $comment->content = 'Se asignó el trámite a: ' . $user->name . ' (' . $user->email . ')' ;
+            
+            $comment->save();
+
+            DB::commit();
+            return response()->json(['message' => 'Se reasignó el trámite correctamente'], 200);
+
+        
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Error al reasignar el tramite", ["Modulo" => "Details:CambioAsignacion","Tramite" => $request->tramite_id, "Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error'], 203);         
+        }
+    }
+
+    
 }

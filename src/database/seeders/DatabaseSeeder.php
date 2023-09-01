@@ -49,7 +49,8 @@ class DatabaseSeeder extends Seeder
             CargosAutoridadesSeeder::class,
             TiposEntidadesSeeder::class,
             TiposActividadesSeeder::class,
-            TramiteEstadosSeeder::class
+            TramiteEstadosSeeder::class,
+            RolesSeeder::class,
 
         ]);
 

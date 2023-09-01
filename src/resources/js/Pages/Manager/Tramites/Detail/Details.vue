@@ -10,7 +10,6 @@
 				<h1 class="font-sm font-medium text-gray-600 sm:truncate">
 					Detalle del Trámite 
 					<span class="text-indigo-700 text-xl font-semibold ">{{tramite[0].dependencia.description}}</span>
-
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -232,6 +231,23 @@
 							
 							</dd>
 						</div>		
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 flex items-center">
+							<dt class="text-sm font-medium text-gray-500">Responsable</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase flex items-center " >
+								<select v-model="assignment" id="assignment" name="assignment" autocomplete="off"
+									class=" block w-80 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="" :bind:select="tramite[0].assigned == null " >Seleccione un Responsable</option>
+									<option v-for="u in users" :key="u.id" :value="u.id"
+										:bind:select="u.id == tramite[0].assigned">
+										{{ u.name }}
+									</option>
+								</select>	
+								<button type="button"
+										class="relative ml-4 inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+										@click="changeAssignment()">
+										Confirmar</button>						
+							</dd>
+						</div>		
 						<!-- Si el tramite esta cerrado no se puede re asignar -->
 						<div v-if="tramite[0].estado_id != 2"  class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Re Asignar</dt>
@@ -314,7 +330,7 @@
 							<tr v-for="(comment, index) in comments" :key="index">
 								
 								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-									{{ comment.created_at }}
+									{{ store.fechaFormateada(comment.created_at) }}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{{ comment.dependencia.description }}
@@ -421,9 +437,12 @@ import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
+import store from '@/store.js'
+
 const estado = {
 	'abierto' : 'px-2 py-1 bg-green-50 text-green-800 border border-green-400',
 	'cerrado' : 'px-2 py-1 bg-red-50 text-red-800 border border-red-300',
+	'en proceso': 'px-2 py-1 bg-blue-50 text-blue-800 border border-blue-300',
 }
 
 export default {
@@ -432,6 +451,7 @@ export default {
 		estados: Object,
 		dependencias: Object,
 		tramite: Object,
+		users: Object,
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -468,24 +488,61 @@ export default {
 			comments: [],
 			newDependencia: this.tramite[0].dependencia_id,
 			newDepObservacion: "",
+			assignment: this.tramite[0].assigned,
 		}
 	},
 	setup() {
-		const format = (date) => {
-			const day = date.getDate();
-			const month = date.getMonth() + 1;
-			const year = date.getFullYear();
+		// const format = (date) => {
+		// 	const day = date.getDate();
+		// 	const month = date.getMonth() + 1;
+		// 	const year = date.getFullYear();
 
-			return `${day}/${month}/${year}`;
-		}
+		// 	return `${day}/${month}/${year}`;
+		// }
 
 		return {
-			format,
-			estado
+			// format,
+			estado,
+			store
 		}
 	},
 
 	methods: {
+
+		async changeAssignment(){
+			
+			if(this.assignment == this.tramite[0].assigned){
+				this.labelType = "danger";
+				this.toastMessage = "Debe seleccionar un responsable distinto";
+				return
+			}
+
+			let rt = route('detail.changeAssigment');
+
+			let formData = new FormData();
+			formData.append('user_id', this.assignment)
+			formData.append('tramite_id', this.tramite[0].id)
+
+			try {
+				const response = await axios.post(rt, formData);
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.tramite[0].assignment = this.assignment
+					this.tramite[0].estado_id = 3 // En proceso, siempre que se asigna se pone en proceso
+					this.getComments()
+
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				console.log(error)
+			}
+
+
+		},
+
 		async changeStatus(newEstado){
 
 			let rt = route('detail.changeEstado');
@@ -500,6 +557,7 @@ export default {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
 					this.tramite[0].estado_id = newEstado
+					this.getComments()
 
 				} else {
 					this.labelType = "danger";
@@ -537,6 +595,7 @@ export default {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
 					this.tramite[0].dependencia_id = this.newDependencia
+					this.getComments()
 				} else {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;

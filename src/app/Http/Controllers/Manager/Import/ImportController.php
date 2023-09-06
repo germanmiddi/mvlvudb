@@ -8,7 +8,9 @@ use App\Imports\EntidadImport;
 use App\Imports\FortalecimientoImport;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
+use App\Imports\JuventudImport;
 use App\Imports\MayoresImport;
+use App\Imports\NinezImport;
 use App\Imports\PromocionImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
@@ -67,9 +69,17 @@ class ImportController extends Controller
                             Log::info('Se ha iniciado el proceso de Importación de Tramite HABITAT. <br>');
                             $import = new HabitatImport();
                             break;
+                        case 8:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite NIÑEZ. <br>');
+                            $import = new NinezImport();
+                            break;
                         case 9:
                             Log::info('Se ha iniciado el proceso de Importación de Tramite PROMOCIONES. <br>');
                             $import = new PromocionImport();
+                            break;
+                        case 13:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite JUVENTUD. <br>');
+                            $import = new JuventudImport();
                             break;
                         case 14:
                             Log::info('Se ha iniciado el proceso de Importación de Tramite MAYORES. <br>');

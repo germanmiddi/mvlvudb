@@ -4,9 +4,9 @@
 		<!-- Page title & actions -->
 		<div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
 			<div class="flex-1 min-w-0 flex items-center">
-				<a class="btn-blue" :href="route('discapacidad')">
+				<button class="btn-blue" @click.prevent="goBack()">
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
-				</a>
+				</button>
 				<h1 class="font-sm font-medium text-gray-600 sm:truncate">
 					Detalle del Trámite 
 					<span class="text-indigo-700 text-xl font-semibold ">{{tramite[0].dependencia.description}}</span>
@@ -39,20 +39,33 @@
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-						<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso</dt>
-						<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ tramite[0].fecha }}</dd>
+							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ tramite[0].fecha }}</dd>
 						</div>
+						
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-						<dt class="text-sm font-medium text-gray-500">Tipo de Trámite</dt>
-						<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].tipo_tramite.description }}</dd>
+							<dt class="text-sm font-medium text-gray-500">Tipo de Trámite</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].tipo_tramite.description }}</dd>
 						</div>
+						
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-						<dt class="text-sm font-medium text-gray-500">Canal de Atención</dt>
-						<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].canal_atencion.description }}</dd>
+							<dt class="text-sm font-medium text-gray-500">Canal de Atención</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].canal_atencion.description }}</dd>
 						</div>
+						
+						<div v-if="tramite[0].dependencia_id == 6" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Modalidad de Atención</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].modalidad_atencion?.description }}</dd>
+						</div>
+						
+						<div v-if="tramite[0].dependencia_id == 6" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Cetegoría</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].category?.nombre }}</dd>
+						</div>
+						
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-						<dt class="text-sm font-medium text-gray-500">Observaciones</dt>
-						<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].observacion }}</dd>
+							<dt class="text-sm font-medium text-gray-500">Observaciones</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].observacion }}</dd>
 						</div>
 						
 					</dl>
@@ -508,7 +521,9 @@ export default {
 	},
 
 	methods: {
-
+		goBack(){
+			window.history.back();
+		},
 		async changeAssignment(){
 			
 			if(this.assignment == this.tramite[0].assigned){

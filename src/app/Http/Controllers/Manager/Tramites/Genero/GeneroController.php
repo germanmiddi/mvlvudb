@@ -34,6 +34,10 @@ use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\Category;
+use App\Models\Manager\ModalidadAtencion;
+
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -76,6 +80,8 @@ class GeneroController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
+                'categories' => Category::where('dependencia_id', 6)->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -220,7 +226,9 @@ class GeneroController extends Controller
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
                             'dependencia_id' => $dependencia['dependencia_id'],
                             'parentesco_id' => $request['parentesco_id'],
-                            'estado_id' => 1, // Estado Abierto
+                            'estado_id' => 1, // Estado Abierto,
+                            'modalidad_atencion_id' => $request['modalidad_atencion_id'],
+                            'category_id' => $request['category_id'],
                         ]
                     );
                     $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
@@ -287,7 +295,9 @@ class GeneroController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
+                'categories' => Category::where('dependencia_id', 6)->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -404,6 +414,8 @@ class GeneroController extends Controller
                     'tipo_tramite_id' => $request['tipo_tramite_id'],
                     'dependencia_id' => $dependencia['dependencia_id'],
                     'parentesco_id' => $request['parentesco_id'],
+                    'modalidad_atencion_id' => $request['modalidad_atencion_id'],
+                    'category_id' => $request['category_id'],
                 ]
             );
 

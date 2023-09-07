@@ -20,4 +20,9 @@ class Dependencia extends Model
     {
         return $this->hasMany(TipoTramite::class);
     }
+    
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'dependencia_id');
+    }
 }

@@ -96,7 +96,10 @@ class MasterdataController extends Controller
             if (!$tipoTramite) {
                 return response()->json(['message' => 'Registro no encontrado'], 404);
             }
-            
+            $tramitesAsociados = $tipoTramite->tramites()->count();
+            if ($tramitesAsociados > 0) {
+                return response()->json(['message' => 'No se puede eliminar este TipoTramite porque está siendo utilizado en trámites'], 422);
+            }
             $tipoTramite->delete();
                 
             return response()->json(['message' => 'Datos eliminados correctamente'], 200);

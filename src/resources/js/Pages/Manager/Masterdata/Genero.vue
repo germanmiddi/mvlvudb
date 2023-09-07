@@ -145,20 +145,33 @@ export default {
 
         },
         async destroyItem(id){
-            const response = await axios.post(route('masterdata.destroy_tipo_tramite' ), {id : id} ); 
+
+            try {
+                const response = await axios.post(route('masterdata.destroy_tipo_tramite' ), {id : id} ); 
                 
-            if (response.status == 200) {
-                this.$emit('toast-message', 
-                                {'message' : response.data.message, 
-                                 'type' : 'success'} )
+                if (response.status == 200) {
+                    this.$emit('toast-message', 
+                                    {'message' : response.data.message, 
+                                    'type' : 'success'} )
 
-                this.tipoTramite = this.tipoTramite.filter( item => item.id != id)
+                    this.tipoTramite = this.tipoTramite.filter( item => item.id != id)
 
-            } else {
+                } else {
+                    this.$emit('toast-message', 
+                                    {'message' : response.data.message, 
+                                    'type' : 'danger'} )
+                }    
+            } catch (error) {        
+
+                console.error(error);
+
                 this.$emit('toast-message', 
-                                {'message' : response.data.message, 
-                                 'type' : 'danger'} )
-            }            
+                            { 'message': 'No se puede eliminar el tipo de trámite', 
+                              'type': 'danger' 
+                            });
+
+                // this.getTipoTramites(); // Debes definir una función para cargar los datos nuevamente
+            }
         }
 
     },

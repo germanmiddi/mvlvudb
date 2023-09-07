@@ -24,7 +24,9 @@ class Tramite extends Model
         'parentesco_id',
         'estado_id',
         'num_tramite_legacy',
-        'assigned'
+        'assigned',
+        'modalidad_atencion_id',
+        'category_id',
     ];
 
     public function sede()
@@ -105,4 +107,16 @@ class Tramite extends Model
     {
         return $this->belongsTo(TramiteEstado::class, 'estado_id');
     }    
+
+    public function modalidadAtencion()
+    {
+        return $this->belongsTo(ModalidadAtencion::class, 'modalidad_atencion_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+
 }

@@ -103,7 +103,7 @@
             <!-- {{ user.grupos }} -->
 
             <div class="space-y-1">
-              <a :href="route('general')">
+              <a :href="route('general')" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
                   <InboxIcon class="w-5 h-5 mr-3" /> <label> Bandeja General</label>
                 </div>

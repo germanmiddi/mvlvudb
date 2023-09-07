@@ -221,6 +221,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 export default {
     props: {
         toast: Object,
+        tiposTramite: Object,
     },
     components: {
         Menu,

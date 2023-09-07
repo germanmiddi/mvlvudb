@@ -21,33 +21,36 @@
                         <div class="">
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
                         </div>
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 flex item-center">
+                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                    @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
-                                Filtro</button>
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar Filtro</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-12 sm:col-span-3 ">
+                        <div class="col-span-12 sm:col-span-4 ">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
+
                         <div class="col-span-12 sm:col-span-2 ">
-                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-                                Documento</label>
+                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de Documento</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
+
                         <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
                             <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
                                     :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
+
+                        <div class="col-span-12 sm:col-span-4">
                             <label for="dependencia_id" class="block text-sm font-medium text-gray-700">Dependencia</label>
-                            <select v-model="filter.dependencia_id" id="dependencia_id" name="dependencia_id"
+                            <select v-model="filter.dependencia_id" id="dependencia_id" name="dependencia_id" @change="filtrarTiposTramite"
                                 autocomplete="off"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" selected>Selecciones una dependencia</option>
@@ -56,22 +59,20 @@
                                 }}</option>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
-                            <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-                                Tramite</label>
+                        
+                        <div class="col-span-12 sm:col-span-4">
+                            <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de Tramite</label>
                             <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
                                 autocomplete="tipo_tramite_id_name"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" selected>Selecciones un tipo de tramite</option>
-                                <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
+                                <option v-for="tipoTramite in tiposTramiteFiltrados" :key="tipoTramite.id" :value="tipoTramite.id">{{
                                     tipoTramite.description
                                 }}</option>
                             </select>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
@@ -244,15 +245,33 @@ export default {
             showToast: false,
             filter: {},
             length: 10,
-            customFormat: 'd-M-Y'
+            customFormat: 'd-M-Y',
+            tiposTramiteFiltrados: this.tiposTramite
         };
     },
     setup() {
     },
     methods: {
+        clearFilter(){
+            this.filter = {}
+            this.tiposTramiteFiltrados = this.tiposTramite
+            this.getTramites()
+        },
+
+        filtrarTiposTramite() {
+            if (this.filter.dependencia_id) {
+                // Filtra los tipos de trámite según la dependencia seleccionada
+                this.tiposTramiteFiltrados = this.tiposTramite.filter((tipoTramite) => tipoTramite.dependencia_id === this.filter.dependencia_id);
+            } else {
+                // Si no se selecciona una dependencia, muestra todos los tipos de trámite
+                this.tiposTramiteFiltrados = this.tiposTramite;
+            }
+        },
+
         clearMessage() {
             this.toastMessage = "";
         },
+
         async getTramites() {
             this.tramites = ''
             let filter = `&length=${this.length}`
@@ -282,6 +301,7 @@ export default {
             const response = await fetch(get, { method: "GET" });
             this.tramites = await response.json();
         },
+
         async getTramitesPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })
@@ -289,6 +309,7 @@ export default {
             this.tramites = await response.json()
             //console.log(this.orders)  
         },
+
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
             fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
@@ -305,6 +326,7 @@ export default {
 
             return fecha;
         },
+
         namePersons(data){
             let name_titular = ''
             let name_benef = ''
@@ -317,6 +339,7 @@ export default {
             });
             return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
         },
+
         dniPersons(data){
             let name_titular = ''
             let name_benef = ''
@@ -341,7 +364,8 @@ export default {
             }
         }
         this.getTramites();
-    }
+      
+    },
 };
 </script>
 

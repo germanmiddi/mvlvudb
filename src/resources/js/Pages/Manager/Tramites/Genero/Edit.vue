@@ -70,14 +70,14 @@
 									obligatorio</span>
 							</div>
 
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
 									Atención</label>
 								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
 									autocomplete="canal_atencion-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.form.canal_atencion_id.$error ? 'border-red-500' : ''">
-									<option value="" disabled>Selecciones un canal de atencion</option>
+									<option value="" disabled>Seleccione el canal de atencion</option>
 									<option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
 										:value="canalAtencion.id">{{
 											canalAtencion.description
@@ -86,6 +86,35 @@
 								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="modalidad_atencion" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+								<select v-model="form.modalidad_atencion_id" id="modalidad_atencion" name="modalidad_atencion"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Selecciones una modalidad de atención
+									</option>
+									<option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
+										:value="modatencion.id">
+										{{ modatencion.description }}
+									</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="category" class="block text-sm font-medium text-gray-700">Categoría</label>
+								<select v-model="form.category_id" id="category" name="category"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Selecciones una categoría
+									</option>
+									<option class="capitalize" v-for="cat in categories" :key="cat.id"
+										:value="cat.id">
+										{{ cat.nombre }}
+									</option>
+								</select>
+							</div>
+
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-8">
@@ -602,7 +631,9 @@ export default {
 		tiposTramite: Object,
 		programasSocial: Object,
 		tramite: Object,
-		parentescos: Object
+		parentescos: Object,
+		categories: Object,
+		modalidadesAtencion: Object,		
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -881,6 +912,10 @@ export default {
 		this.form.parentesco_id = this.tramite[0].parentesco_id
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos
+
+		this.form.modalidad_atencion_id = this.tramite[0].modalidad_atencion_id
+		this.form.category_id = this.tramite[0].category_id
+
 
 		if (beneficiario != '') {
 			this.form_beneficiario.num_documento = beneficiario[0].num_documento

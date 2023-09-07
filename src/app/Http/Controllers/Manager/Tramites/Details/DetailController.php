@@ -54,6 +54,8 @@ class DetailController extends Controller
                                            'comments.dependencia',
                                            'comments.user',
                                            'estado',
+                                           'modalidadAtencion',
+                                           'category'
 
                                            )
                                     ->get()

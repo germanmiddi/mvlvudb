@@ -100,7 +100,7 @@
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Email</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].contact[0].email}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].contact[0].email ? tramite[0].persons[0].contact[0].email : "" }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -158,17 +158,17 @@
 			
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Email</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0].email}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].email : ''}}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Telefono</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0].phone}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].phone : ''}}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Celular</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0].celular}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].celular : ''}}</dd>
 						</div>
 
 
@@ -333,10 +333,10 @@
 									{{ store.fechaFormateada(comment.created_at) }}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-									{{ comment.dependencia.description }}
+									{{ comment.dependencia ? comment.dependencia.description : '' }}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-									{{ comment.user.name }}
+									{{ comment.user ? comment.user.name : '' }}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{{ comment.content }}

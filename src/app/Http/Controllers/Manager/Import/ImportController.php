@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager\Import;
 use App\Http\Controllers\Controller;
 use App\Imports\DiscapacidadImport;
 use App\Imports\EntidadImport;
+use App\Imports\EstadosImport;
 use App\Imports\FortalecimientoImport;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
@@ -14,6 +15,7 @@ use App\Imports\NinezImport;
 use App\Imports\PromocionImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
+use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -26,9 +28,10 @@ class ImportController extends Controller
         return Inertia::render('Manager/Settings/Importador/Index',[
             'dependencias' => Dependencia::where('activo', true)->get()
         ]);
+
     }
 
-    public function importEntidad(Request $request)
+    public function importEntidades(Request $request)
     {
         if( $request->file('file')){
                 $archivoCSV = $request->file('file');
@@ -45,7 +48,7 @@ class ImportController extends Controller
         }
     }
 
-    public function importDependencia(Request $request)
+    public function importDependencias(Request $request)
     {
 
         if( $request->file('file')){
@@ -101,4 +104,22 @@ class ImportController extends Controller
             return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
         }
     }
+
+    public function importEstados(Request $request)
+    {
+        if( $request->file('file')){
+                $archivoCSV = $request->file('file');
+                try {
+                    $import = new EstadosImport();
+                    Excel::import($import, $archivoCSV);
+                    $status = $import->getStatus();
+                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Estados.', 'status' => $status], 200);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                }
+        }else{
+            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+        }
+    }
+
 }

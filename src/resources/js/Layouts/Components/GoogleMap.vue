@@ -1,7 +1,7 @@
 <template>
     <GoogleMap 
         :key="markerOptions.title"
-        api-key="AIzaSyAL9YDINORCmziYVT1RcoJLreHWfVnVxQQ" 
+        api-key="AIzaSyC2ZgKApfK_YBbSnZE6NGGacXCnYqF3zNw" 
         style="width: 100%; height: 300px" 
         :center="markerOptions.position" 
         :zoom="16"

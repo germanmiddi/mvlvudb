@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/entidad', [ImportController::class, 'importEntidades'])->name('import.entidad');  
     Route::post('/import/dependencia', [ImportController::class, 'importDependencias'])->name('import.dependencia');  
     Route::post('/import/estado', [ImportController::class, 'importEstados'])->name('import.estado');  
-    Route::post('/import/persona', [ImportController::class, 'importPersonas'])->name('import.persona');  
+    Route::post('/import/personas', [ImportController::class, 'importPersonas'])->name('import.personas');  
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');

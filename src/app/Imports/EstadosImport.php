@@ -55,6 +55,7 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
                             [
                                 'estado_id' => $row['estado_id'],
                                 'assigned' => $user ? $user->id : 1,
+                                'updated_at' => $row['fecha']
                             ]
                         );
                         ++$this->rowsSuccess;

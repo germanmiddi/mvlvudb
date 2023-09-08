@@ -12,6 +12,7 @@ use App\Imports\HabitatImport;
 use App\Imports\JuventudImport;
 use App\Imports\MayoresImport;
 use App\Imports\NinezImport;
+use App\Imports\PersonImport;
 use App\Imports\PromocionImport;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
@@ -100,6 +101,24 @@ class ImportController extends Controller
             } catch (\Throwable $th) {
                 return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
             }
+        }else{
+            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+        }
+    }
+
+    public function importPersonas(Request $request)
+    {
+        if( $request->file('file')){
+                $archivoCSV = $request->file('file');
+                try {
+                    $import = new PersonImport();
+                    Excel::import($import, $archivoCSV);
+                    $status = $import->getStatus();
+                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Personas.', 'status' => $status], 200);
+                } catch (\Exception $e) {
+                    dd($e);
+                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                }
         }else{
             return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
         }

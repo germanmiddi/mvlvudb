@@ -122,7 +122,7 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Importador de Personas</h3>
                         </div>
                         <div class="flex-shrink-0">
-                            <button type="button" @click="importarPersona()" v-if="!loadingPersona"
+                            <button type="button" @click="importarPersonas()" v-if="!loadingPersona"
                                 class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
                                 Importar
                             </button>
@@ -385,7 +385,7 @@ export default {
         async importarPersonas() {
             this.loadingPersona = true
             this.status = ''
-            let rt = route("import.persona");
+            let rt = route("import.personas");
             const formData = new FormData();
             formData.append('file', this.filePersona);
             try {

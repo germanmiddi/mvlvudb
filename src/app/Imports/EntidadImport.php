@@ -144,7 +144,7 @@ class EntidadImport implements ToModel,WithHeadingRow
                 }
             }catch (\Throwable $th) {
                 ++$this->rowsError;
-                $this->entidadesNoRegistradas .= ' - Entidad N° '.$row['numero'].', correspondiente a la Linea N° '. strval($this->rows+1).' del archivo no se ha sido almacenar. Error: '.strstr($th->getMessage(), "(SQL", true).'<br>'; 
+                $this->entidadesNoRegistradas .= ' - Entidad N° '.$row['numero'].', correspondiente a la Linea N° '. strval($this->rows+1).' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
                 Log::error("Se ha generado un error al momento de almacenar la entidad N° ".$row['numero'], ["Modulo" => "ImportEntidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             }
         return;

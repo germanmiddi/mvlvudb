@@ -18,7 +18,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
+class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
 {
     private $rows = 0;
     private $rowsSuccess = 0;
@@ -62,7 +62,6 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
                 [
                     'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' && $row['social_tipo_ocupacion_id'] !== -1 ? $row['social_tipo_ocupacion_id'] : null,
                     'cobertura_medica_id' => $row['social_cobertura_medica_id'] !== 'NULL' && $row['social_cobertura_medica_id'] !== -1 ? $row['social_cobertura_medica_id'] : null,
-                    'tipo_pension_id' => $row['social_tipo_pension_id'] !== 'NULL' && $row['social_tipo_pension_id'] !== -1 ? $row['social_tipo_pension_id'] : null,
                 ]
             );
 
@@ -87,9 +86,6 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
                     'number' => strtoupper(str_replace(' ', '', $row['address_number'])) !== 'NULL' ? $row['address_number'] : null,
                     'piso' => strtoupper(str_replace(' ', '', $row['address_piso'])) !== 'NULL' ? $row['address_piso'] : null,
                     'dpto' => strtoupper(str_replace(' ', '', $row['address_dpto'])) !== 'NULL' ? $row['address_dpto'] : null,
-                    'latitude' => strtoupper(str_replace(' ', '', $row['address_latitude'])) !== 'NULL' ? $row['address_latitude'] : null,
-                    'longitude' => strtoupper(str_replace(' ', '', $row['address_longitude'])) !== 'NULL' ? $row['address_longitude'] : null,
-                    'google_address' => strtoupper(str_replace(' ', '', $row['address_google_address'])) !== 'NULL' ? $row['address_google_address'] : null,
                     'pais_id' => $row['address_pais_id'] !== 'NULL' && $row['address_pais_id'] !== -1 ? $row['address_pais_id'] : null,
                     'localidad_id' => $row['address_localidad_id'] !== 'NULL' && $row['address_localidad_id'] !== -1 ? $row['address_localidad_id'] : null,
                     'barrio_id' => $row['address_barrio_id'] !== 'NULL' ? $row['address_barrio_id'] : null
@@ -125,7 +121,7 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
 
                 ++$this->rowsDuplicados;
                 $this->registrosDuplidados .= ' - Tramite correspondiente a la Linea N° ' . strval($this->rows + 1) . ' del archivo ha sido cargado previamente. <br>';
-                //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportFortalecimiento:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             } else {
                 $tramite_data = Tramite::Create(
                     [
@@ -141,14 +137,14 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
                 $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                 ++$this->rowsSuccess;
-               // Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportFortalecimiento:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                //Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             }
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "ImportFortalecimiento:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }
@@ -168,7 +164,8 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
             $retorno .= $this->entidadesNoRegistradas;
         }
 
-        Log::info("Importador de Tramite de Fortalecimiento, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+        Log::info("Importador de Tramite de Juventud, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+
         if ($this->registrosDuplidados != '') {
             $retorno .= '<br>Registros Duplicados<br>';
             $retorno .= '=====================================<br>';

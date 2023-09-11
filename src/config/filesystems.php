@@ -40,6 +40,11 @@ return [
             'root' => storage_path('app/tramites'),
         ],
 
+        'restore_legacy' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/restore_legacy'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

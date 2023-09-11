@@ -147,7 +147,7 @@ class MayoresImport implements ToModel,WithHeadingRow, WithBatchInserts
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
-            $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . strstr($th->getMessage(), "(SQL", true) . '<br>';
+            $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
             Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;

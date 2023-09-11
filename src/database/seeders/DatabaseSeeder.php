@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             TiposEntidadesSeeder::class,
             TiposActividadesSeeder::class,
             TramiteEstadosSeeder::class,
-            RolesSeeder::class,
+            RoleSeeder::class,
 
         ]);
 

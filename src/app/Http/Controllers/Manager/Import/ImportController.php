@@ -14,11 +14,14 @@ use App\Imports\MayoresImport;
 use App\Imports\NinezImport;
 use App\Imports\PersonImport;
 use App\Imports\PromocionImport;
+use App\Models\Manager\Archivo;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Entidad;
 use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -141,4 +144,76 @@ class ImportController extends Controller
         }
     }
 
-}
+    public function importFiles(){
+        $sistemaArchivos = Storage::disk('restore_legacy')->files('/');
+
+        $files = count($sistemaArchivos);
+        $filesSuccess = 0;
+        $filesError = 0;
+        $filesDuplicados = 0;
+        $msgError = '';
+        $msgDuplidados = '';
+            foreach ($sistemaArchivos as $file) {
+                $infoArchivo = pathinfo($file);
+                // infoArchivo['basename']['extension']['filename']
+                $partes = explode('$', $infoArchivo['filename']);
+                /*
+                Parte[0] = num_tramite_legacy
+                Parte[1] = Observacion
+                */
+                try {
+                // Copiamos el archivo del disco "restore_legacy" al disco "public"
+                    Storage::disk('public')->put($file, Storage::disk('restore_legacy')->get($file));
+                    // Eliminar el archivo del disco de origen si es necesario
+                    Storage::disk('restore_legacy')->delete($file);
+                    // Verifico si existe el tramite
+                    $tramite = Tramite::where('num_tramite_legacy', $partes[0])->first();
+                    if($tramite){
+                        if(Archivo::where('name', $infoArchivo['basename'])->first()){
+                            $filesDuplicados++; 
+                            $msgDuplidados .= ' - El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', ya se encuentra ingresado en el Sistema. <br>'; 
+                            Log::info( 'El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', ya se encuentra ingresado en el Sistema. ', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                        }else{
+                            Archivo::create([
+                                'name' => $infoArchivo['basename'],
+                                'description' => $partes[1],
+                                'ext' => $infoArchivo['extension'],
+                                'tramite_id' => $tramite->id
+                            ]);
+                            $filesSuccess++; 
+                            Log::info('El archivo '.$infoArchivo['basename'].' correspondiente al tramite legacy N° '.$partes[0].', se ha ingresado correctamente al Sistema.', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                        }
+                    }else{
+                        $filesError++; 
+                        $msgError .= ' - El tramite legacy N° '.$partes[0].', no se encuentra ingresado en el Sistema. <br>'; 
+                        Log::info(" El tramite legacy N° '.$partes[0].', no se encuentra ingresado en el Sistema", ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                    }
+                } catch (\Throwable $th) {
+                    $filesError++; 
+                    $msgError .= 'Se ha producido un error al momento de almacenar el Archivo. '.$th->getMessage().'<br>'; 
+                    Log::info('Se ha producido un error al momento de almacenar el Archivo. '.$th->getMessage().'<br>', ["Modulo" => "Import:importFiles","Usuario" => Auth::user()->id.": ".Auth::user()->name]);
+                }
+
+            }            
+            $retorno = 'PROCESO DE IMPORTADOR DE ARCHIVOS FINALIZADO <br>';
+            $retorno .= '=====================================<br>';
+            $retorno .= 'Se han procesado un total de '.strval($files).' archivos <br>';
+            $retorno .= 'Se ha registrado un total de '.strval($filesSuccess). ' registros correctamente <br>';
+            $retorno .= 'Se ha registrado un total de '.strval($filesDuplicados). ' registros duplicados <br>';
+            $retorno .= 'Se ha registrado un total de '.strval($filesError). ' registros con errores <br>';
+            
+            if($msgError != ''){
+                $retorno .= '<br>Registros con Errores<br>';
+                $retorno .= '=====================================<br>';
+                $retorno .= $msgError;
+            }
+
+            if($msgDuplidados != ''){
+                $retorno .= '<br>Registros Duplicados<br>';
+                $retorno .= '=====================================<br>';
+                $retorno .= $msgDuplidados;
+            }
+
+            return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Estados.', 'status' => $retorno], 200);
+        }
+    }

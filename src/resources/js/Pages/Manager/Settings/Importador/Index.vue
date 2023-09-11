@@ -9,8 +9,218 @@
         </div>
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
+        <div
+            class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 px-4 mt-6 sm:px-6 lg:px-8">
+            <!-- Importador de Tramites -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Importador de Tramites</h4>
+                        <div class="col-span-12 mt-2">
+                            <label v-if="!loadingDependencia"
+                                class="w-full flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span v-if="!fileDependencia" class="mt-2 text-base leading-normal">Seleccione
+                                    Archivo</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileDependenciaName
+                                }}</span>
+                                <input @change="handleFileDependenciaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+
+                            <label v-else
+                                class="w-full flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
+                                <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
+                                <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
+                                <input disabled @change="handleFileDependenciaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="dependencia_id" class="block text-sm font-medium text-gray-700 mt-2">Dependencia</label>
+                        <select id="dependencia_id" name="dependencia_id" autocomplete="off" v-model="dependencia_id"
+                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="" disabled selected>
+                                Seleccione una dependencia
+                            </option>
+                            <option v-for="dependencia in dependencias" :key="dependencia.id" :value="dependencia.id">
+                                {{ dependencia.description }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="button" @click="importarDependencia()" v-if="!loadingDependencia"
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Importador de Entidades -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Importador de Entidades</h4>
+                        <div class="col-span-12 mt-2">
+                            <label v-if="!loadingEntidad"
+                                class=" w-full justify-center relative flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span v-if="!fileEntidad" class="mt-2 text-base leading-normal">Seleccione Archivo</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileName }}</span>
+                                <input @change="handleFileEntidadChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
+                            </label>
+
+                            <label v-else
+                                class="w-64 flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
+                                <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
+                                <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
+                                <input disabled @change="handleFileEntidadChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="button" @click="importarEntidad()" v-if="!loadingEntidad"
+                            class="mt-4 w-full justify-center relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Importador de Personas -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Importador de Personas</h4>
+                        <div class="col-span-12 mt-2">
+                            <label v-if="!loadingPersona"
+                                class="w-full flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span v-if="!filePersona" class="mt-2 text-base leading-normal">Seleccione
+                                    Archivo</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ filePersonaName
+                                }}</span>
+                                <input @change="handleFilePersonaChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
+                            </label>
+
+                            <label v-else
+                                class="w-full flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
+                                <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
+                                <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
+                                <input disabled @change="handleFilePersonaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="button" @click="importarPersonas()" v-if="!loadingPersona"
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Importador de Estados -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Importador de Estados</h4>
+                        <div class="col-span-12 mt-2">
+                            <label v-if="!loadingEstado"
+                                class="w-full flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span v-if="!fileEstado" class="mt-2 text-base leading-normal">Seleccione
+                                    Archivo</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileEstadoName
+                                }}</span>
+                                <input @change="handleFileEstadoChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
+                            </label>
+
+                            <label v-else
+                                class="w-full flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
+                                <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
+                                <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
+                                <input disabled @change="handleFileEstadoChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="button" @click="importarEstados()" v-if="!loadingEstado"
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Importador de Files -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Importador de Archivos</h4>
+                    </div>
+                    <div>
+                        <button type="button" @click="importarArchivos()" v-if="!loadingArchivo"
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar Archivos
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
-            <div class="shadow sm:rounded-md sm:overflow-hidden">
+            <!-- <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
                         <div class="">
@@ -39,7 +249,7 @@
                                 </svg>
                                 <span v-if="!fileEntidad" class="mt-2 text-base leading-normal">Seleccione Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileName }}</span>
-                                <input @change="handleFileEntidadChange" type="file" name="file" id="file" ref="inputfile"
+                                 <input @change="handleFileEntidadChange" type="file" name="file" id="file" ref="inputfile"
                                     autocomplete="off" class="hidden" />
                             </label>
 
@@ -47,15 +257,16 @@
                                 class="w-64 flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
                                 <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
                                 <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
-                                <input disabled @change="handleFileEntidadChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                <input disabled @change="handleFileEntidadChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
                         </div>
                     </div>
                 </div>
 
-            </div>
-            <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+            </div> -->
+
+            <!--  <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
                         <div class="">
@@ -106,16 +317,16 @@
                                 class="w-64 flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
                                 <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
                                 <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
-                                <input disabled @change="handleFileDependenciaChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                <input disabled @change="handleFileDependenciaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
                         </div>
 
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+           <!--  <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
                         <div class="">
@@ -146,24 +357,24 @@
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ filePersonaName
                                 }}</span>
-                                <input @change="handleFilePersonaChange" type="file" name="file" id="file"
-                                    ref="inputfile" autocomplete="off" class="hidden" />
+                                <input @change="handleFilePersonaChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
                                 class="w-64 flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
                                 <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
                                 <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
-                                <input disabled @change="handleFilePersonaChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                <input disabled @change="handleFilePersonaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
                         </div>
 
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+           <!--  <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
                         <div class="">
@@ -194,8 +405,8 @@
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileEstadoName
                                 }}</span>
-                                <input @change="handleFileEstadoChange" type="file" name="file" id="file"
-                                    ref="inputfile" autocomplete="off" class="hidden" />
+                                <input @change="handleFileEstadoChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
@@ -209,7 +420,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div v-if="status" class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -279,6 +490,7 @@ export default {
             loadingDependencia: false,
             loadingEstado: false,
             loadingPersona: false,
+            loadingArchivo: false,
             status: '',
             dependencia_id: ''
         };
@@ -306,35 +518,74 @@ export default {
             this.filePersonaName = this.filePersona ? this.filePersona.name : '';
         },
         async importarEntidad() {
-            this.loadingEntidad = true
-            this.status = ''
-            let rt = route("import.entidad");
-            const formData = new FormData();
-            formData.append('file', this.fileEntidad);
-            try {
-                const response = await axios.post(rt, formData);
-                if (response.status == 200) {
-                    this.labelType = "success";
-                    this.toastMessage = response.data.message;
-                    this.status = response.data.status;
-                    console.log(response)
-                } else {
-                    this.labelType = "danger";
-                    this.toastMessage = response.data.message;
+            if (this.fileEntidad != '') {
+                this.loadingEntidad = true
+                this.status = ''
+                let rt = route("import.entidad");
+                const formData = new FormData();
+                formData.append('file', this.fileEntidad);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.status = response.data.status;
+                        console.log(response)
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-            } catch (error) {
-                console.log(error);
+                this.loadingEntidad = false
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
             }
-            this.loadingEntidad = false
         },
         async importarDependencia() {
             if (this.dependencia_id != '') {
-                this.loadingDependencia = true
+                if (this.fileDependencia != '') {
+                    this.loadingDependencia = true
+                    this.status = ''
+                    let rt = route("import.dependencia");
+                    const formData = new FormData();
+                    formData.append('file', this.fileDependencia);
+                    formData.append('dependencia_id', this.dependencia_id);
+                    try {
+                        const response = await axios.post(rt, formData);
+                        if (response.status == 200) {
+                            this.labelType = "success";
+                            this.toastMessage = response.data.message;
+                            this.status = response.data.status;
+                            console.log(response)
+                        } else {
+                            this.labelType = "danger";
+                            this.toastMessage = response.data.message;
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        this.labelType = "info";
+                        this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
+                    }
+                    this.loadingDependencia = false
+                } else {
+                    this.labelType = "info";
+                    this.toastMessage = "Debe seleccionar un archivo";
+                }
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar una dependencia";
+            }
+        },
+        async importarEstados() {
+            if (this.fileEstado != '') {
+                this.loadingEstado = true
                 this.status = ''
-                let rt = route("import.dependencia");
+                let rt = route("import.estado");
                 const formData = new FormData();
-                formData.append('file', this.fileDependencia);
-                formData.append('dependencia_id', this.dependencia_id);
+                formData.append('file', this.fileEstado);
                 try {
                     const response = await axios.post(rt, formData);
                     if (response.status == 200) {
@@ -351,50 +602,52 @@ export default {
                     this.labelType = "info";
                     this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
                 }
-                this.loadingDependencia = false
+                this.loadingEstado = false
             } else {
                 this.labelType = "info";
-                this.toastMessage = "Debe seleccionar una dependencia";
+                this.toastMessage = "Debe seleccionar un archivo";
             }
-        },
-        async importarEstados() {
-            this.loadingEstado = true
-            this.status = ''
-            let rt = route("import.estado");
-            const formData = new FormData();
-            formData.append('file', this.fileEstado);
-            try {
-                const response = await axios.post(rt, formData);
-                if (response.status == 200) {
-                    this.labelType = "success";
-                    this.toastMessage = response.data.message;
-                    this.status = response.data.status;
-                    console.log(response)
-                } else {
-                    this.labelType = "danger";
-                    this.toastMessage = response.data.message;
-                }
-            } catch (error) {
-                console.log(error);
-                this.labelType = "info";
-                this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
-            }
-            this.loadingEstado = false
-        
+
         },
         async importarPersonas() {
-            this.loadingPersona = true
+            if (this.filePersona != '') {
+                this.loadingPersona = true
+                this.status = ''
+                let rt = route("import.personas");
+                const formData = new FormData();
+                formData.append('file', this.filePersona);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.status = response.data.status;
+                        console.log(response)
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                } catch (error) {
+                    console.log(error);
+                    this.labelType = "info";
+                    this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
+                }
+                this.loadingPersona = false
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+        async importarArchivos() {
+            this.loadingArchivo = true
             this.status = ''
-            let rt = route("import.personas");
-            const formData = new FormData();
-            formData.append('file', this.filePersona);
+            let rt = route("import.files");
             try {
-                const response = await axios.post(rt, formData);
+                const response = await axios.post(rt);
                 if (response.status == 200) {
                     this.labelType = "success";
                     this.toastMessage = response.data.message;
                     this.status = response.data.status;
-                    console.log(response)
                 } else {
                     this.labelType = "danger";
                     this.toastMessage = response.data.message;
@@ -404,8 +657,7 @@ export default {
                 this.labelType = "info";
                 this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
             }
-            this.loadingPersona = false
-        
+            this.loadingArchivo = false
         }
 
     },

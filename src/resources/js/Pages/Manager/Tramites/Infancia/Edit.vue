@@ -1273,7 +1273,6 @@
 										<ListContacto v-for="contacto in this.form_contactos" :parentescos=parentescos :key="contacto.id"
 											:item=contacto @edit-item="editContacto"
 											@destroy-item="destroyContacto" />
-
 									</tbody>
 								</table>
 							</div>
@@ -1714,13 +1713,13 @@ export default {
 			this.showFamiliar = !this.showFamiliar;
 		},
 		async editFamiliar(item) {
-			console.log(item)
 			let formData = new FormData();
 			formData.append('contacto_id', item.id);
 			formData.append('person_id', item.person_id);
 			formData.append('parentesco_id', item.parentesco.id);
 			formData.append('name', item.person.name);
 			formData.append('lastname', item.person.lastname);
+			formData.append('familiar_id', item.id);
 			try {
 				const response = await axios.post(route('persons.updateFamiliar'), formData);
 

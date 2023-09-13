@@ -103,6 +103,7 @@ export default {
             this.item.person.lastname = this.temp.lastname
             this.item.person.contact[0].phone = this.temp.phone
             this.item.parentesco.id = this.temp.parentesco_id
+            console.log('EDIT LOST ' + this.item )
             this.$emit('edit-item', this.item)
             this.editMode = false
         },

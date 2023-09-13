@@ -9,6 +9,8 @@ use App\Models\Manager\Tramite;
 use App\Models\Manager\TramiteEstado;
 use App\Models\Manager\TramiteComment;
 use App\Models\Manager\Dependencia;
+use App\Models\Manager\Parentesco;
+use App\Models\Manager\TipoDocumento;
 use App\Models\User;
 
 use Inertia\Inertia;
@@ -26,6 +28,8 @@ class DetailController extends Controller
                 'estados' => TramiteEstado::all(),
                 'users' => User::all(),
                 'dependencias' => Dependencia::all(),
+                'parentescos' => Parentesco::all(),
+                'tiposDocumento' => TipoDocumento::all(),
                 'tramite' => Tramite::where('id', $id)
                                     ->with('persons', 
                                            'persons.contact',
@@ -42,7 +46,12 @@ class DetailController extends Controller
                                            'cbi_data',
                                            'cbj_data',
                                            'familiares',
+                                           'familiares.person',
+                                           'familiares.parentesco',
                                            'contactos',
+                                           'contactos.person',
+                                           'contactos.person.contact',
+                                           'contactos.parentesco',
                                            'persons.education',
                                            'persons.education.nivelEducativo',
                                            'persons.social',

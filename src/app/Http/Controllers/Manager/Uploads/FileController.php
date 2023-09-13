@@ -87,9 +87,9 @@ class FileController extends Controller
             **  1 => "jpeg"
             */
 
-            preg_match("/^data:image\/(.*);base64/i",$data['base64'], $extension); 
+            preg_match("/^data:(image\/[a-z]+|application\/pdf);base64/i",$data['base64'], $extension); 
+            //preg_match("/^data:image\/(.*);base64/i",$data['base64'], $extension); 
             // preg_match("/^data:image\/(.*);base64/i", $data['base64'], $extensionMatches);
-
             if (!isset($extension[1])) {
 
                     $dataUri = $data['base64'];
@@ -99,8 +99,10 @@ class FileController extends Controller
 
                     if (strpos($contentType, 'image/') === 0) {
                         $extension[1] = str_replace('image/', '', $contentType);
-                    } else {
-                        throw new \Exception("No se encontró una extensión válida en la cadena Data URI");
+                    } elseif (strpos($contentType, 'application/pdf') === 0) {
+                        $extension[1] = str_replace('application/pdf', '', $contentType);
+                    }else{
+                        throw new \Exception("El Formato de archivo no es un formato valido");
                     }
 
 

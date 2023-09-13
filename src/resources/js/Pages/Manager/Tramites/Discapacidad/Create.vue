@@ -139,7 +139,7 @@
 										<td class="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-900">
 											{{ tramite.titulo }}
 										</td>
-										<td class="px-6 py-4 whitespace-wrap text-sm text-gray-500">
+										<td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 text-justify">
 											{{ tramite.observacion }}
 										</td>
 										<td class="px-6 py-4 text-center text-sm font-medium">

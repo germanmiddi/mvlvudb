@@ -174,7 +174,7 @@ class NinezImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
                                             'dependencia_id' => $row['tramite_dependencia_id'],
                                             'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
                                             'estado_id' => $row['tramite_estado_id'],
-                                            'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : null,
+                                            'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : '',
                                             'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
                                         ]
                                     );
@@ -190,7 +190,7 @@ class NinezImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
                                             'dependencia_id' => $row['tramite_dependencia_id'],
                                             'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
                                             'estado_id' => $row['tramite_estado_id'],
-                                            'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : null,
+                                            'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : '',
                                             'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
                                         ]
                                     );
@@ -214,7 +214,7 @@ class NinezImport implements ToModel,WithHeadingRow, WithBatchInserts, WithChunk
                                         'dependencia_id' => $row['tramite_dependencia_id'],
                                         'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
                                         'estado_id' => $row['tramite_estado_id'],
-                                        'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : null,
+                                        'observacion' => $row['tramite_observacion'] !== 'NULL' && $row['tramite_observacion'] !== -1 ? $row['tramite_observacion'] : '',
                                         'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
                                     ]
                                 );

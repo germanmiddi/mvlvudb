@@ -663,7 +663,7 @@ export default {
 			let rt = route('vivienda.update', this.form.tramite_id);
 
 			const formData = new FormData();
-			formData.append('file', this.file);
+			//formData.append('file', this.file);
 
 			/* 
 			** Se formatea las fechas para que las mismas sean enviadas en formato 

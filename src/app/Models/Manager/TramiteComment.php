@@ -9,7 +9,7 @@ class TramiteComment extends Model
 {
     protected $table = 'tramite_comments';
     protected $fillable = [
-        'tramite_id', 'user_id', 'dependencia_id', 'content'
+        'tramite_id', 'user_id', 'dependencia_id', 'content', 'updated_at', 'created_at'
     ];
 
     public function tramite()

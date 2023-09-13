@@ -140,10 +140,10 @@
 								</thead>
 								<tbody class="bg-white divide-y divide-gray-200">
 									<tr v-for="(tramite, index) in tramites" :key="index">
-										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+										<td class="px-6 py-4 whitespace-wrap text-sm font-medium text-gray-900">
 											{{ tramite.titulo }}
 										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+										<td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 text-justify">
 											{{ tramite.observacion }}
 										</td>
 										<td class="px-6 py-4 text-center text-sm font-medium">

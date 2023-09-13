@@ -27,6 +27,7 @@ class Tramite extends Model
         'assigned',
         'modalidad_atencion_id',
         'category_id',
+        'updated_at'
     ];
 
     public function sede()

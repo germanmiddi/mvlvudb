@@ -86,7 +86,7 @@ class FortifyServiceProvider extends ServiceProvider
                     $tokenPayload = base64_decode($tokenParts[1]);
                     
                     $jwtHeader  = json_decode($tokenHeader);
-                    $jwtPayload = json_decode($tokenPayload);
+                    $jwtPayload = json_decode($tokenPayload, true);
                     
                     if($jwtPayload != null){
                         // Convertir descripciones en IDs de roles

@@ -90,8 +90,8 @@ class FortifyServiceProvider extends ServiceProvider
                     
                     if($jwtPayload != null){
                         // Convertir descripciones en IDs de roles
-                        $grupoIds = Role::whereIn('name', $jwtPayload)->pluck('id')->toArray();;
-                        $grupoNames = Role::whereIn('name', $jwtPayload)->pluck('name')->toArray();;
+                        $grupoIds = Role::whereIn('name', $jwtPayload)->pluck('id')->toArray();
+                        $grupoNames = Role::whereIn('name', $jwtPayload)->pluck('name')->toArray();
 
                         // Guardar los IDs en la tabla pivot
                         $user->roles()->sync($grupoIds);

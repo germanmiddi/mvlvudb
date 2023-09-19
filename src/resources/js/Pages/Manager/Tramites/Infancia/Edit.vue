@@ -939,6 +939,17 @@
 						<div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-3">
+								<label for="apto_medico" class="block text-sm font-medium text-gray-700">Apto médico
+									presentado</label>
+								<select v-model="form_nino.apto_medico" id="apto_medico" name="apto_medico"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
 								<label for="libreta_vacunacion" class="block text-sm font-medium text-gray-700">Libreta de
 									vacunación
 									presentada</label>
@@ -1830,6 +1841,11 @@ export default {
 			/* this.form.barrio_id = this.form.get_barrio_id
 			this.form.get_barrio_id = null */
 			return this.barrios.filter(barrio => barrio.localidad_id == this.form.localidad_id)
+		},
+		barriosNinoComputed: function () {
+			/* this.form_nino.barrio_id = this.form_nino.get_barrio_id
+			this.form_nino.get_barrio_id = null */
+			return this.barrios.filter(barrio => barrio.localidad_id == this.form_nino.localidad_id)
 		}
 	},
 	mounted() {
@@ -1879,6 +1895,7 @@ export default {
 		this.form.lastname = titular[0].lastname
 		this.form.email = titular[0].contact[0].email
 		this.form.phone = titular[0].contact[0].phone
+		this.form.celular = titular[0].contact[0].celular
 		this.form.cant_hijos = titular[0].aditional[0].cant_hijos
 		this.form.situacion_conyugal_id = titular[0].aditional[0].situacion_conyugal_id
 		this.form.tipo_ocupacion_id = titular[0].social[0].tipo_ocupacion_id
@@ -1924,11 +1941,7 @@ export default {
 		this.form_nino.lastname = beneficiario[0].lastname
 		this.form_nino.email = beneficiario[0].contact[0].email
 		this.form_nino.phone = beneficiario[0].contact[0].phone
-		this.form_nino.cant_hijos = beneficiario[0].aditional[0].cant_hijos
-		this.form_nino.situacion_conyugal_id = beneficiario[0].aditional[0].situacion_conyugal_id
-		this.form_nino.tipo_ocupacion_id = beneficiario[0].social[0].tipo_ocupacion_id
-		this.form_nino.cobertura_medica_id = beneficiario[0].social[0].cobertura_medica_id
-		this.form_nino.tipo_pension_id = beneficiario[0].social[0].tipo_pension_id
+		this.form_nino.celular = beneficiario[0].contact[0].celular
 		this.form_nino.nivel_educativo_id = beneficiario[0].education[0].nivel_educativo_id
 		this.form_nino.estado_educativo_id = beneficiario[0].education[0].estado_educativo_id
 

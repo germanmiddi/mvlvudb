@@ -259,6 +259,7 @@ class InfanciaController extends Controller
                 ],
                 [
                     'phone' => $request['nino_phone'],
+                    'celular' => $request['nino_celular'],
                     'email' => $request['nino_email']
                 ]
             );

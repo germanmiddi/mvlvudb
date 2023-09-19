@@ -179,7 +179,7 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.sede_id" id="sede_id" name="sede_id"
+								<select v-model="form_cbi.sede_id" id="sede_id" name="sede_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una sede</option>
@@ -195,14 +195,14 @@
 									inicio CBI</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.anio_inicio" auto-apply
+									v-model="form_cbi.anio_inicio" auto-apply
 									year-picker>
 								</Datepicker>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_cbi_id" class="block text-sm font-medium text-gray-700">Estado en CBI</label>
-								<select v-model="form.estado_cbi_id" id="estado_cbi_id" name="estado_cbi_id"
+								<select v-model="form_cbi.estado_cbi_id" id="estado_cbi_id" name="estado_cbi_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione un estado</option>
@@ -215,7 +215,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Autorizacion firmada</label>
-								<select v-model="form.aut_firmada" id="aut_firmada" name="aut_firmada"
+								<select v-model="form_cbi.aut_firmada" id="aut_firmada" name="aut_firmada"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -225,7 +225,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="aut_retirarse" class="block text-sm font-medium text-gray-700">Autorizacion para retirarse solo</label>
-								<select v-model="form.aut_retirarse" id="aut_retirarse" name="aut_retirarse"
+								<select v-model="form_cbi.aut_retirarse" id="aut_retirarse" name="aut_retirarse"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -235,7 +235,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="aut_uso_imagen" class="block text-sm font-medium text-gray-700">Autorizacion uso de imagen</label>
-								<select v-model="form.aut_uso_imagen" id="aut_uso_imagen" name="aut_uso_imagen"
+								<select v-model="form_cbi.aut_uso_imagen" id="aut_uso_imagen" name="aut_uso_imagen"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -245,7 +245,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="act_varias" class="block text-sm font-medium text-gray-700">Actividades varias</label>
-								<select v-model="form.act_varias" id="act_varias" name="act_varias"
+								<select v-model="form_cbi.act_varias" id="act_varias" name="act_varias"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -255,7 +255,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="act_esporadicas" class="block text-sm font-medium text-gray-700">Actividades esporadicas</label>
-								<select v-model="form.act_esporadicas" id="act_esporadicas" name="act_esporadicas"
+								<select v-model="form_cbi.act_esporadicas" id="act_esporadicas" name="act_esporadicas"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -265,7 +265,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="comedor" class="block text-sm font-medium text-gray-700">Comedor</label>
-								<select v-model="form.comedor" id="comedor" name="comedor"
+								<select v-model="form_cbi.comedor" id="comedor" name="comedor"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="1" selected>Si</option>
@@ -274,7 +274,7 @@
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="estado_gabinete_id" class="block text-sm font-medium text-gray-700">Gabinete Psicologico</label>
-								<select v-model="form.estado_gabinete_id" id="estado_gabinete_id" name="estado_gabinete_id"
+								<select v-model="form_cbi.estado_gabinete_id" id="estado_gabinete_id" name="estado_gabinete_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una opcion</option>
@@ -1224,6 +1224,7 @@ export default {
 			form: {},
 			form_temp: {},
 			form_nino: {},
+			form_cbi: {},
 			form_google: "",
 			form_beneficiario: {},
 			form_familiares: [],
@@ -1337,6 +1338,13 @@ export default {
 				}
 			}
 
+			//this.form_cbi.anio_inicio = (this.form_cbi.anio_inicio) ? new Date(this.form_cbi.anio_inicio).toISOString() : null;
+			for (var clave in this.form_cbi) {
+				if (this.form_cbi.hasOwnProperty(clave)) {
+					formData.append(clave, this.form_cbi[clave]);
+				}
+			}
+
 			// Datos del Niño
 			this.form_nino.fecha_nac = (this.form_nino.fecha_nac) ? new Date(this.form_nino.fecha_nac).toISOString() : null;
 
@@ -1411,6 +1419,8 @@ export default {
 			this.form_temp.tipo_tramite_id = this.form.tipo_tramite_id;
 			this.form_temp.canal_atencion_id = this.form.canal_atencion_id;
 			this.form_temp.observacion = this.form.observacion;
+
+			/* DATA DE CBI */
 
 			const get = `${route('persons.getPersonDni', this.form.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })

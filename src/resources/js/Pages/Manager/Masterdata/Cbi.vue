@@ -32,13 +32,16 @@
             </div>
         </div>
 
+        
     </div>
+    <CbiEscuelas :dependencia_id="this.dependencia_id"></CbiEscuelas>
 
 </template>
 
 <script>
 import axios from 'axios'
 import ListItem from './ListItem.vue'
+import CbiEscuelas from './CbiEscuelas.vue'
 
 export default {
 
@@ -53,7 +56,8 @@ export default {
         }
     },
     components:{
-        ListItem
+        ListItem,
+        CbiEscuelas
     },
     setup(){
 
@@ -159,7 +163,10 @@ export default {
                                 {'message' : response.data.message, 
                                  'type' : 'danger'} )
             }            
-        }
+        },
+        setMessage(message){
+            this.$emit('toast-message', message )
+            },
 
     },
 }

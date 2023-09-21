@@ -9,6 +9,26 @@
                     Bandeja General
                 </h1>
             </div>
+            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!showCreate">
+                <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
+                <a @click="showCreate = true"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+            </div>
+            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-else>
+                <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
+                <div class="col-span-12 sm:col-span-4">
+                    <select v-model="dependencia_id" id="create_dependencia_id" name="create_dependencia_id"
+                        autocomplete="off"
+                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="" selected disabled>Selecciones una dependencia</option>
+                        <option v-for="dependencia in createDependencia " :key="dependencia.id" :value="dependencia.id">{{
+                            dependencia.description
+                        }}</option>
+                    </select>
+                </div>
+                <a :href="formUrl()"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ir Formulario</a>
+            </div>
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
@@ -147,19 +167,19 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
-                                                        <!-- <MenuItem v-slot="{ active }">
-                                                        <a :href="route('fortalecimiento.edit', data.tramite.id)"
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a :href="defineUrl(data.tramite.dependencia_id, data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
                                                             Editar</a>
                                                         </MenuItem>
- -->
+ 
                                                         <!-- <MenuItem v-slot="{ active }">
                                                         <a href="#" class="block px-4 py-2 text-sm">
                                                             Ver</a>
                                                         </MenuItem> -->
                                                         
-                                                        <MenuItem v-slot="{ active }">
-                                                            <a :href="route('detail.view', data.tramite.id)"
+                                                        <MenuItem v-slot="{ active }" v-if="showDetails" >
+                                                            <a :href="route('detail.view', data.tramite.id) "
                                                                 class="block px-4 py-2 text-sm">
                                                                 Detalle</a>
                                                         </MenuItem>
@@ -243,10 +263,13 @@ export default {
             labelType: "info",
             message: "",
             showToast: false,
+            showCreate: false,
+            showDetails: false,
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            tiposTramiteFiltrados: this.tiposTramite
+            tiposTramiteFiltrados: this.tiposTramite,
+            dependencia_id: ''
         };
     },
     setup() {
@@ -351,8 +374,91 @@ export default {
                 }
             });
             return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+        },
+        formUrl(){
+                let url = ''
+                switch (this.dependencia_id) {
+                    case 2:
+                        url = route('discapacidad.create') 
+                        break;
+                    case 5:
+                        url = route('fortalecimiento.create') 
+                        break;
+                    case 6:
+                        url = route('genero.create') 
+                        break;
+                    case 7:
+                        url = route('habitat.create') 
+                        break;
+                    case 8:
+                        url = route('ninez.create') 
+                        break;
+                    case 9:
+                        url = route('promocion.create') 
+                        break;
+                    case 11:
+                        url = route('vivienda.create') 
+                        break;
+                    case 12:
+                        url = route('infancia.create') 
+                        break;
+                    case 13:
+                        url = route('juventud.create') 
+                        break;
+                    case 14:
+                        url = route('mayores.create') 
+                        break;
+                    default:
+                        break;
+                }
+                return url    
+        },
+        defineUrl(dependencia, tramite_id){
+                let url = ''
+                switch (dependencia) {
+                    case 2:
+                        url = route('discapacidad.edit', tramite_id) 
+                        break;
+                    case 5:
+                        url = route('fortalecimiento.edit',tramite_id) 
+                        break;
+                    case 6:
+                        url = route('genero.edit', tramite_id) 
+                        break;
+                    case 7:
+                        url = route('habitat.edit', tramite_id) 
+                        break;
+                    case 8:
+                        url = route('ninez.edit', tramite_id) 
+                        break;
+                    case 9:
+                        url = route('promocion.edit', tramite_id) 
+                        break;
+                    case 11:
+                        url = route('vivienda.edit', tramite_id) 
+                        break;
+                    case 12:
+                        url = route('infancia.edit', tramite_id) 
+                        break;
+                    case 13:
+                        url = route('juventud.edit', tramite_id) 
+                        break;
+                    case 14:
+                        url = route('mayores.edit', tramite_id) 
+                        break;
+                    default:
+                        break;
+                }
+                return url
+            
         }
+
     },
+    computed: {
+		createDependencia: function () {
+			return this.dependencias.filter(dependencia => (dependencia.id != 1 && dependencia.id != 3 && dependencia.id != 4 && dependencia.id != 10))
+		}
+	},
     mounted() {
         if (this.toast) {
             if (this.toast["status"] == 200) {
@@ -364,7 +470,6 @@ export default {
             }
         }
         this.getTramites();
-      
     },
 };
 </script>

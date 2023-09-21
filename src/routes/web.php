@@ -172,6 +172,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/masterdata/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
     Route::post('/masterdata/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
 
+    Route::get('/masterdata/get_escuela/{d}', [MasterdataController::class, 'get_escuela'])->name('masterdata.get_escuela');
+    Route::post('/masterdata/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');  
+    Route::post('/masterdata/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');     
+    Route::post('/masterdata/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
+     
     // Users
 
     Route::get('/users', [UserController::class, 'index'])->name('users');

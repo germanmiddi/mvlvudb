@@ -25,4 +25,9 @@ class Dependencia extends Model
     {
         return $this->hasMany(Category::class, 'dependencia_id');
     }
+
+    public function escuela()
+    {
+        return $this->hasMany(Escuela::class);
+    }
 }

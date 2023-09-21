@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
+use App\Models\Manager\Escuela;
 use Carbon\Carbon;
 use App\Models\Manager\TipoTramite;
 
@@ -122,5 +123,79 @@ class MasterdataController extends Controller
 
     // }
 
+    /**
+     * ESCUELAS
+     */
     
+    public function get_escuela($dependencia_id){
+
+        $escuelas = Escuela::where('dependencia_id', $dependencia_id)->get();
+        return response()->json($escuelas);
+        
+    }
+
+    public function store_escuela(Request $request){
+        
+        $description = $request->input('description');
+        $dependencia_id = $request->input('dependencia_id');
+        
+        if (!$description || !$dependencia_id) {
+            return response()->json(['message' => 'El campo descripción es requerido'], 422);
+        }
+
+        $item = Escuela::create([
+            'description' => $description,
+            'dependencia_id' => $dependencia_id,
+            'primaria' => $request->input('primaria')  == 'true' ? 1 : 0,
+            'secundaria' => $request->input('secundaria')  == 'true' ? 1 : 0,
+            'nocturna' => $request->input('nocturna') == 'true' ? 1 : 0,
+            'activo' => 1
+        ]);
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+
+    }
+
+    public function update_escuela(Request $request){
+        
+        $itemId   = $request->input('id'); // Obtener el id del item desde la solicitud
+        $itemDescription = $request->input('description'); // Obtener los datos del item desde la solicitud
+        $activo = $request->input('activo'); // Obtener los datos del item desde la solicitud
+
+        // Buscar el registro TipoTramite por su id
+        $escuela = Escuela::find($itemId);
+    
+        if (!$escuela) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+    
+        // Actualizar los campos del registro con los nuevos datos
+        $escuela->update([
+            'description' => $itemDescription,
+            'activo'     => $activo,
+            'primaria'     => $request->input('primaria')  == 'true' ? 1 : 0,
+            'secundaria'     => $request->input('secundaria')  == 'true' ? 1 : 0,
+            'nocturna'     => $request->input('nocturna')  == 'true' ? 1 : 0,
+            'updated_at' => Carbon::now()
+        ]);
+    
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function hide_escuela(Request $request){
+        
+        $escuela = Escuela::find($request->id);
+
+        if (!$escuela) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        
+        $escuela->activo = $escuela->activo == 1 ? 0 : 1;
+        // dd($tipoTramite->activo);
+        $escuela->save();
+               
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+
+    }
+
 }

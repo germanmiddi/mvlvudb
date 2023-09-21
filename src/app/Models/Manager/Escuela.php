@@ -16,6 +16,12 @@ class Escuela extends Model
         'primaria',
         'secundaria',
         'nocturna',
+        'dependencia_id',
         'activo',
     ];
+
+    public function dependencia()
+    {
+        return $this->belongsTo(Dependencia::class);
+    }
 }

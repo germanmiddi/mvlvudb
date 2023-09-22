@@ -523,6 +523,10 @@ class DiscapacidadController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
+        if(request('assigned_me')){
+            $result->where('assigned', Auth::user()->id);
+        }
+
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()

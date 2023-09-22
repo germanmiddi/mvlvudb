@@ -92,7 +92,7 @@ class InfanciaController extends Controller
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'estadosCbi' => EstadoCbi::all(),
                 'estadosGabinete' => EstadoGabinete::all(),
-                'escuelas' => Escuela::where('primaria', true)->get(),
+                'escuelas' => Escuela::where('primaria', true)->where('dependencia_id',12)->get(),
                 'escuelasDependencias' => EscuelaDependencia::all(),
                 'escuelasNiveles' => EscuelaNivel::all(),
                 'escuelasTurnos' => EscuelaTurno::all(),
@@ -453,7 +453,7 @@ class InfanciaController extends Controller
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'estadosCbi' => EstadoCbi::all(),
                 'estadosGabinete' => EstadoGabinete::all(),
-                'escuelas' => Escuela::where('primaria', true)->get(),
+                'escuelas' => Escuela::where('primaria', true)->where('dependencia_id',12)->get(),
                 'escuelasDependencias' => EscuelaDependencia::all(),
                 'escuelasNiveles' => EscuelaNivel::all(),
                 'escuelasTurnos' => EscuelaTurno::all(),
@@ -691,6 +691,10 @@ class InfanciaController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
+        if(request('assigned_me')){
+            $result->where('assigned', Auth::user()->id);
+        }
+        
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()

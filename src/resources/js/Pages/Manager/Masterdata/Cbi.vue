@@ -34,7 +34,8 @@
 
         
     </div>
-    <CbiEscuelas :dependencia_id="this.dependencia_id"></CbiEscuelas>
+    <CbiEscuelas    :dependencia_id="this.dependencia_id" 
+                    @toast-message="setMessage" />
 
 </template>
 

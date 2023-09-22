@@ -18,9 +18,9 @@
                 </div>
             </div>
             <div v-else class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                <input v-model="edit.primaria" id="turnos_primaria" type="checkbox" value="2" class="m-4 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <input v-model="edit.secundaria" id="turnos_secundaria" type="checkbox" value="2" class="m-4 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <input v-model="edit.nocturna" id="turnos_nocturna" type="checkbox" value="2" class="m-4 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <input v-model="edit.primaria" id="turnos_primaria" type="checkbox" value="2" class="m-4 w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <input v-model="edit.secundaria" id="turnos_secundaria" type="checkbox" value="2" class="m-4 w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <input v-model="edit.nocturna" id="turnos_nocturna" type="checkbox" value="2" class="m-4 w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             </div>
         </td>
         <!-- <td>

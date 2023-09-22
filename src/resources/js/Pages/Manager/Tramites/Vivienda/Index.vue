@@ -62,6 +62,10 @@
                                 }}</option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="asiggned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
+                            <input v-model="filter.assigned_me" id="asiggned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        </div>
                     </div>
 
                 </div>
@@ -263,6 +267,10 @@ export default {
 
             if (this.filter.tipo_tramite_id) {
                 filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
+            }
+
+            if (this.filter.assigned_me) {
+                filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
             }
 
             const get = `${route('vivienda.list')}?${filter}`

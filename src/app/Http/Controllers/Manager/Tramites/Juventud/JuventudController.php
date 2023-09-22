@@ -102,9 +102,9 @@ class JuventudController extends Controller
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'estadosCbj' => EstadoCbj::where('activo', true)->get(),
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
-                'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
-                'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
-                'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
+                'escuelasPrimarias' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
+                'escuelasSecundarias' => Escuela::where('secundaria', true)->whereNull('dependencia_id')->get(),
+                'escuelasNocturnas' => Escuela::where('nocturna', true)->whereNull('dependencia_id')->get(),
                 'orientaciones' => OrientacionEscuela::where('activo', true)->get(),
                 'escuelasTurnos' => EscuelaTurno::all(),
                 'escuelasDependencias' => EscuelaDependencia::all(),
@@ -458,9 +458,9 @@ class JuventudController extends Controller
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'estadosCbj' => EstadoCbj::where('activo', true)->get(),
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
-                'escuelasPrimarias' => Escuela::where('primaria', true)->get(),
-                'escuelasSecundarias' => Escuela::where('secundaria', true)->get(),
-                'escuelasNocturnas' => Escuela::where('nocturna', true)->get(),
+                'escuelasPrimarias' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
+                'escuelasSecundarias' => Escuela::where('secundaria', true)->whereNull('dependencia_id')->get(),
+                'escuelasNocturnas' => Escuela::where('nocturna', true)->whereNull('dependencia_id')->get(),
                 'orientaciones' => OrientacionEscuela::where('activo', true)->get(),
                 'escuelasTurnos' => EscuelaTurno::all(),
                 'escuelasDependencias' => EscuelaDependencia::all(),
@@ -725,7 +725,11 @@ class JuventudController extends Controller
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
-
+        
+        if(request('assigned_me')){
+            $result->where('assigned', Auth::user()->id);
+        }
+        
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()

@@ -146,6 +146,7 @@ class MasterdataController extends Controller
         $item = Escuela::create([
             'description' => $description,
             'dependencia_id' => $dependencia_id,
+            'infante' => $request->input('infante')  == 'true' ? 1 : 0,
             'primaria' => $request->input('primaria')  == 'true' ? 1 : 0,
             'secundaria' => $request->input('secundaria')  == 'true' ? 1 : 0,
             'nocturna' => $request->input('nocturna') == 'true' ? 1 : 0,
@@ -173,6 +174,7 @@ class MasterdataController extends Controller
         $escuela->update([
             'description' => $itemDescription,
             'activo'     => $activo,
+            'infante'     => $request->input('infante')  == 'true' ? 1 : 0,
             'primaria'     => $request->input('primaria')  == 'true' ? 1 : 0,
             'secundaria'     => $request->input('secundaria')  == 'true' ? 1 : 0,
             'nocturna'     => $request->input('nocturna')  == 'true' ? 1 : 0,

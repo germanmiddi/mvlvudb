@@ -265,7 +265,6 @@ p {
             </tr>
         </table>
     </div>
-
     <br><br>
     <div class="destinatario">
         <table>

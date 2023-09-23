@@ -189,6 +189,12 @@
                                                             class="block px-4 py-2 text-sm">
                                                             Imprimir</a>
                                                         </MenuItem>
+
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a :href="route('pdf.acuseobservacionpdf', data.tramite.id)" target="_blank"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Imprimir Obs.</a>
+                                                        </MenuItem>
                                                     </div>
 
                                                 </MenuItems>

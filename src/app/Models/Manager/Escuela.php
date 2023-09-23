@@ -13,6 +13,7 @@ class Escuela extends Model
 
     protected $fillable = [
         'description',
+        'infante',
         'primaria',
         'secundaria',
         'nocturna',

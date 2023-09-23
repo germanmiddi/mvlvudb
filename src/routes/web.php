@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
+    Route::get('/pdf/acuseobservacionespdf/{tramite}', [PdfController::class, 'acuseObservacionPdf'])->name('pdf.acuseobservacionpdf');
 
     // LOGS
     Route::get('/logs', [LogController::class, 'index'])->name('logs');  

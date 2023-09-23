@@ -12,17 +12,21 @@
                 
                     <div class="flex mt-4">
                         <div class="flex items-center mr-4">
-                        <input v-model="turnos.primaria" id="turnos_primaria" type="checkbox" value="1" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Primaria</label>
-                    </div>
-                    <div class="flex items-center mr-4">
-                        <input v-model="turnos.secundaria" id="turnos_secundaria" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="green-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Secundaria</label>
-                    </div>
-                    <div class="flex items-center mr-4">
-                        <input v-model="turnos.nocturna" id="turnos_nocturna" type="checkbox" value="3" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="purple-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nocturna</label>
-                    </div>
+                            <input v-model="turnos.infante" id="turnos_infante" type="checkbox" value="1" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Jardin de Infante</label>
+                        </div>
+                        <div class="flex items-center mr-4">
+                            <input v-model="turnos.primaria" id="turnos_primaria" type="checkbox" value="1" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Primaria</label>
+                        </div>
+                        <div class="flex items-center mr-4">
+                            <input v-model="turnos.secundaria" id="turnos_secundaria" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="green-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Secundaria</label>
+                        </div>
+                        <div class="flex items-center mr-4">
+                            <input v-model="turnos.nocturna" id="turnos_nocturna" type="checkbox" value="3" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="purple-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nocturna</label>
+                        </div>
                     </div>
                     
                     <button class="mt-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
@@ -34,7 +38,7 @@
                     <thead class="border-b-1 border-indigo-600 ">
                         <tr>
                             <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6  text-left">Descripción</th>
-                            <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6  text-center">Turnos (Prim-Sec-Noc)</th>
+                            <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6  text-center">Turnos (Jar-Prim-Sec-Noc)</th>
                             <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6 text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -92,6 +96,7 @@ export default {
             let formData = new FormData();
             formData.append('dependencia_id', this.dependencia_id);
             formData.append('description', this.newDescription);
+            formData.append('infante', this.turnos.infante ?? false);
             formData.append('primaria', this.turnos.primaria ?? false);
             formData.append('secundaria', this.turnos.secundaria ?? false);
             formData.append('nocturna', this.turnos.nocturna ?? false);
@@ -127,6 +132,7 @@ export default {
             let formData = new FormData();
             formData.append('id', item.id);
             formData.append('description', item.description);
+            formData.append('infante', item.infante);
             formData.append('primaria', item.primaria);
             formData.append('secundaria', item.secundaria);
             formData.append('nocturna', item.nocturna);

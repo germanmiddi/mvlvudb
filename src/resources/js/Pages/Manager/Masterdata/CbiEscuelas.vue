@@ -13,7 +13,7 @@
                     <div class="flex mt-4">
                         <div class="flex items-center mr-4">
                             <input v-model="turnos.infante" id="turnos_infante" type="checkbox" value="1" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Jardin de Infante</label>
+                            <label for="red-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Jardin de Infantes</label>
                         </div>
                         <div class="flex items-center mr-4">
                             <input v-model="turnos.primaria" id="turnos_primaria" type="checkbox" value="1" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">

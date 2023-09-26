@@ -875,8 +875,21 @@
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
+								<label for="escuela_infante_id"
+									class="block text-sm font-medium text-gray-700">Escuela Infante</label>
+								<select v-model="form_nino.escuela_infante_id" id="escuela_id"
+									name="escuela_infante_id" autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones un escuela</option>
+									<option v-for="escuela in escuelasInfante" :key="escuela.id" :value="escuela.id">{{
+										escuela.description
+									}}</option>
+
+								</select>
+							</div>
+							<div class="col-span-12 sm:col-span-3">
 								<label for="escuela_id"
-									class="block text-sm font-medium text-gray-700">Escuela</label>
+									class="block text-sm font-medium text-gray-700">Escuela Primaria</label>
 								<select v-model="form_nino.escuela_id" id="escuela_id"
 									name="escuela_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -1199,6 +1212,7 @@ export default {
 		estadosCbi: Object,
 		estadosGabinete: Object,
 		escuelas: Object,
+		escuelasInfante: Object,
 		escuelasDependencias: Object,
 		escuelasNiveles: Object,
 		escuelasTurnos: Object,
@@ -1510,6 +1524,7 @@ export default {
 				this.form_nino.nivel_educativo_id = data.education[0].nivel_educativo_id
 				this.form_nino.estado_educativo_id = data.education[0].estado_educativo_id
 				this.form_nino.escuela_id = data.education[0].escuela_id
+				this.form_nino.escuela_infante_id = data.education[0].escuela_infante_id
 				this.form_nino.escuela_dependencia_id = data.education[0].escuela_dependencia_id
 				this.form_nino.escuela_localidad_id = data.education[0].escuela_localidad_id
 				this.form_nino.anio_curso = data.education[0].anio_curso

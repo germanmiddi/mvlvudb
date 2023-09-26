@@ -25,6 +25,7 @@ class EducationData extends Model
         'permanencia',
         'certificado_escolar',
         'observacion',
+        'escuela_infante_id',
         'escuela_primaria_id',
         'escuela_secundaria_id',
         'escuela_nocturna_id',

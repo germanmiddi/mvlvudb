@@ -22,7 +22,8 @@ class PdfController extends Controller
             'dependencia' => $tramite->tipoTramite->dependencia->description,
             'phone' => $tramite->persons[0]->contact[0]->phone,
             'celular' => $tramite->persons[0]->contact[0]->celular,
-            'tipo_tramite' => $tramite->tipoTramite->description
+            'tipo_tramite' => $tramite->tipoTramite->description,
+            'observacion' => $tramite->observacion,
         ];
         return PDF::loadView('pdf/acusePdf', $data)->stream('acuse.pdf');
     }

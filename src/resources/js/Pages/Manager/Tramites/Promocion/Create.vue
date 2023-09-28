@@ -281,14 +281,16 @@
 						</div>  
 						<div class="col-span-12 sm:col-span-3">
 							<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-							<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-							class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" disabled>Seleccione un barrio</option>
-								<option v-for="barrio in barriosComputed" :key="barrio.id"
-									:value="barrio.id">{{
-											barrio.description
-									}}</option>
-							</select>
+							<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" 
+							        :disabled="barriosComputed.length === 0 || input_disable"
+							        :class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"		
+							        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>Seleccione un barrio</option>
+									<option v-for="barrio in barriosComputed" :key="barrio.id"
+										:value="barrio.id">{{
+												barrio.description
+										}}</option>
+								</select>
 						</div>  
 
 					</div>

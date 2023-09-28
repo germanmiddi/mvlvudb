@@ -115,7 +115,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in tramites.data" :key="data.tramite.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ fechaFormateada(data.tramite.fecha) }}
+                                        {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.persons[0].lastname }},
@@ -222,6 +222,8 @@ import {
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 
+import store from '@/store.js'
+
 export default {
     props: {
         toast: Object,
@@ -252,6 +254,9 @@ export default {
         };
     },
     setup() {
+        return {
+            store
+        }
     },
     methods: {
         clearMessage() {
@@ -294,7 +299,7 @@ export default {
             //this.tramites.persons = this.tramites[0].persons.filter(person => person.pivot.rol_tramite_id == 1)
             //console.log(this.orders)  
         },
-        fechaFormateada(fecha) {
+        /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
             const dia = fechaObjeto.getDate();
             const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
@@ -305,7 +310,7 @@ export default {
             const mesFormateado = mes < 10 ? `0${mes}` : mes;
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
-        },
+        }, */
     },
     mounted() {
         if (this.toast) {

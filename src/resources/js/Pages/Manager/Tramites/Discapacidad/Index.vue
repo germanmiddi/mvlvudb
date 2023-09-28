@@ -131,7 +131,7 @@
                                         {{ data.tramite.id }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ fechaFormateada(data.tramite.fecha) }}
+                                        {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <div v-html=" namePersons(data.tramite.persons) "></div>
@@ -234,6 +234,7 @@ import {
     UserCircleIcon
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
+import store from '@/store.js'
 
 export default {
     props: {
@@ -267,6 +268,9 @@ export default {
         };
     },
     setup() {
+        return {
+            store
+        }
     },
     methods: {
         clearMessage() {
@@ -316,7 +320,7 @@ export default {
             this.tramites = await response.json()
             //console.log(this.orders)  
         },
-        fechaFormateada(fecha) {
+        /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
             fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
 
@@ -331,7 +335,7 @@ export default {
             return `${diaFormateado}-${mesFormateado}-${anio}`;
 
             return fecha;
-        },
+        }, */
         namePersons(data){
             let name_titular = ''
             let name_benef = ''

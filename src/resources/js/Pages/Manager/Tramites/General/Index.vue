@@ -133,7 +133,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in this.tramites.data" :key="data.tramite.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ fechaFormateada(data.tramite.fecha) }}
+                                        {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <div v-html=" namePersons(data.tramite.persons) "></div>
@@ -167,7 +167,7 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
-                                                        <MenuItem v-slot="{ active }">
+                                                        <MenuItem v-slot="{ active }" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
                                                         <a :href="defineUrl(data.tramite.dependencia_id, data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
                                                             Editar</a>
@@ -178,7 +178,7 @@
                                                             Ver</a>
                                                         </MenuItem> -->
                                                         
-                                                        <MenuItem v-slot="{ active }" v-if="showDetails" >
+                                                        <MenuItem v-slot="{ active }" v-show="!store.userCan('VUDS-VU', $page.props.userGroups)" >
                                                             <a :href="route('detail.view', data.tramite.id) "
                                                                 class="block px-4 py-2 text-sm">
                                                                 Detalle</a>
@@ -190,7 +190,7 @@
                                                             Imprimir</a>
                                                         </MenuItem>
 
-                                                        <MenuItem v-slot="{ active }">
+                                                        <MenuItem v-slot="{ active }" v-show="!store.userCan('VUDS-VU', $page.props.userGroups)">
                                                         <a :href="route('pdf.acuseobservacionpdf', data.tramite.id)" target="_blank"
                                                             class="block px-4 py-2 text-sm">
                                                             Imprimir Obs.</a>
@@ -244,6 +244,8 @@ import {
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 
+import store from '@/store.js'
+
 export default {
     props: {
         toast: Object,
@@ -270,7 +272,6 @@ export default {
             message: "",
             showToast: false,
             showCreate: false,
-            showDetails: false,
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
@@ -279,6 +280,9 @@ export default {
         };
     },
     setup() {
+        return {
+            store
+        }
     },
     methods: {
         clearFilter(){
@@ -339,7 +343,7 @@ export default {
             //console.log(this.orders)  
         },
 
-        fechaFormateada(fecha) {
+        /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
             fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
 
@@ -354,7 +358,7 @@ export default {
             return `${diaFormateado}-${mesFormateado}-${anio}`;
 
             return fecha;
-        },
+        }, */
 
         namePersons(data){
             let name_titular = ''

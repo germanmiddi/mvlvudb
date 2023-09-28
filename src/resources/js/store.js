@@ -30,7 +30,8 @@ const store = reactive({
 
     fechaFormateada(fecha) {
         const fechaObjeto = new Date(fecha);
-        fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+        //fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
+        fechaObjeto.setDate(fechaObjeto.getDate()); // Restar un día
 
         const dia = fechaObjeto.getDate();
         const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
@@ -48,6 +49,12 @@ const store = reactive({
         const minutosFormateados = minutos < 10 ? `0${minutos}` : minutos;
 
         return `${diaFormateado}/${mesFormateado}/${anio} ${horasFormateadas}:${minutosFormateados}`;
+    },
+
+    dateFormateada(fecha) {
+        // 2021-08-21
+        const fechaObjecto = fecha.split('-')
+        return `${fechaObjecto[2]}/${fechaObjecto[1]}/${fechaObjecto[0]}`
     },
 
 

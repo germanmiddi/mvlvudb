@@ -310,12 +310,12 @@
 							        :disabled="barriosComputed.length === 0 || input_disable"
 							        :class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"		
 							        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-								<option value="" disabled>Seleccione un barrio</option>
-								<option v-for="barrio in barriosComputed" :key="barrio.id"
-									:value="barrio.id">{{
-											barrio.description
-									}}</option>
-							</select>
+									<option value="" disabled>Seleccione un barrio</option>
+									<option v-for="barrio in barriosComputed" :key="barrio.id"
+										:value="barrio.id">{{
+												barrio.description
+										}}</option>
+								</select>
 							</div>
 						</div>
 

@@ -24,6 +24,7 @@ use App\Http\Controllers\Manager\Tramites\Entidad\EntidadController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
 use App\Http\Controllers\Manager\Masterdata\MasterdataController;
+use App\Http\Controllers\Manager\Report\ReportController;
 use App\Http\Controllers\Manager\Users\UserController;
 
 use App\Http\Controllers\Manager\Tramites\Details\DetailController;
@@ -34,6 +35,11 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/statistics', [DashboardController::class, 'getstatistics'])->name('dashboard.statistics');
+
+    // Report
+    Route::get('/report', [ReportController::class, 'index'])->name('report');
+    Route::get('/report/summary', [ReportController::class, 'summary'])->name('report.summary');
+    Route::post('/report/exportTramiteExcel', [ReportController::class, 'exportTramiteExcel'])->name('report.exportTramiteExcel');
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');

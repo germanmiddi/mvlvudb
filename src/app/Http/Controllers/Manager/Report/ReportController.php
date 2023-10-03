@@ -56,6 +56,23 @@ class ReportController extends Controller
     }
 
     public function exportTramiteExcel(Request $request){
-        return Excel::download(new TramitesExport(), 'tramites.xlsx');
+        $data = [];
+
+        if($request->date){
+            //$date = json_decode($request->date);
+
+            $data['from'] = date('Y-m-d', strtotime($request->date[0]));
+            $data['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
+                   
+        }
+        if($request->dependencia_id){
+            $data['dependencia_id'] = json_decode($request->dependencia_id);
+        }
+
+        if($request->tipo_tramite_id){
+            $data['tipo_tramite_id'] = json_decode($request->tipo_tramite_id);
+        }
+
+        return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }
 }

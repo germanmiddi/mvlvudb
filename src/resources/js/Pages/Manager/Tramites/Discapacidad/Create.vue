@@ -185,7 +185,9 @@
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
 								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off" :class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable"
+									autocomplete="off"
+									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione un tipo de documento
@@ -202,18 +204,15 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
-									<div class="relative">
-  <input
-    type="text" v-model="form.num_documento" @focusout="getPerson()"
-    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-  />
-  <a @click="getPerson()"
-    class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white"
-  >
-    Verificar
-  </a>
-</div>
-<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
+								<div class="relative">
+									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									<a @click="getPerson()"
+										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
+										Verificar
+									</a>
+								</div>
+								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 								<!-- <input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
 									id="num_documento" autocomplete="level2"
@@ -228,7 +227,8 @@
 								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
 								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable"/>
+									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable" />
 								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
@@ -237,7 +237,8 @@
 								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
 								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable" />
+									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable" />
 								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
@@ -250,7 +251,8 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
@@ -259,25 +261,29 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-								<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
@@ -305,7 +311,8 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
-								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione una localidad
@@ -317,15 +324,14 @@
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" 
-							        :disabled="barriosComputed.length === 0 || input_disable"
-							        :class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"		
-							        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
+									autocomplete="barrio_id-name" :disabled="barriosComputed.length === 0 || input_disable"
+									:class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione un barrio</option>
-									<option v-for="barrio in barriosComputed" :key="barrio.id"
-										:value="barrio.id">{{
-												barrio.description
-										}}</option>
+									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
+										barrio.description
+									}}</option>
 								</select>
 							</div>
 						</div>
@@ -333,24 +339,28 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-4">
 								<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
-								<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2">
 								<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
-								<input v-model="form.number" type="text" name="number" id="number" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.number" type="text" name="number" id="number" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-2">
 								<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2">
 								<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 						</div>
@@ -358,14 +368,15 @@
 							<div class="col-span-12 sm:col-span-6">
 								<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección
 									Google</label>
-								<vue-google-autocomplete ref="address" id="map" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<vue-google-autocomplete ref="address" id="map" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									placeholder="Ingrese la dirección" v-on:placechanged="getAddressData">
 								</vue-google-autocomplete>
 							</div>
 							<div class="col-span-12 sm:col-span-2">
 								<label for="latitude" class="block text-sm font-medium text-gray-700">Latitud</label>
-								<input v-model="form.latitude" type="text" name="latitude" id="latitude" autocomplete="off" 
+								<input v-model="form.latitude" type="text" name="latitude" id="latitude" autocomplete="off"
 									disabled
 									class="bg-gray-100 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -404,7 +415,8 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
 								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
-								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un pais
@@ -419,7 +431,8 @@
 								<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación
 									Conyugal</label>
 								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
-									name="situacion_conyugal_id" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="situacion_conyugal_id" autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones una situacion conyugal
@@ -473,7 +486,8 @@
 								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo alcanzado</label>
 								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="estado_educativo_id" autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un estado educativo
@@ -550,7 +564,8 @@
 								<label for="cobertura_medica_id" class="block text-sm font-medium text-gray-700">Cobertura
 									de Salud</label>
 								<select v-model="form.cobertura_medica_id" id="cobertura_medica_id"
-									name="cobertura_medica_id" autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="cobertura_medica_id" autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un tipo de cobertura medica

@@ -241,7 +241,7 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo

@@ -7,7 +7,7 @@
                     Reporte General
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!showCreate">
+            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!processReport">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
                 <a @click="generateReport()"
                     class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Generar
@@ -15,20 +15,12 @@
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4" v-else>
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
-                <div class="col-span-12 sm:col-span-4">
-                    <select v-model="dependencia_id" id="create_dependencia_id" name="create_dependencia_id"
-                        autocomplete="off"
-                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" selected disabled>Selecciones una dependencia</option>
-                        <option v-for="dependencia in createDependencia " :key="dependencia.id" :value="dependencia.id">{{
-                            dependencia.description
-                        }}</option>
-                    </select>
-                </div>
-                <a :href="formUrl()"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Ir
-                    Formulario</a>
+                <a
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                    <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
             </div>
+
+           
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
@@ -123,7 +115,8 @@ import {
     ChevronRightIcon,
     EllipsisVerticalIcon,
     PencilSquareIcon,
-    ArrowsPointingOutIcon
+    ArrowsPointingOutIcon,
+    ArrowPathIcon
 } from "@heroicons/vue/24/solid";
 import { DocumentChartBarIcon } from '@heroicons/vue/24/outline'
 import Toast from "@/Layouts/Components/Toast.vue";
@@ -146,6 +139,7 @@ export default {
         PencilSquareIcon,
         ArrowsPointingOutIcon,
         DocumentChartBarIcon,
+        ArrowPathIcon,
         Toast,
         Datepicker
     },
@@ -160,7 +154,8 @@ export default {
             filter: {},
             customFormat: 'd-M-Y',
             tiposTramiteFiltrados: this.tiposTramite,
-            dependencia_id: ''
+            dependencia_id: '',
+            processReport: false
         };
     },
     setup() {
@@ -212,7 +207,7 @@ export default {
         },
         async generateReport() {
 
-            this.btnGuardar = true
+            this.processReport = true
             let rt = route("report.exportTramiteExcel");
 
             try {
@@ -241,6 +236,7 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+            this.processReport = false
         }
     },
     computed: {

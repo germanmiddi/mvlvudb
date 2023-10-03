@@ -9,10 +9,14 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
-class TramitesExport implements FromCollection, WithHeadings, WithStyles
+use Maatwebsite\Excel\Concerns\WithTitle;
+
+class TramitesExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithColumnFormatting, WithTitle, WithCustomStartCell
 {
 
     use Exportable;
@@ -24,58 +28,118 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles
 
     function __construct($param) {
         $this->data = $param;
-        //dd(" queres cantar" . $this->data['dependencia_id']);
     }
 
     public function collection()
     {
         
-        return Tramite::select('person.name', 'person.lastname', 'person.num_documento',DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 'localidades.description', 'escuelas.description')
+        $result = Tramite::query();
+
+        $result->select('person.name', 
+                'person.lastname', 
+                'person.num_documento',
+                DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
+                'localidades.description', 
+                'escuelas.description AS escuela_description', 
+                'estado_educativo.description AS estado_educativo',
+                'tipo_ocupacion.description AS tipo_ocupacion_description',
+                DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
+                'tipo_tramite.description AS tipo_tramite_description',
+                'dependencias.description AS dependencia_description',
+                'barrios.description as barrio_description',
+                'tramites.observacion')
+
             ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
             ->join('person', 'person.id', '=', 'person_tramite.person_id')
-            ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
             ->leftjoin('education_data','education_data.person_id','=', 'person.id')
-            ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
+            ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
+            ->leftjoin('social_data', 'social_data.person_id', '=', 'person.id')
             ->leftjoin('escuelas', 'escuelas.id', '=', 'education_data.escuela_id')
-            ->where('person_tramite.rol_tramite_id', '1')
-            ->where('tramites.dependencia_id', $this->data['dependencia_id'])
-            ->get();
+            ->leftjoin('estado_educativo', 'estado_educativo.id', '=', 'education_data.estado_educativo_id')
+            ->leftjoin('tipo_ocupacion', 'tipo_ocupacion.id', '=', 'social_data.tipo_ocupacion_id')
+            ->leftjoin('tipo_tramite', 'tipo_tramite.id', '=', 'tramites.tipo_tramite_id')
+            ->leftjoin('dependencias', 'dependencias.id', '=', 'tramites.dependencia_id')
+            ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
+            ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
+            ->where('person_tramite.rol_tramite_id', '1');
+
+        if(isset($this->data['dependencia_id'])){
+            $result->where('tramites.dependencia_id', $this->data['dependencia_id']);
+        }
+
+        if(isset($this->data['tipo_tramite_id'])){
+            $result->where('tramites.tipo_tramite_id', $this->data['tipo_tramite_id']);
+        }
+
+        if(isset($this->data['from']) && isset($this->data['to'])){
+            $result->where('fecha','>=', $this->data['from'])
+                    ->where('fecha', '<', $this->data['to']);
+        }
+
+        return $result->get();
     }
 
-    public function headings(): array
+    // Define el inicio del archivo.
+    public function startCell(): string
     {
-        return [
-            'Nombre',
-            'Apellido',
-            'Num. Documento',
-            'Fecha Nacimiento',
-            'Localidad',
-            'Educación',
-            'Estado Educativo',
-            'Ocupación',
-            'Fecha Tramite',
-            'Tipo Tramite',
-            'Dependencia',
-            'Barrio',
-            //'Nomenclatura', //No se utiliza
-            'Observacion'
-        ];
+        return 'A1';
+    }
+
+    // Titulo de la hoja de excel.
+    public function title(): string
+    {
+        return 'Detalle Tramites';
     }
 
     public function styles(Worksheet $sheet)
     {
         // Aplica un estilo a las celdas de la cabecera
         $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')
-              ->applyFromArray([
-                  'font' => [
-                      'bold' => true,
-                    ],
-                    'fill' => [
-                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'startColor' => [
-                          'rgb' => 'CCC', // Color de fondo GRIS
-                      ],
-                  ],
-              ]);
+        ->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 14,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => 'CCCCCC', // Corregido el color de fondo GRIS
+                ]
+            ],
+        ]);
+
+        $sheet->getRowDimension(1)->setRowHeight(30);
     }
+
+    // encabezados
+    public function headings(): array
+    {
+        return [
+                'Nombre',
+                'Apellido',
+                'Num. Documento',
+                'Fecha Nacimiento',
+                'Localidad',
+                'Escuela',
+                'Estado Educativo',
+                'Ocupación',
+                'Fecha Tramite',
+                'Tipo Tramite',
+                'Dependencia',
+                'Barrio',
+                //'Nomenclatura', //No se utiliza
+                'Observacion'
+        ];
+    }
+
+    //Define el ancho de las columnas, si esta vacio se autoajustan
+    public function columnFormats(): array
+    {
+        return [   
+                
+        ];
+    }
+
+
+    
 }

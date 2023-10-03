@@ -36,8 +36,7 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use App\Models\Manager\Category;
 use App\Models\Manager\ModalidadAtencion;
-
-
+use App\Models\Manager\TramiteEstado;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -55,6 +54,7 @@ class GeneroController extends Controller
         return Inertia::render('Manager/Tramites/Genero/Index',
         [
             'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
+            'estados' => TramiteEstado::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -454,14 +454,10 @@ class GeneroController extends Controller
 
         $result->where('dependencia_id', 6);
 
-        $name = json_decode(request('name'));  
-            $result->whereIn('id', function ($sub) use($name) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->where('person_tramite.rol_tramite_id', 1);
-                    });
-
+        if(request('tramite_id')){
+            $tramite_id = json_decode(request('tramite_id'));
+            $result->where('id', $tramite_id);
+        }
 
         if(request('name')){
             $name = json_decode(request('name'));  
@@ -496,6 +492,11 @@ class GeneroController extends Controller
         if(request('tipo_tramite_id')){
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
+        }
+
+        if(request('estado_id')){
+            $estado_id = json_decode(request('estado_id'));
+            $result->where('estado_id', $estado_id);
         }
 
         if(request('assigned_me')){

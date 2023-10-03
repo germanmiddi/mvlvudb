@@ -32,31 +32,41 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-12 sm:col-span-3 ">
+                        <div class="col-span-12 sm:col-span-1 ">
+                            <label for="tramite_id" class="block text-sm font-medium text-gray-700">N° Tramite</label>
+                            <input v-model="filter.tramite_id" type="number" name="tramite_id" id="tramite_id" autocomplete="name-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+                        <div class="col-span-12 sm:col-span-2 ">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        <div class="col-span-12 sm:col-span-3 ">
+                        
+                        <div class="col-span-12 sm:col-span-2 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        <div class="col-span-12 sm:col-span-3 ">
-                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-                            <!-- <Datepicker
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                v-model="filter.date" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-                                :format="format">
-                            </Datepicker> -->
-                            <Datepicker
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
-                                :enableTimePicker="false" :format="customFormat"></Datepicker>
-                        </div>
                         <div class="col-span-12 sm:col-span-3">
+                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
+                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
+                            <select v-model="filter.estado_id" id="estado_id" name="estado_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">TODOS</option>
+                                <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
+                                    estado.description
+                                }}</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
                                 Tramite</label>
                             <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
@@ -86,6 +96,11 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
+                                        N° Tramite
+                                    </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Fecha
@@ -100,10 +115,6 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rol
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tramite
                                     </th>
                                     <th scope="col"
@@ -114,30 +125,20 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in tramites.data" :key="data.tramite.id">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-green-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-red-500' ">
+                                        {{ data.tramite.id }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.persons[0].lastname }},
-                                        {{ data.tramite.persons[0].name }}
+                                        <div v-html=" namePersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.persons[0]
-                                                .num_documento
-                                        }}
+                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.rol_tramite[0]
-                                                .description
-                                        }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{
-                                            data.tramite.tipo_tramite
-                                                .description
-                                        }}
+                                        {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
                                         <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
@@ -147,7 +148,7 @@
                                             <div>
                                                 <MenuButton class="btn-blue h-7">
                                                     <EllipsisVerticalIcon name="options-vertical"
-                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600 hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
+                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
                                                 </MenuButton>
                                             </div>
                                             <transition enter-active-class="transition ease-out duration-100"
@@ -159,19 +160,28 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
+                                                        
                                                         <MenuItem v-slot="{ active }">
-                                                            <a :href="route('genero.edit',data.tramite.id)" class="block px-4 py-2 text-sm">
-                                                                Editar</a>
+                                                        <a :href="route('discapacidad.edit', data.tramite.id)"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Editar</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                            <a :href="route('detail.view', data.tramite.id)" class="block px-4 py-2 text-sm">
-                                                                Detalle</a>
+                                                        <a :href="route('detail.view', data.tramite.id)"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Detalle</a>
                                                         </MenuItem>
 
+                                                        <!-- <MenuItem v-slot="{ active }">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                            Ver</a>
+                                                        </MenuItem> -->
+                                                        
                                                         <MenuItem v-slot="{ active }">
-                                                            <a :href="route('pdf.acusepdf',data.tramite.id)" target="_blank" class="block px-4 py-2 text-sm">
-                                                                Imprimir</a>
+                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Imprimir</a>
                                                         </MenuItem>
                                                     </div>
 
@@ -228,6 +238,7 @@ export default {
     props: {
         toast: Object,
         tiposTramite: Object,
+        estados: Object
     },
     components: {
         Menu,
@@ -266,6 +277,10 @@ export default {
             this.tramites = ''
             let filter = `&length=${this.length}`
 
+            if (this.filter.tramite_id) {
+                filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
+            }
+
             if (this.filter.assigned_me) {
                 filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
             }
@@ -282,9 +297,14 @@ export default {
                 filter += `&date=${JSON.stringify(this.filter.date)}`
             }
 
+            if (this.filter.estado_id) {
+                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`
+            }
+
             if (this.filter.tipo_tramite_id) {
                 filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
             }
+
 
             const get = `${route('genero.list')}?${filter}`
 
@@ -311,6 +331,30 @@ export default {
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
         }, */
+        namePersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.lastname + ', '+element.name
+                }else{
+                    name_benef = element.lastname + ', '+element.name
+                }
+            });
+            return name_titular+'<br><br>'+name_benef
+        },
+        dniPersons(data){
+            let name_titular = ''
+            let name_benef = ''
+            data.forEach(element => {
+                if(element.pivot.rol_tramite_id == 1){
+                    name_titular = element.num_documento
+                }else{
+                    name_benef = element.num_documento
+                }
+            });
+            return name_titular+'<br><br>'+name_benef
+        },
     },
     mounted() {
         if (this.toast) {

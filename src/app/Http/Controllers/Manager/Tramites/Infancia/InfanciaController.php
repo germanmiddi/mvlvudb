@@ -49,6 +49,7 @@ use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\TramiteEstado;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -64,6 +65,7 @@ class InfanciaController extends Controller
         return Inertia::render('Manager/Tramites/Infancia/Index',
         [
             'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
+            'estados' => TramiteEstado::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -660,6 +662,11 @@ class InfanciaController extends Controller
         $result->where('dependencia_id', 12);
 
 
+        if(request('tramite_id')){
+            $tramite_id = json_decode(request('tramite_id'));
+            $result->where('id', $tramite_id);
+        }
+
         if(request('name')){
             $name = json_decode(request('name'));  
             $result->whereIn('id', function ($sub) use($name) {
@@ -693,6 +700,11 @@ class InfanciaController extends Controller
         if(request('tipo_tramite_id')){
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
+        }
+
+        if(request('estado_id')){
+            $estado_id = json_decode(request('estado_id'));
+            $result->where('estado_id', $estado_id);
         }
 
         if(request('assigned_me')){

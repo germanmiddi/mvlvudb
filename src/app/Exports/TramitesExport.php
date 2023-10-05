@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
+//use Maatwebsite\Excel\Concerns\WithCache;
 
 use Maatwebsite\Excel\Concerns\WithTitle;
 
@@ -138,6 +139,12 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
         return [   
                 
         ];
+    }
+
+    public function cacheFor()
+    {
+        // Define el tiempo en minutos durante el cual la caché debe ser válida
+        return now()->addMinutes(60); // 60 minutos de caché
     }
 
 

@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Manager\Entidad;
 use App\Models\Manager\Tramite;
 
 class DashboardController extends Controller
@@ -91,10 +92,12 @@ class DashboardController extends Controller
 
     public function getstatistics(){
 
-        $data = Tramite::select('dependencia_id', DB::raw('COUNT(*) as count'))
+        $tramites = Tramite::select('dependencia_id', DB::raw('COUNT(*) as count'))
             ->groupBy('dependencia_id')
             ->get();
-            
+        $entidades = Entidad::count();
+        $data['tramites'] = $tramites;
+        $data['entidades'] = $entidades;
         return ($data);
     }
 

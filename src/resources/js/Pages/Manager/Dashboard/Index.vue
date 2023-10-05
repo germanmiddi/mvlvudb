@@ -43,30 +43,7 @@ import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
 import store from '@/store.js'
 
 const projects = [
-    {
-      id: 2,
-      title: 'Discapacidad',
-      initials: 'DI',
-      bgColorClass: 'bg-pink-600',
-      route: 'discapacidad',
-      module:'DIS'
-    },
-    {
-      id: 6,
-      title: 'Género y Diversidad',
-      initials: 'GD',
-      bgColorClass: 'bg-green-600',
-      route: 'genero',
-      module: 'GEN'
-    },
-    {
-      id: 8,
-      title: 'Niñez y Adolescencia',
-      initials: 'NA',
-      bgColorClass: 'bg-blue-600',
-      route: 'ninez',
-      module: 'NIN'
-    },
+      
     {
       id: 12,
       title: 'Centro Barriales Infancia | CBI',
@@ -84,12 +61,36 @@ const projects = [
       module: 'CBJ'
     },
     {
+      id: 2,
+      title: 'Discapacidad',
+      initials: 'DI',
+      bgColorClass: 'bg-pink-600',
+      route: 'discapacidad',
+      module:'DIS'
+    },
+    {
+      id: 3,
+      title: 'Entidades Intermedias',
+      initials: 'EI',
+      bgColorClass: 'bg-gray-600',
+      route: 'entidad',
+      module: 'ENT'
+    },
+    {
       id: 5,
       title: 'Fortalecimiento Comunitario',
       initials: 'FC',
       bgColorClass: 'bg-yellow-600',
       route: 'fortalecimiento',
       module: 'FOR'
+    },
+    {
+      id: 6,
+      title: 'Género y Diversidad',
+      initials: 'GD',
+      bgColorClass: 'bg-green-600',
+      route: 'genero',
+      module: 'GEN'
     },
     {
       id: 7,
@@ -100,12 +101,20 @@ const projects = [
       module: 'HAB'
     },
     {
+      id: 8,
+      title: 'Niñez y Adolescencia',
+      initials: 'NA',
+      bgColorClass: 'bg-blue-600',
+      route: 'ninez',
+      module: 'NIN'
+    },
+    {
       id: 9,
       title: 'Promoción y Protección de Derechos',
       initials: 'PP',
       bgColorClass: 'bg-yellow-600',
       route: 'promocion',
-      module: ''
+      module: 'PRO'
     },
     {
       id: 14,
@@ -123,6 +132,7 @@ const projects = [
       route: 'vivienda',
       module: 'VIV'
     },
+    
     // More projects...
   ]
 const pinnedProjects = projects.filter((project) => project.pinned)
@@ -165,13 +175,16 @@ export default {
 
             this.data = this.projects
             this.data.forEach(element => {
- 
-                
-                const dat = dependencias.find((objeto) => objeto.dependencia_id === element.id);
-                if(dat){
-                    element.totalTramites = dat.count
+
+                const dat = dependencias.tramites.find((objeto) => objeto.dependencia_id === element.id);
+                if(element.id == 3){
+                  element.totalTramites = dependencias.entidades
                 }else{
-                    element.totalTramites = 0
+                  if(dat){
+                      element.totalTramites = dat.count
+                  }else{
+                      element.totalTramites = 0
+                  }
                 }
             });
         },

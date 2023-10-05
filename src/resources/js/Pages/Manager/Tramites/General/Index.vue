@@ -391,6 +391,9 @@ export default {
                     case 2:
                         url = route('discapacidad.create') 
                         break;
+                    case 3:
+                        url = route('entidad.create') 
+                        break;
                     case 5:
                         url = route('fortalecimiento.create') 
                         break;
@@ -466,7 +469,7 @@ export default {
     },
     computed: {
 		createDependencia: function () {
-			return this.dependencias.filter(dependencia => (dependencia.id != 1 && dependencia.id != 3 && dependencia.id != 4 && dependencia.id != 10))
+			return this.dependencias.filter(dependencia => (dependencia.id != 1 &&  dependencia.id != 4 && dependencia.id != 10))
 		}
 	},
     mounted() {

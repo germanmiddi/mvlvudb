@@ -25,8 +25,8 @@
                         <div class="">
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Nuevo Usuarios</h3>
                         </div>
-
                     </div>
+
                     <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12 sm:col-span-8 ">
                             <label for="newUserName" class="block text-sm font-medium text-gray-700">Nombre</label>
@@ -126,6 +126,24 @@
             </div>
         </div> -->
         <!-- Fin Card Ver grupos de usuario -->
+
+        <div class="flex items-center justify-between px-4 mt-6 sm:px-6 lg:px-9">
+            <div class="flex items-center">
+                <div for="search" class="text-sm mr-2">Buscar:</div>  
+                <input type="text" v-model="search"  name="search" id="search" class="h-9 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white ml-2" @click="getUsers">Buscar</button>
+            </div>    
+            <div class="flex items-center">
+                <div class="mr-2 text-sm">Ver:</div>
+                <select v-model="length" @change="getUsers" class="h-9 block w-14 py-1 px-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -281,24 +299,25 @@ export default {
 
 		},
 
-
         clearMessage() {
             this.toastMessage = "";
         },
+
         async getUsers() {
             this.users = ''
             let filter = `&length=${this.length}`
 
-            if (this.filter.name) {
-                filter += `&search=${JSON.stringify(this.search)}`
+            if (this.search) {
+                filter += `&search=${this.search}`
             }
-
+            
             const get = `${route('users.list')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
             this.users = await response.json();
 
         },
+
         async getUsersPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })
@@ -306,6 +325,7 @@ export default {
             this.users = await response.json()
             
         },
+
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
             fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día

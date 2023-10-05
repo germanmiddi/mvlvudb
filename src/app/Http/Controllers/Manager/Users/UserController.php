@@ -25,11 +25,18 @@ class UserController extends Controller
         $column = request()->input('column') ? request()->input('column') : 'id'; 
 
         $query = User::query();
+        
+        
+        if (request('search')) {
+            $search = request('search');
+            
+            $query->where('name', 'LIKE', '%' . request('search') . '%');
+            $query->orWhere('email', 'LIKE', '%' . request('search') . '%');
+            $query->orWhere('email', 'LIKE', '%' . request('search') . '%');
 
-        if(request()->input('search')) {
-            $search = request()->input('search');
-            $query->where('name', 'LIKE', "%{$search}%");
-            $query->orWhere('email', 'LIKE', "%{$search}%");
+            $query->orWhereHas('roles', function ($roleQuery) use ($search) {
+                $roleQuery->where('name', 'like', '%' . $search . '%');
+            });
         }
 
         return $query->orderBy($column, 'asc')
@@ -44,11 +51,6 @@ class UserController extends Controller
                 'created_at' => $user->created_at
             ]);
 
-
-        // $users = User::all();
-        // return Inertia::render('Manager/Users/List', [
-        //     'users' => $users
-        // ]);
     }
 
     public function store(Request $request){

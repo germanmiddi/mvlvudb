@@ -379,10 +379,14 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
-								<input v-model="form.num_documento" @focusout="getPerson()" type="text" name="num_documento"
-									id="num_documento" autocomplete="level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.num_documento.$error ? 'border-red-500' : ''" />
+								<div class="relative">
+									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()" :class="v$.form.num_documento.$error ? 'border-red-500' : ''"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									<a @click="getPerson()" 
+										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
+										Verificar
+									</a>
+								</div>
 								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 
@@ -703,10 +707,14 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
-								<input v-model="form_beneficiario.num_documento" @focusout="getPersonBenef()" type="text" name="num_documento"
-									id="num_documento" autocomplete="level2"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form_beneficiario.num_documento.$error ? 'border-red-500' :  input_disable ? bg_disable : ''" :disabled="input_disable" />
+								<div class="relative">
+									<input type="text" v-model="form_beneficiario.num_documento" @keyup.enter="getPersonBenef()" :class="v$.form_beneficiario.num_documento.$error ? 'border-red-500' : ''"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									<a @click="getPersonBenef()" 
+										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
+										Verificar
+									</a>
+								</div>
 								<span v-if="v$.form_beneficiario.num_documento.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 
@@ -786,7 +794,9 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
 								<select v-model="form_beneficiario.barrio_id" id="barrio_id" name="barrio_id"
-									autocomplete="barrio_id-name" :class="input_juventud_disable ? bg_disable : ''" :disabled="input_juventud_disable"
+									autocomplete="barrio_id-name" 
+									:class="barriosComputed.length === 0 || input_juventud_disable ? bg_disable : ''" 
+									:disabled="barriosBenefComputed.length === 0 || input_juventud_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione un barrio</option>
 									<option v-for="barrio in barriosBenefComputed" :key="barrio.id" :value="barrio.id">{{
@@ -830,7 +840,7 @@
 
 				<!-- FIN DATOS DEL NIÑO -->
 
-				<div v-if="isMayor != ''" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div v-if="(isMayor == 'Mayor' && !input_disable) || (isMayor == 'Menor' && !input_juventud_disable)" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 v-if="isMayor == 'Mayor'" class="text-lg leading-6 font-medium text-gray-900">Estudios | Titular</h3>
@@ -1038,7 +1048,7 @@
 					</div>
 				</div>
 
-				<div v-if="isMayor != ''" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div v-if="(isMayor == 'Mayor' && !input_disable) || (isMayor == 'Menor' && !input_juventud_disable)" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 v-if="isMayor == 'Mayor'" class="text-lg leading-6 font-medium text-gray-900">Salud | Titular</h3>
@@ -1165,12 +1175,12 @@
 
 				<!-- FIN DATOS DEL TITULAR.. -->
 
-				<FormFamiliar v-if="isMayor != ''" :parentescos="parentescos" :tiposDocumento="tiposDocumento"
+				<FormFamiliar v-if="(isMayor == 'Mayor' && !input_disable) || (isMayor == 'Menor' && !input_juventud_disable)" :parentescos="parentescos" :tiposDocumento="tiposDocumento"
 					@data_familiares="familiares_data"></FormFamiliar>
 
 				
 
-				<div v-if="isMayor != ''" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div v-if="(isMayor == 'Mayor' && !input_disable) || (isMayor == 'Menor' && !input_juventud_disable)" class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">

@@ -24,7 +24,7 @@
                     <label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
                         Documento</label>
                     <select v-model="form_familiar.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-                        autocomplete="tipo_documento_id-name"
+                        autocomplete="tipo_documento_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="" disabled>
                             Seleccione un tipo de documento
@@ -39,22 +39,26 @@
                 <div class="col-span-12 sm:col-span-3">
                     <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                         Documento</label>
-                    <input v-model="form_familiar.num_documento" @focusout="getPerson()" type="text" 
-                        name="num_documento" id="num_documento" autocomplete="address-level2"
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" 
-                        />
+                        <div class="relative">
+                        <input type="text" v-model="form_familiar.num_documento" @keyup.enter="getPerson()"
+                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <a @click="getPerson()"
+                            class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
+                            Verificar
+                        </a>
+                    </div>
                 </div>
 
                 <div class="col-span-12 sm:col-span-3">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input v-model="form_familiar.name" type="text" name="name" id="name" autocomplete="name-level2"
+                    <input v-model="form_familiar.name" type="text" name="name" id="name" autocomplete="name-level2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
                 <div class="col-span-12 sm:col-span-3">
                     <label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
                     <input v-model="form_familiar.lastname" type="text" name="lastname" id="lastname"
-                        autocomplete="lastname-level2"
+                        autocomplete="lastname-level2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
@@ -66,7 +70,7 @@
                     <label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
                         Nacimiento</label>
                     <Datepicker
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         v-model="form_familiar.fecha_nac" :enableTimePicker="false" :monthChangeOnScroll="false"
                         autoApply :format="format">
                     </Datepicker>
@@ -75,7 +79,7 @@
                     <label for="tipo_documento_id"
                         class="block text-sm font-medium text-gray-700">{{ this.txtFamiliar }}</label>
                     <select v-model="form_familiar.parentesco_id" id="parentesco_id" name="parentesco_id"
-                        autocomplete="parentesco_id-name"
+                        autocomplete="parentesco_id-name" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="" disabled>
                             Seleccione un tipo un parentesco
@@ -170,6 +174,8 @@ export default ({
 			labelType: "info",
 			message: "",
 			showToast: false,
+            bg_disable: 'bg-gray-100',
+			input_disable: true
         };
     },
     setup() {
@@ -219,6 +225,7 @@ export default ({
                 this.form_familiar = this.form_temp
                 this.form_temp = {}
             }
+            this.input_disable = false
         },
         
         /* ***************************

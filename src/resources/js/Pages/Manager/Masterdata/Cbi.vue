@@ -31,11 +31,30 @@
                 </table> 
             </div>
         </div>
-
-        
     </div>
     <CbiEscuelas    :dependencia_id="this.dependencia_id" 
                     @toast-message="setMessage" />
+                    <div class="shadow sm:rounded-md sm:overflow-hidden">
+        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+            <div>
+                <div class="flex justify-between">
+                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Datos Maestros Formulario CBI</h2>
+                    <a v-if="!processExport"
+                        class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                        @click="exportDatos">
+                        Exportar Datos
+                    </a>
+                    <a v-else
+                        class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-yellow-900"
+                        @click="exportDatos">
+                        <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Exportar Datos
+                    </a>
+                    
+                </div>
+            </div>
+           
+        </div>
+    </div>
 
 </template>
 
@@ -43,6 +62,7 @@
 import axios from 'axios'
 import ListItem from './ListItem.vue'
 import CbiEscuelas from './CbiEscuelas.vue'
+import {ArrowPathIcon} from "@heroicons/vue/24/solid";
 
 export default {
 
@@ -58,7 +78,8 @@ export default {
     },
     components:{
         ListItem,
-        CbiEscuelas
+        CbiEscuelas,
+        ArrowPathIcon
     },
     setup(){
 
@@ -69,7 +90,8 @@ export default {
         return{
             tipoTramite: "",
             showNew: false,
-            newDescription: "",    
+            newDescription: "",   
+            processExport: false 
         }
     },
     created(){
@@ -164,6 +186,39 @@ export default {
                                 {'message' : response.data.message, 
                                  'type' : 'danger'} )
             }            
+        },
+        async exportDatos() {
+
+            this.processExport = true
+            let rt = route("masterdata.exportDatos");
+
+            try {
+                const response = await axios.post(rt, this.filter, {
+                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                });
+
+                // Crear un objeto Blob con la respuesta
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Crear una URL de objeto para el Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un enlace <a> para iniciar la descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Datos Maestros CBI.xlsx'; // Nombre del archivo
+                a.style.display = 'none';
+
+                // Agregar el enlace al cuerpo del documento y hacer clic en él
+                document.body.appendChild(a);
+                a.click();
+
+                // Liberar la URL del objeto después de la descarga
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error(error);
+            }
+            this.processExport = false
         },
         setMessage(message){
             this.$emit('toast-message', message )

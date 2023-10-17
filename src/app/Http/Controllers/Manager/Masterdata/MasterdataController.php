@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager\Masterdata;
 
+use App\Exports\MasterDataExport;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Manager\Escuela;
 use Carbon\Carbon;
 use App\Models\Manager\TipoTramite;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MasterdataController extends Controller
 {
@@ -198,6 +200,10 @@ class MasterdataController extends Controller
                
         return response()->json(['message' => 'Datos actualizados correctamente'], 200);
 
+    }
+
+    public function export_datos(Request $request){
+        return Excel::download(new MasterDataExport(), 'masteData.xlsx');
     }
 
 }

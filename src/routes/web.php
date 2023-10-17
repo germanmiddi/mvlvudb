@@ -183,6 +183,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/masterdata/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');  
     Route::post('/masterdata/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');     
     Route::post('/masterdata/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
+
+    Route::post('/masterdata/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
      
     // Users
 

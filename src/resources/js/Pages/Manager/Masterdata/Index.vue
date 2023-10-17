@@ -10,7 +10,11 @@
                 </h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
-
+                <button
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+					@click="exportDatos">
+					Exportar Datos
+				</button>
             </div>
         </div>
 
@@ -123,6 +127,39 @@
                 this.toastMessage = message.message;
                 this.labelType = message.type;
             },
+            async exportDatos() {
+
+                this.processReport = true
+                let rt = route("masterdata.exportDatos");
+
+                try {
+                    const response = await axios.post(rt, this.filter, {
+                        responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                    });
+
+                    // Crear un objeto Blob con la respuesta
+                    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                    // Crear una URL de objeto para el Blob
+                    const url = window.URL.createObjectURL(blob);
+
+                    // Crear un enlace <a> para iniciar la descarga
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Datos Maestros.xlsx'; // Nombre del archivo
+                    a.style.display = 'none';
+
+                    // Agregar el enlace al cuerpo del documento y hacer clic en él
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Liberar la URL del objeto después de la descarga
+                    window.URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error(error);
+                }
+                this.processReport = false
+                }
         },
 
         computed: {

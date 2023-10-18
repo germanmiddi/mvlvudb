@@ -523,16 +523,24 @@
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-8 ">
-							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-							<div class="flex ">
-								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-								<input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile" autocomplete="file-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
-								<div class="flex-shrink-0">
-									<button @click="addFile()" type="button" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">Agregar Archivo</button>
+						<div class="col-span-12 sm:col-span-8">
+								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+								<div class="flex">
+									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
+										autocomplete="off"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
+									<input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf" type="file" name="file" id="file" ref="inputfile"
+										autocomplete="off"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
+										<div class="flex-shrink-0">
+											<button @click="addFile()" type="button"
+											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+											Agregar Archivo
+										</button>
+									</div>
 								</div>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen o PDF.</p>
 							</div>
-						</div> 
 						<div class="col-span-12 sm:col-span-12">
 							<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
                             <thead class="bg-gray-50">
@@ -598,6 +606,7 @@ import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import ViewFile from "../Detail/ViewFile.vue";
+import store from '@/store.js'
 
 export default {
 
@@ -629,7 +638,8 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
-		ViewFile
+		ViewFile,
+		store
 	},
 	data() {
 		return {
@@ -664,6 +674,7 @@ export default {
 			input_disable: true,
 			fileView: '',
 			openModal: false,
+			fileInvalid: false
 			
 		}
 	},validations() {
@@ -872,31 +883,44 @@ export default {
 	/* ********************
 	** * MANEJO DE ARCHIVOS
 	*/ 
-		handleFileChange(event) {
-			//this.selectedFile = event.target.files[0];
-			const file =  event.target.files[0];
-			const reader = new FileReader();
-
-			reader.onload = () => {
-				this.selectedFile = reader.result; // Obtiene los datos en Base64 sin la cabecera
-			};
-
-			reader.readAsDataURL(file);
+	handleFileChange(event) {
+			this.fileInvalid = false
+			const file = event.target.files[0];
+			if (file) {
+				// Verificar el tipo de archivo
+				if (store.isValidFileType(file)) {
+					// El archivo es válido
+					const reader = new FileReader();
+					reader.onload = () => {
+						this.selectedFile = reader.result; // Obtiene los datos en Base64 sin la cabecera
+					};
+					reader.readAsDataURL(file);
+				} else {
+					// Archivo no válido
+					this.selectedFile = null;
+					const fileValue = this.$refs.inputfile;
+					fileValue.value = null;
+					this.selectedFile = null;
+					this.fileInvalid = true;
+				}
+			}
 		},
-
 		addFile() {
+
 			if (this.selectedFile && this.form.description_file) {
-				this.files.push(
-					{
-						description: this.form.description_file,
-						file: this.selectedFile,
-					}
-				)
-				this.selectedFile = null
-				this.form.description_file = ''
-			}else{
+				this.files.push({
+					description: this.form.description_file,
+					file: this.selectedFile,
+					ext: this.selectedFile.split(",")[0]
+				});
+				this.selectedFile = null;
+				const fileValue = this.$refs.inputfile;
+				fileValue.value = null;
+				this.form.description_file = "";
+			} else {
 				this.labelType = "danger";
-                this.toastMessage = "Debe completar completar los datos del archivo";
+				this.toastMessage =
+					"Debe completar completar los datos del archivo, Verifique si el archivo es valido.";
 			}
 		},
 		deleteFile(index) {

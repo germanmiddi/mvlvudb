@@ -57,6 +57,12 @@ const store = reactive({
         return `${fechaObjecto[2]}/${fechaObjecto[1]}/${fechaObjecto[0]}`
     },
 
+    // Validar formato de Input File.
+    isValidFileType(file) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+        return allowedTypes.includes(file.type);
+    },
+
 
 
 })

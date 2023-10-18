@@ -627,16 +627,17 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-span-6 sm:col-span-6">
+							<div class="col-span-12 sm:col-span-12">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12">
 									<thead class="bg-gray-50">
 										<tr>
 											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">
 												Descripcion
 											</th>
+	
 											<th scope="col"
-												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">
 												Accion
 											</th>
 										</tr>
@@ -647,10 +648,16 @@
 												{{ file.description }}
 											</td>
 											<td class="px-6 py-4 text-center text-sm font-medium">
+												
 												<button type="button"
 													class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
 													@click="deleteFile(index)">
 													Eliminar
+												</button>
+												<button type="button"
+													class="ml-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+													@click="viewFile(file.file)">
+													Ver/Descargar
 												</button>
 											</td>
 										</tr>
@@ -662,16 +669,18 @@
 				</div>
 			</form>
 		</div>
-
+		
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
-				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
-				:disabled="btnGuardar || input_disable">
-				Guardar
+			class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+			:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
+			:disabled="btnGuardar || input_disable">
+			Guardar
 			</button>
 		</div>
+		<ViewFile :file="fileView"  :show="openModal" @closeModal="closeModal" />
 	</main>
+
 </template>
 
 <script>
@@ -692,6 +701,7 @@ import {
 	ListboxOptions,
 	ListboxOption,
 } from "@headlessui/vue";
+import ViewFile from "../Detail/ViewFile.vue";
 
 const people = [
 	{ id: 1, name: "Durward Reynolds", unavailable: false },
@@ -735,6 +745,7 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		ViewFile,
 	},
 	data() {
 		return {
@@ -768,7 +779,9 @@ export default {
 				border: '1px solid red',
 			},
 			bg_disable: 'bg-gray-100',
-			input_disable: true
+			input_disable: true,
+			fileView: '',
+			openModal: false,
 		};
 	},
 	validations() {
@@ -799,6 +812,13 @@ export default {
 		};
 	},
 	methods: {
+		closeModal() {
+            this.openModal = false
+        },
+		viewFile(data) {
+			this.fileView = data
+			this.openModal = true
+		},
 		clearMessage() {
 			this.toastMessage = "";
 		},
@@ -1016,6 +1036,7 @@ export default {
 				this.files.push({
 					description: this.form.description_file,
 					file: this.selectedFile,
+					ext: this.selectedFile.split(",")[0]
 				});
 				this.selectedFile = null;
 				this.form.description_file = "";

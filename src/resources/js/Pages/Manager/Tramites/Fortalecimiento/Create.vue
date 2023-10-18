@@ -536,7 +536,7 @@
 					</div>
 
 					<div class="grid grid-cols-12 gap-6">
-						<div class="col-span-12 sm:col-span-8 ">
+						<div class="col-span-12 sm:col-span-12 ">
 							<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
 							<div class="flex ">
 								<input v-model="form.description_file" type="text" name="descripcion" id="descripcion" autocomplete="descripcion-level2" 
@@ -547,16 +547,16 @@
 								</div>
 							</div>
 						</div> 
-						<div class="col-span-6 sm:col-span-6">
+						<div class="col-span-12 sm:col-span-12">
 							<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12 ">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">
 										Descripcion
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">
                                         Accion
                                     </th>
                                 </tr>
@@ -567,8 +567,15 @@
                                     	{{file.description}}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
-										<button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white" @click="deleteFile(index)">
-											Eliminar
+										<button type="button"
+													class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+													@click="deleteFile(index)">
+													Eliminar
+												</button>
+										<button type="button"
+											class="ml-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+											@click="viewFile(file.file)">
+											Ver/Descargar
 										</button>
                                     </td>
                                 </tr>
@@ -590,6 +597,7 @@
 				</button>
 		</div>
      
+		<ViewFile :file="fileView"  :show="openModal" @closeModal="closeModal" />
     </main>
 
 
@@ -607,6 +615,7 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue"
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import ViewFile from "../Detail/ViewFile.vue"
 
 export default {
 
@@ -638,6 +647,7 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		ViewFile
 	},
 	data() {
 		return {
@@ -670,7 +680,9 @@ export default {
 				border: '1px solid red',
 			},
 			bg_disable: 'bg-gray-100',
-			input_disable: true
+			input_disable: true,
+			fileView: '',
+			openModal: false,
 			
 		}
 	},
@@ -703,6 +715,13 @@ export default {
 		}
 	},
 	methods: {
+		closeModal() {
+            this.openModal = false
+        },
+		viewFile(data) {
+			this.fileView = data
+			this.openModal = true
+		},
 		clearMessage() {
             this.toastMessage = "";
         },

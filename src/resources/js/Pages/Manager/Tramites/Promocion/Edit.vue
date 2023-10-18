@@ -506,8 +506,8 @@
 									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
 										autocomplete="descripcion-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileUpload" type="file" name="file" id="file" ref="file"
-										autocomplete="file-level2"
+										<input @change="handleFileUpload" accept=".jpg, .jpeg, .png, .gif, .pdf" type="file" name="file" id="file" ref="inputfile"
+										autocomplete="off"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 									<div class="flex-shrink-0">
 										<button @click="uploadFile()" type="button"
@@ -515,6 +515,7 @@
 											Subir Archivo</button>
 									</div>
 								</div>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen o PDF.</p>
 							</div>
 							<div class="col-span-6 sm:col-span-6 ">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
@@ -580,6 +581,7 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import store from '@/store.js'
 
 export default {
 
@@ -613,6 +615,7 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		store
 	},
 	data() {
 		return {
@@ -633,7 +636,8 @@ export default {
 			datepickerStyle: {
 				color: 'red',
 				border: '1px solid red',
-			}
+			},
+			fileInvalid: false
 		}
 	},
 	setup() {
@@ -792,7 +796,21 @@ export default {
 		},
 
 		handleFileUpload(event) {
-			this.file = event.target.files[0];
+			this.fileInvalid = false
+			const fileUpload = event.target.files[0];
+			if (fileUpload) {
+				// Verificar el tipo de archivo
+				if (store.isValidFileType(fileUpload)) {
+					// El archivo es válido
+					this.file = fileUpload
+				} else {
+					// Archivo no válido
+					this.file = null
+					const fileValue = this.$refs.inputfile;
+					fileValue.value = null;
+					this.fileInvalid = true;
+				}
+			}
 		},
 		coord_google($coord) {
 			this.form.latitude = $coord.position.lat.toString()
@@ -842,6 +860,10 @@ export default {
                 	this.toastMessage = response.data.message; 
 					this.form_archivo.push(response.data.archivo)
 					this.form.description_file = ''
+
+					this.file = null
+					const fileValue = this.$refs.inputfile;
+					fileValue.value = null;
 				} else {
 					this.labelType = "danger";
                 	this.toastMessage = response.data.message;

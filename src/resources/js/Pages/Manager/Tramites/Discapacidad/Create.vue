@@ -1063,6 +1063,7 @@ export default {
 					"Debe completar completar los datos del archivo, Verifique si el archivo es valido.";
 			}
 		},
+		
 		deleteFile(index) {
 			this.files.splice(index, 1);
 		},

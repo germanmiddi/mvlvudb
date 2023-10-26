@@ -63,6 +63,9 @@ const store = reactive({
         return allowedTypes.includes(file.type);
     },
 
+    exportBandejaExcel(filtros){
+        console.log("REPORTE EXCEL BANDEJA")
+    }
 
 
 })

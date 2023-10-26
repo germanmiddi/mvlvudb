@@ -59,7 +59,6 @@ class ReportController extends Controller
         $data = [];
 
         if($request->date){
-            //$date = json_decode($request->date);
 
             $data['from'] = date('Y-m-d', strtotime($request->date[0]));
             $data['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
@@ -71,6 +70,22 @@ class ReportController extends Controller
 
         if($request->tipo_tramite_id){
             $data['tipo_tramite_id'] = json_decode($request->tipo_tramite_id);
+        }
+
+        if($request->estado_id){
+            $data['estado_id'] = json_decode($request->estado_id);
+        }
+
+        if($request->asigned_me){
+            $data['asigned_me'] = json_decode($request->asigned_me);
+        }
+
+        if($request->name){
+            $data['name'] = json_decode($request->name);
+        }
+
+        if($request->num_documento){
+            $data['num_documento'] = json_decode($request->num_documento);
         }
 
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');

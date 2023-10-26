@@ -13,6 +13,12 @@
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
                 <a :href="route('habitat.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+                
+                <a  @click="generateReport()" v-if="!processReport"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
+
+                <a v-else
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
             </div>
         </div>
 
@@ -230,7 +236,8 @@ import {
     ChevronRightIcon,
     EllipsisVerticalIcon,
     PencilSquareIcon,
-    ArrowsPointingOutIcon
+    ArrowsPointingOutIcon,
+    ArrowPathIcon
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
@@ -250,6 +257,7 @@ export default {
         ChevronRightIcon,
         PencilSquareIcon,
         ArrowsPointingOutIcon,
+        ArrowPathIcon,
         Toast,
         Datepicker
     },
@@ -262,7 +270,8 @@ export default {
             showToast: false,
             filter: {},
             length: 10,
-            customFormat: 'd-M-Y'
+            customFormat: 'd-M-Y',
+            processReport: false
         };
     },
     setup() {
@@ -359,6 +368,40 @@ export default {
             });
             return name_titular+'<br><br>'+name_benef
         },
+        async generateReport() {
+
+            this.filter.dependencia_id = 7
+            this.processReport = true
+            let rt = route("report.exportTramiteExcel");
+
+            try {
+                const response = await axios.post(rt, this.filter, {
+                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                });
+
+                // Crear un objeto Blob con la respuesta
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Crear una URL de objeto para el Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un enlace <a> para iniciar la descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
+                a.style.display = 'none';
+
+                // Agregar el enlace al cuerpo del documento y hacer clic en él
+                document.body.appendChild(a);
+                a.click();
+
+                // Liberar la URL del objeto después de la descarga
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error(error);
+            }
+            this.processReport = false
+        }
     },
     mounted() {
         if (this.toast) {

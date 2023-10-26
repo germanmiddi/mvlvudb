@@ -58,7 +58,6 @@ class ImportController extends Controller
         if( $request->file('file')){
             try {
                 $archivoCSV = $request->file('file');
-                
                     switch ($request['dependencia_id']) {
                         case 2:
                             Log::info('Se ha iniciado el proceso de Importación de Tramite DISCAPACIDAD. <br>');

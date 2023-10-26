@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Manager\Tramite;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -75,6 +76,37 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
         if(isset($this->data['from']) && isset($this->data['to'])){
             $result->where('fecha','>=', $this->data['from'])
                     ->where('fecha', '<', $this->data['to']);
+        }
+
+        if(isset($this->data['estado_id'])){
+            $estado_id = json_decode($this->data['estado_id']);
+            $result->where('estado_id', $estado_id);
+        }
+
+        if(isset($this->data['asigned_me'])){
+            $result->where('assigned', Auth::user()->id);
+        }
+
+        if(isset($this->data['name'])){
+            $name = json_decode($this->data['name']);  
+            $result->whereIn('id', function ($sub) use($name) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                            ->where('person.name', 'LIKE', '%'.$name.'%')
+                            ->orWhere('person.lastname', 'LIKE', '%'.$name.'%');
+                    });
+        }
+        if(isset($this->data['num_documento'])){
+            $num_documento = json_decode($this->data['num_documento']);  
+            $result->whereIn('id', function ($sub) use($num_documento) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                            ->where('person.num_documento', 'LIKE', '%'.$num_documento.'%');
+                    });
         }
 
         return $result->get();

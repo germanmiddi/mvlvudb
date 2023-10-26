@@ -51,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
     // IMPORTADOR
     Route::get('/import', [ImportController::class, 'index'])->name('import');  
-    Route::post('/import/entidad', [ImportController::class, 'importEntidades'])->name('import.entidad');  
+    Route::post('/import/entidad', [ImportController::class, 'importEntidades'])->name('import.entidad');
     Route::post('/import/dependencia', [ImportController::class, 'importDependencias'])->name('import.dependencia');  
     Route::post('/import/estado', [ImportController::class, 'importEstados'])->name('import.estado');  
     Route::post('/import/personas', [ImportController::class, 'importPersonas'])->name('import.personas'); 

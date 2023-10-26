@@ -1,8 +1,6 @@
 <template>
     <main class="flex-1">
         <!-- Page title & actions -->
-
-
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
@@ -10,9 +8,14 @@
                 </h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
-                <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
-                <a :href="route('discapacidad.create')"
+                <a  :href="route('discapacidad.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+                
+                <a  @click="generateReport()" v-if="!processReport"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
+
+                <a v-else
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
             </div>
         </div>
 
@@ -98,7 +101,6 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
                                         N° Tramite
@@ -231,7 +233,8 @@ import {
     EllipsisVerticalIcon,
     PencilSquareIcon,
     ArrowsPointingOutIcon,
-    UserCircleIcon
+    UserCircleIcon,
+    ArrowPathIcon
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
@@ -252,6 +255,7 @@ export default {
         PencilSquareIcon,
         ArrowsPointingOutIcon,
         UserCircleIcon,
+        ArrowPathIcon,
         Toast,
         Datepicker
     },
@@ -264,7 +268,8 @@ export default {
             showToast: false,
             filter: {},
             length: 10,
-            customFormat: 'd-M-Y'
+            customFormat: 'd-M-Y',
+            processReport: false
         };
     },
     setup() {
@@ -319,6 +324,40 @@ export default {
 
             this.tramites = await response.json()
             //console.log(this.orders)  
+        },
+        async generateReport() {
+
+            this.filter.dependencia_id = 2
+            this.processReport = true
+            let rt = route("report.exportTramiteExcel");
+
+            try {
+                const response = await axios.post(rt, this.filter, {
+                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                });
+
+                // Crear un objeto Blob con la respuesta
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Crear una URL de objeto para el Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un enlace <a> para iniciar la descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
+                a.style.display = 'none';
+
+                // Agregar el enlace al cuerpo del documento y hacer clic en él
+                document.body.appendChild(a);
+                a.click();
+
+                // Liberar la URL del objeto después de la descarga
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error(error);
+            }
+            this.processReport = false
         },
         /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);

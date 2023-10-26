@@ -509,6 +509,10 @@ export default {
             this.fileDependencia = event.target.files[0];
             this.fileDependenciaName = this.fileDependencia ? this.fileDependencia.name : '';
         },
+        handleFileInfanciaChange(event) {
+            this.fileInfancia = event.target.files[0];
+            this.fileInfanciaName = this.fileInfancia ? this.fileInfancia.name : '';
+        },
         handleFileEstadoChange(event) {
             this.fileEstado = event.target.files[0];
             this.fileEstadoName = this.fileEstado ? this.fileEstado.name : '';
@@ -609,6 +613,7 @@ export default {
             }
 
         },
+
         async importarPersonas() {
             if (this.filePersona != '') {
                 this.loadingPersona = true

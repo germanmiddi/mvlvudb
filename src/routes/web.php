@@ -28,7 +28,12 @@ use App\Http\Controllers\Manager\Report\ReportController;
 use App\Http\Controllers\Manager\Users\UserController;
 
 use App\Http\Controllers\Manager\Tramites\Details\DetailController;
+use Illuminate\Support\Facades\URL;
 
+
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
 
 Route::middleware(['auth'])->group(function () {
 

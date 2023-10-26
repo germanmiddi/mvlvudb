@@ -35,5 +35,9 @@ class AppServiceProvider extends ServiceProvider
 
         date_default_timezone_set('America/Argentina/Buenos_Aires');
         Schema::defaultStringLength(191);
+
+        if(env('APP_ENV') == 'production'){
+            $this->app['request']->server->set('HTTPS', true);
+        }
     }
 }

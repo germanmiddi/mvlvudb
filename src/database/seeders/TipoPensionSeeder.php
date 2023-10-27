@@ -20,6 +20,7 @@ class TipoPensionSeeder extends Seeder
             ['id' => 2, 'description' => 'JUBILACIÓN'],
             ['id' => 3, 'description' => 'AMBOS'],
             ['id' => 4, 'description' => 'NO PERCIBE'],
+            ['id' => 5, 'description' => 'PENSIÓN UNIVERSAL ADULTO MAYOR'],
         ];
 
         DB::table('tipo_pension')->insert($data);

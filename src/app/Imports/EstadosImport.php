@@ -46,7 +46,7 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
                         TramiteComment::Create(
                             [
                                 'tramite_id' => $tramite->id,
-                                'user_id' => $user ? $user->id : 1,
+                                'user_id' => $user ? $user->id : 167,
                                 'dependencia_id' => $row['dependencia_id'] !== 'NULL' && $row['dependencia_id'] !== -1 ? $row['dependencia_id'] : $tramite->dependencia_id,
                                 'content' => $row['observacion'] !== 'NULL' && $row['observacion'] !== -1 ? $row['observacion'] : '',
                                 'updated_at' => Carbon::parse($row['fecha'])->format('Y-m-d H:i:s'),
@@ -56,7 +56,7 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
                         Tramite::where('id', $tramite->id)->update(
                             [
                                 'estado_id' => $row['estado_id'],
-                                'assigned' => $user ? $user->id : 1,
+                                'assigned' => $user ? $user->id : 167,
                                 'updated_at' => Carbon::parse($row['fecha'])->format('Y-m-d H:i:s')
                             ]
                         );

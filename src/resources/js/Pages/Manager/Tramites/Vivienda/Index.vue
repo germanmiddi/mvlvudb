@@ -170,7 +170,7 @@
                                                     <div class="py-1 text-left">
                                                         
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route('discapacidad.edit', data.tramite.id)"
+                                                        <a :href="route('vivienda.edit', data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
                                                             Editar</a>
                                                         </MenuItem>

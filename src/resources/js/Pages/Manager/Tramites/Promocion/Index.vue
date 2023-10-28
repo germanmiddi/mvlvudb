@@ -133,7 +133,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in tramites.data" :key="data.tramite.id">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-green-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-red-500' ">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-red-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-green-500' ">
                                         {{ data.tramite.id }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

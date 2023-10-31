@@ -45,12 +45,12 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                 [
                     'lastname' => strtoupper(str_replace(' ', '', $row['person_lastname'])) !== 'NULL' ? $row['person_lastname'] : null,
                     'name' => strtoupper(str_replace(' ', '', $row['person_name'])) !== 'NULL' ? $row['person_name'] : null,
-                    'fecha_nac' => $row['person_fecha_nac'],
+                    'fecha_nac' => date("Y-m-d ", strtotime($row['person_fecha_nac'])),
                     'tipo_documento_id' => $row['person_tipo_documento_id'],
                     'num_documento' => $row['person_num_documento']
                 ]
             );
-
+            //dd( $person );
             /* AditionalData::updateOrCreate(
                 [
                     'person_id' => $person->id
@@ -68,6 +68,7 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                 [
                     'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' && $row['social_tipo_ocupacion_id'] !== -1 ? $row['social_tipo_ocupacion_id'] : null,
                     //'cobertura_medica_id' => $row['social_cobertura_medica_id'] !== 'NULL' && $row['social_cobertura_medica_id'] !== -1 ? $row['social_cobertura_medica_id'] : null,
+                    'programa_social_id' => $row['programa_social_id'] !== 'NULL' && $row['programa_social_id'] !== -1 ? $row['programa_social_id'] : null,
                 ]
             );
 
@@ -120,9 +121,9 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'num_documento' => $row['nino_num_documento']
                 ],
                 [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['nino_name'])) !== 'NULL' ? $row['nino_name'] : null,
+                    'lastname' => strtoupper(str_replace(' ', '', $row['nino_lastname'])) !== 'NULL' ? $row['nino_lastname'] : null,
                     'name' => strtoupper(str_replace(' ', '', $row['nino_name'])) !== 'NULL' ? $row['nino_name'] : null,
-                    'fecha_nac' => $row['nino_fecha_nac'],
+                    'fecha_nac' => date("Y-m-d ", strtotime($row['nino_fecha_nac'])),
                     'tipo_documento_id' => $row['nino_tipo_documento_id'],
                     'num_documento' => $row['nino_num_documento']
                 ]
@@ -162,15 +163,15 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                    // 'longitude' => $request['nino_longitude'],
                    // 'google_address' => $request['nino_google_address'],
                    // 'pais_id' => $request['nino_pais_id'],
-                   /// 'localidad_id' => $request['nino_localidad_id'],
-                    'barrio_id' => $row['nino_barrio_id'] !== 'NULL' && $row['nino_barrio_id'] !== -1 ? $row['nino_barrio_id'] : null,
+                   // 'localidad_id' => $request['nino_localidad_id'],
+                   // 'barrio_id' => $row['nino_barrio_id'] !== 'NULL' && $row['nino_barrio_id'] !== -1 ? $row['nino_barrio_id'] : null,
 
                 ]
             );
 
             // contact_data
 
-            ContactData::updateOrCreate(
+            /* ContactData::updateOrCreate(
                 [
                     'person_id' => $nino->id
                 ],
@@ -179,7 +180,7 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                    // 'celular' => $request['nino_celular'],
                    // 'email' => $request['nino_email']
                 ]
-            );
+            ); */
 
             // salud_data
 
@@ -190,10 +191,10 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                 [
                     'apto_medico' => $row['nino_apto_medico'] == 'SI' ? 1 : ($row['nino_apto_medico'] == 'NO' ? 0 : null),
                     'libreta_vacunacion' => $row['nino_libreta_vacunacion'] == 'SI' ? 1 : ($row['nino_libreta_vacunacion'] == 'NO' ? 0 : null),
-                 //  'observacion' => $request['nino_observacion'],
+                    //'observacion' => $request['nino_observacion'],
                     'centro_salud_id' =>$row['nino_centro_salud_id'] !== 'NULL' && $row['nino_centro_salud_id'] !== -1 ? $row['nino_centro_salud_id'] : null,
                     'estado_salud_id' => $row['nino_estado_salud_id'] !== 'NULL' && $row['nino_estado_salud_id'] !== -1 ? $row['nino_estado_salud_id'] : null,
-                   // 'observacion' => $request['nino_observacion_salud'],
+                    //'observacion' => $request['nino_observacion_salud'],
                 ]
             );
 
@@ -205,25 +206,30 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
                     'dependencia_id' => 12,
                     'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                    //'estado_id' => $row['tramite_estado_id'],
+                    'sede_id' => $row['sede_id'],
+                    'estado_id' => 1,
                     //'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
                 ]
             );
 
             CbiData::Create(
                 [
-                    'anio_inicio' => $row['anio_inicio'] !== 'NULL' && $row['anio_inicio'] !== -1 ? $row['anio_inicio'] : null,
+                    'anio_inicio' => $row['anio_inicio'] !== 'NULL' && $row['anio_inicio'] !== -1 ? date("Y", strtotime($row['anio_inicio'])) : null,
                     'aut_firmada' => $row['aut_firmada'] == 'SI' ? 1 : ($row['aut_firmada'] == 'NO' ? 0 : null),
                     'aut_retirarse' => $row['aut_retirarse'] == 'SI' ? 1 : ($row['aut_retirarse'] == 'NO' ? 0 : null),
                     'aut_uso_imagen' => $row['aut_uso_imagen'] == 'SI' ? 1 : ($row['aut_uso_imagen'] == 'NO' ? 0 : null),
-                    //'act_varias' => $request['act_varias'],
+                    'act_varias' => $row['act_varias'] == 'PRESENTE' ? 1 : ($row['act_varias'] == 'AUSENTE' ? 0 : null),
                     //'act_esporadicas' => $request['act_esporadicas'],
-                    //'comedor' => $request['comedor'],
-                    //'estado_cbi_id' => $request['estado_cbi_id'],
-                    //'estado_gabinete_id'  => $request['estado_gabinete_id'],
-                    //'tramite_id' => $tramite_data['id']
+                    'comedor' => $row['comedor'] == 'SI' ? 1 : ($row['comedor'] == 'NO' ? 0 : null),
+                    'estado_cbi_id' => $row['estado_cbi_id'] !== 'NULL' && $row['estado_cbi_id'] !== -1 ? $row['estado_cbi_id'] : null,
+                    'estado_gabinete_id'  => $row['estado_gabinete_id'] !== 'NULL' && $row['estado_gabinete_id'] !== -1 ? $row['estado_gabinete_id'] : null,
+                    'tramite_id' => $tramite_data['id']
                 ]
             );
+
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+                    
+            $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
 
 
             ++$this->rowsSuccess;
@@ -267,7 +273,7 @@ class InfanciaImport implements ToModel,WithHeadingRow, WithBatchInserts
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . strval($this->rows + 1), ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }

@@ -9,6 +9,7 @@ use App\Imports\EstadosImport;
 use App\Imports\FortalecimientoImport;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
+use App\Imports\InfanciaImport;
 use App\Imports\JuventudImport;
 use App\Imports\MayoresImport;
 use App\Imports\NinezImport;
@@ -83,6 +84,10 @@ class ImportController extends Controller
                             Log::info('Se ha iniciado el proceso de Importación de Tramite PROMOCIONES. <br>');
                             $import = new PromocionImport();
                             break;
+                        case 12:
+                            Log::info('Se ha iniciado el proceso de Importación de Tramite INFANCIA. <br>');
+                            $import = new InfanciaImport();
+                            break;
                         case 13:
                             Log::info('Se ha iniciado el proceso de Importación de Tramite JUVENTUD. <br>');
                             $import = new JuventudImport();
@@ -101,6 +106,7 @@ class ImportController extends Controller
                     return response()->json(['message' => 'Se ha finalizado el proceso de importacion de tramite.', 'status' => $status], 200);
                 
             } catch (\Throwable $th) {
+                dd($th);
                 return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
             }
         }else{
@@ -136,6 +142,7 @@ class ImportController extends Controller
                     $status = $import->getStatus();
                     return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Estados.', 'status' => $status], 200);
                 } catch (\Exception $e) {
+                    dd($e);
                     return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
                 }
         }else{

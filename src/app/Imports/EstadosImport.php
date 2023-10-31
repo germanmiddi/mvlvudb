@@ -29,6 +29,9 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
     private $rowsDuplicados = 0;
     private $entidadesNoRegistradas = '';
     private $registrosDuplidados = '';
+    //private $estadoPrevio = 1;
+    private $emailPrevio = '';
+    private $n_tramite_previo = 1;
 
     public function model(array $row)
     {
@@ -43,12 +46,27 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
                         Log::error("La observacion ha sido cargado previamente en el estado de la linea N° " .strval($this->rows + 1), ["Modulo" => "ImportEstados:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
                     }else{
                         $user = User::where('email', $row['email'])->first();
+                        // Verifico si el tramite viene vacio.
+                        if($row['observacion'] == '' && $row['observacion'] == null){
+                            $row['observaciones'] = ' ';
+                            if($this->n_tramite_previo == $row['num_tramite_legacy'] && $this->emailPrevio != $row['email']){
+                                $row['observacion'] .= "Tramite reasignado a nuevo legajo";
+                            }
+                        }
+
+                        if(!$user){
+                            $row['observacion'] .= " Usuario inhabilitado, reasignado al administrador";
+                        }
+                        
+                        //$this->estadoPrevio = $row['estado_id'];
+                        $this->emailPrevio = $row['email'];
+                        $this->n_tramite_previo = $row['num_tramite_legacy'];
                         TramiteComment::Create(
                             [
                                 'tramite_id' => $tramite->id,
                                 'user_id' => $user ? $user->id : 167,
                                 'dependencia_id' => $row['dependencia_id'] !== 'NULL' && $row['dependencia_id'] !== -1 ? $row['dependencia_id'] : $tramite->dependencia_id,
-                                'content' => $row['observacion'] !== 'NULL' && $row['observacion'] !== -1 ? $row['observacion'] : '',
+                                'content' => $row['observacion'] !== 'NULL' && $row['observacion'] !== -1 && $row['observacion'] !== NULL ? $row['observacion'] : '',
                                 'updated_at' => Carbon::parse($row['fecha'])->format('Y-m-d H:i:s'),
                                 'created_at' => Carbon::parse($row['fecha'])->format('Y-m-d H:i:s')
                             ]
@@ -69,6 +87,7 @@ class EstadosImport implements ToModel,WithHeadingRow, WithBatchInserts
             }
             DB::commit();
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Estado de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha podido almacenar. Error: ' . $th->getMessage() . '<br>';

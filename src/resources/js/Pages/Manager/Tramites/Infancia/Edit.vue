@@ -1934,7 +1934,7 @@ export default {
 		this.form.phone = titular[0].contact[0].phone
 		this.form.celular = titular[0].contact[0].celular
 		if(titular[0].aditional[0]){
-			this.form.cant_hijos = isset(titular[0].aditional[0].cant_hijos)
+			this.form.cant_hijos = titular[0].aditional[0].cant_hijos
 			this.form.situacion_conyugal_id = titular[0].aditional[0].situacion_conyugal_id
 		}
 		this.form.tipo_ocupacion_id = titular[0].social[0].tipo_ocupacion_id

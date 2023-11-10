@@ -537,7 +537,7 @@
 									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
 										autocomplete="descripcion-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-										<input @change="handleFileUpload" accept=".jpg, .jpeg, .png, .gif, .pdf" type="file" name="file" id="file" ref="inputfile"
+										<input @change="handleFileUpload" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
 										autocomplete="off"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 									<div class="flex-shrink-0">
@@ -546,7 +546,7 @@
 											Subir Archivo</button>
 									</div>
 								</div>
-								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen o PDF.</p>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen, office o PDF.</p>
 							</div>
 							<div class="col-span-6 sm:col-span-6 ">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">

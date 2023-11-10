@@ -59,7 +59,10 @@ const store = reactive({
 
     // Validar formato de Input File.
     isValidFileType(file) {
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/vnd.ms-excel', 'application/msword'];
         return allowedTypes.includes(file.type);
     },
 

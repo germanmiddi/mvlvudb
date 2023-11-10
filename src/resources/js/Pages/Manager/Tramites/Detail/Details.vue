@@ -382,8 +382,7 @@
 									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
 										autocomplete="descripcion-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileUpload" type="file" name="file" id="file" ref="file"
-										autocomplete="file-level2"
+									<input @change="handleFileUpload" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 									<div class="flex-shrink-0">
 										<button @click="uploadFile()" type="button"
@@ -391,6 +390,7 @@
 											Subir Archivo</button>
 									</div>
 								</div>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen, office o PDF.</p>
 							</div>
 							<div class="col-span-12 sm:col-span-10 ">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
@@ -502,6 +502,7 @@ export default {
 			newDependencia: this.tramite[0].dependencia_id,
 			newDepObservacion: "",
 			assignment: this.tramite[0].assigned,
+			fileInvalid: false
 		}
 	},
 	setup() {
@@ -681,7 +682,22 @@ export default {
 		},
 
 		handleFileUpload(event) {
-			this.file = event.target.files[0];
+			this.fileInvalid = false
+			const file = event.target.files[0];
+			if (file) {
+				// Verificar el tipo de archivo
+				console.log('adentro')
+				if (store.isValidFileType(file)) {
+					// El archivo es válido
+					this.file = file
+				} else {
+					// Archivo no válido
+					this.file = null
+					const fileValue = this.$refs.inputfile;
+					fileValue.value = null;
+					this.fileInvalid = true;
+				}
+			}
 		},
 
 		coord_google($coord) {

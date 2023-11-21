@@ -1046,7 +1046,6 @@ export default {
 			}
 		},
 		addFile() {
-
 			if (this.selectedFile && this.form.description_file) {
 				this.files.push({
 					description: this.form.description_file,

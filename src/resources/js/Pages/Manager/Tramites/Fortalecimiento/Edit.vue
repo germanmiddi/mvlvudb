@@ -845,31 +845,37 @@ export default {
 		},
 		async uploadFile(){
 
-			let rt = route('file.upload');
-			const formData = new FormData();
+			if (this.file && this.form.description_file) {
+				let rt = route('file.upload');
+				const formData = new FormData();
 
-			formData.append('file', this.file);
-			formData.append('tramite_id', this.form.tramite_id);
-			formData.append('description', this.form.description_file);
-		
+				formData.append('file', this.file);
+				formData.append('tramite_id', this.form.tramite_id);
+				formData.append('description', this.form.description_file);
+			
 
-			try {
-				const response = await axios.post(rt, formData); 
-				if (response.status == 200) {
-					this.labelType = "success";
-                	this.toastMessage = response.data.message; 
-					this.form_archivo.push(response.data.archivo)
-					this.form.description_file = ''
-					
-					this.file = null
-					const fileValue = this.$refs.inputfile;
-					fileValue.value = null;
-				} else {
-					this.labelType = "danger";
-                	this.toastMessage = response.data.message;
+				try {
+					const response = await axios.post(rt, formData); 
+					if (response.status == 200) {
+						this.labelType = "success";
+						this.toastMessage = response.data.message; 
+						this.form_archivo.push(response.data.archivo)
+						this.form.description_file = ''
+						
+						this.file = null
+						const fileValue = this.$refs.inputfile;
+						fileValue.value = null;
+					} else {
+						this.labelType = "danger";
+						this.toastMessage = response.data.message;
+					}
+				} catch (error) {
+					console.log(error)
 				}
-			} catch (error) {
-				console.log(error)
+			} else {
+				this.labelType = "danger";
+				this.toastMessage =
+					"Debe completar completar los datos del archivo, Verifique si el archivo es valido.";
 			}
 		}
 

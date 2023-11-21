@@ -375,8 +375,8 @@
 
 						</div>
 						<!-- Si el tramite esta cerrado no se puede agregar archivos -->
-						<div v-if="tramite[0].estado_id != 2" class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-10 ">
+						<div class="grid grid-cols-12 gap-6">
+							<div v-if="tramite[0].estado_id != 2" class="col-span-12 sm:col-span-10 ">
 								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
 								<div class="flex ">
 									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
@@ -735,28 +735,37 @@ export default {
 
 		async uploadFile() {
 
-			let rt = route('file.upload');
-			const formData = new FormData();
+			if (this.file && this.form.description_file) {
+				let rt = route('file.upload');
+				const formData = new FormData();
 
-			formData.append('file', this.file);
-			formData.append('tramite_id', this.tramite[0].id);
-			formData.append('description', this.form.description_file);
+				formData.append('file', this.file);
+				formData.append('tramite_id', this.tramite[0].id);
+				formData.append('description', this.form.description_file);
 
 
-			try {
-				const response = await axios.post(rt, formData);
-				if (response.status == 200) {
-					this.labelType = "success";
-					this.toastMessage = response.data.message;
-					this.form_archivo.push(response.data.archivo)
-					this.form.description_file = ''
-					this.file = ''
-				} else {
-					this.labelType = "danger";
-					this.toastMessage = response.data.message;
+				try {
+					const response = await axios.post(rt, formData);
+					if (response.status == 200) {
+						this.labelType = "success";
+						this.toastMessage = response.data.message;
+						this.form_archivo.push(response.data.archivo)
+						this.form.description_file = ''
+						
+						this.file = null
+						const fileValue = this.$refs.inputfile;
+						fileValue.value = null;
+					} else {
+						this.labelType = "danger";
+						this.toastMessage = response.data.message;
+					}
+				} catch (error) {
+					console.log(error)
 				}
-			} catch (error) {
-				console.log(error)
+			} else {
+				this.labelType = "danger";
+				this.toastMessage =
+					"Debe completar completar los datos del archivo, Verifique si el archivo es valido.";
 			}
 		}
 

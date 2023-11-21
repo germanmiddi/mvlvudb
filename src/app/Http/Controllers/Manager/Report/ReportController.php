@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager\Report;
 
+use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Dependencia;
@@ -90,4 +91,9 @@ class ReportController extends Controller
 
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }
+
+    public function exportTramiteCBIExcel(){
+        return Excel::download(new TramitesCBIExport(), 'tramitesCBI.xlsx');
+    }
+
 }

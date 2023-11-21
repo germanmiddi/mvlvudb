@@ -2,7 +2,10 @@
 
 namespace App\Exports;
 
+use App\Models\Manager\CbiData;
+use App\Models\Manager\Person;
 use App\Models\Manager\Tramite;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -15,10 +18,11 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 //use Maatwebsite\Excel\Concerns\WithCache;
+use Maatwebsite\Excel\Concerns\FromArray;
 
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class TramitesCBIExport implements FromCollection, WithHeadings, WithStyles, ShouldAutoSize, WithColumnFormatting, WithTitle, WithCustomStartCell
+class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAutoSize, WithColumnFormatting, WithTitle, WithCustomStartCell
 {
 
     use Exportable;
@@ -32,12 +36,113 @@ class TramitesCBIExport implements FromCollection, WithHeadings, WithStyles, Sho
         
     }
 
-    public function collection()
+    public function array(): array
     {
         
         $result = Tramite::query();
+        $pos = 0; 
+        $tramites = Tramite::where('dependencia_id',12)->get()->toArray();
 
-        $result->select(
+        foreach ($tramites as $tramite) {
+            // Ejecutar una consulta directa
+            $query = "SELECT * FROM person_tramite WHERE tramite_id =".$tramite['id'];
+            $person_tramite = DB::select($query);
+            
+            foreach ($person_tramite as $pt) {
+                // Recorro las personas asociadas, y se cargan los datos del tramite. 
+                $data_temp = [];
+                $data_temp['id'] = $tramite['id'];
+                $data_temp['fecha'] = $tramite['fecha'];
+                $data_temp['observacion'] = $tramite['observacion'];
+                $data_temp['sede_id'] = $tramite['sede_id'];
+                $data_temp['canal_atencion_id'] = $tramite['canal_atencion_id'];
+                $data_temp['tipo_tramite_id'] = $tramite['tipo_tramite_id'];
+                $data_temp['tipo_institucion_id'] = $tramite['tipo_institucion_id'];
+                $data_temp['dependencia_id'] = $tramite['dependencia_id'];
+                $data_temp['num_tramite_legacy'] = $tramite['num_tramite_legacy'];
+                $data_temp['parentesco_id'] = $tramite['parentesco_id'];
+                $data_temp['estado_id'] = $tramite['estado_id'];
+                $data_temp['assigned'] = $tramite['assigned'];
+                $data_temp['users_email'] = User::where('users.id', $tramite['assigned'])->first()->email ?? '';
+                $data_temp['category_id'] = $tramite['category_id'];
+                $data_temp['modalidad_atencion_id'] = $tramite['modalidad_atencion_id'];
+                //Person_tramite
+                $data_temp['person_rol_tramite_id'] = $pt->rol_tramite_id;
+                //Person
+                $person = Person::where('id', $pt->person_id)->first();
+
+                $data_temp['person_name'] = $person->name;
+                $data_temp['person_lastname'] = $person->lastname;
+                $data_temp['person_num_documento'] = $person->num_documento;
+                $data_temp['person_tipo_documento_id'] = $person->tipo_documento_id;
+                $data_temp['person_fecha_nacimiento'] = $person->fecha_nac;
+
+                //Data_address
+                $data_temp['address_data_localidad_id'] = $person->address[0]->localidad_id;
+                $data_temp['address_data_pais_id'] = $person->address[0]->pais_id;
+                $data_temp['address_data_barrio_id'] = $person->address[0]->barrio_id;
+                $data_temp['address_data_calle'] = $person->address[0]->calle;
+                $data_temp['address_data_number'] = $person->address[0]->numero;
+                $data_temp['address_data_piso'] = $person->address[0]->piso;
+                $data_temp['address_data_dpto'] = $person->address[0]->dpto;
+                $data_temp['address_data_latitude'] = $person->address[0]->latitude;
+                $data_temp['address_data_longitude'] = $person->address[0]->longitude;
+                $data_temp['address_data_google_address'] = $person->address[0]->google_address;
+
+                //Data_aditional
+                $data_temp['aditional_data_cant_hijos'] = $person->aditional[0]->cant_hijos ?? null;
+                $data_temp['aditional_data_tipo_vivienda_id'] = $person->aditional[0]->tipo_vivienda_id ?? null;
+                $data_temp['aditional_data_tipo_vinculo_familiar_id'] = $person->aditional[0]->tipo_vinculo_familiar_id ?? null;
+                $data_temp['aditional_data_situacion_conyugal_id'] = $person->aditional[0]->situacion_conyugal_id ?? null;
+
+                //Data_contact
+                $data_temp['contact_data_phone'] = $person->contact[0]->phone;
+                $data_temp['contact_data_celular'] = $person->contact[0]->celular;
+                $data_temp['contact_data_email'] = $person->contact[0]->email;
+
+                // Data_salud
+                $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico ?? null;
+                $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion ?? null;
+                $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
+                $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma ?? null;
+                $data_temp['salud_data_fecha_electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
+                $data_temp['salud_data_medicacion'] = $person->salud->medicacion ?? null;
+                $data_temp['salud_data_name_medicacion'] = $person->salud->name_medicacion ?? null;
+                $data_temp['salud_data_dosis'] = $person->salud->dosis ?? null;
+                $data_temp['salud_data_observacion'] = $person->salud->observacion ?? null;
+                $data_temp['salud_data_centro_salud_id'] = $person->salud->centro_salud_id ?? null;
+                $data_temp['salud_data_estado_salud_id'] = $person->salud->estado_salud_id ?? null;
+                
+                // Data_social
+                $data_temp['social_data_tipo_ocupacion_id'] = $person->social[0]->tipo_ocupacion_id ?? null;
+                $data_temp['social_data_cobertura_medica_id'] = $person->contact[0]->cobertura_medica_id ?? null;
+                $data_temp['social_data_tipo_pension_id'] = $person->contact[0]->tipo_pension_id ?? null;
+                $data_temp['social_data_programa_social_id'] = $person->contact[0]->programa_social_id ?? null;
+                
+                //CBI DATA
+                $cbi_data = CbiData::where('tramite_id', $tramite['id'])->first();
+                //dd($cbi_data);
+                $data_temp['cbi_data_anio_inicio'] = $cbi_data->anio_inicio;
+                $data_temp['cbi_data_aut_firmada'] = $cbi_data->aut_firmada;
+                $data_temp['cbi_data_aut_retirarse'] = $cbi_data->aut_retirarse;
+                $data_temp['cbi_data_aut_uso_imagen'] = $cbi_data->aut_uso_imagen;
+                $data_temp['cbi_data_act_varias'] = $cbi_data->act_varias;
+                $data_temp['cbi_data_act_esporadicas'] = $cbi_data->act_esporadicas;
+                $data_temp['cbi_data_comedor'] = $cbi_data->comedor == 1 ? '1' : ($cbi_data->comedor === null ? null : '0');
+                $data_temp['cbi_data_estado_cbi_id'] = $cbi_data->estado_cbi_id;
+                $data_temp['cbi_data_estado_gabinete_id'] = $cbi_data->estado_gabinete_id;
+
+                
+                $this->data[$pos] = $data_temp;
+                $pos++;
+            }
+            
+            
+
+        }
+        return $this->data;
+
+        /* $result->select(
             // Data Tramite
             'tramites.id', DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"), 'tramites.observacion',
             'tramites.sede_id','tramites.canal_atencion_id','tramites.tipo_tramite_id',
@@ -93,7 +198,7 @@ class TramitesCBIExport implements FromCollection, WithHeadings, WithStyles, Sho
             ->where('tramites.id', '1')
             ->where('tramites.dependencia_id','12');
             //->orderBy('tramites.id');
-        return $result->get();
+        return $result->get(); */
     }
 
     // Define el inicio del archivo.
@@ -131,13 +236,14 @@ class TramitesCBIExport implements FromCollection, WithHeadings, WithStyles, Sho
     // encabezados
     public function headings(): array
     {
+
         return [
                 //tramite
                 'tramite_id','tramite_fecha','tramite_observacion','tramite_sede_id','tramite_canal_atencion','tramite_tipo_tramite_id',
                 'tramite_tipo_institucion_id', 'tramite_dependencia_id', 'tramite_num_tramite_legacy','tramite_parentesco_id', 
                 'tramite_estado_id','tramite_assigned','users_email','tramite_category_id', 'tramite_modalidad_atencion_id',
                 //Person_tramite
-                'person_tramite_person_id','person_tramite_tramite_id', 'person_tramite_rol_tramite_id',
+                'person_tramite_rol_tramite_id',
                 //Person
                 'person_name','person_lastname','person_num_documento','person_tipo_documento_id','person_fecha_nacimiento',
                 //Data_address

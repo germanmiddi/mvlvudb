@@ -24,6 +24,8 @@ class PdfController extends Controller
             'celular' => $tramite->persons[0]->contact[0]->celular,
             'tipo_tramite' => $tramite->tipoTramite->description,
             'observacion' => $tramite->observacion,
+            'cud_codigo' => $tramite->persons[0]->cud->codigo,
+            'cud_diagnostico' => $tramite->persons[0]->cud->diagnostico,
         ];
         return PDF::loadView('pdf/acusePdf', $data)->stream('acuse.pdf');
     }
@@ -40,6 +42,8 @@ class PdfController extends Controller
             'celular' => $tramite->persons[0]->contact[0]->celular,
             'tipo_tramite' => $tramite->tipoTramite->description,
             'observacion' => $tramite->observacion,
+            'cud_codigo' => $tramite->persons[0]->cud->codigo,
+            'cud_diagnostico' => $tramite->persons[0]->cud->diagnostico,
             'comments' => $tramite->comments
         ];
         return PDF::loadView('pdf/acuseObservacionPdf', $data)->stream('acuseObservacion.pdf');

@@ -235,6 +235,12 @@ p {
                         @if ($celular)
                             <div class="mt-10"><strong>Celular: </strong>  </div>
                         @endif
+                         @if ($cud_codigo)
+                            <div class="mt-10"><strong>Codigo CUD: </strong>  </div>
+                        @endif
+                        @if ($cud_diagnostico)
+                            <div class="mt-10"><strong>Diagnostico: </strong>  </div>
+                        @endif
                         <div class="mt-10"><strong>Dependencia: </strong>  </div>
                         <div class="mt-10"><strong>Tipo de Tramite: </strong>  </div>
                         <div class="mt-10"><strong>Observación: </strong>  </div>
@@ -256,6 +262,12 @@ p {
                         @endif
                         @if ($celular)
                             <div class="mt-10">{{$celular}}</div>
+                        @endif
+                        @if ($cud_codigo)
+                            <div class="mt-10">{{$cud_codigo}}</div>
+                        @endif
+                        @if ($cud_diagnostico)
+                            <div class="mt-10">{{$cud_diagnostico}}</div>
                         @endif
                         <div class="mt-10">{{$dependencia}}</div>
                         <div class="mt-10">{{$tipo_tramite}}</div> 

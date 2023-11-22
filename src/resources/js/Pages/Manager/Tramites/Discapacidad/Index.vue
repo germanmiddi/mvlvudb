@@ -82,6 +82,16 @@
                                 }}</option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-4">
+                            <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
+                            <select v-model="filter.user_id" id="user_id" name="user_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option v-for="user in users" :key="user.id" :value="user.id">{{
+                                    user.name
+                                }}</option>
+                            </select>
+                        </div>
                         <div class="col-span-12 sm:col-span-2">
                             <label for="asiggned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
                             <input v-model="filter.assigned_me" id="asiggned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -243,7 +253,8 @@ export default {
     props: {
         toast: Object,
         tiposTramite: Object,
-        estados: Object
+        estados: Object,
+        users: Object
     },
     components: {
         Menu,
@@ -287,6 +298,10 @@ export default {
 
             if (this.filter.tramite_id) {
                 filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
+            }
+
+            if (this.filter.user_id) {
+                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
             }
 
             if (this.filter.assigned_me) {

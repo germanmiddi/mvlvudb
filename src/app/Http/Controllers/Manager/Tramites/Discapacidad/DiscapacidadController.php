@@ -37,8 +37,7 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\TramiteEstado;
-
-
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -53,6 +52,7 @@ class DiscapacidadController extends Controller
         [
             'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
             'estados' => TramiteEstado::all(),
+            'users' => User::orderBy('name')->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -525,6 +525,11 @@ class DiscapacidadController extends Controller
 
         if(request('assigned_me')){
             $result->where('assigned', Auth::user()->id);
+        }
+
+        if(request('user_id')){
+            $user_id = json_decode(request('user_id'));
+            $result->orwhere('assigned', $user_id);
         }
 
         return  $result->orderBy("tramites.fecha", 'DESC')

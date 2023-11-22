@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,6 +20,7 @@ class GeneralController extends Controller
         [
             'tiposTramite' => TipoTramite::active()->get(),
             'dependencias' => Dependencia::all(),
+            'users' => User::orderBy('name')->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -77,6 +79,11 @@ class GeneralController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
+        if(request('user_id')){
+            $user_id = json_decode(request('user_id'));
+            $result->where('assigned', $user_id);
+        }
+
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
@@ -84,7 +91,8 @@ class GeneralController extends Controller
                 'tramite'   => $tramite,
                 'persons'   => $tramite->persons,
                 'tipo_tramite' => $tramite->tipoTramite,
-                'dependencia' => $tramite->dependencia
+                'dependencia' => $tramite->dependencia,
+                'archivos' => $tramite->archivos,
             ]);
     }
 

@@ -33,6 +33,8 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
                         </div>
                         <div class="flex-shrink-0">
+                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                    @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
                                 class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
                                 Filtro</button>
@@ -82,6 +84,16 @@
                                 <option value="" selected>Selecciones un tipo de tramite</option>
                                 <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
                                     tipoTramite.description
+                                }}</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)">
+                            <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
+                            <select v-model="filter.user_id" id="user_id" name="user_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option v-for="user in users" :key="user.id" :value="user.id">{{
+                                    user.name
                                 }}</option>
                             </select>
                         </div>
@@ -247,7 +259,8 @@ export default {
     props: {
         toast: Object,
         tiposTramite: Object,
-        estados: Object
+        estados: Object,
+        users: Object
     },
     components: {
         Menu,
@@ -281,6 +294,11 @@ export default {
         }
     },
     methods: {
+        clearFilter(){
+            this.filter = {}
+            this.tiposTramiteFiltrados = this.tiposTramite
+            this.getTramites()
+        },
         clearMessage() {
             this.toastMessage = "";
         },
@@ -290,6 +308,10 @@ export default {
 
             if (this.filter.tramite_id) {
                 filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
+            }
+
+            if (this.filter.user_id) {
+                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
             }
 
             if (this.filter.assigned_me) {

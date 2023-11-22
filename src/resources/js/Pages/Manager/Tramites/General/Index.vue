@@ -91,6 +91,17 @@
                                 }}</option>
                             </select>
                         </div>
+
+                        <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)">
+                            <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
+                            <select v-model="filter.user_id" id="user_id" name="user_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option v-for="user in users" :key="user.id" :value="user.id">{{
+                                    user.name
+                                }}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,6 +115,10 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
+                                        N° Tramite
+                                    </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Fecha
@@ -132,6 +147,9 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in this.tramites.data" :key="data.tramite.id">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-red-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-green-500' ">
+                                        {{ data.tramite.id }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
@@ -147,10 +165,8 @@
                                     <td class="px-6 py-4 whitespace-wrap text-sm text-gray-500">
                                         {{ data.tramite.tipo_tramite.description }}
                                     </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium">
-                                        <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                            <PencilSquareIcon class="w-5 h-5 text-purple-700 mr-2" />
-                                        </a> -->
+                                    <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
+                                        <PaperClipIcon title="Posee archivos" v-if="data.archivos.length > 0" class="w-7 h-7 mr-2 inline-flex  bg-gray-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"/>
                                         <Menu as="div" class="inline-node">
                                             <div>
                                                 <MenuButton class="btn-blue h-7">
@@ -240,7 +256,8 @@ import {
     ChevronRightIcon,
     EllipsisVerticalIcon,
     PencilSquareIcon,
-    ArrowsPointingOutIcon
+    ArrowsPointingOutIcon,
+    PaperClipIcon
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 
@@ -250,7 +267,8 @@ export default {
     props: {
         toast: Object,
         tiposTramite: Object,
-        dependencias: Object
+        dependencias: Object,
+        users: Object
     },
     components: {
         Menu,
@@ -261,6 +279,7 @@ export default {
         ChevronRightIcon,
         PencilSquareIcon,
         ArrowsPointingOutIcon,
+        PaperClipIcon,
         Toast,
         Datepicker
     },
@@ -327,6 +346,10 @@ export default {
 
             if (this.filter.dependencia_id) {
                 filter += `&dependencia_id=${JSON.stringify(this.filter.dependencia_id)}`
+            }
+
+            if (this.filter.user_id) {
+                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
             }
 
             const get = `${route('general.list')}?${filter}`

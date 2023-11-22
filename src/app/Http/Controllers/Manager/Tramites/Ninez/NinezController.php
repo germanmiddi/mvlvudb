@@ -36,6 +36,7 @@ use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use App\Models\Manager\TramiteEstado;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -54,6 +55,7 @@ class NinezController extends Controller
         [
             'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
             'estados' => TramiteEstado::all(),
+            'users' => User::orderBy('name')->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -510,8 +512,17 @@ class NinezController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
+        $users_id = [];
         if(request('assigned_me')){
-            $result->where('assigned', Auth::user()->id);
+            $users_id[] = Auth::user()->id;
+        }
+
+        if(request('user_id')){
+            $users_id[] = json_decode(request('user_id'));
+        }
+
+        if(request('assigned_me') || request('user_id')){
+            $result->whereIn('assigned', $users_id);
         }
         
         return  $result->orderBy("tramites.fecha", 'DESC')

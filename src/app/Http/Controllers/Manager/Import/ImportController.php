@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager\Import;
 
 use App\Http\Controllers\Controller;
+use App\Imports\CudImport;
 use App\Imports\DiscapacidadImport;
 use App\Imports\EntidadImport;
 use App\Imports\EstadosImport;
@@ -123,6 +124,24 @@ class ImportController extends Controller
                     Excel::import($import, $archivoCSV);
                     $status = $import->getStatus();
                     return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Personas.', 'status' => $status], 200);
+                } catch (\Exception $e) {
+                    dd($e);
+                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                }
+        }else{
+            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+        }
+    }
+
+    public function importCud(Request $request)
+    {
+        if( $request->file('file')){
+                $archivoCSV = $request->file('file');
+                try {
+                    $import = new CudImport();
+                    Excel::import($import, $archivoCSV);
+                    $status = $import->getStatus();
+                    return response()->json(['message' => 'Se ha finalizado el proceso de importacion de CUD.', 'status' => $status], 200);
                 } catch (\Exception $e) {
                     dd($e);
                     return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);

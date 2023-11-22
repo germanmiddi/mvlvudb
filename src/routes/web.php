@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/estado', [ImportController::class, 'importEstados'])->name('import.estado');  
     Route::post('/import/personas', [ImportController::class, 'importPersonas'])->name('import.personas'); 
     Route::post('/import/files', [ImportController::class, 'importFiles'])->name('import.files');  
+    Route::post('/import/cud', [ImportController::class, 'importCud'])->name('import.cud');  
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');

@@ -60,6 +60,8 @@ class FortifyServiceProvider extends ServiceProvider
                 // Agrega los nuevos valores al array
                 $grupoNames = [
                     'APP-VUDS-ALL-VU',
+                    //'APP-VUDS-DIS-OP',
+                    //'APP-VUDS-DIS-ADM',
                 ];
                 // Asigna el array actualizado a la variable de sesión
                 session(['userGroups' => $grupoNames]);

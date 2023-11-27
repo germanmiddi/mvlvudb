@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\Manager\Tramites\General\GeneralController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
 //Models
@@ -482,17 +482,28 @@ class HabitatController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
-        $users_id = [];
-        if(request('assigned_me')){
-            $users_id[] = Auth::user()->id;
-        }
+        $generalController = new GeneralController();
+        if($generalController->_check_permission()){
+            // Si posee un rol que posee permiso operador visualizará unicamente sus tramites
+            $result->where('assigned', Auth::user()->id);
+        }else{
+            // Si no posee rol operador ejecuta los filtros.
+            $users_id = [];
+            if(request('assigned_me')){
+                $users_id[] = Auth::user()->id;
+            }
 
-        if(request('user_id')){
-            $users_id[] = json_decode(request('user_id'));
-        }
+            if(request('user_id')){
+                $users_id[] = json_decode(request('user_id'));
+            }
 
-        if(request('assigned_me') || request('user_id')){
-            $result->whereIn('assigned', $users_id);
+            if(request('not_assigned')){
+                $result->whereNull('assigned');
+            }
+            
+            if(count($users_id) > 0){
+                $result->whereIn('assigned', $users_id);
+            }
         }
 
        return  $result->orderBy("tramites.fecha", 'DESC')
@@ -503,7 +514,8 @@ class HabitatController extends Controller
                'persons'   => $tramite->persons,
                'contact_data' => $tramite->persons[0]->contact,
                'rol_tramite' => $tramite->rol_tramite[0]['description'],
-               'tipo_tramite' => $tramite->tipoTramite
+               'tipo_tramite' => $tramite->tipoTramite,
+               'archivos' => $tramite->archivos,
            ]);
    }
 }

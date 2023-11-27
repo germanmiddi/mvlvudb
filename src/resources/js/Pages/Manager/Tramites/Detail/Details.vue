@@ -13,7 +13,7 @@
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
-				<button v-if="tramite[0].estado_id == 1" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3"
+				<button v-if="tramite[0].estado_id == 1 || tramite[0].estado_id == 3" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3"
 						@click="changeStatus(2)">
 						Cerrar Trámite
 				</button>

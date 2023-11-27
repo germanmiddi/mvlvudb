@@ -28,18 +28,11 @@ class GeneralController extends Controller
     //list
     public function list()
     {
-        // $ids = $this->_get_id_entidades();
-
-        // dd($ids);
-
         $length = request('length');
         
         $result = Tramite::query();
-            //->with('person_tramite') // Carga la relación "documentos" para evitar problemas de carga perezosa (eager loading)
-            //->orderBy('person_tramite.rol_tramite_id', 'asc') // Ordena los trámites por la columna "fecha" de la relación "documentos" de forma descendente
-           // ->get();
 
-           if(request('dependencia_id')){
+        if(request('dependencia_id')){
             $dependencia_id = json_decode(request('dependencia_id'));
             $result->where('dependencia_id', $dependencia_id);
         }
@@ -55,6 +48,7 @@ class GeneralController extends Controller
                             ->orWhere('person.lastname', 'LIKE', '%'.$name.'%');
                     });
         }
+
         if(request('num_documento')){
             $num_documento = json_decode(request('num_documento'));  
             $result->whereIn('id', function ($sub) use($num_documento) {
@@ -65,15 +59,15 @@ class GeneralController extends Controller
                             ->where('person.num_documento', 'LIKE', '%'.$num_documento.'%');
                     });
         }
+
         if(request('date')){
             $date = json_decode(request('date'));
-
             $from = date('Y-m-d', strtotime($date[0]));
             $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
             $result->where('fecha','>=', $from)
                     ->where('fecha', '<', $to);
         }
+
         if(request('tipo_tramite_id')){
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
@@ -122,6 +116,21 @@ class GeneralController extends Controller
         $filteredEntityIds = array_filter($filteredEntityIds); // Remove null values
         
         return $filteredEntityIds;
+
+    }
+
+    public function _check_permission($permission = '-OP'){
+        $userGroups = session('userGroups');
+        //dd($userGroups);
+        $result = false;
+
+        foreach ($userGroups as $texto) {
+            if (strpos($texto, $permission) !== false) {
+                $result = true;
+            }
+        }
+
+        return $result;
 
     }
 }

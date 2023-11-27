@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)">
                             <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
-                            <select v-model="filter.user_id" id="user_id" name="user_id"
+                            <select @click="filter.not_assigned = ''" v-model="filter.user_id" id="user_id" name="user_id"
                                 autocomplete="off"
                                 class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option v-for="user in users" :key="user.id" :value="user.id">{{
@@ -97,9 +97,13 @@
                                 }}</option>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
-                            <label for="asiggned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
-                            <input v-model="filter.assigned_me" id="asiggned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <div class="col-span-12 sm:col-span-2" v-show="!store.userCan('-OP', $page.props.userGroups) || store.userCan('ALL', $page.props.userGroups)">
+                            <label for="assigned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
+                            <input @click="filter.not_assigned = ''" v-model="filter.assigned_me" id="assigned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        </div>
+                        <div class="col-span-12 sm:col-span-2" v-show="store.userCan('ADM', $page.props.userGroups)">
+                            <label for="not_assigned" class="block text-sm font-medium text-gray-700">Sin Asignar</label>
+                            <input @click="filter.user_id = '', filter.assigned_me = ''" v-model="filter.not_assigned" id="not_assigned" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>
                     </div>
 
@@ -160,10 +164,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.tramite.tipo_tramite.description }}
                                     </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium">
-                                        <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                            <PencilSquareIcon class="w-5 h-5 text-purple-700 mr-2" />
-                                        </a> -->
+                                    <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
+                                        <PaperClipIcon title="Posee archivos" v-if="data.archivos.length > 0" class="w-7 h-7 mr-2 inline-flex  bg-gray-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"/>
                                         <Menu as="div" class="inline-node">
                                             <div>
                                                 <MenuButton class="btn-blue h-7">
@@ -249,7 +251,8 @@ import {
     EllipsisVerticalIcon,
     PencilSquareIcon,
     ArrowsPointingOutIcon,
-    ArrowPathIcon
+    ArrowPathIcon,
+    PaperClipIcon
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
@@ -271,6 +274,7 @@ export default {
         PencilSquareIcon,
         ArrowsPointingOutIcon,
         ArrowPathIcon,
+        PaperClipIcon,
         Toast,
         Datepicker
     },
@@ -315,6 +319,10 @@ export default {
 
             if (this.filter.assigned_me) {
                 filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
+            }
+
+            if (this.filter.not_assigned) {
+                filter += `&not_assigned=${JSON.stringify(this.filter.not_assigned)}`
             }
 
             if (this.filter.name) {

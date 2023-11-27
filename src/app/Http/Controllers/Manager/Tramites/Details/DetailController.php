@@ -24,7 +24,7 @@ class DetailController extends Controller
         return Inertia::render('Manager/Tramites/Detail/Details',
             [   
                 'estados' => TramiteEstado::all(),
-                'users' => User::all(),
+                'users' => User::orderBy('name')->get(),
                 'dependencias' => Dependencia::all(),
                 'tramite' => Tramite::where('id', $id)
                                     ->with('persons', 

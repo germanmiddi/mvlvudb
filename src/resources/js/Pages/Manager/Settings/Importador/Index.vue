@@ -261,6 +261,50 @@
                     </div>
                 </div>
             </div>
+            <!-- UPDATE de Responsable -->
+            <div class="group relative bg-gray-50 rounded-md">
+                <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
+                    <div>
+                        <h4 class="text-center font-bold">Update Responsable</h4>
+                        <div class="col-span-12 mt-2">
+                            <label v-if="!loadingUpdateResponsable"
+                                class="w-full flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
+                                <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                </svg>
+                                <span v-if="!fileUpdateResponsable" class="mt-2 text-base leading-normal">Seleccione
+                                    Archivo</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileUpdateResponsableName
+                                }}</span>
+                                <input @change="handleFileUpdateResponsableChange" type="file" name="file" id="file" ref="inputfile"
+                                    autocomplete="off" class="hidden" />
+                            </label>
+
+                            <label v-else
+                                class="w-full flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
+                                <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
+                                <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
+                                <input disabled @change="handleFileUpdateResponsableChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="button" @click="importarUpdateResponsable()" v-if="!loadingUpdateResponsable"
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
+                            Importar
+                        </button>
+
+                        <button type="button" disabled v-else
+                            class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white">
+                            <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -529,8 +573,10 @@ export default {
             fileEstado: '',
             fileCudName: '',
             fileEstadoName: '',
+            fileUpdateResponsableName: '',
             filePersona: '',
             fileCud: '',
+            fileUpdateResponsable: '',
             filePersonaName: '',
             loadingEntidad: false,
             loadingCud: false,
@@ -538,6 +584,7 @@ export default {
             loadingEstado: false,
             loadingPersona: false,
             loadingCud: false,
+            loadingUpdateResponsable: false,
             loadingArchivo: false,
             status: '',
             dependencia_id: ''
@@ -572,6 +619,10 @@ export default {
         handleFileCudChange(event) {
             this.fileCud = event.target.files[0];
             this.fileCudName = this.fileCud ? this.fileCud.name : '';
+        },
+        handleFileUpdateResponsableChange(event) {
+            this.fileUpdateResponsable = event.target.files[0];
+            this.fileUpdateResponsableName = this.fileUpdateResponsable ? this.fileUpdateResponsable.name : '';
         },
         async importarEntidad() {
             if (this.fileEntidad != '') {
@@ -743,7 +794,35 @@ export default {
                 this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
             }
             this.loadingArchivo = false
-        }
+        },
+        async importarUpdateResponsable() {
+            if (this.fileUpdateResponsable != '') {
+                this.loadingUpdateResponsable = true
+                this.status = ''
+                let rt = route("import.updateResponsable");
+                const formData = new FormData();
+                formData.append('file', this.fileUpdateResponsable);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.status = response.data.status;
+                        console.log(response)
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                } catch (error) {
+                    this.labelType = "info";
+                    this.toastMessage = "El proceso de importación continuará ejecutandose en segundo plano, puede verificarlo en los Logs.";
+                }
+                this.loadingUpdateResponsable = false
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
 
     },
     mounted() {

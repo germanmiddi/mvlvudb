@@ -12,6 +12,7 @@ use App\Imports\EstadosUpdateResponsaleImport;
 use App\Imports\FortalecimientoImport;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
+use App\Imports\InfanciaDevImport;
 use App\Imports\InfanciaImport;
 use App\Imports\JuventudImport;
 use App\Imports\MayoresImport;
@@ -245,20 +246,37 @@ class ImportController extends Controller
         }
 
         public function updateResponsable(Request $request)
-    {
-        if( $request->file('file')){
-                $archivoCSV = $request->file('file');
-                try {
-                    $import = new EstadosUpdateResponsableImport();
-                    Excel::import($import, $archivoCSV);
-                    $status = $import->getStatus();
-                    return response()->json(['message' => 'Se ha finalizado el proceso de update de Responsable.', 'status' => $status], 200);
-                } catch (\Exception $e) {
-                    dd($e);
-                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
-                }
-        }else{
-            return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+        {
+            if( $request->file('file')){
+                    $archivoCSV = $request->file('file');
+                    try {
+                        $import = new EstadosUpdateResponsableImport();
+                        Excel::import($import, $archivoCSV);
+                        $status = $import->getStatus();
+                        return response()->json(['message' => 'Se ha finalizado el proceso de update de Responsable.', 'status' => $status], 200);
+                    } catch (\Exception $e) {
+                        dd($e);
+                        return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                    }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
         }
-    }
-    }
+
+        public function importCbiDev(Request $request)
+        {
+            if( $request->file('file')){
+                    $archivoCSV = $request->file('file');
+                    try {
+                        $import = new InfanciaDevImport();
+                        Excel::import($import, $archivoCSV);
+                        $status = $import->getStatus();
+                        return response()->json(['message' => 'Se ha finalizado el proceso de importacion de CBI Dev.', 'status' => $status], 200);
+                    } catch (\Exception $e) {
+                        return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                    }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
+        }
+}

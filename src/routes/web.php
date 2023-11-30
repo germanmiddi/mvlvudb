@@ -63,7 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/personas', [ImportController::class, 'importPersonas'])->name('import.personas'); 
     Route::post('/import/files', [ImportController::class, 'importFiles'])->name('import.files');  
     Route::post('/import/cud', [ImportController::class, 'importCud'])->name('import.cud');
-    Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable');  
+    Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable'); 
+    Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');  
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');

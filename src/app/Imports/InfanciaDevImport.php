@@ -241,7 +241,7 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                 
                 $tramite_data = Tramite::where('num_tramite_legacy', $row['tramite_id'])->first();
 
-                if(count($tramite_data->rol_tramite) > 1){
+                if(count($tramite_data->rol_tramite) < 2){
                     $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                 }
             }

@@ -51,7 +51,7 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
             foreach ($person_tramite as $pt) {
                 // Recorro las personas asociadas, y se cargan los datos del tramite. 
                 $data_temp = [];
-                $data_temp['id'] = $tramite['id'];
+                $data_temp['id'] = $tramite['id'] + 12000000;
                 $data_temp['fecha'] = $tramite['fecha'];
                 $data_temp['observacion'] = $tramite['observacion'];
                 $data_temp['sede_id'] = $tramite['sede_id'];
@@ -102,7 +102,7 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
 
                 // Data_salud
                 if($person->salud){
-                    $data_temp['salud_data_apto_medico'] = $person->salud ? null : ($person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0'));
+                    $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0');
                     $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion == 1 ? '1' : ($person->salud->libreta_vacunacion === null ? null : '0');
                     $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
                     $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma == 1 ? '1' : ($person->salud->electrocardiograma === null ? null : '0');
@@ -150,11 +150,11 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 //CBI DATA
                 $cbi_data = CbiData::where('tramite_id', $tramite['id'])->first();
                 $data_temp['cbi_data_anio_inicio'] = $cbi_data->anio_inicio;
-                $data_temp['cbi_data_aut_firmada'] = $cbi_data->aut_firmada;
-                $data_temp['cbi_data_aut_retirarse'] = $cbi_data->aut_retirarse;
-                $data_temp['cbi_data_aut_uso_imagen'] = $cbi_data->aut_uso_imagen;
-                $data_temp['cbi_data_act_varias'] = $cbi_data->act_varias;
-                $data_temp['cbi_data_act_esporadicas'] = $cbi_data->act_esporadicas;
+                $data_temp['cbi_data_aut_firmada'] = $cbi_data->aut_firmada == 1 ? '1' : ($cbi_data->aut_firmada === null ? null : '0');
+                $data_temp['cbi_data_aut_retirarse'] = $cbi_data->aut_retirarse == 1 ? '1' : ($cbi_data->aut_retirarse === null ? null : '0');
+                $data_temp['cbi_data_aut_uso_imagen'] = $cbi_data->aut_uso_imagen == 1 ? '1' : ($cbi_data->aut_uso_imagen === null ? null : '0');
+                $data_temp['cbi_data_act_varias'] = $cbi_data->act_varias == 1 ? '1' : ($cbi_data->act_varias === null ? null : '0');
+                $data_temp['cbi_data_act_esporadicas'] = $cbi_data->act_esporadicas == 1 ? '1' : ($cbi_data->act_esporadicas === null ? null : '0');
                 $data_temp['cbi_data_comedor'] = $cbi_data->comedor == 1 ? '1' : ($cbi_data->comedor === null ? null : '0');
                 $data_temp['cbi_data_estado_cbi_id'] = $cbi_data->estado_cbi_id;
                 $data_temp['cbi_data_estado_gabinete_id'] = $cbi_data->estado_gabinete_id;

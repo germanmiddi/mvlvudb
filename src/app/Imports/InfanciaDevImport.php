@@ -126,7 +126,8 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                 );
 
                 // CREO EL TRAMITE
-                if(!Tramite::where('num_tramite_legacy',$row['tramite_id'])->first()){
+                if(!Tramite::where('num_tramite_legacy', $row['tramite_id'])->first()){
+
                     $tramite_data = Tramite::Create(
                         [
                             'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
@@ -239,7 +240,10 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                 );    
                 
                 $tramite_data = Tramite::where('num_tramite_legacy', $row['tramite_id'])->first();
-                $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+
+                if(count($tramite_data->rol_tramite) > 1){
+                    $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                }
             }
 
             ++$this->rowsSuccess;

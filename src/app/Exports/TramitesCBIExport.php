@@ -101,17 +101,32 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 $data_temp['contact_data_email'] = $person->contact[0]->email;
 
                 // Data_salud
-                $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0');
-                $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion == 1 ? '1' : ($person->salud->libreta_vacunacion === null ? null : '0');
-                $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
-                $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma == 1 ? '1' : ($person->salud->electrocardiograma === null ? null : '0');
-                $data_temp['salud_data_fecha_electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
-                $data_temp['salud_data_medicacion'] = $person->salud->medicacion == 1 ? '1' : ($person->salud->medicacion === null ? null : '0');
-                $data_temp['salud_data_name_medicacion'] = $person->salud->name_medicacion ?? null;
-                $data_temp['salud_data_dosis'] = $person->salud->dosis ?? null;
-                $data_temp['salud_data_observacion'] = $person->salud->observacion ?? null;
-                $data_temp['salud_data_centro_salud_id'] = $person->salud->centro_salud_id ?? null;
-                $data_temp['salud_data_estado_salud_id'] = $person->salud->estado_salud_id ?? null;
+                if($person->salud){
+                    $data_temp['salud_data_apto_medico'] = $person->salud ? null : ($person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0'));
+                    $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion == 1 ? '1' : ($person->salud->libreta_vacunacion === null ? null : '0');
+                    $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
+                    $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma == 1 ? '1' : ($person->salud->electrocardiograma === null ? null : '0');
+                    $data_temp['salud_data_fecha_electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
+                    $data_temp['salud_data_medicacion'] = $person->salud->medicacion == 1 ? '1' : ($person->salud->medicacion === null ? null : '0');
+                    $data_temp['salud_data_name_medicacion'] = $person->salud->name_medicacion ?? null;
+                    $data_temp['salud_data_dosis'] = $person->salud->dosis ?? null;
+                    $data_temp['salud_data_observacion'] = $person->salud->observacion ?? null;
+                    $data_temp['salud_data_centro_salud_id'] = $person->salud->centro_salud_id ?? null;
+                    $data_temp['salud_data_estado_salud_id'] = $person->salud->estado_salud_id ?? null;
+                }else{
+                    $data_temp['salud_data_apto_medico'] = null;
+                    $data_temp['salud_data_libreta_vacunacion'] = null;
+                    $data_temp['salud_data_fecha_apto_medico'] = null;
+                    $data_temp['salud_data_electrocardiograma'] = null;
+                    $data_temp['salud_data_fecha_electrocardiograma'] = null;
+                    $data_temp['salud_data_medicacion'] = null;
+                    $data_temp['salud_data_name_medicacion'] = null;
+                    $data_temp['salud_data_dosis'] = null;
+                    $data_temp['salud_data_observacion'] = null;
+                    $data_temp['salud_data_centro_salud_id'] = null;
+                    $data_temp['salud_data_estado_salud_id'] = null;
+                }
+
                 
                 // Data_social
                 $data_temp['social_data_tipo_ocupacion_id'] = $person->social[0]->tipo_ocupacion_id ?? null;
@@ -128,8 +143,8 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 $data_temp['education_data_escuela_localidad_id'] = $person->education[0]->escuela_localidad_id ?? null;
                 $data_temp['education_data_escuela_nivel_id'] = $person->education[0]->escuela_nivel_id ?? null;
                 $data_temp['education_data_escuela_turno_id'] = $person->education[0]->escuela_turno_id ?? null;
-                $data_temp['education_data_permanencia'] = $person->ceducation[0]->permanencia == 1 ? '1' : ($person->education[0]->permanencia === null ? null : '0');
-                $data_temp['education_data_certificado_escolar'] = $person->ceducation[0]->certificado_escolar == 1 ? '1' : ($person->education[0]->certificado_escolar === null ? null : '0');
+                $data_temp['education_data_permanencia'] = $person->education[0]->permanencia == 1 ? '1' : ($person->education[0]->permanencia === null ? null : '0');
+                $data_temp['education_data_certificado_escolar'] = $person->education[0]->certificado_escolar == 1 ? '1' : ($person->education[0]->certificado_escolar === null ? null : '0');
                 $data_temp['education_data_observacion'] = $person->education[0]->observacion ?? null;
                 
                 //CBI DATA

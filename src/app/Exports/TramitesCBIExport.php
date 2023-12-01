@@ -101,12 +101,12 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 $data_temp['contact_data_email'] = $person->contact[0]->email;
 
                 // Data_salud
-                $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico ?? null;
-                $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion ?? null;
+                $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0');
+                $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion == 1 ? '1' : ($person->salud->libreta_vacunacion === null ? null : '0');
                 $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
-                $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma ?? null;
+                $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma == 1 ? '1' : ($person->salud->electrocardiograma === null ? null : '0');
                 $data_temp['salud_data_fecha_electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
-                $data_temp['salud_data_medicacion'] = $person->salud->medicacion ?? null;
+                $data_temp['salud_data_medicacion'] = $person->salud->medicacion == 1 ? '1' : ($person->salud->medicacion === null ? null : '0');
                 $data_temp['salud_data_name_medicacion'] = $person->salud->name_medicacion ?? null;
                 $data_temp['salud_data_dosis'] = $person->salud->dosis ?? null;
                 $data_temp['salud_data_observacion'] = $person->salud->observacion ?? null;
@@ -124,12 +124,12 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 $data_temp['education_data_estado_educativo_id'] = $person->education[0]->estado_educativo_id ?? null;
                 $data_temp['education_data_escuela_id'] = $person->education[0]->escuela_id ?? null;
                 $data_temp['education_data_escuela_infante_id'] = $person->education[0]->escuela_infante_id ?? null;
-                $data_temp['education_data_escuela_dependencia_id'] = $person->education[0]->dependencia_id ?? null;
-                $data_temp['education_data_escuela_localidad_id'] = $person->education[0]->localidad_id ?? null;
-                $data_temp['education_data_escuela_nivel_id'] = $person->education[0]->nivel_id ?? null;
-                $data_temp['education_data_escuela_turno_id'] = $person->education[0]->turno_id ?? null;
-                $data_temp['education_data_permanencia'] = $person->education[0]->permanencia ?? null;
-                $data_temp['education_data_certificado_escolar'] = $person->education[0]->certificado_escolar ?? null;
+                $data_temp['education_data_escuela_dependencia_id'] = $person->education[0]->escuela_dependencia_id ?? null;
+                $data_temp['education_data_escuela_localidad_id'] = $person->education[0]->escuela_localidad_id ?? null;
+                $data_temp['education_data_escuela_nivel_id'] = $person->education[0]->escuela_nivel_id ?? null;
+                $data_temp['education_data_escuela_turno_id'] = $person->education[0]->escuela_turno_id ?? null;
+                $data_temp['education_data_permanencia'] = $person->ceducation[0]->permanencia == 1 ? '1' : ($person->education[0]->permanencia === null ? null : '0');
+                $data_temp['education_data_certificado_escolar'] = $person->ceducation[0]->certificado_escolar == 1 ? '1' : ($person->education[0]->certificado_escolar === null ? null : '0');
                 $data_temp['education_data_observacion'] = $person->education[0]->observacion ?? null;
                 
                 //CBI DATA
@@ -205,7 +205,7 @@ class TramitesCBIExport implements FromArray, WithHeadings, WithStyles, ShouldAu
                 //Data_contact
                 'contact_data_phone','contact_data_celular','contact_data_email',
                 // Data_salud
-                'salud_data_apt_medico','salud_data_libreta_vacunacion','salud_data_fecha_apto_medico','salud_data_electrocardiograma','salud_data_fecha_electrocardiograma',
+                'salud_data_apto_medico','salud_data_libreta_vacunacion','salud_data_fecha_apto_medico','salud_data_electrocardiograma','salud_data_fecha_electrocardiograma',
                 'salud_data_medicacion','salud_data_name_medicacion','salud_data_dosis','salud_data_observacion','salud_data_centro_salud_id','salud_data_estado_salud_id',
                 // Data_social
                 'social_data_tipo_ocupacion_id','social_data_cobertura_medica_id','social_data_tipo_pension_id','social_data_programa_social_id',

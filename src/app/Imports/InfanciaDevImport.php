@@ -108,7 +108,7 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                         'google_address' => $row['address_data_google_address'] !== 'NULL' && $row['address_data_google_address'] !== -1 ? $row['address_data_google_address'] : null,
                         'pais_id' => $row['address_data_pais_id'] !== 'NULL' && $row['address_data_pais_id'] !== -1 ? $row['address_data_pais_id'] : null,
                         'localidad_id' => $row['address_data_localidad_id'] !== 'NULL' && $row['address_data_localidad_id'] !== -1 ? $row['address_data_localidad_id'] : null,
-                        'barrio_id' => $row['address_data_pais_id'] !== 'NULL' && $row['address_data_pais_id'] !== -1 ? $row['address_data_pais_id'] : null,
+                        'barrio_id' => $row['address_data_barrio_id'] !== 'NULL' && $row['address_data_barrio_id'] !== -1 ? $row['address_data_barrio_id'] : null,
     
                     ]
                 );
@@ -126,36 +126,38 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                 );
 
                 // CREO EL TRAMITE
-                $tramite_data = Tramite::Create(
-                    [
-                        'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
-                        'observacion' => $row['tramite_observacion'],
-                        'canal_atencion_id' => $row['tramite_canal_atencion'] !== 'NULL' && $row['tramite_canal_atencion'] !== -1 ? $row['tramite_canal_atencion'] : null,
-                        'tipo_tramite_id' => $row['tramite_tipo_tramite_id'] !== 'NULL' && $row['tramite_tipo_tramite_id'] !== -1 ? $row['tramite_tipo_tramite_id'] : null,
-                        'dependencia_id' => $row['tramite_dependencia_id'] !== 'NULL' && $row['tramite_dependencia_id'] !== -1 ? $row['tramite_dependencia_id'] : null,
-                        'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                        'sede_id' =>$row['tramite_sede_id'] !== 'NULL' && $row['tramite_sede_id'] !== -1 ? $row['tramite_sede_id'] : null,
-                        'estado_id' => $row['tramite_estado_id'], 
-                        'num_tramite_legacy' => $row['tramite_id']
-                    ]
-                );
-                // CARGO DATOS DE CBI
-                CbiData::Create(
-                    [
-                        'anio_inicio' => $row['cbi_data_anio_inicio'] !== 'NULL' && $row['cbi_data_anio_inicio'] !== -1 ? $row['cbi_data_anio_inicio'] : null,
-                        'aut_firmada' => $row['cbi_data_aut_firmada'] !== 'NULL' && $row['cbi_data_aut_firmada'] !== -1 ? $row['cbi_data_aut_firmada'] : null,
-                        'aut_retirarse' => $row['cbi_data_aut_retirarse'] !== 'NULL' && $row['cbi_data_aut_retirarse'] !== -1 ? $row['cbi_data_aut_retirarse'] : null,
-                        'aut_uso_imagen' =>$row['cbi_data_aut_uso_imagen'] !== 'NULL' && $row['cbi_data_aut_uso_imagen'] !== -1 ? $row['cbi_data_aut_uso_imagen'] : null,
-                        'act_varias' => $row['cbi_data_act_varias'] !== 'NULL' && $row['cbi_data_act_varias'] !== -1 ? $row['cbi_data_act_varias'] : null,
-                        'act_esporadicas' => $row['cbi_data_act_esporadicas'] !== 'NULL' && $row['cbi_data_act_esporadicas'] !== -1 ? $row['cbi_data_act_esporadicas'] : null,
-                        'comedor' => $row['cbi_data_comedor'] !== 'NULL' && $row['cbi_data_comedor'] !== -1 ? $row['cbi_data_comedor'] : null,
-                        'estado_cbi_id' => $row['cbi_data_estado_cbi_id'] !== 'NULL' && $row['cbi_data_estado_cbi_id'] !== -1 ? $row['cbi_data_estado_cbi_id'] : null,
-                        'estado_gabinete_id'  => $row['cbi_data_estado_gabinete_id'] !== 'NULL' && $row['cbi_data_estado_gabinete_id'] !== -1 ? $row['cbi_data_estado_gabinete_id'] : null,
-                        'tramite_id' => $tramite_data['id']
-                    ]
-                );
-                // ASOCIO EL TRAMITE
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+                if(!Tramite::where('num_tramite_legacy',$row['tramite_id'])->first()){
+                    $tramite_data = Tramite::Create(
+                        [
+                            'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
+                            'observacion' => $row['tramite_observacion'],
+                            'canal_atencion_id' => $row['tramite_canal_atencion'] !== 'NULL' && $row['tramite_canal_atencion'] !== -1 ? $row['tramite_canal_atencion'] : null,
+                            'tipo_tramite_id' => $row['tramite_tipo_tramite_id'] !== 'NULL' && $row['tramite_tipo_tramite_id'] !== -1 ? $row['tramite_tipo_tramite_id'] : null,
+                            'dependencia_id' => $row['tramite_dependencia_id'] !== 'NULL' && $row['tramite_dependencia_id'] !== -1 ? $row['tramite_dependencia_id'] : null,
+                            'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
+                            'sede_id' =>$row['tramite_sede_id'] !== 'NULL' && $row['tramite_sede_id'] !== -1 ? $row['tramite_sede_id'] : null,
+                            'estado_id' => $row['tramite_estado_id'], 
+                            'num_tramite_legacy' => $row['tramite_id']
+                        ]
+                    );
+                    // CARGO DATOS DE CBI
+                    CbiData::Create(
+                        [
+                            'anio_inicio' => $row['cbi_data_anio_inicio'] !== 'NULL' && $row['cbi_data_anio_inicio'] !== -1 ? $row['cbi_data_anio_inicio'] : null,
+                            'aut_firmada' => $row['cbi_data_aut_firmada'] !== 'NULL' && $row['cbi_data_aut_firmada'] !== -1 ? $row['cbi_data_aut_firmada'] : null,
+                            'aut_retirarse' => $row['cbi_data_aut_retirarse'] !== 'NULL' && $row['cbi_data_aut_retirarse'] !== -1 ? $row['cbi_data_aut_retirarse'] : null,
+                            'aut_uso_imagen' =>$row['cbi_data_aut_uso_imagen'] !== 'NULL' && $row['cbi_data_aut_uso_imagen'] !== -1 ? $row['cbi_data_aut_uso_imagen'] : null,
+                            'act_varias' => $row['cbi_data_act_varias'] !== 'NULL' && $row['cbi_data_act_varias'] !== -1 ? $row['cbi_data_act_varias'] : null,
+                            'act_esporadicas' => $row['cbi_data_act_esporadicas'] !== 'NULL' && $row['cbi_data_act_esporadicas'] !== -1 ? $row['cbi_data_act_esporadicas'] : null,
+                            'comedor' => $row['cbi_data_comedor'] !== 'NULL' && $row['cbi_data_comedor'] !== -1 ? $row['cbi_data_comedor'] : null,
+                            'estado_cbi_id' => $row['cbi_data_estado_cbi_id'] !== 'NULL' && $row['cbi_data_estado_cbi_id'] !== -1 ? $row['cbi_data_estado_cbi_id'] : null,
+                            'estado_gabinete_id'  => $row['cbi_data_estado_gabinete_id'] !== 'NULL' && $row['cbi_data_estado_gabinete_id'] !== -1 ? $row['cbi_data_estado_gabinete_id'] : null,
+                            'tramite_id' => $tramite_data['id']
+                        ]
+                    );
+                    // ASOCIO EL TRAMITE
+                    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+                }
 
             } elseif($row['person_tramite_rol_tramite_id'] == 2){
                 
@@ -207,7 +209,7 @@ class InfanciaDevImport implements ToModel,WithHeadingRow, WithBatchInserts
                         'google_address' => $row['address_data_google_address'] !== 'NULL' && $row['address_data_google_address'] !== -1 ? $row['address_data_google_address'] : null,
                         'pais_id' => $row['address_data_pais_id'] !== 'NULL' && $row['address_data_pais_id'] !== -1 ? $row['address_data_pais_id'] : null,
                         'localidad_id' => $row['address_data_localidad_id'] !== 'NULL' && $row['address_data_localidad_id'] !== -1 ? $row['address_data_localidad_id'] : null,
-                        'barrio_id' => $row['address_data_pais_id'] !== 'NULL' && $row['address_data_pais_id'] !== -1 ? $row['address_data_pais_id'] : null,
+                        'barrio_id' => $row['address_data_barrio_id'] !== 'NULL' && $row['address_data_barrio_id'] !== -1 ? $row['address_data_barrio_id'] : null,
     
                     ]
                 );

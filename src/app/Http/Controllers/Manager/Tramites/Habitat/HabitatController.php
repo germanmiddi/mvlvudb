@@ -49,7 +49,7 @@ class HabitatController extends Controller
    {
        return Inertia::render('Manager/Tramites/Habitat/Index',
        [
-           'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
+           'tiposTramite' => TipoTramite::where('dependencia_id', 7)->active()->get(),
            'estados' => TramiteEstado::all(),
            'users' => User::orderBy('name')->get(),
            'toast' => Session::get('toast')

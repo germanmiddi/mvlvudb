@@ -487,11 +487,11 @@ class PromocionController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
-        $generalController = new GeneralController();
+        /* $generalController = new GeneralController();
         if($generalController->_check_permission()){
             // Si posee un rol que posee permiso operador visualizará unicamente sus tramites
             $result->where('assigned', Auth::user()->id);
-        }else{
+        }else{ */
             // Si no posee rol operador ejecuta los filtros.
             $users_id = [];
             if(request('assigned_me')){
@@ -509,7 +509,7 @@ class PromocionController extends Controller
             if(count($users_id) > 0){
                 $result->whereIn('assigned', $users_id);
             }
-        }
+        //}
         
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)

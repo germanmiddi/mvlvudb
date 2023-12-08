@@ -62,6 +62,7 @@ class FortifyServiceProvider extends ServiceProvider
                     'APP-VUDS-ALL-VU',
                     //'APP-VUDS-DIS-OP',
                     //'APP-VUDS-DIS-ADM',
+                    //'APP-VUDS-GEN-OP',
                 ];
                 // Asigna el array actualizado a la variable de sesión
                 session(['userGroups' => $grupoNames]);

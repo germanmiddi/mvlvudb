@@ -87,7 +87,8 @@
                                 }}</option>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)">
+                        <!-- <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
+                            <div class="col-span-12 sm:col-span-3">
                             <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
                             <select @click="filter.not_assigned = ''" v-model="filter.user_id" id="user_id" name="user_id"
                                 autocomplete="off"
@@ -97,11 +98,13 @@
                                 }}</option>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-2" v-show="!store.userCan('-OP', $page.props.userGroups) || store.userCan('ALL', $page.props.userGroups)">
+                        <!-- <div class="col-span-12 sm:col-span-2" v-show="!store.userCan('-OP', $page.props.userGroups) || store.userCan('ALL', $page.props.userGroups)"> -->
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="assigned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
                             <input @click="filter.not_assigned = ''" v-model="filter.assigned_me" id="assigned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>
-                        <div class="col-span-12 sm:col-span-2" v-show="store.userCan('ADM', $page.props.userGroups)">
+                        <!-- <div class="col-span-12 sm:col-span-2" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="not_assigned" class="block text-sm font-medium text-gray-700">Sin Asignar</label>
                             <input @click="filter.user_id = '', filter.assigned_me = ''" v-model="filter.not_assigned" id="not_assigned" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>

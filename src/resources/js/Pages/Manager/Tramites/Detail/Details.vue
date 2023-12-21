@@ -24,6 +24,8 @@
 				<a target="_blank" :href="route('pdf.acusepdf', tramite[0].id)" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 focus:ring-green-500 sm:order-1 sm:ml-3">
 					Imprimir Acuse					
 				</a>
+				<a :href="route('pdf.acuseobservacionpdf', tramite[0].id)" target="_blank" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-purple-500 focus:ring-green-500 sm:order-1 sm:ml-3">
+					Imprimir Acuse Obs.</a>
 			</div>
 		</div>
 

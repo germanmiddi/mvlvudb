@@ -121,7 +121,6 @@ class GeneralController extends Controller
 
     public function _check_permission($permission = '-OP'){
         $userGroups = session('userGroups');
-        //dd($userGroups);
         $result = false;
 
         foreach ($userGroups as $texto) {

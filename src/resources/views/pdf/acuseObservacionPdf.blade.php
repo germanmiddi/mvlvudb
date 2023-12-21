@@ -41,15 +41,16 @@ p {
     padding-left: 10px;
 
 }
+
 .header-col>div{
     height: 20px;
 }
+
 .header-col>.title{
     font-size: 1.1rem;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 20px;
-    
+    margin-bottom: 20px;    
 }
 
 .image{
@@ -174,6 +175,14 @@ p {
     text-align: center;    
 }
 
+.text-justify{
+    text-align: justify;    
+}
+
+.text-line-20{
+    line-height:2.0;
+}
+
 .left-td{
     text-align: right;
     width: 80%;
@@ -278,53 +287,6 @@ p {
         </table>
     </div>
 
-    @if (count($comments) > 0)
-        <div class="header">
-        <br><br>
-        <strong>Detalle de comentarios</strong>
-        <br><br>
-        
-        <table class="header-col">
-        <thead>
-            <tr>
-                <th class="col-left">
-                    Fecha
-                </th>
-                <th class="col-center">
-                    Dependencia
-                </th>
-                <th class="col-center">
-                    Usuario
-                </th>
-                <th class="col-center">
-                    Comentario
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-
-        @foreach ($comments as $comment )
-            <tr>
-                <td class="text-center">
-                   {{$comment->created_at->format('d/m/Y H:i:s')}}
-                </td>
-                <td class="text-center">
-                    {{$comment->dependencia['description']}}
-                </td>
-                <td class="text-center">
-                    {{$comment->user['name']}}
-                </td>
-                <td class="text-center">
-                    {{$comment->content}}
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-        </table>
-    </div>
-    @endif
-    
-    <br><br>
     <div class="destinatario">
         <table>
             <tr>
@@ -338,5 +300,58 @@ p {
             </tr>
         </table>            
     </div>
+
+    <div class="header" style="page-break-before: always;">
+        <table>
+            <tr>
+                <td><strong>DESARROLLO SOCIAL</strong></td>
+                <td class="text-right"> <img class="image" src="{{ public_path('images/logos/mvl.jpg') }}"> </td>
+            </tr>
+        </table>
+    </div>
+    @if (count($comments) > 0)
+    <br><br>
+        <div class="header">
+           {{--  <strong>COMENTARIOS</strong>
+            <br><br> --}}
+        
+        <table class="header-col">
+        <thead>
+            <tr>
+                <th class="col-left">
+                    Detalle
+                </th>
+                <th class="col-center">
+                    Comentario
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        
+        @foreach ($comments as $comment )
+        <br>
+            <tr>
+                <td class="text-center text-line-20 mt-10">
+                   {{$comment->created_at->format('d/m/Y H:i:s')}}
+
+                    {{$comment->dependencia['description']}}
+                {{-- </td>
+                <td class="text-center"> --}}
+                    {{$comment->user['name']}}
+                </td>
+                <td class="text-justify">
+                    {{$comment->content}}
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+        </table>
+    </div>
+    @else
+        <p>El tramite no posee comentarios.</p>
+    @endif
+    
+    <br><br>
+    
 </body>
 </html>

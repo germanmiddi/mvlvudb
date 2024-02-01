@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager\Report;
 
+use App\Exports\PersonsExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
 use App\Http\Controllers\Controller;
@@ -94,6 +95,32 @@ class ReportController extends Controller
 
     public function exportTramiteCBIExcel(){
         return Excel::download(new TramitesCBIExport(), 'tramitesCBI.xlsx');
+    }
+
+    public function exportPersonsExcel(Request $request){
+        $data = [];
+
+        if($request->lastname){
+            $data['lastname'] = $request->lastname;
+        }
+
+        if($request->name){
+            $data['name'] = $request->name;
+        }
+
+        if($request->num_documento){
+            $data['num_documento'] = json_decode($request->num_documento);
+        }
+
+        if($request->localidad){
+            $data['localidad'] = json_decode($request->localidad);
+        }
+
+        if($request->barrio){
+            $data['barrio'] = json_decode($request->barrio);
+        }
+
+        return Excel::download(new PersonsExport($data), 'persons.xlsx');
     }
 
 }

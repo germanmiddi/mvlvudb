@@ -38,11 +38,11 @@ class AddressData extends Model
 
     public function pais()
     {
-        return $this->belongsTo(Paises::class, 'pais_id');
+        return $this->belongsTo(Pais::class, 'pais_id');
     }
 
     public function barrio()
     {
-        return $this->belongsTo(Barrios::class, 'barrio_id');
+        return $this->belongsTo(Barrio::class, 'barrio_id');
     }
 }

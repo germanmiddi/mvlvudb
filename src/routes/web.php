@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/summary', [ReportController::class, 'summary'])->name('report.summary');
     Route::post('/report/exportTramiteExcel', [ReportController::class, 'exportTramiteExcel'])->name('report.exportTramiteExcel');
     Route::get('/report/exportTramiteCBIExcel', [ReportController::class, 'exportTramiteCBIExcel'])->name('report.exportTramiteCBIExcel');
+    Route::post('/report/exportPersonsExcel', [ReportController::class, 'exportPersonsExcel'])->name('report.exportPersonsExcel');
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
@@ -88,6 +89,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/discapacidad/list', [DiscapacidadController::class, 'list'])->name('discapacidad.list'); 
 
     // Person
+    Route::get('/persons', [PersonController::class, 'index'])->name('persons'); 
+    Route::get('/persons/list', [PersonController::class, 'list'])->name('persons.list'); 
+    Route::get('/persons/edit/{id}', [PersonController::class, 'edit'])->name('persons.edit'); 
+    Route::post('/persons/update/{id}', [PersonController::class, 'update'])->name('persons.update');  
+
     Route::get('/persons/getPersonDni/{dni}', [PersonController::class, 'getPersonDni'])->name('persons.getPersonDni');
     Route::post('/persons/destroyFamiliar/', [PersonController::class, 'destroyFamiliar'])->name('persons.destroyFamiliar');
     Route::post('/persons/addFamiliar/', [PersonController::class, 'addFamiliar'])->name('persons.addFamiliar');
@@ -95,6 +101,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/persons/destroyContacto/', [PersonController::class, 'destroyContacto'])->name('persons.destroyContacto');
     Route::post('/persons/addContacto/', [PersonController::class, 'addContacto'])->name('persons.addContacto');
     Route::post('/persons/updateContacto/', [PersonController::class, 'updateContacto'])->name('persons.updateContacto');
+
+
 
     // Genero
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    

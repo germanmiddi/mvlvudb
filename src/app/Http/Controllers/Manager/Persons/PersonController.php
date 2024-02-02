@@ -14,6 +14,7 @@ use App\Models\Manager\CoberturaMedica;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\ContactoEmergencia;
 use App\Models\Manager\Cud;
+use App\Models\Manager\Dependencia;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\Familiar;
@@ -27,8 +28,10 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\TipoDocumento;
 use App\Models\Manager\TipoOcupacion;
 use App\Models\Manager\TipoPension;
+use App\Models\Manager\TipoTramite;
 use App\Models\Manager\TipoVivienda;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\TramiteEstado;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -104,6 +107,66 @@ class PersonController extends Controller
                 'fecha_nac' => Carbon::parse($person->fecha_nac)->format("d-m-Y"),
                 'barrio' => $person->address[0]->barrio->description ?? null,
                 'cant_tramites'  => $person->tramites->count()
+            ]);
+    }
+
+    public function tramitesByPerson($id)
+    {
+        return Inertia::render('Manager/Persons/ListTramites',
+        [
+            //'tiposTramite' => TipoTramite::active()->get(),
+            //'localidades' => Localidad::all(),
+            //'barrios'   => Barrio::all(),
+            'tiposTramite' => TipoTramite::active()->get(),
+            'dependencias' => Dependencia::all(),
+            'estados' => TramiteEstado::all(),
+            'person' => Person::find($id),
+            'toast' => Session::get('toast')
+        ]);
+    }
+
+    public function listTramites()
+    {
+        $length = request('length');
+        
+        $result = Tramite::query();
+
+        if(request('dependencia_id')){
+            $dependencia_id = json_decode(request('dependencia_id'));
+            $result->where('dependencia_id', $dependencia_id);
+        }
+
+        if(request('person_id')){
+            $person_id = json_decode(request('person_id'));  
+            $result->whereIn('id', function ($sub) use($person_id) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                            ->where('person.id',$person_id);
+                    });
+        }
+
+        if(request('date')){
+            $date = json_decode(request('date'));
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
+            $result->where('fecha','>=', $from)
+                    ->where('fecha', '<', $to);
+        }
+
+        if(request('tipo_tramite_id')){
+            $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
+            $result->where('tipo_tramite_id', $tipo_tramite_id);
+        }
+
+        return  $result->orderBy("tramites.fecha", 'DESC')
+            ->paginate($length)
+            ->withQueryString()
+            ->through(fn ($tramite) => [
+                'tramite'   => $tramite,
+                'tipo_tramite' => $tramite->tipoTramite,
+                'dependencia' => $tramite->dependencia
             ]);
     }
 

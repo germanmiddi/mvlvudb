@@ -2,19 +2,24 @@
     <main class="flex-1">
         <!-- Page title & actions -->
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 flex items-center">
+				<a class="btn-blue" :href="route('persons')">
+					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
+				</a>
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                    Personas
+                    Listado de Tramites | {{person.lastname}}, {{person.name}}
                 </h1>
-            </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
-                
-                <a  @click="generateReport()" v-if="!processReport"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
+			</div>
 
-                <a v-else
-                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
-            </div>
+
+           <!--  <div class="flex-1 min-w-0">
+                <a class="btn-blue" :href="route('persons')">
+					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
+				</a>
+                <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
+                    Listado de Tramites | {{person.lastname}}, {{person.name}}
+                </h1>
+            </div> -->
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
@@ -35,61 +40,37 @@
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
-                        <!-- <div class="col-span-12 sm:col-span-1 ">
-                            <label for="tramite_id" class="block text-sm font-medium text-gray-700">N° Tramite</label>
-                            <input v-model="filter.tramite_id" type="number" name="tramite_id" id="tramite_id" autocomplete="name-level2"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div> -->
-                        <div class="col-span-12 sm:col-span-3 ">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Apellido</label>
-                            <input v-model="filter.lastname" type="text" name="name" id="name" autocomplete="name-level2"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div>
-
-                        <div class="col-span-12 sm:col-span-3 ">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                            <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div>
-                        
-                        <div class="col-span-12 sm:col-span-3 ">
-                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-                                Documento</label>
-                            <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
-                                autocomplete="address-level2"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div>
                         <div class="col-span-12 sm:col-span-3">
-								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
-								<select v-model="filter.localidad" id="localidad_id" name="localidad_id" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione una localidad
-									</option>
-									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
-										{{ localidad.description }}
-									</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-								<select v-model="filter.barrio" id="barrio_id" name="barrio_id"
-									autocomplete="barrio_id-name" :disabled="barriosComputed.length === 0 || input_disable"
-									:class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>Seleccione un barrio</option>
-									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
-										barrio.description
-									}}</option>
-								</select>
-							</div>
-                        <!-- <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
                             <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
                                     :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
+
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="dependencia_id" class="block text-sm font-medium text-gray-700">Dependencia</label>
+                            <select v-model="filter.dependencia_id" id="dependencia_id" name="dependencia_id" @change="filtrarTiposTramite"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" selected>Selecciones una dependencia</option>
+                                <option v-for="dependencia in dependencias" :key="dependencia.id" :value="dependencia.id">{{
+                                    dependencia.description
+                                }}</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de Tramite</label>
+                            <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
+                                autocomplete="tipo_tramite_id_name"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" selected>Selecciones un tipo de tramite</option>
+                                <option v-for="tipoTramite in tiposTramiteFiltrados" :key="tipoTramite.id" :value="tipoTramite.id">{{
+                                    tipoTramite.description
+                                }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-3">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
                             <select v-model="filter.estado_id" id="estado_id" name="estado_id"
                                 autocomplete="off"
@@ -100,39 +81,8 @@
                                 }}</option>
                             </select>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
-                            <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-                                Tramite</label>
-                            <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-                                autocomplete="tipo_tramite_id_name"
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="" selected>Selecciones un tipo de tramite</option>
-                                <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
-                                    tipoTramite.description
-                                }}</option>
-                            </select>
-                        </div> -->
-                        <!-- <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
-                        <!-- <div class="col-span-12 sm:col-span-3">
-                            <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
-                            <select @click="filter.not_assigned = ''" v-model="filter.user_id" id="user_id" name="user_id"
-                                autocomplete="off"
-                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option v-for="user in users" :key="user.id" :value="user.id">{{
-                                    user.name
-                                }}</option>
-                            </select> 
-                        </div>-->
-                        <!-- <div class="col-span-12 sm:col-span-2" v-show="!store.userCan('-OP', $page.props.userGroups) || store.userCan('ALL', $page.props.userGroups)"> -->
-                       <!--  <div class="col-span-12 sm:col-span-2">
-                            <label for="assigned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
-                            <input @click="filter.not_assigned = ''" v-model="filter.assigned_me" id="assigned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        </div> -->
-                        <!-- <div class="col-span-12 sm:col-span-2" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
-                        <!-- <div class="col-span-12 sm:col-span-2">
-                            <label for="not_assigned" class="block text-sm font-medium text-gray-700">Sin Asignar</label>
-                            <input @click="filter.user_id = '', filter.assigned_me = ''" v-model="filter.not_assigned" id="not_assigned" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        </div> -->
+
+
                     </div>
 
                 </div>
@@ -150,27 +100,19 @@
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
-                                        Nro Doc.
+                                        N° de Tramite
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Apellido
+                                        Fecha
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nombre
+                                        Dependencia
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Fecha Nac.
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Barrio
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Cant. Tramite
+                                        Tramite
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
@@ -180,23 +122,17 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in persons.data" :key="data.id">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ data.num_documento }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-red-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-green-500' ">
+                                        {{ data.tramite.id }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.lastname }}
+                                        {{ store.dateFormateada(data.tramite.fecha) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.name }}
+                                        {{ data.dependencia.description }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.fecha_nac }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.barrio ?? '--'}}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.cant_tramites ?? '--'}}
+                                        {{ data.tramite.tipo_tramite.description }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
                                         <Menu as="div" class="inline-node">
@@ -217,22 +153,10 @@
                                                     <div class="py-1 text-left">
                                                         
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route('persons.edit', data.id)"
+                                                        <a :href="defineUrl(data.tramite.dependencia_id, data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
                                                             Editar</a>
                                                         </MenuItem>
-
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route('persons.tramites', data.id)"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Tramites</a>
-                                                        </MenuItem>
- 
-                                                        <!-- <MenuItem v-slot="{ active }">
-                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Imprimir</a>
-                                                        </MenuItem> -->
                                                     </div>
 
                                                 </MenuItems>
@@ -271,6 +195,7 @@
 <script>
 import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { ArrowLeftCircleIcon } from '@heroicons/vue/24/outline';
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -289,9 +214,10 @@ import store from '@/store.js'
 export default {
     props: {
         toast: Object,
-        localidades: Object,
-        barrios: Object,
-        users: Object
+        tiposTramite: Object,
+        dependencias: Object,
+        estados: Object,
+        person: Object
     },
     components: {
         Menu,
@@ -306,7 +232,9 @@ export default {
         ArrowPathIcon,
         PaperClipIcon,
         Toast,
-        Datepicker
+        Datepicker,
+        ArrowLeftCircleIcon,
+        store
     },
     data() {
         return {
@@ -319,7 +247,8 @@ export default {
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            processReport: false
+            processReport: false,
+            tiposTramiteFiltrados: this.tiposTramite,
         };
     },
     setup() {
@@ -338,44 +267,9 @@ export default {
         async getPersons() {
             this.tramites = ''
             let filter = `&length=${this.length}`
+            filter += `&person_id=${this.person.id}`
 
-            /* if (this.filter.name) {
-                filter += `&name=${JSON.stringify(this.filter.tramite_id)}`
-            }
-
-            if (this.filter.user_id) {
-                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
-            }
-
-            if (this.filter.assigned_me) {
-                filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
-            }
-
-            if (this.filter.not_assigned) {
-                filter += `&not_assigned=${JSON.stringify(this.filter.not_assigned)}`
-            } */
-
-            if (this.filter.lastname) {
-                filter += `&lastname=${JSON.stringify(this.filter.lastname)}`
-            }
-
-            if (this.filter.name) {
-                filter += `&name=${JSON.stringify(this.filter.name)}`
-            }
-
-            if (this.filter.num_documento) {
-                filter += `&num_documento=${JSON.stringify(this.filter.num_documento)}`
-            }
-
-            if (this.filter.localidad) {
-                filter += `&localidad=${JSON.stringify(this.filter.localidad)}`
-            }
-
-            if (this.filter.barrio) {
-                filter += `&barrio=${JSON.stringify(this.filter.barrio)}`
-            }
-
-            /* if (this.filter.date) {
+            if (this.filter.date) {
                 filter += `&date=${JSON.stringify(this.filter.date)}`
             }
 
@@ -385,9 +279,13 @@ export default {
 
             if (this.filter.tipo_tramite_id) {
                 filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
-            } */
+            }
 
-            const get = `${route('persons.list')}?${filter}`
+            if (this.filter.dependencia_id) {
+                filter += `&dependencia_id=${JSON.stringify(this.filter.dependencia_id)}`
+            }
+
+            const get = `${route('persons.listTramites')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
             this.persons = await response.json();
@@ -432,13 +330,61 @@ export default {
             }
             this.processReport = false
         },
+        defineUrl(dependencia, tramite_id){
+                let url = ''
+                switch (dependencia) {
+                    case 2:
+                        url = route('discapacidad.edit', tramite_id) 
+                        break;
+                    case 5:
+                        url = route('fortalecimiento.edit',tramite_id) 
+                        break;
+                    case 6:
+                        url = route('genero.edit', tramite_id) 
+                        break;
+                    case 7:
+                        url = route('habitat.edit', tramite_id) 
+                        break;
+                    case 8:
+                        url = route('ninez.edit', tramite_id) 
+                        break;
+                    case 9:
+                        url = route('promocion.edit', tramite_id) 
+                        break;
+                    case 11:
+                        url = route('vivienda.edit', tramite_id) 
+                        break;
+                    case 12:
+                        url = route('infancia.edit', tramite_id) 
+                        break;
+                    case 13:
+                        url = route('juventud.edit', tramite_id) 
+                        break;
+                    case 14:
+                        url = route('mayores.edit', tramite_id) 
+                        break;
+                    default:
+                        break;
+                }
+                return url
+            
+        },
+        filtrarTiposTramite() {
+            if (this.filter.dependencia_id) {
+                // Filtra los tipos de trámite según la dependencia seleccionada
+                this.tiposTramiteFiltrados = this.tiposTramite.filter((tipoTramite) => tipoTramite.dependencia_id === this.filter.dependencia_id);
+            } else {
+                // Si no se selecciona una dependencia, muestra todos los tipos de trámite
+                this.tiposTramiteFiltrados = this.tiposTramite;
+            }
+        },
     },
     computed: {
-		barriosComputed: function () {
+		/* barriosComputed: function () {
 			return this.barrios.filter(
 				(barrio) => barrio.localidad_id == this.filter.localidad
 			);
-		},
+		}, */
 	},
     mounted() {
         if (this.toast) {

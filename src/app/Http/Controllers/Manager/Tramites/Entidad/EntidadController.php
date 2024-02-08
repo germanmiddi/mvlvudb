@@ -172,6 +172,7 @@ class EntidadController extends Controller
             Log::info("Se ha actualizado un entidad", ["Modulo" => "Entidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Entidad" => $form['id'] ]);
             return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de actualizar una entidad", ["Modulo" => "Entidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar la entidad. Verifique los datos ingresados.'], 203);
@@ -180,8 +181,19 @@ class EntidadController extends Controller
     //destroy
     public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            Entidad::where('id', $id)->delete();
+            DB::commit();
+            Log::info("Se ha eliminado una entidad", ["Modulo" => "Entidad:delete","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Entidad" => $id ]);
+            return response()->json(['message' => 'Se elimino correctamente una entidad.'], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error("Se ha generado un error al momento de eliminar una entidad", ["Modulo" => "Entidad:delete","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de eliminar una entidad.'], 203);
+        }
     }
+
     //list
     public function list()
     {
@@ -200,6 +212,11 @@ class EntidadController extends Controller
         if(request('tipo_entidad_id')){
             $tipo_entidad_id = json_decode(request('tipo_entidad_id'));
             $result->where('tipo_entidad_id', $tipo_entidad_id);
+        }
+
+        if(request('activo')){
+            $activo = json_decode(request('activo'));
+            $result->where('activo', $activo);
         }
 
         return  $result->orderBy("entidades.num_entidad", 'DESC')
@@ -262,6 +279,19 @@ class EntidadController extends Controller
         $autoridad->delete();
         Log::error("Se ha actualizado correctamente la autoridad", ["Modulo" => "Entidad:destoryAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $request->id ]);
         return response()->json(['message' => 'Se ha actualizado correctamente la autoridad'], 200);
+    }
+
+    public function active($id)
+    {
+        try {
+            $entidad = Entidad::where('id', $id)->first();
+            $entidad->activo = $entidad->activo == 1 ? 0 : 1;
+            $entidad->save();
+            return response()->json(['message' => 'Se actualizado correctamente la entidad.'], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message'=>'Se ha producido un error al momento de actualizar la Entidad'], 500);
+        }
     }
 }
 

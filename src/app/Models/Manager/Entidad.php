@@ -5,9 +5,13 @@ namespace App\Models\Manager;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Entidad extends Model
 {
+
+    //use SoftDeletes;
+
     protected $table = 'entidades';
     protected $primaryKey = 'id';
     public $timestamps = true;

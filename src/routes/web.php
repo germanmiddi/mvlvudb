@@ -183,7 +183,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/entidad/create', [EntidadController::class, 'create'])->name('entidad.create');  
     Route::get('/entidad/edit/{id}', [EntidadController::class, 'edit'])->name('entidad.edit');    
     Route::post('/entidad/store', [EntidadController::class, 'store'])->name('entidad.store');   
-    Route::post('/entidad/update/{id}', [EntidadController::class, 'update'])->name('entidad.update');    
+    Route::post('/entidad/update/{id}', [EntidadController::class, 'update'])->name('entidad.update');
+    Route::delete('/entidad/destroy/{id}', [EntidadController::class, 'destroy'])->name('entidad.destroy');    
     Route::get('/entidad/list', [EntidadController::class, 'list'])->name('entidad.list'); 
     Route::post('/entidad/destroy_autoridad/', [EntidadController::class, 'destroyAutoridad'])->name('entidad.destroyAutoridad');
     Route::post('/entidad/update_autoridad/', [EntidadController::class, 'updateAutoridad'])->name('entidad.updateAutoridad');

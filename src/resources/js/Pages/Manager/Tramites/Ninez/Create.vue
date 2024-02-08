@@ -1093,9 +1093,7 @@ export default {
 					"El tipo de tramite ya se ha ingresado previamente";
 			} else {
 				if (
-					this.form.tipo_tramite_id != "" &&
-					this.form.observacion != ""
-				) {
+					this.form.tipo_tramite_id != "" /* && this.form.observacion != "" */) {
 					this.tramites.push({
 						id: this.form.tipo_tramite_id,
 						titulo: this.tiposTramite.find(
@@ -1106,7 +1104,7 @@ export default {
 					});
 				} else {
 					this.labelType = "danger";
-					this.toastMessage = "Debe completar todos los datos";
+					this.toastMessage = "Debe seleccionar un tipo de tramite";
 				}
 			}
 			this.form.tipo_tramite_id = "";

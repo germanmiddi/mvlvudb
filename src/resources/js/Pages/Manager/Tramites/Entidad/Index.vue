@@ -57,6 +57,18 @@
                                 }}</option>
                             </select>
                         </div>
+
+                        <!-- <div class="col-span-12 sm:col-span-3">
+                            <label for="tipo_entidad_id" class="block text-sm font-medium text-gray-700">Estado
+                                Entidad</label>
+                            <select v-model="filter.activo" id="activo" name="activo"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Selecciones un estado</option>
+                                <option value="1">Habilitado</option>
+                                <option value="0">Deshabilitado</option>
+                            </select>
+                        </div> -->
                     </div>
 
                 </div>
@@ -147,6 +159,16 @@
                                                         <a href="#" class="block px-4 py-2 text-sm">
                                                             Ver</a>
                                                         </MenuItem>
+
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a href="#" @click="this.deleteEntidad.id = data.entidad.id, this.deleteEntidad.name = data.entidad.name, this.deleteEntidad.num_entidad = data.entidad.num_entidad, showDeleteEntidad = true" class="block px-4 py-2 text-sm">
+                                                            Eliminar</a>
+                                                        </MenuItem>
+
+                                                       <!--  <MenuItem v-else v-slot="{ active }">
+                                                        <button @click="active(data.entidad.id)" class="block px-4 py-2 text-sm">
+                                                            Activar</button>
+                                                        </MenuItem> -->
                                                     </div>
 
                                                 </MenuItems>
@@ -180,6 +202,11 @@
             </div>
         </div>
     </main>
+
+    <DeleteModal :show="showDeleteEntidad" :entidad="deleteEntidad"
+                     @viewDeleteEntidad="fnShowDeleteEntidad" 
+                     ref="componenteDeleteOrder" 
+                     @responseDeleteEntidad="fnDeleteEntidad" />
 </template>
 
 <script>
@@ -187,6 +214,7 @@ import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import DeleteModal from '@/Layouts/Components/DeleteModal.vue'
 
 import {
     ChevronRightIcon,
@@ -211,7 +239,8 @@ export default {
         PencilSquareIcon,
         ArrowsPointingOutIcon,
         Toast,
-        Datepicker
+        Datepicker,
+        DeleteModal
     },
     data() {
         return {
@@ -222,7 +251,9 @@ export default {
             showToast: false,
             filter: {},
             length: 10,
-            customFormat: 'd-M-Y'
+            customFormat: 'd-M-Y',
+            showDeleteEntidad: false,
+            deleteEntidad: {}
         };
     },
     setup() {
@@ -230,6 +261,9 @@ export default {
     methods: {
         clearMessage() {
             this.toastMessage = "";
+        },
+        fnShowDeleteEntidad() {
+            this.showDeleteEntidad = false
         },
         async getEntidades() {
             this.entidades = ''
@@ -245,6 +279,10 @@ export default {
 
             if (this.filter.tipo_entidad_id) {
                 filter += `&tipo_entidad_id=${JSON.stringify(this.filter.tipo_entidad_id)}`
+            }
+
+            if (this.filter.activo) {
+                filter += `&activo=${JSON.stringify(this.filter.activo)}`
             }
 
             const get = `${route('entidad.list')}?${filter}`
@@ -272,6 +310,22 @@ export default {
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
         },
+        async fnDeleteEntidad(data) {
+            this.showDeleteEntidad = false
+            const response = await axios.delete(route('entidad.destroy', data));
+
+			if (response.status == 200) {
+				this.labelType = "success"
+                this.toastMessage = response.data.message
+                this.showToast = true
+                this.getEntidades()
+
+			} else {
+				this.labelType = "danger"
+                this.toastMessage = response.data.message
+                this.showToast = true
+			}
+        }
     },
     mounted() {
         if (this.toast) {

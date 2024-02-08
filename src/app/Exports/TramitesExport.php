@@ -41,20 +41,29 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 'person.lastname', 
                 'person.num_documento',
                 DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
+                'contact_data.phone',
+                'contact_data.celular',
+                'contact_data.email',
                 'localidades.description', 
+                'barrios.description as barrio_description',
+                'address_data.calle',
+                'address_data.number',
+                'address_data.piso',
+                'address_data.dpto',
+                'address_data.google_address',
                 'escuelas.description AS escuela_description', 
                 'estado_educativo.description AS estado_educativo',
                 'tipo_ocupacion.description AS tipo_ocupacion_description',
                 DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
                 'tipo_tramite.description AS tipo_tramite_description',
                 'dependencias.description AS dependencia_description',
-                'barrios.description as barrio_description',
                 'tramites.observacion')
 
             ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
             ->join('person', 'person.id', '=', 'person_tramite.person_id')
             ->leftjoin('education_data','education_data.person_id','=', 'person.id')
             ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
+            ->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id')
             ->leftjoin('social_data', 'social_data.person_id', '=', 'person.id')
             ->leftjoin('escuelas', 'escuelas.id', '=', 'education_data.escuela_id')
             ->leftjoin('estado_educativo', 'estado_educativo.id', '=', 'education_data.estado_educativo_id')
@@ -152,14 +161,22 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 'Apellido',
                 'Num. Documento',
                 'Fecha Nacimiento',
+                'Telefono',
+                'Celular',
+                'Email',
                 'Localidad',
+                'Barrio',
+                'Calle',
+                'Numero',
+                'Piso',
+                'Dpto',
+                'Direccion Google',
                 'Escuela',
                 'Estado Educativo',
                 'Ocupación',
                 'Fecha Tramite',
                 'Tipo Tramite',
                 'Dependencia',
-                'Barrio',
                 //'Nomenclatura', //No se utiliza
                 'Observacion'
         ];

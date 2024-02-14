@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager\Report;
 
+use App\Exports\EntidadesExport;
 use App\Exports\PersonsExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
@@ -121,6 +122,25 @@ class ReportController extends Controller
         }
 
         return Excel::download(new PersonsExport($data), 'persons.xlsx');
+    }
+
+    public function exportEntidadExcel(Request $request){
+        $data = [];
+
+        if($request->name){
+            $data['name'] = json_decode($request->name);
+        }
+
+        if($request->num_entidad){
+            $data['num_entidad'] = json_decode($request->num_entidad);
+        }
+
+        if($request->tipo_entidad_id){
+            $data['tipo_entidad_id'] = json_decode($request->tipo_entidad_id);
+        }
+
+
+        return Excel::download(new EntidadesExport($data), 'entidades.xlsx');
     }
 
 }

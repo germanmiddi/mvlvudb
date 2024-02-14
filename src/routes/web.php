@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/report/exportTramiteExcel', [ReportController::class, 'exportTramiteExcel'])->name('report.exportTramiteExcel');
     Route::get('/report/exportTramiteCBIExcel', [ReportController::class, 'exportTramiteCBIExcel'])->name('report.exportTramiteCBIExcel');
     Route::post('/report/exportPersonsExcel', [ReportController::class, 'exportPersonsExcel'])->name('report.exportPersonsExcel');
+    Route::post('/report/exportEntidadExcel', [ReportController::class, 'exportEntidadExcel'])->name('report.exportEntidadExcel');
 
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');

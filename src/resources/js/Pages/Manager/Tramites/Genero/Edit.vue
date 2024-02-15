@@ -963,8 +963,9 @@ export default {
 		this.form.modalidad_atencion_id = this.tramite[0].modalidad_atencion_id
 		this.form.category_id = this.tramite[0].category_id
 
-		this.form.ingreso_nuevo = this.tramite[0].tramite_data.ingreso_nuevo
-		this.form.boton_antipanico = this.tramite[0].tramite_data.boton_antipanico
+		
+		this.form.ingreso_nuevo = this.tramite[0].tramite_data ? this.tramite[0].tramite_data.ingreso_nuevo : ''
+		this.form.boton_antipanico = this.tramite[0].tramite_data  ? this.tramite[0].tramite_data.boton_antipanico : ''
 
 		if (beneficiario != '') {
 			this.form_beneficiario.num_documento = beneficiario[0].num_documento

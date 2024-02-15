@@ -43,7 +43,7 @@ class EntidadesExport implements FromCollection, WithHeadings, WithStyles, Shoul
                 'entidades.name',
                 'entidades.objeto',
                 'entidades.address',
-                'localidades.description',
+                'localidades.description as localidad_description',
                 'entidades.phone',
                 'entidades.email',
                 'entidades.solicitud_inscripcion',
@@ -55,8 +55,8 @@ class EntidadesExport implements FromCollection, WithHeadings, WithStyles, Shoul
                 DB::raw("DATE_FORMAT(entidades.fecha_fin_mandato, '%d-%m-%Y')" ),
                 DB::raw("DATE_FORMAT(entidades.fecha_memoria, '%d-%m-%Y')" ),
                 DB::raw("DATE_FORMAT(entidades.fecha_asamblea, '%d-%m-%Y')" ),
-                'tipos_entidades.description',
-                'tipos_actividades.description')
+                'tipos_entidades.description as tipo_entidad_description',
+                'tipos_actividades.description as tipo_actividad_description')
 
                 ->leftjoin('localidades', 'localidades.id', '=', 'entidades.localidad_id')
                 ->leftjoin('tipos_entidades', 'tipos_entidades.id', '=', 'entidades.tipo_entidad_id')

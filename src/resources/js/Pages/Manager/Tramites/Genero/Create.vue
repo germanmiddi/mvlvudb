@@ -109,7 +109,25 @@
 								</select>
 							</div>
 
+							<div class="col-span-12 sm:col-span-3">
+								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Ingreso Nuevo</label>
+								<select v-model="form.ingreso_nuevo" id="ingreso_nuevo" name="ingreso_nuevo"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
 
+							<div class="col-span-12 sm:col-span-3">
+								<label for="boton_antipanico" class="block text-sm font-medium text-gray-700">Boton Antipanico</label>
+								<select v-model="form.boton_antipanico" id="boton_antipanico" name="boton_antipanico"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">

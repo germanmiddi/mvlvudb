@@ -56,14 +56,11 @@ class EntidadesExport implements FromCollection, WithHeadings, WithStyles, Shoul
                 DB::raw("DATE_FORMAT(entidades.fecha_memoria, '%d-%m-%Y')" ),
                 DB::raw("DATE_FORMAT(entidades.fecha_asamblea, '%d-%m-%Y')" ),
                 'tipos_entidades.description',
-                'tipos_actividades.description'
-                /* DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')" ),*/
-                )
+                'tipos_actividades.description')
 
                 ->leftjoin('localidades', 'localidades.id', '=', 'entidades.localidad_id')
-                ->leftjoin('tipos_actividades', 'tipos_actividades.id', '=', 'entidades.tipo_actividad_id')
                 ->leftjoin('tipos_entidades', 'tipos_entidades.id', '=', 'entidades.tipo_entidad_id')
-;
+                ->leftjoin('tipos_actividades', 'tipos_actividades.id', '=', 'entidades.tipo_actividad_id');
 
         if(isset($this->data['name'])){
             $result->where('entidades.name', 'LIKE', '%'.$this->data['name'].'%');

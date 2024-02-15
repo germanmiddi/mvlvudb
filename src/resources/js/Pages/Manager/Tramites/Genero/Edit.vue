@@ -115,6 +115,25 @@
 								</select>
 							</div>
 
+							<div class="col-span-12 sm:col-span-3">
+								<label for="ingreso_nuevo" class="block text-sm font-medium text-gray-700">Ingreso Nuevo</label>
+								<select v-model="form.ingreso_nuevo" id="ingreso_nuevo" name="ingreso_nuevo" autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="boton_antipanico" class="block text-sm font-medium text-gray-700">Boton Antipanico
+									firmada</label>
+								<select v-model="form.boton_antipanico" id="boton_antipanico" name="boton_antipanico" autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
+
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-8">
@@ -944,6 +963,8 @@ export default {
 		this.form.modalidad_atencion_id = this.tramite[0].modalidad_atencion_id
 		this.form.category_id = this.tramite[0].category_id
 
+		this.form.ingreso_nuevo = this.tramite[0].tramite_data.ingreso_nuevo
+		this.form.boton_antipanico = this.tramite[0].tramite_data.boton_antipanico
 
 		if (beneficiario != '') {
 			this.form_beneficiario.num_documento = beneficiario[0].num_documento

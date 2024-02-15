@@ -37,6 +37,7 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use App\Models\Manager\Category;
 use App\Models\Manager\ModalidadAtencion;
+use App\Models\Manager\TramiteData;
 use App\Models\Manager\TramiteEstado;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -252,6 +253,16 @@ class GeneroController extends Controller
                             $fileController->uploadbase64($data);
                         }
                     }
+
+                    // tramite_data
+
+                    TramiteData::Create(
+                        [
+                            'ingreso_nuevo' => $request['ingreso_nuevo'],
+                            'boton_antipanico' => $request['boton_antipanico'],
+                            'tramite_id' => $tramite_data['id']
+                        ]
+                    );
                     
                     
                     $list_tramites_id[] = $tramite_data['id'];
@@ -298,7 +309,7 @@ class GeneroController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'tramite_data')->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
                 'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
@@ -433,6 +444,13 @@ class GeneroController extends Controller
                 
                 $fileController->upload($data );
             }
+
+            TramiteData::where('tramite_id', $request['tramite_id'])->update(
+                [
+                    'ingreso_nuevo' => $request['ingreso_nuevo'],
+                    'boton_antipanico' => $request['boton_antipanico']
+                ]
+            );
 
             DB::commit();
             Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Genero:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);

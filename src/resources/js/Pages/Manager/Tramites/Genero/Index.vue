@@ -86,6 +86,26 @@
                                 }}</option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-2">
+								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Ingreso Nuevo</label>
+								<select v-model="filter.ingreso_nuevo" id="ingreso_nuevo" name="ingreso_nuevo"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-2">
+								<label for="boton_antipanico" class="block text-sm font-medium text-gray-700">Boton Antipanico</label>
+								<select v-model="filter.boton_antipanico" id="boton_antipanico" name="boton_antipanico"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="1" selected>Si</option>
+									<option value="0" selected>No</option>
+								</select>
+							</div>
+
                         <!-- <div class="col-span-12 sm:col-span-3" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
                             <div class="col-span-12 sm:col-span-3">
                             <label for="user_id" class="block text-sm font-medium text-gray-700">Usuarios</label>
@@ -343,10 +363,13 @@ export default {
                 filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`
             }
 
-            if (this.filter.tipo_tramite_id) {
-                filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
+            if (this.filter.ingreso_nuevo) {
+                filter += `&ingreso_nuevo=${JSON.stringify(this.filter.ingreso_nuevo)}`
             }
 
+            if (this.filter.boton_antipanico) {
+                filter += `&boton_antipanico=${this.filter.boton_antipanico}`
+            }
 
             const get = `${route('genero.list')}?${filter}`
 

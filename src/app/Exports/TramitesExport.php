@@ -36,7 +36,7 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     {
         
         $result = Tramite::query();
-
+        $depe = true;
         $result->select('person.name', 
                 'person.lastname', 
                 'person.num_documento',
@@ -57,7 +57,9 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
                 'tipo_tramite.description AS tipo_tramite_description',
                 'dependencias.description AS dependencia_description',
-                'tramites.observacion')
+                'tramites.observacion',
+                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.ingreso_nuevo IS NOT NULL, IF(tramite_data.ingreso_nuevo, 'SI', 'NO'), '-'), '') AS ingreso_nuevo"),
+                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"))
 
             ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
             ->join('person', 'person.id', '=', 'person_tramite.person_id')
@@ -72,6 +74,7 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             ->leftjoin('dependencias', 'dependencias.id', '=', 'tramites.dependencia_id')
             ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
             ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
+            ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
             ->where('person_tramite.rol_tramite_id', '1');
 
         if(isset($this->data['dependencia_id'])){
@@ -118,6 +121,27 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                     });
         }
 
+        if(isset($this->data['boton_antipanico'])){
+            $boton_antipanico = json_decode($this->data['boton_antipanico']);  
+            dd($boton_antipanico);
+            $result->whereIn('id', function ($sub) use($boton_antipanico) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+                            ->where('tramite_data.boton_antipanico', $boton_antipanico);
+                    });
+        }
+
+        if(isset($this->data['ingreso_nuevo'])){
+            $ingreso_nuevo = json_decode($this->data['ingreso_nuevo']);  
+            $result->whereIn('id', function ($sub) use($ingreso_nuevo) {
+                        $sub->selectRaw('tramites.id')
+                            ->from('tramites')
+                            ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+                            ->where('tramite_data.ingreso_nuevo', $ingreso_nuevo);
+                    });
+        }
+
         return $result->get();
     }
 
@@ -156,30 +180,35 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     // encabezados
     public function headings(): array
     {
-        return [
-                'Nombre',
-                'Apellido',
-                'Num. Documento',
-                'Fecha Nacimiento',
-                'Telefono',
-                'Celular',
-                'Email',
-                'Localidad',
-                'Barrio',
-                'Calle',
-                'Numero',
-                'Piso',
-                'Dpto',
-                'Direccion Google',
-                'Escuela',
-                'Estado Educativo',
-                'Ocupación',
-                'Fecha Tramite',
-                'Tipo Tramite',
-                'Dependencia',
-                //'Nomenclatura', //No se utiliza
-                'Observacion'
+        $title = [
+            'Nombre',
+            'Apellido',
+            'Num. Documento',
+            'Fecha Nacimiento',
+            'Telefono',
+            'Celular',
+            'Email',
+            'Localidad',
+            'Barrio',
+            'Calle',
+            'Numero',
+            'Piso',
+            'Dpto',
+            'Direccion Google',
+            'Escuela',
+            'Estado Educativo',
+            'Ocupación',
+            'Fecha Tramite',
+            'Tipo Tramite',
+            'Dependencia',
+            //'Nomenclatura', //No se utiliza
+            'Observacion'
         ];
+        if($this->data['dependencia_id'] === 6){
+            $title[] = 'Ingreso Nuevo';
+            $title[] = 'Boton Antipanico';
+        }
+        return $title;
     }
 
     //Define el ancho de las columnas, si esta vacio se autoajustan

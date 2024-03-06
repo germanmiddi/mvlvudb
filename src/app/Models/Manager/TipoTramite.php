@@ -28,7 +28,7 @@ class TipoTramite extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('activo', '1');
+        return $query->where('activo', '1')->orderBy('description', 'asc');
     }    
 
 }

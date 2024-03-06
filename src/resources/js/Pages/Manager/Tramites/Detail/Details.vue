@@ -327,39 +327,41 @@
 					</dl>
 				</div>	
 				
-				<div class="grid grid-cols-12 gap-12">
-					<table class="min-w-full divide-y divide-gray-200 w-full col-span-12">
-						<thead class="bg-gray-50">
-							<tr>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
-									Fecha</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-									Dependencia</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
-									Usuario</th>
-								<th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
-									Observación</th>
-							</tr>
-						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
-							<tr v-for="(comment, index) in comments" :key="index">
-								
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-									{{ store.fechaFormateada(comment.created_at) }}
-								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-									{{ comment.dependencia ? comment.dependencia.description : '' }}
-								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-									{{ comment.user ? comment.user.name : '' }}
-								</td>
-								<td class="px-6 py-4 whitespace-wrap text-sm text-gray-500 text-justify">
-									{{ comment.content }}
-								</td>
-
-							</tr>
-						</tbody>
-					</table>
+				<div class="grid grid-cols-12 gap-2">
+					<div class="px-4 py-5 sm:px-6">
+						<h3 class="text-lg leading-6 font-medium text-gray-900">Comentarios</h3>
+						<p class="mt-1 max-w-2xl text-sm text-gray-500"></p>
+					</div>
+					<div v-for="(comment, index) in comments" :key="index" class="min-w-full divide-y divide-gray-200 w-full col-span-12">
+						<div class="flex flex-col m-4 col-span-12 bg-gray-50 rounded-lg">
+							<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+								<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+									<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+										<div class="grid grid-cols-12 gap-6 m-4">
+											<div class="col-span-12 md:col-span-4 sm:col-span:6">
+												<dt class="text-sm font-medium leading-6 text-gray-900">Dependencia</dt>
+												<dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{comment.dependencia ? comment.dependencia.description : ''}}</dd>
+											</div>
+											<div class="col-span-12 md:col-span-4 sm:col-span:6">
+												<dt class="text-sm font-medium leading-6 text-gray-900">Fecha</dt>
+												<dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ store.fechaFormateada(comment.created_at) }}</dd>
+											</div>
+											<div class="col-span-12 md:col-span-4 sm:col-span:6">
+												<dt class="text-sm font-medium leading-6 text-gray-900">Responsable</dt>
+												<dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{comment.user ? comment.user.name : ''}}</dd>
+											</div>
+										</div>
+										<hr>
+										<dl class="grid grid-cols-1 gap-x-8 gap-y-10 lg:pt-2 m-4">
+											<div class="flex flex-col items-start">
+												<dd class="mt-2 leading-7 text-gray-600 text-xs text-justify">{{comment.content}}</dd>
+											</div>
+										</dl>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>				
 			</div>
 		</div>	

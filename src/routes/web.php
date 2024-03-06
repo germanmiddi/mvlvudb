@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
     // Person
     Route::get('/persons', [PersonController::class, 'index'])->name('persons'); 
     Route::get('/persons/tramites/{id}', [PersonController::class, 'tramitesByPerson'])->name('persons.tramites'); 
+    Route::get('/persons/comments/{id}', [PersonController::class, 'comments'])->name('persons.comments'); 
     Route::get('/persons/list', [PersonController::class, 'list'])->name('persons.list'); 
     Route::get('/persons/listTramites', [PersonController::class, 'listTramites'])->name('persons.listTramites'); 
     Route::get('/persons/edit/{id}', [PersonController::class, 'edit'])->name('persons.edit'); 

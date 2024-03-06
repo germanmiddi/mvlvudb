@@ -24,7 +24,7 @@ class Person extends Model
 
     public function tipoDoc()
     {
-        return $this->belongsTo(TipoDoc::class, 'tipo_documento_id');
+        return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
     }
 
     public function personas()

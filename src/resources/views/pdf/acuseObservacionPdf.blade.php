@@ -122,6 +122,10 @@ p {
     width: 50%!important;
 }
 
+.mt-4 {
+    margin-top:4px;
+}
+
 .mt-10 {
     margin-top:10px;
 }
@@ -312,19 +316,16 @@ p {
     @if (count($comments) > 0)
     <br><br>
         <div class="header">
-           {{--  <strong>COMENTARIOS</strong>
-            <br><br> --}}
-        
         <table class="header-col">
         <thead>
-            <tr>
+            {{-- <tr>
                 <th class="col-left">
                     Detalle
                 </th>
                 <th class="col-center">
                     Comentario
                 </th>
-            </tr>
+            </tr> --}}
         </thead>
         <tbody>
         
@@ -332,14 +333,17 @@ p {
         <br>
             <tr>
                 <td class="text-center text-line-20 mt-10">
-                   {{$comment->created_at->format('d/m/Y H:i:s')}}
-
-                    {{$comment->dependencia['description']}}
-                {{-- </td>
-                <td class="text-center"> --}}
-                    {{$comment->user['name']}}
+                   <b>{{$comment->created_at->format('d/m/Y H:i:s')}}</b>
                 </td>
-                <td class="text-justify">
+                <td class="text-center text-line-20 mt-10">
+                    <b>{{$comment->dependencia['description']}}</b>
+                </td>
+                <td class="text-center text-line-20 mt-10">
+                    <b>{{$comment->user['name']}}</b>
+                </td>
+            </tr>
+            <tr>
+                <td class="text-justify mt-4" colspan="3">
                     {{$comment->content}}
                 </td>
             </tr>

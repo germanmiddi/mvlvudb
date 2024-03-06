@@ -114,13 +114,46 @@ class PersonController extends Controller
     {
         return Inertia::render('Manager/Persons/ListTramites',
         [
-            //'tiposTramite' => TipoTramite::active()->get(),
-            //'localidades' => Localidad::all(),
-            //'barrios'   => Barrio::all(),
             'tiposTramite' => TipoTramite::active()->get(),
             'dependencias' => Dependencia::all(),
             'estados' => TramiteEstado::all(),
             'person' => Person::find($id),
+            'toast' => Session::get('toast')
+        ]);
+    }
+
+    public function comments($id)
+    {
+        $person = Person::find($id);
+        $person->load([
+            'contact',
+            'tramites' => function ($query) {
+                $query->orderBy('fecha', 'desc'); // Ordenar trámites por fecha de forma descendente
+            },
+            'tramites.dependencia',
+            'tramites.assigned',
+            'tramites.comments' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // Ordenar comentarios por fecha de creación de forma ascendente
+            },
+            'tramites.archivos',
+            'tramites.comments.dependencia',
+            'tramites.comments.user'
+        ]);
+
+        // Formatear las fechas
+        $person->tramites->map(function ($tramite) {
+            $tramite->fecha = Carbon::parse($tramite->fecha)->format('d-m-Y'); // Formato personalizado
+            $tramite->comments->map(function ($comment) {
+                $comment->created_at_comment = Carbon::parse($comment->created_at)->format('d-m-Y H:i'); // Formato personalizado
+                return $comment;
+            });
+            return $tramite;
+        });
+
+
+        return Inertia::render('Manager/Persons/Comments',
+        [
+            'person' => $person,
             'toast' => Session::get('toast')
         ]);
     }

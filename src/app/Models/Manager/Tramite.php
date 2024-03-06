@@ -2,6 +2,7 @@
 
 namespace App\Models\Manager;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -122,6 +123,11 @@ class Tramite extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function assigned()
+    {
+        return $this->belongsTo(User::class, 'assigned', 'id');
     }
 
 

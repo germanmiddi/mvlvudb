@@ -228,11 +228,11 @@
                                                             Tramites</a>
                                                         </MenuItem>
  
-                                                        <!-- <MenuItem v-slot="{ active }">
-                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
+                                                        <MenuItem v-slot="{ active }">
+                                                            <a :href="route('persons.comments', data.id)"
                                                             class="block px-4 py-2 text-sm">
-                                                            Imprimir</a>
-                                                        </MenuItem> -->
+                                                            Historial</a>
+                                                        </MenuItem>
                                                     </div>
 
                                                 </MenuItems>

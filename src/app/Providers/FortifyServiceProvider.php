@@ -60,7 +60,8 @@ class FortifyServiceProvider extends ServiceProvider
                 // Agrega los nuevos valores al array
                 $grupoNames = [
                     'APP-VUDS-ALL-VU',
-                    //'APP-VUDS-DIS-OP',
+                    //'APP-VUDS-GEN-OP',
+                    //'APP-VUDS-CBJ-OP-PROF'
                     //'APP-VUDS-DIS-ADM',
                     //'APP-VUDS-CBI-OP',
                     //'APP-VUDS-VU-OP'

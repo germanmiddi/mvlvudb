@@ -121,24 +121,26 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                     });
         }
 
+        //dd($this->data['ingreso_nuevo']);
         if(isset($this->data['boton_antipanico'])){
             $boton_antipanico = json_decode($this->data['boton_antipanico']);  
-            dd($boton_antipanico);
-            $result->whereIn('id', function ($sub) use($boton_antipanico) {
+        
+            $result->whereIn('tramites.id', function ($sub) use($boton_antipanico) {
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
                             ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.boton_antipanico', $boton_antipanico);
+                            ->where('tramite_data.boton_antipanico', '=', $boton_antipanico);
                     });
         }
 
         if(isset($this->data['ingreso_nuevo'])){
-            $ingreso_nuevo = json_decode($this->data['ingreso_nuevo']);  
-            $result->whereIn('id', function ($sub) use($ingreso_nuevo) {
+            $ingreso_nuevo = $this->data['ingreso_nuevo'];  
+
+            $result->whereIn('tramites.id', function ($sub) use($ingreso_nuevo) {
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
                             ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.ingreso_nuevo', $ingreso_nuevo);
+                            ->where('tramite_data.ingreso_nuevo', '=', $ingreso_nuevo);
                     });
         }
 

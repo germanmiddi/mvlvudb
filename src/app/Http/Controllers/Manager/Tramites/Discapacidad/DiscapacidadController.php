@@ -523,30 +523,25 @@ class DiscapacidadController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
-        /* $generalController = new GeneralController();
-        if($generalController->_check_permission()){
-            // Si posee un rol que posee permiso operador visualizará unicamente sus tramites
-            $result->where('assigned', Auth::user()->id);
-        }else{ */
-            // Si no posee rol operador ejecuta los filtros.
-            $users_id = [];
-            if(request('assigned_me')){
-                $users_id[] = Auth::user()->id;
-            }
+       
+        // Si no posee rol operador ejecuta los filtros.
+        $users_id = [];
+        if(request('assigned_me')){
+            $users_id[] = Auth::user()->id;
+        }
 
-            if(request('user_id')){
-                $users_id[] = json_decode(request('user_id'));
-            }
+        if(request('user_id')){
+            $users_id[] = json_decode(request('user_id'));
+        }
 
-            if(request('not_assigned')){
-                $result->whereNull('assigned');
-            }
-            
-            if(count($users_id) > 0){
-                $result->whereIn('assigned', $users_id);
-            }
-        //}
-
+        if(request('not_assigned')){
+            $result->whereNull('assigned');
+        }
+        
+        if(count($users_id) > 0){
+            $result->whereIn('assigned', $users_id);
+        }
+        
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
@@ -560,46 +555,4 @@ class DiscapacidadController extends Controller
                 'archivos' => $tramite->archivos,
             ]);
     }
-
-    // public function view($id){
-
-    //     return Inertia::render('Manager/Tramites/Discapacidad/Details',
-    //         [   
-    //             'estados' => TramiteEstado::all(),
-    //             'dependencias' => Dependencia::all(),
-    //             'tramite' => Tramite::where('id', $id)
-    //                                 ->with('persons',
-    //                                        'persons.contact',
-    //                                        'persons.address', 
-    //                                        'persons.address.localidad',
-    //                                        'archivos', 
-    //                                        'tipoTramite', 
-    //                                        'canalAtencion',
-    //                                        'sede',
-    //                                        'rol_tramite',
-    //                                        'dependencia',
-    //                                        'parentesco',
-    //                                        'persons.cud',
-    //                                        'cbi_data',
-    //                                        'cbj_data',
-    //                                        'familiares',
-    //                                        'contactos',
-    //                                        'persons.education',
-    //                                        'persons.education.nivelEducativo',
-    //                                        'persons.social',
-    //                                        'persons.social.tipoOcupacion',
-    //                                        'persons.social.coberturaMedica',
-    //                                        'persons.social.tipoPension',
-    //                                        'persons.social.programaSocial',
-    //                                        'comments',
-    //                                        'comments.dependencia',
-    //                                        'comments.user',
-    //                                        'estado',
-
-    //                                        )
-    //                                 ->get()
-    //         ]
-    //     );
-
-    // }
 }

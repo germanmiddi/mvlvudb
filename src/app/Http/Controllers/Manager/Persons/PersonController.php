@@ -31,6 +31,7 @@ use App\Models\Manager\TipoPension;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\TipoVivienda;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\TramiteComment;
 use App\Models\Manager\TramiteEstado;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Svg\Tag\Rect;
 
 class PersonController extends Controller
 {
@@ -45,10 +47,8 @@ class PersonController extends Controller
     {
         return Inertia::render('Manager/Persons/Index',
         [
-            //'tiposTramite' => TipoTramite::active()->get(),
             'localidades' => Localidad::all(),
             'barrios'   => Barrio::all(),
-            //'users' => User::orderBy('name')->get(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -156,6 +156,23 @@ class PersonController extends Controller
             'person' => $person,
             'toast' => Session::get('toast')
         ]);
+    }
+
+    public function editComments($id, Request $request){
+        DB::beginTransaction();
+        
+        try {
+            TramiteComment::where('id',$id)->update(
+                [
+                    'content' => $request->content
+                ]
+            );
+            DB::commit();
+            return response()->json(['message' => 'Se actualizado correctamente el comentario del tramite.'], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
+        }
     }
 
     public function listTramites()

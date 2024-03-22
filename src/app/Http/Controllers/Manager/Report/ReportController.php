@@ -91,10 +91,11 @@ class ReportController extends Controller
             $data['num_documento'] = json_decode($request->num_documento);
         }
 
-        if($request->ingreso_nuevo){
+        if(isset($request->ingreso_nuevo)){
             $data['ingreso_nuevo'] = json_decode($request->ingreso_nuevo);
         }
-        if($request->boton_antipanico){
+
+        if(isset($request->boton_antipanico)){
             $data['boton_antipanico'] = json_decode($request->boton_antipanico);
         } 
         

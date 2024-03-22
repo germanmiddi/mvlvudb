@@ -266,7 +266,7 @@ class GeneroController extends Controller
                     
                     
                     $list_tramites_id[] = $tramite_data['id'];
-                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
                 }
             }else{
                 // Se verifica que se haya enviado tipos de tramite
@@ -320,7 +320,7 @@ class GeneroController extends Controller
     {
         DB::beginTransaction();
         try {
-           
+        
             Person::where('id',$request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -409,8 +409,6 @@ class GeneroController extends Controller
                 );
     
             }
-
-
             /**
              * FIN Registro de Beneficiario
              */
@@ -506,7 +504,7 @@ class GeneroController extends Controller
 
             $from = date('Y-m-d', strtotime($date[0]));
             $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
+            
             $result->where('fecha','>=', $from)
                     ->where('fecha', '<', $to);
         }
@@ -522,11 +520,11 @@ class GeneroController extends Controller
 
         if(request('boton_antipanico')){
             $boton_antipanico = json_decode(request('boton_antipanico'));  
-            $result->whereIn('id', function ($sub) use($boton_antipanico) {
+            $result->whereIn('tramites.id', function ($sub) use($boton_antipanico) {
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
                             ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.boton_antipanico', $boton_antipanico);
+                            ->where('tramite_data.boton_antipanico', '=' ,$boton_antipanico);
                     });
         }
 
@@ -536,33 +534,26 @@ class GeneroController extends Controller
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
                             ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.ingreso_nuevo', $ingreso_nuevo);
+                            ->where('tramite_data.ingreso_nuevo','=', $ingreso_nuevo);
                     });
         }
+        // Si no posee rol operador ejecuta los filtros.
+        $users_id = [];
+        if(request('assigned_me')){
+            $users_id[] = Auth::user()->id;
+        }
 
-        /* $generalController = new GeneralController();
-        if($generalController->_check_permission()){
-            // Si posee un rol que posee permiso operador visualizará unicamente sus tramites
-            $result->where('assigned', Auth::user()->id);
-        }else{ */
-            // Si no posee rol operador ejecuta los filtros.
-            $users_id = [];
-            if(request('assigned_me')){
-                $users_id[] = Auth::user()->id;
-            }
+        if(request('user_id')){
+            $users_id[] = json_decode(request('user_id'));
+        }
 
-            if(request('user_id')){
-                $users_id[] = json_decode(request('user_id'));
-            }
-
-            if(request('not_assigned')){
-                $result->whereNull('assigned');
-            }
-            
-            if(count($users_id) > 0){
-                $result->whereIn('assigned', $users_id);
-            }
-        //}
+        if(request('not_assigned')){
+            $result->whereNull('assigned');
+        }
+        
+        if(count($users_id) > 0){
+            $result->whereIn('assigned', $users_id);
+        }
         
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)

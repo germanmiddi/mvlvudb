@@ -79,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
     // General
     Route::get('/general', [GeneralController::class, 'index'])->name('general');  
     Route::get('/general/list', [GeneralController::class, 'list'])->name('general.list');   
-   
+    
     // Discapacidad
     Route::get('/discapacidad', [DiscapacidadController::class, 'index'])->name('discapacidad');    
     Route::get('/discapacidad/create', [DiscapacidadController::class, 'create'])->name('discapacidad.create');  
@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/persons', [PersonController::class, 'index'])->name('persons'); 
     Route::get('/persons/tramites/{id}', [PersonController::class, 'tramitesByPerson'])->name('persons.tramites'); 
     Route::get('/persons/comments/{id}', [PersonController::class, 'comments'])->name('persons.comments'); 
+    Route::put('/persons/comments/{id}', [PersonController::class, 'editComments'])->name('persons.editComments'); 
     Route::get('/persons/list', [PersonController::class, 'list'])->name('persons.list'); 
     Route::get('/persons/listTramites', [PersonController::class, 'listTramites'])->name('persons.listTramites'); 
     Route::get('/persons/edit/{id}', [PersonController::class, 'edit'])->name('persons.edit'); 

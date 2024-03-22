@@ -184,7 +184,7 @@
                 </div>
               </a>
 
-              <a :href="route('persons')"  v-show="store.userCan('-ADM', $page.props.userGroups) || store.userCan('-DIR', $page.props.userGroups)">
+              <a :href="route('persons')"  v-show="store.userCan('-PROF', $page.props.userGroups)">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
                   <UserGroupIcon class="w-5 h-5 mr-3" /> <label> Personas</label>
                 </div>

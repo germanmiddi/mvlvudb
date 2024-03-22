@@ -368,7 +368,7 @@ export default {
             }
 
             if (this.filter.boton_antipanico) {
-                filter += `&boton_antipanico=${this.filter.boton_antipanico}`
+                filter += `&boton_antipanico=${JSON.stringify(this.filter.boton_antipanico)}`
             }
 
             const get = `${route('genero.list')}?${filter}`

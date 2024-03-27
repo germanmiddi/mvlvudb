@@ -73,7 +73,11 @@
                                             </div>  
                                         <div v-for="comment in tramite.comments"  v-key="comment.id">
                                             
-                                            <Comment :comment=comment @message="handleMessage" v-if="store.userCan(comment.dependencia.rol_prefix, $page.props.userGroups)"></Comment>
+                                            <Comment v-if="store.userCan(comment.dependencia.rol_prefix, $page.props.userGroups) && comment.activo === 1"
+                                                        :comment=comment 
+                                                        @message="handleMessage"
+                                                        @deleteComment="handleDeleteComment" >
+                                            </Comment>
                                         
                                         </div>
                                     </div>
@@ -220,8 +224,17 @@ export default {
         handleMessage(data){
             this.labelType = data.labelType;
             this.toastMessage = data.toastMessage;
+        },
+        handleDeleteComment(id){
+            for (const tramite of this.person.tramites) {
+                console.log(tramite);
+                const comment = tramite.comments.find(comentario => comentario.id === id);
+                if (comment) {
+                    console.log(comment);
+                    comment.activo = 0;
+                }
+            }
         }
-        
     },
     computed: {
 		
@@ -236,7 +249,6 @@ export default {
                 this.toastMessage = this.toast["message"];
             }
         }
-        //this.getPersons();
     }
 };
 </script>

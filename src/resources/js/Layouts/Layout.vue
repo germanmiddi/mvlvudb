@@ -158,7 +158,7 @@
                         Niñez y Adolescencia
                       </li>
                     </a>
-                    <a :href="route('promocion')" v-show="store.userCan('PRO', $page.props.userGroups)">
+                    <a :href="route('promocion')" v-show="store.userCan('PPD', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Promoción y Protección de derechos
                       </li>

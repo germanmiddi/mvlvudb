@@ -25,14 +25,20 @@
                         </div>
                     </dl>
                     <dl class="grid grid-cols-1 gap-x-8 gap-y-10 lg:pt-2 m-4">
-                        <div v-if="$page.props.user.id === comment.user.id" class="flex flex-col items-end">
+                        <div v-if="$page.props.user.id === comment.user.id" class="flex justify-end w-full mx-auto">
+                            
                             <button v-if="!editComment" class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-gray-200 text-gray-900 hover:bg-gray-600 hover:text-white"
                                 title="Editar Comentario" @click="editComment = true">
-                                Editar Comentario
+                                Editar
                             </button>
                             <button v-else class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
                                 title="Editar Comentario" @click="submit()">
-                                Guardar Comentario
+                                Guardar
+                            </button>
+
+                            <button v-if="!editComment" class="ml-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
+                                title="Eliminar Comentario" @click="deletedComment = true">
+                                Eliminar
                             </button>
                         </div>
                     </dl>
@@ -40,22 +46,31 @@
             </div>
         </div>
     </div>
+
+    <DeleteModal :show="deletedComment" :id="comment.id"
+        :title="`¿Está seguro que desea eliminar el comentario?`"
+        @viewDeleted="fnShowDelete" 
+        @responseDeleted="fnDelete" />
+
 </template>
 
 <script>
 import { ref } from "vue";
 import store from '@/store.js'
+import DeleteModal from '@/Layouts/Components/DeleteModal.vue'
 
 export default {
     props: {
         comment: Object
     },
     components: {
-        store
+        store,
+        DeleteModal
     },
     data() {
         return {
-            editComment: false
+            editComment: false,
+            deletedComment: false,
         };
     },
     setup() {
@@ -71,6 +86,24 @@ export default {
 				const response = await axios.put(rt, {content: this.comment.content});
 				if (response.status == 200) {
                     this.$emit('message', {labelType: 'success', toastMessage: response.data.message});
+				} else {
+					this.$emit('message', {labelType: 'danger', toastMessage: response.data.message});
+				}
+			} catch (error) {
+				console.log(error)
+			}
+        },
+        fnShowDelete(){
+            this.deletedComment = false
+        },
+        async fnDelete(id){
+            this.deletedComment = false
+            let rt = route('persons.deleteComments', id);
+            try {
+				const response = await axios.delete(rt);
+				if (response.status == 200) {
+                    this.$emit('message', {labelType: 'success', toastMessage: response.data.message});
+                    this.$emit('deleteComment', id);
 				} else {
 					this.$emit('message', {labelType: 'danger', toastMessage: response.data.message});
 				}

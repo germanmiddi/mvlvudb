@@ -114,7 +114,7 @@ const projects = [
       initials: 'PP',
       bgColorClass: 'bg-yellow-600',
       route: 'promocion',
-      module: 'PRO'
+      module: 'PPD'
     },
     {
       id: 14,

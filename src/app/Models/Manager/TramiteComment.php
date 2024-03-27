@@ -26,4 +26,9 @@ class TramiteComment extends Model
     {
         return $this->belongsTo(Dependencia::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('activo', '1');
+    } 
 }

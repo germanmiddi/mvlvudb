@@ -175,6 +175,25 @@ class PersonController extends Controller
         }
     }
 
+    public function deleteComments($id){
+        DB::beginTransaction();
+        
+        try {
+            TramiteComment::where('id',$id)->update(
+                [
+                    'activo' => 0
+                ]
+            );
+
+            DB::commit();
+            return response()->json(['message' => 'Se eliminado correctamente el comentario del tramite.'], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => 'Se ha producido un error al momento de eliminar el tramite. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+
     public function listTramites()
     {
         $length = request('length');

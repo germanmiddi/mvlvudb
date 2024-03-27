@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/persons/tramites/{id}', [PersonController::class, 'tramitesByPerson'])->name('persons.tramites'); 
     Route::get('/persons/comments/{id}', [PersonController::class, 'comments'])->name('persons.comments'); 
     Route::put('/persons/comments/{id}', [PersonController::class, 'editComments'])->name('persons.editComments'); 
+    Route::delete('/persons/comments/{id}', [PersonController::class, 'deleteComments'])->name('persons.deleteComments'); 
     Route::get('/persons/list', [PersonController::class, 'list'])->name('persons.list'); 
     Route::get('/persons/listTramites', [PersonController::class, 'listTramites'])->name('persons.listTramites'); 
     Route::get('/persons/edit/{id}', [PersonController::class, 'edit'])->name('persons.edit'); 

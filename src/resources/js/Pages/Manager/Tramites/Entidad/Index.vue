@@ -209,10 +209,11 @@
         </div>
     </main>
 
-    <DeleteModal :show="showDeleteEntidad" :entidad="deleteEntidad"
-                     @viewDeleteEntidad="fnShowDeleteEntidad" 
-                     ref="componenteDeleteOrder" 
-                     @responseDeleteEntidad="fnDeleteEntidad" />
+    <DeleteModal :show="showDeleteEntidad" :id="deleteEntidad.id"
+                    :title="`¿Está seguro que desea eliminar la entidad ${deleteEntidad.name}, identificada con el N° ${deleteEntidad.num_entidad}`"
+                    @viewDeleted="fnShowDeleteEntidad" 
+                    ref="componenteDeleteOrder" 
+                    @responseDeleted="fnDeleteEntidad" />
 </template>
 
 <script>

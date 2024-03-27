@@ -16,11 +16,11 @@
             <div v-if="!editMode" class="flex justify-between w-1/2 mx-auto">
                 <div >
                     <EyeIcon v-if="item.activo == true" 
-                             @click="hideItem(item.id)"
-                             class="w-5 h-5 text-green-400 hover:text-green-600"/> 
+                            @click="hideItem(item.id)"
+                            class="w-5 h-5 text-green-400 hover:text-green-600"/> 
                     <EyeSlashIcon v-else 
-                             @click="hideItem(item.id)"
-                             class="w-5 h-5 text-yellow-700 hover:text-yellow-900" />
+                            @click="hideItem(item.id)"
+                            class="w-5 h-5 text-yellow-700 hover:text-yellow-900" />
                 </div>
                 <PencilSquareIcon @click="editMode = true" class="w-5 h-5 hover:text-blue-600  "/>
                 <TrashIcon @click="destroyItem(item.id)" class="w-5 h-5 hover:text-red-500"/>

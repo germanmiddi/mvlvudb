@@ -170,7 +170,7 @@ import {
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
-import Comment from './Components/Comment.vue';
+import Comment from '@/Layouts/Components/Tramites/Comment.vue';
 
 export default {
     props: {

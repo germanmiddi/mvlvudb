@@ -333,7 +333,12 @@
 						<p class="mt-1 max-w-2xl text-sm text-gray-500"></p>
 					</div>
 					<div v-for="(comment, index) in comments" :key="index" class="min-w-full divide-y divide-gray-200 w-full col-span-12">
-						<div class="flex flex-col m-4 col-span-12 bg-gray-50 rounded-lg">
+						<Comment v-if="comment.activo === 1"
+									:comment=comment 
+									@message="handleMessage"
+									@deleteComment="handleDeleteComment" >
+						</Comment>
+						<!-- <div class="flex flex-col m-4 col-span-12 bg-gray-50 rounded-lg">
 							<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
 								<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 									<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -360,7 +365,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>				
 			</div>
@@ -453,6 +458,7 @@ import FormBeneficiario from '@/Layouts/Components/Tramites/FormBeneficiario.vue
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import Comment from '@/Layouts/Components/Tramites/Comment.vue';
 
 import store from '@/store.js'
 
@@ -482,6 +488,7 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
+		Comment
 	},
 	data() {
 		return {
@@ -529,6 +536,13 @@ export default {
 		goBack(){
 			window.history.back();
 		},
+		handleMessage(data){
+            this.labelType = data.labelType;
+            this.toastMessage = data.toastMessage;
+        },
+		handleDeleteComment(id){
+			this.getComments();
+        },
 		async changeAssignment(){
 			
 			if(this.assignment == this.tramite[0].assigned){

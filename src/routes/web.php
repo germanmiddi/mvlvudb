@@ -28,6 +28,7 @@ use App\Http\Controllers\Manager\Report\ReportController;
 use App\Http\Controllers\Manager\Users\UserController;
 
 use App\Http\Controllers\Manager\Tramites\Details\DetailController;
+use App\Http\Controllers\MilDias\MilDiasController;
 use Illuminate\Support\Facades\URL;
 
 
@@ -107,8 +108,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/persons/destroyContacto/', [PersonController::class, 'destroyContacto'])->name('persons.destroyContacto');
     Route::post('/persons/addContacto/', [PersonController::class, 'addContacto'])->name('persons.addContacto');
     Route::post('/persons/updateContacto/', [PersonController::class, 'updateContacto'])->name('persons.updateContacto');
-
-
 
     // Genero
     Route::get('/genero', [GeneroController::class, 'index'])->name('genero');    
@@ -226,5 +225,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/detail/changeEstado/', [DetailController::class, 'changeEstado'])->name('detail.changeEstado');
     Route::post('/detail/changeAssigment/', [DetailController::class, 'changeAssigment'])->name('detail.changeAssigment');
     
+    // Routes Mil Dias
 
+    Route::get('/mil-dias', [MilDiasController::class, 'index'])->name('mil-dias');
+    Route::get('/mil-dias/create', [MilDiasController::class, 'create'])->name('mil-dias.create'); 
 });

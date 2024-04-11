@@ -717,6 +717,10 @@ export default {
             this.labelType = data.labelType;
             this.toastMessage = data.toastMessage;
         },
+		async submit(){
+			this.labelType = 'info';
+            this.toastMessage = 'Los datos ingresados son de prueba y no serán almacenados';
+		},
 		/* async submit() {
 			const result = await this.v$.$validate()
 			if (!result) {

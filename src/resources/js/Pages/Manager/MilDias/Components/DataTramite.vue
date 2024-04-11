@@ -40,10 +40,9 @@
                     <option value="" disabled>
                         Seleccione un Tratamiento
                     </option>
-                    <!--  <option v-for="canalAtencion in canalesAtencion" :key="canalAtencion.id"
-                        :value="canalAtencion.id">
-                        {{ canalAtencion.description }}
-                    </option> -->
+                    <option value="0" selected>Psicología</option>
+					<option value="1" selected>Psicopedagogía</option>
+                    <option value="2" selected>Combinado</option>
                 </select>
             </div>
 
@@ -54,6 +53,10 @@
                     <option value="" disabled>
                         Seleccione un estado
                     </option>
+                    <option value="0" selected>En Tratamiento</option>
+					<option value="1" selected>Alta</option>
+                    <option value="2" selected>Baja</option>
+					<option value="3" selected>Derivado</option>
                 </select>
             </div>
 
@@ -64,10 +67,10 @@
                     <option value="" disabled>
                         Seleccione un origen de demanda
                     </option>
-                    <!--  <option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
-                        :value="modatencion.id">
-                        {{ modatencion.description }}
-                    </option> -->
+                    <option value="0" selected>Centro Barrial</option>
+					<option value="1" selected>Familia</option>
+                    <option value="2" selected>Escuela</option>
+					<option value="3" selected>Salud</option>
                 </select>
             </div>
 
@@ -78,10 +81,9 @@
                     <option value="" disabled>
                         Seleccione un motivo de baja
                     </option>
-                    <!--  <option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
-                        :value="modatencion.id">
-                        {{ modatencion.description }}
-                    </option> -->
+                    <option value="0" selected>Falta de Adherencia</option>
+					<option value="1" selected>Migración</option>
+                    <option value="2" selected>Cambio de Horario en la Escolaridad</option>
                 </select>
             </div>
 
@@ -92,10 +94,13 @@
                     <option value="" disabled>
                         Seleccione una derivacion
                     </option>
-                    <!--  <option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
-                        :value="modatencion.id">
-                        {{ modatencion.description }}
-                    </option> -->
+                    <option value="0" selected>Salud</option>
+					<option value="1" selected>Servicio Local</option>
+                    <option value="2" selected>ASI</option>
+					<option value="3" selected>Violencia Intrafamiliar</option>
+                    <option value="4" selected>Negligencia</option>
+					<option value="5" selected>Deserción Escolar</option>
+                    <option value="6" selected>Consumo Problemático</option>
                 </select>
             </div>
 
@@ -106,10 +111,13 @@
                     <option value="" disabled>
                         Seleccione una articulacion
                     </option>
-                    <!--  <option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
-                        :value="modatencion.id">
-                        {{ modatencion.description }}
-                    </option> -->
+                    <option value="0" selected>Niñez</option>
+					<option value="1" selected>Educación</option>
+                    <option value="2" selected>Salud</option>
+					<option value="3" selected>Género</option>
+                    <option value="4" selected>Discapacidad</option>
+					<option value="5" selected>Fortalecimiento Comunitario</option>
+                    <option value="6" selected>Habitat</option>
                 </select>
             </div>
 

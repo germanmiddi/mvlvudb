@@ -5,13 +5,20 @@ namespace App\Http\Controllers\MilDias;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Sede;
 use App\Models\Manager\Barrio;
+use App\Models\Manager\FamiliarAntecedente;
 use App\Models\Manager\Localidad;
+use App\Models\Manager\MotivoBaja;
 use App\Models\Manager\MotivoConsulta;
 use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\OrigenDemanda;
 use App\Models\Manager\Pais;
 use App\Models\Manager\Parentesco;
+use App\Models\Manager\TipoArticulacion;
+use App\Models\Manager\TipoDerivacion;
 use App\Models\Manager\TipoDocumento;
+use App\Models\Manager\TipoEnfermedad;
 use App\Models\Manager\TipoOcupacion;
+use App\Models\Manager\TipoTratamiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -54,6 +61,15 @@ class MilDiasController extends Controller
                 'nivelesEducativo' => NivelEducativo::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
 
+                'familarAntecedentes' => FamiliarAntecedente::all(),
+                'motivoBajas' => MotivoBaja::all(),
+                'origenDemandas' => OrigenDemanda::all(),
+                'tipoArticulaciones' => TipoArticulacion::all(),
+                'tipoDerivaciones' => TipoDerivacion::all(),
+                'tipoEnfermedades' => TipoEnfermedad::all(),
+                'tipoTratamientos' => TipoTratamiento::all(),
+
+
                 /*
                 'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
@@ -76,7 +92,7 @@ class MilDiasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

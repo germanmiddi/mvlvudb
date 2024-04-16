@@ -40,9 +40,10 @@
                     <option value="" disabled>
                         Seleccione un Tratamiento
                     </option>
-                    <option value="0" selected>Psicología</option>
-					<option value="1" selected>Psicopedagogía</option>
-                    <option value="2" selected>Combinado</option>
+                    <option class="capitalize" v-for="tratamiento in tipoTratamientos" :key="tratamiento.id"
+                        :value="tratamiento.id">
+                        {{ tratamiento.description }}
+                    </option>
                 </select>
             </div>
 
@@ -67,10 +68,10 @@
                     <option value="" disabled>
                         Seleccione un origen de demanda
                     </option>
-                    <option value="0" selected>Centro Barrial</option>
-					<option value="1" selected>Familia</option>
-                    <option value="2" selected>Escuela</option>
-					<option value="3" selected>Salud</option>
+                    <option class="capitalize" v-for="origen in origenDemandas" :key="origen.id"
+                        :value="origen.id">
+                        {{ origen.description }}
+                    </option>
                 </select>
             </div>
 
@@ -81,9 +82,10 @@
                     <option value="" disabled>
                         Seleccione un motivo de baja
                     </option>
-                    <option value="0" selected>Falta de Adherencia</option>
-					<option value="1" selected>Migración</option>
-                    <option value="2" selected>Cambio de Horario en la Escolaridad</option>
+                    <option class="capitalize" v-for="motivo in motivoBajas" :key="motivo.id"
+                        :value="motivo.id">
+                        {{ motivo.description }}
+                    </option>
                 </select>
             </div>
 
@@ -94,13 +96,10 @@
                     <option value="" disabled>
                         Seleccione una derivacion
                     </option>
-                    <option value="0" selected>Salud</option>
-					<option value="1" selected>Servicio Local</option>
-                    <option value="2" selected>ASI</option>
-					<option value="3" selected>Violencia Intrafamiliar</option>
-                    <option value="4" selected>Negligencia</option>
-					<option value="5" selected>Deserción Escolar</option>
-                    <option value="6" selected>Consumo Problemático</option>
+                    <option class="capitalize" v-for="derivacion in tipoDerivaciones" :key="derivacion.id"
+                        :value="derivacion.id">
+                        {{ derivacion.description }}
+                    </option>
                 </select>
             </div>
 
@@ -111,13 +110,10 @@
                     <option value="" disabled>
                         Seleccione una articulacion
                     </option>
-                    <option value="0" selected>Niñez</option>
-					<option value="1" selected>Educación</option>
-                    <option value="2" selected>Salud</option>
-					<option value="3" selected>Género</option>
-                    <option value="4" selected>Discapacidad</option>
-					<option value="5" selected>Fortalecimiento Comunitario</option>
-                    <option value="6" selected>Habitat</option>
+                    <option class="capitalize" v-for="articulacion in tipoArticulaciones" :key="articulacion.id"
+                        :value="articulacion.id">
+                        {{ articulacion.description }}
+                    </option>
                 </select>
             </div>
 
@@ -185,7 +181,12 @@ export default defineComponent({
     props: {
         form: Object,
         sedes: Object,
-        motivo_consultas: Object
+        motivo_consultas: Object,
+        tipoTratamientos: Object,
+        origenDemandas: Object,
+        motivoBajas: Object,
+        tipoDerivaciones: Object,
+        tipoArticulaciones: Object,
     },
     components: {
         required,

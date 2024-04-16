@@ -41,9 +41,10 @@
                     <option disabled value="">
                         Seleccione estado de enfermedad cronica
                     </option>
-					<option value="0" selected>No</option>
-                    <option value="1" selected>Si, con tratamiento</option>
-                    <option value="2" selected>Si, sin tratamiento</option>
+					<option class="capitalize" v-for="enfermedad in tipoEnfermedades" :key="enfermedad.id"
+                        :value="enfermedad.id">
+                        {{ enfermedad.description }}
+                    </option>
                 </select>
             </div>
 
@@ -107,11 +108,10 @@
                     <option disabled value="">
                         Selecciones antecedente familiar
                     </option>
-					<option value="0" selected>No</option>
-                    <option value="1" selected>Madre con Antecedente</option>
-                    <option value="2" selected>Madre Actualmente</option>
-					<option value="3" selected>Padre con Antecedente</option>
-                    <option value="4" selected>Padre Actualmente</option>
+					<option class="capitalize" v-for="antecedente in familarAntecedentes" :key="antecedente.id"
+                        :value="antecedente.id">
+                        {{ antecedente.description }}
+                    </option>
                 </select>
             </div>
 
@@ -148,7 +148,9 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 export default defineComponent({
     props: {
         form: Object,
-        barrios: Object
+        barrios: Object,
+        familarAntecedentes: Object,
+        tipoEnfermedades: Object
     },
     components: {
         required,

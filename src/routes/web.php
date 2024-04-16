@@ -229,4 +229,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/mil-dias', [MilDiasController::class, 'index'])->name('mil-dias');
     Route::get('/mil-dias/create', [MilDiasController::class, 'create'])->name('mil-dias.create'); 
+    Route::post('/mil-dias/store', [MilDiasController::class, 'store'])->name('mil-dias.store');
 });

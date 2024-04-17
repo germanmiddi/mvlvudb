@@ -2,14 +2,24 @@
 
 namespace App\Imports;
 
+use App\Models\Manager\AcompanamientoCbj;
+use App\Models\Manager\ActividadCbj;
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
+use App\Models\Manager\CanalAtencion;
+use App\Models\Manager\CbjData;
+use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\EstadoCbj;
+use App\Models\Manager\Localidad;
 use App\Models\Manager\Person;
+use App\Models\Manager\Sede;
 use App\Models\Manager\SocialData;
+use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -29,122 +39,81 @@ class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
 
     public function model(array $row)
     {
+        DB::beginTransaction();
         ++$this->rows;  
         try {
-            $person = Person::updateOrCreate(
-                [
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
-                ],
-                [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['person_lastname'])) !== 'NULL' ? $row['person_lastname'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['person_name'])) !== 'NULL' ? $row['person_name'] : null,
-                    'fecha_nac' => $row['person_fecha_nac'],
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
-                ]
-            );
-
-            AditionalData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'cant_hijos' => $row['aditional_cant_hijos'],
-                    'situacion_conyugal_id' => $row['aditional_situacion_conyugal_id'] !== 'NULL' ? $row['aditional_situacion_conyugal_id'] : null
-                ]
-            );
-
-            SocialData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' && $row['social_tipo_ocupacion_id'] !== -1 ? $row['social_tipo_ocupacion_id'] : null,
-                    'cobertura_medica_id' => $row['social_cobertura_medica_id'] !== 'NULL' && $row['social_cobertura_medica_id'] !== -1 ? $row['social_cobertura_medica_id'] : null,
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['education_nivel_educativo_id'] !== 'NULL' && $row['education_nivel_educativo_id'] !== -1 ? $row['education_nivel_educativo_id'] : null,
-                    'estado_educativo_id' => $row['education_estado_educativo_id'] !== 'NULL' && $row['education_estado_educativo_id'] !== -1 ? $row['education_estado_educativo_id'] : null
-                ]
-            );
-
-            // address_data
-
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'calle' => strtoupper(str_replace(' ', '', $row['address_calle'])) !== 'NULL' ? $row['address_calle'] : null,
-                    'number' => strtoupper(str_replace(' ', '', $row['address_number'])) !== 'NULL' ? $row['address_number'] : null,
-                    'piso' => strtoupper(str_replace(' ', '', $row['address_piso'])) !== 'NULL' ? $row['address_piso'] : null,
-                    'dpto' => strtoupper(str_replace(' ', '', $row['address_dpto'])) !== 'NULL' ? $row['address_dpto'] : null,
-                    'pais_id' => $row['address_pais_id'] !== 'NULL' && $row['address_pais_id'] !== -1 ? $row['address_pais_id'] : null,
-                    'localidad_id' => $row['address_localidad_id'] !== 'NULL' && $row['address_localidad_id'] !== -1 ? $row['address_localidad_id'] : null,
-                    'barrio_id' => $row['address_barrio_id'] !== 'NULL' ? $row['address_barrio_id'] : null
-
-                ]
-            );
-
-            // contact_data
-
-            ContactData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'phone' => strtoupper(str_replace(' ', '', $row['contact_phone'])) !== 'NULL' ? $row['contact_phone'] : null,
-                    'email' => strtoupper(str_replace(' ', '', $row['contact_email'])) !== 'NULL' ? $row['contact_email'] : null
-                ]
-            );
-
-            if (Tramite::where('num_tramite_legacy', $row['tramite_num_tramite_legacy'])->first()) {
-                $tramite_data = Tramite::where('num_tramite_legacy', $row['tramite_num_tramite_legacy'])->update(
-                    [
-                        'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
-                        'canal_atencion_id' => $row['tramite_canal_atencion_id'],
-                        'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
-                        'dependencia_id' => $row['tramite_dependencia_id'],
-                        'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                        'estado_id' => $row['tramite_estado_id'],
-                        'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
-                    ]
-                );
-
-
-                ++$this->rowsDuplicados;
-                $this->registrosDuplidados .= ' - Tramite correspondiente a la Linea N° ' . strval($this->rows + 1) . ' del archivo ha sido cargado previamente. <br>';
-                //Log::info("Linea: " . strval($this->rows + 1) . " .El tramite N° " . $row['tramite_num_tramite_legacy'] . ", ha sido cargado previamente", ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
-            } else {
-                $tramite_data = Tramite::Create(
-                    [
-                        'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
-                        'canal_atencion_id' => $row['tramite_canal_atencion_id'],
-                        'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
-                        'dependencia_id' => $row['tramite_dependencia_id'],
-                        'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                        'estado_id' => $row['tramite_estado_id'],
-                        'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
-                    ]
-                );
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-
-                ++$this->rowsSuccess;
-                //Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportMayores:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+            // Verifico que existan los campos/columnas minimos para la carga de un adulto responsable
+            if(!isset($row['responsable_dni']) || !isset($row['responsable_nombre']) || !isset($row['responsable_apellido']) || !isset($row['responsable_fecha_nac'])){
+                 // Tramite de CBJ sin un adulto responsable valido/relacionado
+                $person = $this->setBeneficiario($row);
+            }else{
+                // Verifico que existan todos los minimos para la carga de un adulto responsable
+                if(($row['responsable_dni'] === 'NULL' || $row['responsable_dni'] === '')
+                    || ($row['responsable_nombre'] === 'NULL' || $row['responsable_nombre'] === '')
+                    || ($row['responsable_apellido'] === 'NULL' || $row['responsable_apellido'] === '')
+                    || ($row['responsable_fecha_nac'] === 'NULL' || $row['responsable_fecha_nac'] === '') ){
+                    // Tramite de CBJ sin un adulto responsable valido/relacionado
+                    $person = $this->setBeneficiario($row);
+                }else{
+                    // Tramite de CBJ con un adulto responsable valido/relacionado
+                    $beneficiario = $this->setBeneficiario($row);
+                    $person = $this->setResponsable($row);
+                }
             }
+            
+            $dependencia = TipoTramite::where('description', 'JUVENTUD')->first();
+            $canal = CanalAtencion::where('description', 'CENTRO BARRIAL DE JUVENTUD')->first();
+            $tipoTramite = TipoTramite::where('description', 'JUVENTUD')->first();
+            $sede = Sede::where('description', $row['cbj_sede'])->first()->id ?? null;
+
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($row['cbj_fecha'] ?? Carbon::now())),
+                    'observacion' => $row['cbj_observacion'] ?? null,
+
+                    'canal_atencion_id' => $canal['id'],
+                    'tipo_tramite_id' => $tipoTramite['id'],
+                    'dependencia_id' => $dependencia['dependencia_id'],
+                    'sede_id' => $sede,
+                    'estado_id' => 1, // Estado Abierto
+                ]
+            );
+
+            $estadoCbj = EstadoCbj::where('description', $row['cbj_estado'])->first()->id ?? null;
+            $comedor = Comedor::where('description', $row['cbj_comedor'])->first()->id ?? null;
+            $actividad = ActividadCbj::where('description', $row['cbj_actividad'])->first()->id ?? null;
+            $acompanamiento = AcompanamientoCbj::where('description', $row['cbj_acompanamiento'])->first()->id ?? null;
+
+            CbjData::Create(
+                [
+                    'anio_inicio' => $row['cbj_anio_inicio'] ?? date("Y ", strtotime(Carbon::now())),
+                    'estado_cbj_id' => $estadoCbj,
+                    'comedor_id' => $comedor,
+                    'actividad_cbj_id' => $actividad,
+                    'apoyo_escolar' => $row['cbj_apoyo_escolar'] == 'ACTIVO' ? true : ($row['cbj_apoyo_escolar'] == 'INACTIVO' ? false : null),
+                    'act_empleo' => $row['cbj_actividad_empleo'] == 'ACTIVO' ? true : ($row['cbj_actividad_empleo'] == 'INACTIVO' ? false : null),
+                    'acompanamiento_cbj_id'  => $acompanamiento,
+                    'aut_firmada' => $row['cbj_aut_firmada'] == 'SI' ? true : ($row['cbj_aut_firmada'] == 'NO' ? false : null),
+                    'aut_retirarse' => $row['cbj_aut_retirarse'] == 'SI' ? true : ($row['cbj_aut_retirarse'] == 'NO' ? false : null),
+                    'aut_uso_imagen' => $row['cbj_aut_uso_imagen'] == 'SI' ? true : ($row['cbj_aut_uso_imagen'] == 'NO' ? false : null),
+                    'certificado_escolar' => $row['cbj_certificado_escolar'] == 'SI' ? true : ($row['cbj_certificado_escolar'] == 'NO' ? false : null),
+                    'tramite_id' => $tramite_data['id'],
+
+                ]
+            );
+
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+            if (isset($beneficiario)) {
+                $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $row['tramite_num_tramite_legacy'], ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $this->rows, ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }
@@ -178,5 +147,73 @@ class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function setBeneficiario($row){
+        dd(Person::where('num_documento', $row['beneficiario_dni'])->get());
+        $person = Person::updateOrCreate(
+            [
+                'tipo_documento_id' => 1,
+                'num_documento' => $row['beneficiario_dni']
+            ],
+            [
+                'lastname' => strtoupper(str_replace(' ', '', $row['beneficiario_apellido'])) !== 'NULL' ? $row['beneficiario_apellido'] : null,
+                'name' => strtoupper(str_replace(' ', '', $row['beneficiario_nombre'])) !== 'NULL' ? $row['beneficiario_nombre'] : null,
+                'fecha_nac' => date("Y-m-d ", strtotime($row['beneficiario_fecha_nac'])),
+                'tipo_documento_id' => 1,
+                'num_documento' => $row['beneficiario_dni']
+            ]
+        );
+
+        $address = AddressData::updateOrCreate(
+            [
+                'person_id' => $person->id
+            ],
+            [
+                'calle' => strtoupper(str_replace(' ', '', $row['beneficiario_calle'])) !== 'NULL' ? $row['beneficiario_calle'] : null,
+                'number' => strtoupper(str_replace(' ', '', $row['beneficiario_numero'])) !== 'NULL' ? $row['beneficiario_numero'] : null,
+                'piso' => strtoupper(str_replace(' ', '', $row['beneficiario_piso'])) !== 'NULL' ? $row['beneficiario_piso'] : null,
+                'dpto' => strtoupper(str_replace(' ', '', $row['beneficiario_departamento'])) !== 'NULL' ? $row['beneficiario_departamento'] : null,
+            ]
+        );
+
+        if($row['beneficiario_localidad'] !== 'NULL' || $row['beneficiario_localidad'] !== '' || $row['beneficiario_localidad']){
+            $row['beneficiario_localidad'] = str_replace(' ', '', $row['beneficiario_localidad']);
+            $localidad_id = Localidad::select('id')->where('description', $row['beneficiario_localidad'])->first()->id ?? null;
+            if($localidad_id !== null){
+                $address->localidad_id = $localidad_id;
+                $address->save();
+            }
+        }
+        
+        ContactData::updateOrCreate(
+            [
+                'person_id' => $person->id
+            ],
+            [
+                'phone' => strtoupper(str_replace(' ', '', $row['beneficiario_telefono'])) !== 'NULL' ? $row['beneficiario_telefono'] : null,
+                'email' => strtoupper(str_replace(' ', '', $row['beneficiario_email'])) !== 'NULL' ? $row['beneficiario_email'] : null,
+            ]
+        );
+
+        return $person;
+    }
+
+    public function setResponsable($row){
+        $person = Person::updateOrCreate(
+            [
+                'tipo_documento_id' => 1,
+                'num_documento' => $row['responsable_dni']
+            ],
+            [
+                'lastname' => strtoupper(str_replace(' ', '', $row['responsable_apellido'])) !== 'NULL' ? $row['responsable_apellido'] : null,
+                'name' => strtoupper(str_replace(' ', '', $row['responsable_nombre'])) !== 'NULL' ? $row['responsable_nombre'] : null,
+                'fecha_nac' => date("Y-m-d ", strtotime($row['responsable_fecha_nac'])),
+                'tipo_documento_id' => 1,
+                'num_documento' => $row['responsable_dni']
+            ]
+        );
+
+        return $person;
     }
 }

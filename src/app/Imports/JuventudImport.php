@@ -39,81 +39,84 @@ class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
 
     public function model(array $row)
     {
-        DB::beginTransaction();
-        ++$this->rows;  
-        try {
-            // Verifico que existan los campos/columnas minimos para la carga de un adulto responsable
-            if(!isset($row['responsable_dni']) || !isset($row['responsable_nombre']) || !isset($row['responsable_apellido']) || !isset($row['responsable_fecha_nac'])){
-                 // Tramite de CBJ sin un adulto responsable valido/relacionado
-                $person = $this->setBeneficiario($row);
-            }else{
-                // Verifico que existan todos los minimos para la carga de un adulto responsable
-                if(($row['responsable_dni'] === 'NULL' || $row['responsable_dni'] === '')
-                    || ($row['responsable_nombre'] === 'NULL' || $row['responsable_nombre'] === '')
-                    || ($row['responsable_apellido'] === 'NULL' || $row['responsable_apellido'] === '')
-                    || ($row['responsable_fecha_nac'] === 'NULL' || $row['responsable_fecha_nac'] === '') ){
-                    // Tramite de CBJ sin un adulto responsable valido/relacionado
+        if($row['numero'] !== null || $row['numero'] !== ''){
+            DB::beginTransaction();
+            ++$this->rows;  
+            
+            try {
+                // Verifico que existan los campos/columnas minimos para la carga de un adulto responsable
+                if(!isset($row['responsable_dni']) || !isset($row['responsable_nombre']) || !isset($row['responsable_apellido']) || !isset($row['responsable_fecha_nac'])){
+                     // Tramite de CBJ sin un adulto responsable valido/relacionado
                     $person = $this->setBeneficiario($row);
                 }else{
-                    // Tramite de CBJ con un adulto responsable valido/relacionado
-                    $beneficiario = $this->setBeneficiario($row);
-                    $person = $this->setResponsable($row);
+                    // Verifico que existan todos los minimos para la carga de un adulto responsable
+                    if(($row['responsable_dni'] === 'NULL' || $row['responsable_dni'] === '')
+                        || ($row['responsable_nombre'] === 'NULL' || $row['responsable_nombre'] === '')
+                        || ($row['responsable_apellido'] === 'NULL' || $row['responsable_apellido'] === '')
+                        || ($row['responsable_fecha_nac'] === 'NULL' || $row['responsable_fecha_nac'] === '') ){
+                        // Tramite de CBJ sin un adulto responsable valido/relacionado
+                        $person = $this->setBeneficiario($row);
+                    }else{
+                        // Tramite de CBJ con un adulto responsable valido/relacionado
+                        $beneficiario = $this->setBeneficiario($row);
+                        $person = $this->setResponsable($row);
+                    }
                 }
+                
+                $dependencia = TipoTramite::where('description', 'JUVENTUD')->first();
+                $canal = CanalAtencion::where('description', 'CENTRO BARRIAL DE JUVENTUD')->first();
+                $tipoTramite = TipoTramite::where('description', 'JUVENTUD')->first();
+                $sede = Sede::where('description', $row['cbj_sede'])->first()->id ?? null;
+    
+                $tramite_data = Tramite::Create(
+                    [
+                        'fecha' => date("Y-m-d ", strtotime($row['cbj_fecha'] ?? Carbon::now())),
+                        'observacion' => $row['cbj_observacion'] ?? null,
+    
+                        'canal_atencion_id' => $canal['id'],
+                        'tipo_tramite_id' => $tipoTramite['id'],
+                        'dependencia_id' => $dependencia['dependencia_id'],
+                        'sede_id' => $sede,
+                        'estado_id' => 1, // Estado Abierto
+                    ]
+                );
+    
+                $estadoCbj = EstadoCbj::where('description', $row['cbj_estado'])->first()->id ?? null;
+                $comedor = Comedor::where('description', $row['cbj_comedor'])->first()->id ?? null;
+                $actividad = ActividadCbj::where('description', $row['cbj_actividad'])->first()->id ?? null;
+                $acompanamiento = AcompanamientoCbj::where('description', $row['cbj_acompanamiento'])->first()->id ?? null;
+    
+                CbjData::Create(
+                    [
+                        'anio_inicio' => $row['cbj_anio_inicio'] ?? date("Y ", strtotime(Carbon::now())),
+                        'estado_cbj_id' => $estadoCbj,
+                        'comedor_id' => $comedor,
+                        'actividad_cbj_id' => $actividad,
+                        'apoyo_escolar' => $row['cbj_apoyo_escolar'] == 'ACTIVO' ? 1 : ($row['cbj_apoyo_escolar'] == 'INACTIVO' ? 0 : null),
+                        'act_empleo' => $row['cbj_actividad_empleo'] == 'ACTIVO' ? 1 : ($row['cbj_actividad_empleo'] == 'INACTIVO' ? 0 : null),
+                        'acompanamiento_cbj_id'  => $acompanamiento,
+                        'aut_firmada' => $row['cbj_aut_firmada'] == 'SI' ? 1 : ($row['cbj_aut_firmada'] == 'NO' ? 0 : null),
+                        'aut_retirarse' => $row['cbj_aut_retirarse'] == 'SI' ? 1 :($row['cbj_aut_retirarse'] == 'NO' ? 0 : null),
+                        'aut_uso_imagen' => $row['cbj_aut_uso_imagen'] == 'SI' ? 1 : ($row['cbj_aut_uso_imagen'] == 'NO' ? 0 : null),
+                        'certificado_escolar' => $row['cbj_certificado_escolar'] == 'SI' ? 1 : ($row['cbj_certificado_escolar'] == 'NO' ? 0 : null),
+                        'tramite_id' => $tramite_data['id'],
+    
+                    ]
+                );
+    
+                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
+                if (isset($beneficiario)) {
+                    $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                }
+    
+                DB::commit();
+            } catch (\Throwable $th) {
+                dd($row['numero']. ' _ ' .$this->rows. ' _ ' .$th);
+                DB::rollBack();
+                ++$this->rowsError;
+                $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
+                Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $this->rows, ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             }
-            
-            $dependencia = TipoTramite::where('description', 'JUVENTUD')->first();
-            $canal = CanalAtencion::where('description', 'CENTRO BARRIAL DE JUVENTUD')->first();
-            $tipoTramite = TipoTramite::where('description', 'JUVENTUD')->first();
-            $sede = Sede::where('description', $row['cbj_sede'])->first()->id ?? null;
-
-            $tramite_data = Tramite::Create(
-                [
-                    'fecha' => date("Y-m-d ", strtotime($row['cbj_fecha'] ?? Carbon::now())),
-                    'observacion' => $row['cbj_observacion'] ?? null,
-
-                    'canal_atencion_id' => $canal['id'],
-                    'tipo_tramite_id' => $tipoTramite['id'],
-                    'dependencia_id' => $dependencia['dependencia_id'],
-                    'sede_id' => $sede,
-                    'estado_id' => 1, // Estado Abierto
-                ]
-            );
-
-            $estadoCbj = EstadoCbj::where('description', $row['cbj_estado'])->first()->id ?? null;
-            $comedor = Comedor::where('description', $row['cbj_comedor'])->first()->id ?? null;
-            $actividad = ActividadCbj::where('description', $row['cbj_actividad'])->first()->id ?? null;
-            $acompanamiento = AcompanamientoCbj::where('description', $row['cbj_acompanamiento'])->first()->id ?? null;
-
-            CbjData::Create(
-                [
-                    'anio_inicio' => $row['cbj_anio_inicio'] ?? date("Y ", strtotime(Carbon::now())),
-                    'estado_cbj_id' => $estadoCbj,
-                    'comedor_id' => $comedor,
-                    'actividad_cbj_id' => $actividad,
-                    'apoyo_escolar' => $row['cbj_apoyo_escolar'] == 'ACTIVO' ? true : ($row['cbj_apoyo_escolar'] == 'INACTIVO' ? false : null),
-                    'act_empleo' => $row['cbj_actividad_empleo'] == 'ACTIVO' ? true : ($row['cbj_actividad_empleo'] == 'INACTIVO' ? false : null),
-                    'acompanamiento_cbj_id'  => $acompanamiento,
-                    'aut_firmada' => $row['cbj_aut_firmada'] == 'SI' ? true : ($row['cbj_aut_firmada'] == 'NO' ? false : null),
-                    'aut_retirarse' => $row['cbj_aut_retirarse'] == 'SI' ? true : ($row['cbj_aut_retirarse'] == 'NO' ? false : null),
-                    'aut_uso_imagen' => $row['cbj_aut_uso_imagen'] == 'SI' ? true : ($row['cbj_aut_uso_imagen'] == 'NO' ? false : null),
-                    'certificado_escolar' => $row['cbj_certificado_escolar'] == 'SI' ? true : ($row['cbj_certificado_escolar'] == 'NO' ? false : null),
-                    'tramite_id' => $tramite_data['id'],
-
-                ]
-            );
-
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
-            if (isset($beneficiario)) {
-                $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-            }
-
-            DB::commit();
-        } catch (\Throwable $th) {
-            dd($th);
-            DB::rollBack();
-            ++$this->rowsError;
-            $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . $this->rows, ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }
@@ -150,7 +153,6 @@ class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
     }
 
     public function setBeneficiario($row){
-        dd(Person::where('num_documento', $row['beneficiario_dni'])->get());
         $person = Person::updateOrCreate(
             [
                 'tipo_documento_id' => 1,

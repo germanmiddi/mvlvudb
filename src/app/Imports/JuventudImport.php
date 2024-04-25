@@ -15,6 +15,7 @@ use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\Person;
+use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\TipoTramite;
@@ -197,6 +198,45 @@ class JuventudImport implements ToModel,WithHeadingRow, WithBatchInserts
                 'email' => strtoupper(str_replace(' ', '', $row['beneficiario_email'])) !== 'NULL' ? $row['beneficiario_email'] : null,
             ]
         );
+
+        // Salud
+        SaludData::updateOrCreate(
+            [
+                'person_id' => $person->id
+            ],
+            [
+                'apto_medico' => strtoupper($row['beneficiario_apto_medico']) == 'SI' ? 1 : (strtoupper($row['beneficiario_apto_medico']) == 'NO' ? 0 : null),
+                'fecha_apto_medico' => $row['beneficiario_apto_fecha_vencimiento'] !== '' ? date("Y-m-d ", strtotime($row['beneficiario_apto_fecha_vencimiento'])) : null,
+                'electrocardiograma' => strtoupper($row['beneficiario_electro']) == 'SI' ? 1 : (strtoupper($row['beneficiario_electro']) == 'NO' ? 0 : null),
+                'fecha_electrocardiograma' => $row['beneficiario_electro_fecha_vencimiento'] !== '' ? date("Y-m-d ", strtotime($row['beneficiario_electro_fecha_vencimiento'])) : null,
+            ]
+        );
+
+        /* // Educacion
+        EducationData::updateOrCreate(
+            [
+                'person_id' => $person->id
+            ],
+            [
+                'nivel_educativo_id' => $request['nivel_educativo_id'],
+                'estado_educativo_id' => $request['estado_educativo_id'],
+                'escuela_primaria_id' => $request['escuela_primaria_id'],
+                'escuela_secundaria_id' => $request['escuela_secundaria_id'],
+                'escuela_nocturna_id' => $request['escuela_nocturna_id'],
+                'orientacion_secundario_id' => $request['orientacion_secundario_id'],
+                'nivel_secundario_id' => $request['nivel_secundario_id'],
+                'turno_nocturno_id' => $request['turno_nocturno_id'],
+                'dependencia_nocturno_id' => $request['dependencia_nocturno_id'],
+                'terciario' => $request['terciario'],
+                'name_terciario' => $request['name_terciario'],
+                'carrera_terciario' => $request['carrera_terciario'],
+                'anio_terciario' => $request['anio_terciario'],
+                'universitario' => $request['universitario'],
+                'name_universitario' => $request['name_universitario'],
+                'carrera_universitario' => $request['carrera_universitario'],
+                'anio_universitario' => $request['anio_universitario']
+            ]
+        ); */
 
         return $person;
     }

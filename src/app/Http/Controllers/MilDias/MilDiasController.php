@@ -32,7 +32,7 @@ class MilDiasController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Manager/MilDias/Index',
+        return Inertia::render('Manager/CentrosBarriales/MilDias/Index',
         [
             //'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
             //'estados' => TramiteEstado::all(),
@@ -48,7 +48,7 @@ class MilDiasController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Manager/MilDias/Create',
+        return Inertia::render('Manager/CentrosBarriales/MilDias/Create',
             [
                 'sedes' => Sede::get(),
                 'barrios' => Barrio::all(),

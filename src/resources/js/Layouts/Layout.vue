@@ -118,7 +118,7 @@
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
 
-                    <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
+                    <!-- <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
                       </li>
@@ -127,7 +127,7 @@
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Juventud
                       </li>
-                    </a>
+                    </a> -->
                     <a :href="route('discapacidad')" v-show="store.userCan('DIS', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Discapacidad
@@ -178,11 +178,48 @@
 
               </Disclosure>
 
-              <a :href="route('mil-dias')">
-                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                  <CalendarDaysIcon class="w-5 h-5 mr-3" /> <label> Mil Dias</label>
-                </div>
-              </a>
+              <Disclosure as="div">
+                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                  <button class="flex items-center" ><NewspaperIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Centros Barriales</button>
+                </DisclosureButton>
+
+                <!-- Render a `ul` for the `DisclosurePanel` component -->
+                  <DisclosurePanel as="ul" class="pl-4">
+                    
+                    <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Centros Barriales Infancia
+                      </li>
+                    </a>
+                    <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Centros Barriales Juventud
+                      </li>
+                    </a>
+                    <a :href="route('inscripcionCBJ.create')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Inscripciones CBJ
+                      </li>
+                    </a>
+                    <a :href="route('listInscriptosCBJ')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Lista Inscriptos
+                      </li>
+                    </a>
+                    <a :href="route('mil-dias')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Gabinete
+                      </li>
+                    </a>
+                    <a :href="route('mil-dias')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Mil Dias
+                      </li>
+                    </a>
+                  </DisclosurePanel>
+
+              </Disclosure>
 
               <a :href="route('report')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
@@ -322,7 +359,7 @@
     TransitionRoot,
   } from '@headlessui/vue'
 
-  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon, DocumentChartBarIcon } from '@heroicons/vue/24/outline'
+  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon, DocumentChartBarIcon, NewspaperIcon } from '@heroicons/vue/24/outline'
   import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/vue/24/solid'
 
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
@@ -410,7 +447,8 @@
       Cog6ToothIcon,
       PowerIcon,
       UserGroupIcon,
-      CalendarDaysIcon
+      CalendarDaysIcon,
+      NewspaperIcon
       
     },
     setup() {

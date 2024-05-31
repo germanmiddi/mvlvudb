@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Manager\CentrosBarriales\InscripcionesCBJController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
@@ -230,4 +231,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mil-dias', [MilDiasController::class, 'index'])->name('mil-dias');
     Route::get('/mil-dias/create', [MilDiasController::class, 'create'])->name('mil-dias.create'); 
     Route::post('/mil-dias/store', [MilDiasController::class, 'store'])->name('mil-dias.store');
+
+    // Centros Barriales / Inscripciones
+    Route::get('/inscripcion-cbj', [InscripcionesCBJController::class, 'index'])->name('inscripcionCBJ');    
+    Route::get('/inscripcion-cbj/create', [InscripcionesCBJController::class, 'create'])->name('inscripcionCBJ.create');  
+    Route::get('/list-inscriptos-cbj', [InscripcionesCBJController::class, 'index_inscriptos'])->name('listInscriptosCBJ');    
 });

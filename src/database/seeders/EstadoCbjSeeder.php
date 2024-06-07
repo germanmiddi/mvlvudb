@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Manager\EstadoCbj;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class EstadoCbjSeeder extends Seeder
 {
@@ -17,12 +16,14 @@ class EstadoCbjSeeder extends Seeder
     {
         $data = [
             ['id' => 1, 'description' => 'Activo'],
-            ['id' => 2, 'description' => 'Inactivo'],
+            ['id' => 2, 'description' => 'Regular'],
             ['id' => 3, 'description' => 'Baja'],
             ['id' => 4, 'description' => 'Egreso'],
-            ['id' => 5, 'description' => 'Solo Comedor']
+            ['id' => 5, 'description' => 'No Participa']
         ];
 
-        DB::table('estado_cbj')->insert($data);
+        foreach ($data as $value) {
+            EstadoCbj::updateOrCreate(['id' => $value['id']],$value);
+        }
     }
 }

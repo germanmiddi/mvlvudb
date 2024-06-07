@@ -76,7 +76,7 @@
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nombre y Apellido
+                                        Apellido y Nombre
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -101,7 +101,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr>
+                                <!-- <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-l-8 border-green-500">
                                         Alberto Bernar
                                     </td>
@@ -171,22 +171,22 @@
                                             </transition>
                                         </Menu>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-l-8 border-green-500">
-                                        Ariel Cabrera
+                                </tr> -->
+                                <tr v-for="data in legajos" :key="data.id">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{data.person?.lastname ?? '-'}}, {{data.person?.name ?? '-'}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        35203598
+                                        {{data.person?.num_documento ?? '-'}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        Munro
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        24/05/2024
+                                        {{data.sede?.description ?? '-'}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">No Participa</span>
+                                        {{ store.fechaFormateada(data.created_at) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{{data.estadocbj?.description ?? '-'}}</span>
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
                                         <Menu as="div" class="inline-node">
@@ -204,10 +204,9 @@
                                                 leave-to-class="transform opacity-0 scale-95">
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-                                                    <div class="py-1 text-left">
-                                                        
+                                                    <div class="px-1 py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
+                                                        <a :href="route('detailsLegajoCB', data.id)"
                                                             class="block px-4 py-2 text-sm">
                                                             Detalle</a>
                                                         </MenuItem>
@@ -243,66 +242,6 @@
                                         </Menu>
                                     </td>
                                 </tr>
-
-                                <!-- <tr v-for="data in tramites.data" :key="data.tramite.id">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" :class="data.tramite.estado_id == 2 ? 'border-l-8 border-red-500' : data.tramite.estado_id == 3 ? 'border-l-8 border-purple-500' : 'border-l-8 border-green-500' ">
-                                        {{ data.tramite.id }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ store.dateFormateada(data.tramite.fecha) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div v-html=" namePersons(data.tramite.persons) "></div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div v-html=" dniPersons(data.tramite.persons) "></div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ data.tramite.tipo_tramite.description }}
-                                    </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
-                                        <PaperClipIcon title="Posee archivos" v-if="data.archivos.length > 0" class="w-7 h-7 mr-2 inline-flex  bg-gray-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"/>
-                                        <Menu as="div" class="inline-node">
-                                            <div>
-                                                <MenuButton class="btn-blue h-7">
-                                                    <EllipsisVerticalIcon name="options-vertical"
-                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
-                                                </MenuButton>
-                                            </div>
-                                            <transition enter-active-class="transition ease-out duration-100"
-                                                enter-from-class="transform opacity-0 scale-95"
-                                                enter-to-class="transform opacity-100 scale-100"
-                                                leave-active-class="transition ease-in duration-75"
-                                                leave-from-class="transform opacity-100 scale-100"
-                                                leave-to-class="transform opacity-0 scale-95">
-                                                <MenuItems
-                                                    class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-                                                    <div class="py-1 text-left">
-                                                        
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route('discapacidad.edit', data.tramite.id)"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Editar</a>
-                                                        </MenuItem>
-
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route('detail.view', data.tramite.id)"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Detalle</a>
-                                                        </MenuItem>
-                                                        
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Imprimir</a>
-                                                        </MenuItem>
-                                                    </div>
-
-                                                </MenuItems>
-                                            </transition>
-                                        </Menu>
-                                    </td>
-                                </tr> -->
                             </tbody>
                         </table>
                         <hr>
@@ -352,7 +291,7 @@ import store from '@/store.js'
 export default {
     props: {
         toast: Object,
-        tiposTramite: Object,
+        legajos: Object,
         estados: Object,
         users: Object
     },

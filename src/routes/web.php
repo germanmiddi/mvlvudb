@@ -235,5 +235,7 @@ Route::middleware(['auth'])->group(function () {
     // Centros Barriales / Inscripciones
     Route::get('/inscripcion-cbj', [InscripcionesCBJController::class, 'index'])->name('inscripcionCBJ');    
     Route::get('/inscripcion-cbj/create', [InscripcionesCBJController::class, 'create'])->name('inscripcionCBJ.create');  
-    Route::get('/list-inscriptos-cbj', [InscripcionesCBJController::class, 'index_inscriptos'])->name('listInscriptosCBJ');    
+    Route::post('/inscripcion-cbj/store', [InscripcionesCBJController::class, 'store'])->name('inscripcionCBJ.store');   
+    Route::get('/list-inscriptos-cbj', [InscripcionesCBJController::class, 'index_inscriptos'])->name('listInscriptosCBJ'); 
+    Route::get('/details-cb/{id}', [InscripcionesCBJController::class, 'view_inscripto_cb'])->name('detailsLegajoCB');    
 });

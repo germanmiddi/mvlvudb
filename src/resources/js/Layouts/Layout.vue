@@ -197,7 +197,7 @@
                         Centros Barriales Juventud
                       </li>
                     </a>
-                    <a :href="route('inscripcionCBJ.create')">
+                    <a :href="route('inscripcionCBJ')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscripciones CBJ
                       </li>

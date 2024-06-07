@@ -3,18 +3,18 @@
 		<!-- Page title & actions -->
 		<div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
 			<div class="flex-1 min-w-0 flex items-center">
-				<!-- <a class="btn-blue" :href="route('inscripcionCBJ')">
+				<a class="btn-blue" :href="route('inscripcionCBJ')">
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
-				</a> -->
+				</a>
 				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-					Nueva Inscripcion CBJ
+					Nueva Inscripción CBJ
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
 				<button
 					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-					:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
-					@click="submit" :disabled="btnGuardar">
+					:class="btnGuardar || input_disable ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+					@click="submit" :disabled="btnGuardar || input_disable">
 					Guardar
 				</button>
 			</div>
@@ -22,23 +22,54 @@
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
-		<div v-if="v$.form.$error" class="px-4 mt-6 sm:px-6 lg:px-8">
-			<div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
-				role="alert">
-				<p class="font-bold">Campos requeridos</p>
-				<p v-for="error of v$.tramites.$errors" :key="error.$uid">
-					{{ error.$message }}
-				</p>
-				<p v-for="error of v$.form.$errors" :key="error.$uid">
-					{{ error.$message }}
-				</p>
-			</div>
-		</div>
-
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
-			<form action="#" method="POST" enctype="multipart/form-data">
+			<div class="border-b border-gray-200 dark:border-gray-700">
+				<ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 1" :class="this.tabs === 1 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Datos Inscripción
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 2" :class="this.tabs === 2 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Dirección
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 3" :class="this.tabs === 3 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Salud
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 4" :class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Autorizaciones
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 5" :class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Educación
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Adulto Responsable
+						</a>
+					</li>
+				</ul>
+			</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+			<div v-if="v$.form.$error" class="border-b border-gray-200 dark:border-gray-700 text-xs">
+				<div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+					role="alert">
+					<p class="font-bold text-md mb-2">Campos requeridos </p>
+					<p v-for="error of v$.form.$errors" :key="error.$uid">
+						{{error.$message}}
+					</p>
+				</div>
+			</div>
+
+			<form action="#" method="POST" enctype="multipart/form-data">
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 1">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
@@ -52,9 +83,9 @@
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+								<select v-model="form.person.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
 									autocomplete="off"
-									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:class="v$.form.person.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
@@ -65,7 +96,7 @@
 										{{ tipoDocumento.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.person.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
@@ -73,35 +104,35 @@
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
 								<div class="relative">
-									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()" :class="v$.form.num_documento.$error ? 'border-red-500' : ''"
+									<input type="text" v-model="form.person.num_documento" @keyup.enter="getPerson()" :class="v$.form.person.num_documento.$error ? 'border-red-500' : ''"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 									<a @click="getPerson()" 
 										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
 										Verificar
 									</a>
 								</div>
-								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.person.num_documento.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
+								<input v-model="form.person.name" type="text" name="name" id="name" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:class="v$.form.person.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable" />
-								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.person.name.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
+								<input v-model="form.person.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:class="v$.form.person.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable" />
-								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.person.lastname.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
@@ -110,24 +141,24 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:style="v$.form.person.fecha_nac.$error ? datepickerStyle : ''" v-model="form.person.fecha_nac"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
-								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.person.fecha_nac.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
+								<input v-model="form.contact.email" type="text" name="email" id="email" autocomplete="email"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
+								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
+								<input v-model="form.contact.phone" type="text" name="phone" id="phone" autocomplete="off"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -138,11 +169,11 @@
 				</div>
 
 				<!-- DATOS INSCRIPCION -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 1">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
 							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Datos de Inscripcion
+								Datos de Inscripción
 							</h3>
 						</div>
 
@@ -151,20 +182,22 @@
 								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
 								<Datepicker
 									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-									v-model="form.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:formatinscripcionCBJ="format" :style="v$.form.fecha.$error ? datepickerStyle : ''">
+									v-model="form.inscripcion.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+									:formatinscripcionCBJ="format" :style="v$.form.inscripcion.fecha.$error ? datepickerStyle : ''"
+									:disabled="input_disable">
 								</Datepicker>
-								<span v-if="v$.form.fecha.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
 									Atención</label>
-								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
+								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion" name="canal_atencion"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-									:class="v$.form.canal_atencion_id.$error ? 'border-red-500' : ''">
+									:class="v$.form.inscripcion.canal_atencion_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable">
 									<option value="" disabled>
 										Selecciones un canal de atencion
 									</option>
@@ -173,30 +206,15 @@
 										{{ canalAtencion.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.inscripcion.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
-						
-							<!-- <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Tramite</label>
-								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
-									autocomplete="off"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-									:class="v$.tramites.$error ? 'border-red-500' : ''">
-									<option value="" disabled>
-										Selecciones un tipo de tramite
-									</option>
-									<option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id"
-										:value="tipoTramite.id">
-										{{ tipoTramite.description }}
-									</option>
-								</select>
-							</div> -->
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+								<select v-model="form.inscripcion.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+									:disabled="input_disable"
+									:class="v$.form.inscripcion.sede_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una sede</option>
 									<option v-for="sede in sedes" :key="sede.id" :value="sede.id">{{
@@ -204,6 +222,8 @@
 									}}</option>
 
 								</select>
+								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
@@ -211,174 +231,26 @@
 									inicio CBJ</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.anio_inicio" auto-apply year-picker>
+									v-model="form.inscripcion.anio_inicio" auto-apply year-picker
+									:disabled="input_disable">
 								</Datepicker>
 							</div>
 
-							<!-- <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="estado_cbj_id" class="block text-sm font-medium text-gray-700">Estado en
-									CBJ</label>
-								<select v-model="form.estado_cbj_id" id="estado_cbj_id" name="estado_cbj_id"
-									autocomplete="estado_cbj_id"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>Seleccione un estado</option>
-									<option value="activo">Activo</option>
-									<option valur="solo_vacaciones" disabled>Solo en vacaciones</option>
-									<option value="regular" disabled>Regular</option>
-									<option value="no_participa" disabled>No Participa</option>
-									<option value="Baja" disabled>Baja</option>
-								</select>
-							</div> -->
-
-							<div class="col-span-12 xl:col-span-6">
+							<div class="col-span-12 xl:col-span-12">
 								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
-									<textarea v-model="form.observacion" id="observacion" name="observacion" rows="1"
+									<textarea v-model="form.inscripcion.observacion" id="observacion" name="observacion" rows="3" :disabled="input_disable"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
-										:class="v$.tramites.$error ? 'border-red-500' : ''" />
+										:class="input_disable ? bg_disable : ''"/>
 								</div>
-								<p class="mt-2 text-sm text-gray-500">
-									Ingrese información adicional del tramite.
-								</p>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Datos del Titular
-								</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showBenef
-										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
-										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
-										">
-									{{ this.textBtnBenef }}
-								</button>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Documento</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
-									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un tipo de documento
-									</option>
-									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
-										:value="tipoDocumento.id">
-										{{ tipoDocumento.description }}
-									</option>
-								</select>
-								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<div class="relative">
-									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()" :class="v$.form.num_documento.$error ? 'border-red-500' : ''"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-									<a @click="getPerson()" 
-										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
-										Verificar
-									</a>
-								</div>
-								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable" />
-								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable" />
-								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<Datepicker
-									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
-								</Datepicker>
-								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-						</div>
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="codigo" class="block text-sm font-medium text-gray-700">Nro CUD</label>
-								<input v-model="form.codigo" type="text" name="codigo" id="codigo" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="diagnostico" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
-								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-						</div>
-					</div>
-				</div> -->
-
 				<!-- DOMICILIO -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 2">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
@@ -387,18 +259,11 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="card_direccion=!card_direccion"
-									class=" bg-transparent relative inline-flex items-center px-2 py-2 shadow-sm text-xs font-medium rounded-md border-red-500"
-									:class="card_direccion
-										? 'bg-transparent text-red-900 hover:bg-red-300 hover:text-white border-red-500'
-										: 'bg-transparent text-green-900 hover:bg-green-300 hover:text-white border-green-500'
-										">
-									<ArrowsPointingInIcon class="h-6 w-6 mr-2"></ArrowsPointingInIcon> {{card_direccion ? 'Ocultar' : 'Agregar'}}
-								</button>
+								
 							</div>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6" v-show="card_direccion">
+						<!-- <div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id" autocomplete="off"
@@ -440,158 +305,12 @@
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
-
-				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Situación Social
-							</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
-								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un pais
-									</option>
-									<option v-for="pais in paises" :key="pais.id" :value="pais.id"
-										:bind:select="pais.id == form.pais_id">
-										{{ pais.description }}
-									</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación
-									Conyugal</label>
-								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
-									name="situacion_conyugal_id" autocomplete="off" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones una situacion conyugal
-									</option>
-									<option v-for="situacionConyugal in situacionesConyugal" :key="situacionConyugal.id"
-										:value="situacionConyugal.id" :bind:select="situacionConyugal.id ==
-											form.situacion_conyugal_id
-											">
-										{{ situacionConyugal.description }}
-									</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-4">
-								<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad
-									Hijos</label>
-								<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Estudios
-							</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
-									educativo en curso</label>
-								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un nivel educativo
-									</option>
-									<option v-for="nivelEducativo in nivelesEducativo" :key="nivelEducativo.id"
-										:value="nivelEducativo.id" :bind:select="nivelEducativo.id ==
-											form.nivel_educativo_id
-											">
-										{{ nivelEducativo.description }}
-									</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
-									educativo alcanzado</label>
-								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="off" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un estado educativo
-									</option>
-									<option v-for="estadoEducativo in estadosEducativo" :key="estadoEducativo.id"
-										:value="estadoEducativo.id" :bind:select="estadoEducativo.id ==
-											form.estado_educativo_id
-											">
-										{{ estadoEducativo.description }}
-									</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">
-								Situación Laboral
-							</h3>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_ocupacion_id"
-									class="block text-sm font-medium text-gray-700">Ocupación</label>
-								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones una ocupacion
-									</option>
-									<option v-for="tipoOcupacion in tiposOcupacion" :key="tipoOcupacion.id"
-										:value="tipoOcupacion.id" :bind:select="tipoOcupacion.id ==
-											form.tipo_ocupacion_id
-											">
-										{{ tipoOcupacion.description }}
-									</option>
-								</select>
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
-									Jubilación / Pensión</label>
-								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un tipo de pension
-									</option>
-									<option v-for="tipoPension in tiposPension" :key="tipoPension.id"
-										:value="tipoPension.id" :bind:select="tipoPension.id ==
-											form.tipo_pension_id
-											">
-										{{ tipoPension.description }}
-									</option>
-								</select>
-							</div>
-						</div>
-					</div>
-				</div> -->	
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				
+				<!-- SALUD -->
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 3">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
@@ -600,18 +319,11 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="card_salud=!card_salud"
-									class=" bg-transparent relative inline-flex items-center px-2 py-2 shadow-sm text-xs font-medium rounded-md border-red-500"
-									:class="card_salud
-										? 'bg-transparent text-red-900 hover:bg-red-300 hover:text-white border-red-500'
-										: 'bg-transparent text-green-900 hover:bg-green-300 hover:text-white border-green-500'
-										">
-									<ArrowsPointingInIcon class="h-6 w-6 mr-2"></ArrowsPointingInIcon>{{card_salud ? 'Ocultar' : 'Agregar'}}
-								</button>
+								
 							</div>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6" v-show="card_salud">
+						<!-- <div class="grid grid-cols-12 gap-6" >
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
 								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Apto Fisico</label>
 									<Switch v-model="form.apto_fisico"
@@ -677,275 +389,20 @@
 												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
 									</Switch>   
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
+				
+				<!-- AUTORIZACIONES -->
+				<TabAutorizaciones 	v-if="this.tabs === 4" 
+									:form="form.autorizaciones" 
+									:input_disable="input_disable"
+									:comedores="comedores"
+									@submit="handleAutorizaciones">
+				</TabAutorizaciones>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Autorizaciones
-								</h3>
-							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="card_autorizacion=!card_autorizacion"
-									class=" bg-transparent relative inline-flex items-center px-2 py-2 shadow-sm text-xs font-medium rounded-md border-red-500"
-									:class="card_autorizacion
-										? 'bg-transparent text-red-900 hover:bg-red-300 hover:text-white border-red-500'
-										: 'bg-transparent text-green-900 hover:bg-green-300 hover:text-white border-green-500'
-										">
-									<ArrowsPointingInIcon class="h-6 w-6 mr-2"></ArrowsPointingInIcon>{{card_autorizacion ? 'Ocultar' : 'Agregar'}}
-								</button>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6" v-show="card_autorizacion">
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Apoyo Escolar</label>
-									<Switch v-model="form.apoyo_escolar"
-											@click="form.apoyo_escolar = !form.apoyo_escolar"
-											:class="form.apoyo_escolar ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.apoyo_escolar ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Act. por Area Empleo</label>
-									<Switch v-model="form.act_empleo"
-											@click="form.act_empleo = !form.act_empleo"
-											:class="form.act_empleo ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.act_empleo ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Firmada</label>
-									<Switch v-model="form.aut_firmada"
-											@click="form.aut_firmada = !form.aut_firmada"
-											:class="form.aut_firmada ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.aut_firmada ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Retirarse</label>
-									<Switch v-model="form.aut_retirarse"
-											@click="form.aut_retirarse = !form.aut_retirarse"
-											:class="form.aut_retirarse ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.aut_retirarse ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Uso Imagen</label>
-									<Switch v-model="form.aut_imagen"
-											@click="form.aut_imagen = !form.aut_imagen"
-											:class="form.aut_imagen ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.aut_imagen ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Cert. escolar</label>
-									<Switch v-model="form.cert_escolar"
-											@click="form.cert_escolar = !form.cert_escolar"
-											:class="form.cert_escolar ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.cert_escolar ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Inscripcion Comedor</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
-									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un comedor
-									</option>
-									<option v-for="comedor in comedores" :key="comedor.id" :value="comedor.id">{{
-										comedor.description
-									}}</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="actividad_cbj" class="block text-sm font-medium text-gray-700">Actividad CBJ</label>
-								<div class="flex items-center mb-2">
-									<select v-model="actividadSelect" id="actividad_cbj" name="actividad_cbj"
-										autocomplete="off"
-										:disabled="input_disable"
-										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-										<option value="" disabled>
-											Seleccione un tipo de documento
-										</option>
-										<option v-for="actividad in actividadesCbj" :key="actividad.id"
-											:value="actividad ">
-											{{ actividad.description }}
-										</option>
-									</select>
-									<a class="ml-2 items-center" @click="addActividad"><PlusCircleIcon class="h-8 w-8 text-green-700"></PlusCircleIcon></a>
-								</div>
-								<span  v-for="(act, index) in this.actividadesSelected" :key="index" 
-									class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2 mt-2">
-									{{act.description}} <TrashIcon @click="removeActividad(act)" class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
-								</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="aconpanamiento_id" class="block text-sm font-medium text-gray-700">Acompañamiento CBJ</label>
-								<div class="flex items-center mb-2">
-									<select v-model="acompanamientoSelect" id="aconpanamiento_id" name="aconpanamiento_id"
-										autocomplete="off"
-										
-										:disabled="input_disable"
-										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-										<option value="" disabled>
-											Seleccione un tipo de documento
-										</option>
-										<option v-for="acompanamiento in acompanamientosCbj" :key="acompanamiento.id"
-											:value="acompanamiento">
-											{{ acompanamiento.description }}
-										</option>
-									</select>
-									<a class="ml-2 items-center" @click="addAcompanamiento"><PlusCircleIcon class="h-8 w-8 text-green-700"></PlusCircleIcon></a>
-								</div>
-								<span  v-for="(act, index) in this.acompanamientosSelected" :key="index" 
-									class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2 mt-2">
-									{{act.description}} <TrashIcon @click="removeAcompanamiento(act)" class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
-								</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="taller_id" class="block text-sm font-medium text-gray-700">Talleres</label>
-								<div class="flex items-center mb-2">
-									<select v-model="tallerSelect" id="taller_id" name="taller_id"
-										autocomplete="off"
-										
-										:disabled="input_disable"
-										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-										<option value="" disabled>
-											Seleccione un taller
-										</option>
-										<option value="Ajedrez">Ajedrez</option>
-										<option value="Arte">Arte</option>
-										<option value="Huerta">Huerta</option>
-										<option value="Ensamble_musical">Ensamble musical</option>
-										<option value="Indumentaria">Indumentaria</option>
-										<option value="Futbol">Futbol</option>
-										<option value="Percusion">Percusion</option>
-										<option value="Tecnologia">Tecnologia</option>
-										<option value="Artesanias">Artesanias</option>
-										<option value="Carpinteria">Carpinteria</option>
-										<option value="Manicuria">Manicuria</option>
-										<option value="Programacion">Programacion</option>
-										<option value="Panaderia">Panaderia</option>
-										<option value="Coreografia">Coreografia</option>
-										<option value="Cocina">Cocina</option>
-										<option value="Barberia">Barberia</option>
-										<option value="Karate">Karate</option>
-										<option value="Ping_Pong">Ping Pong</option>
-										<option value="Musica">Musica</option>
-										<option value="Reparacion_de_PC">Reparacion de PC</option>
-										<option value="Otro">Otro</option>
-									</select>
-									<a class="ml-2 items-center" @click="addTaller"><PlusCircleIcon class="h-8 w-8 text-green-700"></PlusCircleIcon></a>
-								</div>
-								<span  v-for="(act, index) in this.talleresSelected" :key="index" 
-									class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2 mt-2">
-									{{act}} <TrashIcon @click="removeTaller(act)" class="h-5 w-5 text-red-700 ml-2"></TrashIcon>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="!input_disable">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Archivos Adjuntos
-								</h3>
-							</div>
-						</div>
-
-						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-8">
-								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
-								<div class="flex">
-									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
-										autocomplete="off"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
-										autocomplete="off"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
-										<div class="flex-shrink-0">
-											<button @click="addFile()" type="button"
-											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
-											Agregar Archivo
-										</button>
-									</div>
-								</div>
-								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen, office o PDF.</p>
-							</div>
-							<div class="col-span-12 sm:col-span-12">
-								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12">
-									<thead class="bg-gray-50">
-										<tr>
-											<th scope="col"
-												class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/6">
-												Descripcion
-											</th>
-	
-											<th scope="col"
-												class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-2/6">
-												Accion
-											</th>
-										</tr>
-									</thead>
-									<tbody class="bg-white divide-y divide-gray-200">
-										<tr v-for="(file, index) in files" :key="index">
-											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{{ file.description }}
-											</td>
-											<td class="px-6 py-4 text-center text-sm font-medium">
-												
-												<button type="button"
-													class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white"
-													@click="deleteFile(index)">
-													Eliminar
-												</button>
-												<button type="button"
-													class="ml-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-													@click="viewFile(file.file)">
-													Ver/Descargar
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div> -->
-
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<!-- Educacion -->
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 5">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
@@ -954,18 +411,11 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="card_educacion=!card_educacion"
-									class=" bg-transparent relative inline-flex items-center px-2 py-2 shadow-sm text-xs font-medium rounded-md border-red-500"
-									:class="card_educacion
-										? 'bg-transparent text-red-900 hover:bg-red-300 hover:text-white border-red-500'
-										: 'bg-transparent text-green-900 hover:bg-green-300 hover:text-white border-green-500'
-										">
-									<ArrowsPointingInIcon class="h-6 w-6 mr-2"></ArrowsPointingInIcon>{{card_educacion ? 'Ocultar' : 'Agregar'}}
-								</button>
+								
 							</div>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6" v-show="card_educacion">
+						<!-- <div class="grid grid-cols-12 gap-6">
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Situación Educativa</label>
@@ -1092,19 +542,19 @@
 								</label>
 								<div class="mt-1">
 									<textarea v-model="form.observacion_educacion" id="observacion" name="observacion" rows="1"
-										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
-										:class="v$.tramites.$error ? 'border-red-500' : ''" />
+										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"/>
 								</div>
 								<p class="mt-2 text-sm text-gray-500">
 									Ingrese información adicional del tramite.
 								</p>
 							</div>
 
-						</div>
+						</div> -->
 					</div>
 				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+				<!-- ADULTO RESPONSABLE -->
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 6">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
@@ -1113,18 +563,10 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="card_adulto=!card_adulto"
-									class=" bg-transparent relative inline-flex items-center px-2 py-2 shadow-sm text-xs font-medium rounded-md border-red-500"
-									:class="card_adulto
-										? 'bg-transparent text-red-900 hover:bg-red-300 hover:text-white border-red-500'
-										: 'bg-transparent text-green-900 hover:bg-green-300 hover:text-white border-green-500'
-										">
-									<ArrowsPointingInIcon class="h-6 w-6 mr-2"></ArrowsPointingInIcon>{{card_adulto ? 'Ocultar' : 'Agregar'}}
-								</button>
 							</div>
 						</div>
 
-						<div class="grid grid-cols-12 gap-6" v-show="card_adulto">
+						<!-- <div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
@@ -1223,29 +665,28 @@
 								</label>
 								<div class="mt-1">
 									<textarea v-model="form.observacion_adulto" id="observacion" name="observacion" rows="1"
-										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
-										:class="v$.tramites.$error ? 'border-red-500' : ''" />
+										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"/>
 								</div>
 								<p class="mt-2 text-sm text-gray-500">
 									Ingrese información adicional del tramite.
 								</p>
 							</div>
 
-						</div>
+						</div> -->
 					</div>
 				</div>
 
 			</form>
 		</div>
 		
-		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
+		<!-- <div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
 			class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
 			:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
 			:disabled="btnGuardar || input_disable">
 			Guardar
 			</button>
-		</div>
+		</div> -->
 	</main>
 </template>
 
@@ -1255,28 +696,15 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, minLength } from '@vuelidate/validators'
 
 import { ArrowLeftCircleIcon, ArrowsPointingInIcon ,PlusCircleIcon, TrashIcon} from "@heroicons/vue/24/outline";
-import GoogleMap from "@/Layouts/Components/GoogleMap.vue";
-import VueGoogleAutocomplete from "vue-google-autocomplete";
-import FormBeneficiario from "@/Layouts/Components/Tramites/FormBeneficiario.vue";
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import {
-	Listbox,
-	ListboxButton,
-	ListboxOptions,
-	ListboxOption,
-	Switch
-} from "@headlessui/vue";
+import { Switch } from "@headlessui/vue";
 import store from '@/store.js'
 
-const people = [
-	{ id: 1, name: "Durward Reynolds", unavailable: false },
-	{ id: 2, name: "Kenton Towne", unavailable: false },
-	{ id: 3, name: "Therese Wunsch", unavailable: false },
-	{ id: 4, name: "Benedict Kessler", unavailable: true },
-	{ id: 5, name: "Katelyn Rohan", unavailable: false },
-];
+// Tabs
+import TabAutorizaciones from './Components/TabAutorizaciones.vue';
+
 
 export default {
 	props: {
@@ -1302,16 +730,8 @@ export default {
 	},
 	components: {
 		ArrowLeftCircleIcon,
-		GoogleMap,
-		VueGoogleAutocomplete,
 		Toast,
 		Datepicker,
-		FormBeneficiario,
-		Listbox,
-		ListboxButton,
-		ListboxOptions,
-		ListboxOption,
-		people,
 		required,
 		useVuelidate,
 		helpers,
@@ -1320,49 +740,25 @@ export default {
 		Switch,
 		ArrowsPointingInIcon,
 		PlusCircleIcon,
-		TrashIcon
+		TrashIcon,
+		// Tabs
+		TabAutorizaciones,
 	},
 	data() {
 		return {
-			form: {},
-			form_temp: {},
-			form_google: "",
-			form_beneficiario: {},
-			address: "",
-			/* BENEFICIARIO */
-			textBtnBenef: "Agregar Beneficiario",
-			showBenef: false,
-			beneficiario_control: false,
-			/* MAPA */
-			textMap: "Ver Mapa",
-			showMap: false,
+			tabs: 1,
+			// Datos formulario
+			form: {
+				person:{},
+				contact: {},
+				inscripcion: {},
+				autorizaciones: {}
+			},
+			
 			/* MENSAJERIA */
 			toastMessage: "",
 			labelType: "info",
-			message: "",
 			showToast: false,
-			/* CARGA MASIVA DE FILE */
-			file: "",
-			file_tmp: {},
-			files: [],
-			selectedFile: null,
-			tramites: [],
-			selectPlanes: [],
-			btnGuardar: false,
-			datepickerStyle: {
-				color: 'red',
-				border: '1px solid red',
-			},
-			bg_disable: 'bg-gray-100',
-			input_disable: false,
-			fileView: '',
-			openModal: false,
-			fileInvalid: false,
-			card_direccion:false,
-			card_salud:false,
-			card_autorizacion:false,
-			card_educacion:false,
-			card_adulto:false,
 
 			// Multiselect
 			actividadSelect: '',
@@ -1370,21 +766,35 @@ export default {
 			acompanamientoSelect: '',
             acompanamientosSelected: [],
 			tallerSelect: '',
-            talleresSelected: []
+            talleresSelected: [],
+			
+			// Disabled - Enabled
+			bg_disable: 'bg-gray-100', 
+			btnGuardar: false,
+			input_disable: true,
+			datepickerStyle: {
+				color: 'red',
+				border: '1px solid red',
+			},
 		};
 	},
 	validations() {
 		return {
-			tramites: { required: helpers.withMessage('Debe seleccionar minimo un tramite', required) },
+			// Validaciones de campos obligatorios
 			form: {
-				fecha: { required: helpers.withMessage('El campo Fecha es Obligatorio', required) },
-				canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
-				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento es Obligatorio', required) },
-				num_documento: { required: helpers.withMessage('El campo N° de documento es Obligatorio', required) }, // Matches this.contact.email
-				name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
-				lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
-				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
-			},
+				person: {
+					tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento es Obligatorio', required) },
+					num_documento: { required: helpers.withMessage('El campo N° de documento es Obligatorio', required) }, // Matches this.contact.email
+					name: { required: helpers.withMessage('El campo Nombre es Obligatorio', required) },
+					lastname: { required: helpers.withMessage('El campo Apellido es Obligatorio', required) },
+					fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
+				},
+				inscripcion: {
+					fecha: { required: helpers.withMessage('El campo Fecha de Inscripcion es Obligatorio', required) },
+					canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
+					sede_id: { required: helpers.withMessage('El campo Sede es Obligatorio', required) },
+				}
+			}
 		}
 	},
 	setup() {
@@ -1404,16 +814,83 @@ export default {
 		closeModal() {
             this.openModal = false
         },
-		viewFile(data) {
-		},
 		clearMessage() {
 			this.toastMessage = "";
 		},
+		clearFormData() {
+			this.form = {
+				person: {},
+				contact: {},
+				inscripcion: {},
+				autorizaciones: {}
+			}
+		},
 		async submit() {
+			// VALIDACION CAMPOS OBLIGATORIOS
+			const result = await this.v$.$validate()
+			if(!result){
+				return
+			}
+
+			// RUTA
+			//this.btnGuardar = true
+			let rt = route("inscripcionCBJ.store");
+
+			// FORMATEO DE FECHAS
+			this.form.fecha = this.form.fecha
+				? new Date(this.form.fecha).toISOString()
+				: null;
+			this.form.fecha_nac = this.form.fecha_nac
+				? new Date(this.form.fecha_nac).toISOString()
+				: null;
+
+			// AXIOS STORE
+			try {
+				const response = await axios.post(rt, this.form);
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.btnGuardar = false
+					setTimeout(() => {
+						window.location.href = "/inscripcion-cbj";
+					}, 3100);
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+				}
+			} catch (error) {
+				this.labelType = "danger";
+				this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+			}
 		},
 		async getPerson() {
+			const get = `${route('persons.getPersonDni', this.form.person.num_documento)}`
+			const response = await fetch(get, { method: 'GET' })
+			let data = await response.json()
+			if (!data.data.length == 0) {
+				this.labelType = "success";
+				this.toastMessage = "El DNI indicado se encuentra registrado";
+
+				data = data.data[0].person
+				/// Recuperar datos.
+				this.form.person.tipo_documento_id = data.tipo_documento_id
+				this.form.person.fecha_nac = data.fecha_nac
+				this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
+				this.form.person.name = data.name
+				this.form.person.lastname = data.lastname
+				this.form.contact.email = data.contact[0].email
+				this.form.contact.phone = data.contact[0].phone
+				this.form = this.removeNullValues(this.form);
+
+			} else {
+				this.labelType = "info";
+				this.toastMessage = "El DNI indicado no se encuentra registrado";
+				this.clearFormData()
+			}
+			this.input_disable = false;
 		},
 		removeNullValues(data) {
+			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
 		addBeneficiario() {
 		},
@@ -1536,6 +1013,9 @@ export default {
             this.labelType = "success";
             this.toastMessage = "Se ha eliminado correctamente el taller";
         },
+		handleAutorizaciones(data){
+			this.form.autorizaciones = data;
+		}
 	},
 	computed: {
 	},

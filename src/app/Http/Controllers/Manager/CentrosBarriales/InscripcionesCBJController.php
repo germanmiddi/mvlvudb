@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager\CentrosBarriales;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\AcompanamientoCbj;
 use App\Models\Manager\ActividadCbj;
+use App\Models\Manager\AddressData;
 use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\Comedor;
@@ -12,9 +13,11 @@ use App\Models\Manager\ContactData;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\Person;
+use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\TipoDocumento;
 use App\Models\Manager\TipoTramite;
+use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +59,7 @@ class InscripcionesCBJController extends Controller
     //create
     public function store(Request $request)
     {
-        //dd($request->autorizaciones);
+       //dd($request);
         DB::beginTransaction();
         try {
             //dd($request->person);
@@ -76,11 +79,28 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->contact
             );
+
+            // updateOrCreate de Datos de la Direccion $person
+            AddressData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                $request->direccion
+            );
+
+            // updateOrCreate de Datos de Salud $person
+            SaludData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                $request->salud
+            );
             
             $request->merge([
                 'inscripcion' => array_merge($request->input('inscripcion', []), ['person_id' => $person->id])
             ]);
 
+            // Recupero si la persona posee legajoCB
             // updateOrCreate de $legajo = Legajo($person.id)
             $legajo = LegajoCB::updateOrCreate(
                 [
@@ -100,10 +120,26 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->autorizaciones
             );
+            /// Obtener el id del tipo tramite Inscripcion Centros Barriales.
+            $tipo_tramite = TipoTramite::where('description','INSCRIPCIÓN A CENTROS BARRIALES')->first();
             // Crear Tramite de Inscripcion
-
-            // Relacionar tramite con Persons.
-
+            if($person->tramites()->where('tipo_tramite_id', $tipo_tramite['id'])->count() === 0){ // si la persona posee un tramite de Inscripcion no genera un nuevo tramite.
+                $tramite_data = Tramite::Create(
+                    [
+                        'fecha' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
+                        'observacion' => $request->inscripcion['observacion'] ?? '',
+                        'sede_id' => $request->inscripcion['canal_atencion_id'],
+                        'canal_atencion_id' => $request->inscripcion['canal_atencion_id'],
+                        'tipo_tramite_id' => $tipo_tramite['id'],
+                        'dependencia_id' => $tipo_tramite['dependencia_id'],
+    
+                        'estado_id' => 1 // Abierto
+                    ]
+                );
+    
+                // Relacionar tramite con Persons.
+                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            }
 
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);

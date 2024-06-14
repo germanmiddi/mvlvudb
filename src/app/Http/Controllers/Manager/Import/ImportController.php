@@ -10,6 +10,7 @@ use App\Imports\EstadosImport;
 use App\Imports\EstadosUpdateResponsableImport;
 use App\Imports\EstadosUpdateResponsaleImport;
 use App\Imports\FortalecimientoImport;
+use App\Imports\FortalecimientoImportTemplate;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
 use App\Imports\InfanciaDevImport;
@@ -275,6 +276,65 @@ class ImportController extends Controller
                     } catch (\Exception $e) {
                         return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
                     }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
+        }
+
+        public function templateDependencia(Request $request){
+            if( $request->file('file')){
+                try {
+                    $archivoCSV = $request->file('file');
+                        switch ($request['dependencia_id']) {
+                            /* case 2:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite DISCAPACIDAD mediante template. <br>');
+                                $import = new DiscapacidadImport();
+                                break; */
+                            case 5:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite FORTALECIMIENTO mediante template. <br>');
+                                $import = new FortalecimientoImportTemplate();
+                                break;
+                            /* case 6:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite GENERO mediante template. <br>');
+                                $import = new GeneroImport();
+                                break;
+                            case 7:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite HABITAT mediante template. <br>');
+                                $import = new HabitatImport();
+                                break;
+                            case 8:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite NIÑEZ mediante template. <br>');
+                                $import = new NinezImport();
+                                break;
+                            case 9:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite PROMOCIONES mediante template. <br>');
+                                $import = new PromocionImport();
+                                break;
+                            case 12:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite INFANCIA mediante template. <br>');
+                                $import = new InfanciaImport();
+                                break;
+                            case 13:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite JUVENTUD mediante template. <br>');
+                                $import = new JuventudImport();
+                                break;
+                            case 14:
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite MAYORES mediante template. <br>');
+                                $import = new MayoresImport();
+                                break; */
+                            default:
+                                return response()->json(['message' => 'No se ha podido detectar una Dependencia Valida'], 203);
+                                break;
+                        }
+                        Excel::import($import, $archivoCSV);
+                        $status = $import->getStatus();
+    
+                        return response()->json(['message' => 'Se ha finalizado el proceso de importacion de tramite.', 'status' => $status], 200);
+                    
+                } catch (\Throwable $th) {
+                    dd($th);
+                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                }
             }else{
                 return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
             }

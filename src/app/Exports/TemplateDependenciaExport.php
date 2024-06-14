@@ -28,8 +28,8 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
 
     protected $data;
 
-    function __construct() {
-       // $this->data = $param;
+    function __construct($param) {
+       $this->data = $param;
     }
 
     public function collection()
@@ -64,7 +64,7 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                 'startColor' => [
-                    'rgb' => 'CCCCCC', // Corregido el color de fondo GRIS
+                    'rgb' => '4781ff', // Corregido el color de fondo GRIS
                 ]
             ],
             'alignment' => [
@@ -73,13 +73,13 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
             ],
         ]);
 
-        $sheet->getStyle('A1:C1')->applyFromArray(['fill' => ['startColor' => ['rgb' => '4781ff']]]);
-        $sheet->getStyle('D1:G1')->applyFromArray(['fill' => ['startColor' => ['rgb' => '8ae4f2']]]);
+       // $sheet->getStyle('A1:')->applyFromArray(['fill' => ['startColor' => ['rgb' => '4781ff']]]);
+        /* $sheet->getStyle('D1:G1')->applyFromArray(['fill' => ['startColor' => ['rgb' => '8ae4f2']]]);
         $sheet->getStyle('H1:S1')->applyFromArray(['fill' => ['startColor' => ['rgb' => '61c66d']]]);
         $sheet->getStyle('T1:Y1')->applyFromArray(['fill' => ['startColor' => ['rgb' => 'd4f274']]]);
         $sheet->getStyle('Z1:AG1')->applyFromArray(['fill' => ['startColor' => ['rgb' => 'f28e8e']]]);
         $sheet->getStyle('AH1:AK1')->applyFromArray(['fill' => ['startColor' => ['rgb' => 'ff9728']]]);
-        $sheet->getStyle('AL1:N1')->applyFromArray(['fill' => ['startColor' => ['rgb' => 'ff77d8']]]);
+        $sheet->getStyle('AL1:N1')->applyFromArray(['fill' => ['startColor' => ['rgb' => 'ff77d8']]]); */
 
 
         $sheet->getStyle('A2:' . $sheet->getHighestColumn() . '2')
@@ -112,25 +112,35 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
     // encabezados
     public function headings(): array
     {
-        $title = [
-
-            /* ['DATOS TRAMITE','DATOS CBI', 'DATOS ADULTO RESPONSABLE','DATOS DEL MENOR','DATOS EDUCACIÓN DEL MENOR','DATOS SALUD DEL MENOR','AUTORIZACIONES'], */
-
-            ['NUMERO','FECHA','SEDE','ANIO_CBI', 'ESTADO_CBI', 'GABINETE_CBI', 'COMEDOR_CBI','APELLIDO', 'NOMBRE', 'DNI', 'NACIONALIDAD', 
-            'FECHA_NAC', 'DOMICILIO', 'ESTUDIO_ALCANZADO','OCUPACION','PROGRAMA_SOCIAL', 'PARENTESCO','TELEFONO','CELULAR', 'APELLIDO_MENOR',
-            'NOMBRE_MENOR','DNI_MENOR','FECHA_NAC_MENOR','DOMICILIO_MENOR','BARRIO_MENOR','ESCUELA_MENOR','DEPENDENCIA_ESCUELA_MENOR','LOCALIDAD_MENOR',
-            'NIVEL_EDUCATIVO_MENOR', 'ESCUELA_NIVEL_MENOR','TURNO_ESCOLAR_MENOR','PERMANENCIA_MENOR','CERTIFICADO_ESCOLAR','APTO_FISICO','LIBRETA_VACUNACION','CENTRO_SALUD','ESTADO_SALUD',
-            'AUTORIZACION_FIRMADA','USO_IMAGEN','AUTORIZACION_RETIRARSE'],
+        switch ($this->data['id']) {
+            case 12:
+                $title = [
+                    ['NUMERO','FECHA','SEDE','TIPO TRAMITE','ANIO_CBI', 'ESTADO_CBI', 'GABINETE_CBI', 'COMEDOR_CBI','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'NACIONALIDAD', 
+                    'FECHA_NAC', 'DOMICILIO', 'ESTUDIO_ALCANZADO','OCUPACION','PROGRAMA_SOCIAL', 'PARENTESCO','TELEFONO','CELULAR', 'APELLIDO_MENOR',
+                    'NOMBRE_MENOR','DNI_MENOR','FECHA_NAC_MENOR','DOMICILIO_MENOR','BARRIO_MENOR','ESCUELA_MENOR','DEPENDENCIA_ESCUELA_MENOR','LOCALIDAD_MENOR',
+                    'NIVEL_EDUCATIVO_MENOR', 'ESCUELA_NIVEL_MENOR','TURNO_ESCOLAR_MENOR','PERMANENCIA_MENOR','CERTIFICADO_ESCOLAR','APTO_FISICO','LIBRETA_VACUNACION','CENTRO_SALUD','ESTADO_SALUD',
+                    'AUTORIZACION_FIRMADA','USO_IMAGEN','AUTORIZACION_RETIRARSE'],
+                    
+                    ['Numero secuencial','Formato "DD/MM/AAAA"','Hojas (sedes)','Hojas (tipos_tramite)', 'Formato "AAAA"','Hoja (estados_cbi)','Hoja (gabinete_psicologico','SI/NO','Apellido del Responsable','Nombre del Responsable',
+                    'Sin Puntos (.)', 'Hoja (paises)', 'Formato "DD/MM/AAAA"','','Hoja (escuela_nivel)','Hoja (tipo_ocupacion)','Hoja (programa_social)','Hoja (parentesco)','','','','',
+                    'Sin Puntos (.)', 'Formato "DD/MM/AAAA"', '','Hoja (barrios)', 'Hoja (escuelas)','Hoja (escuela_dependencia', 'Hoja (localidades)', 'Hoja (escuela_nivel)','Hoja (escuela_grado)',
+                    'Hoja (escuela_turno)','SI/NO','SI/NO','SI/NO','SI/NO','Hoja (centro_salud)','Hoja (estado_salud)','SI/NO','SI/NO','SI/NO']
+                ];
+                break;
             
-            ['Numero secuencial','Formato "DD/MM/AAAA"','Hojas (sedes)', 'Formato "AAAA"','Hoja (estados_cbi)','Hoja (gabinete_psicologico','SI/NO','Apellido del Responsable','Nombre del Responsable',
-            'Sin Puntos (.)', 'Hoja (paises)', 'Formato "DD/MM/AAAA"','','Hoja (escuela_nivel)','Hoja (tipo_ocupacion)','Hoja (programa_social)','Hoja (parentesco)','','','','',
-            'Sin Puntos (.)', 'Formato "DD/MM/AAAA"', '','Hoja (barrios)', 'Hoja (escuelas)','Hoja (escuela_dependencia', 'Hoja (localidades)', 'Hoja (escuela_nivel)','Hoja (escuela_grado)',
-            'Hoja (escuela_turno)','SI/NO','SI/NO','SI/NO','SI/NO','Hoja (centro_salud)','Hoja (estado_salud)','SI/NO','SI/NO','SI/NO']
-        ];
-        /* if($this->data['dependencia_id'] === 6){
-            $title[] = 'Ingreso Nuevo';
-            $title[] = 'Boton Antipanico';
-        } */
+            default:
+                $title = [
+                    ['NUMERO','FECHA','CANAL_ATENCION','TIPO_TRAMITE','OBSERVACION','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'EMAIL','TELEFONO','CELULAR','NACIONALIDAD', 
+                    'FECHA_NAC','LOCALIDAD','BARRIO','CALLE', 'NUMERO', 'PISO',' DPTO', 'ESTUDIO_ALCANZADO','OCUPACION','PENSION','PROGRAMA_SOCIAL',
+                    'COBERTURA_SALUD','SITUACION_CONYUGAL','CANTIDAD_HIJOS','PROGRAMA_SOCIAL'],
+                    
+                    ['Numero secuencial','Formato "DD/MM/AAAA"','Hojas (canal_atencion)','Hojas (tipos_tramite)','Observación del tramite','Apellido del Responsable','Nombre del Responsable',
+                    'Sin Puntos (.)', 'correo electrónico','','', 'Hoja (paises)', 'Formato "DD/MM/AAAA"','Hoja (localidades)','Hoja (barrios)','Calle', 'Numero', 'Piso',' Dpto',
+                    'Hoja (escuela_nivel)','Hoja (tipo_ocupacion)','Hoja (pension)','Hoja (programa_social)','Hoja (cobertura_salud)','Hoja (situacion_conyugal','hijos']
+                ];
+                break;
+            }
+
         return $title;
     }
 

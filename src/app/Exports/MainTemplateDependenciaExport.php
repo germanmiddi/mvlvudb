@@ -15,17 +15,18 @@ class MainTemplateDependenciaExport implements WithMultipleSheets
 
     protected $data;
 
-    function __construct() {
-       // $this->data = $param;
+    function __construct($param) {
+        $this->data = $param;
     }
 
     public function sheets(): array
     {
+        $this->data['id'];
         $sheets = [];
 
-        $sheets[0] = new TemplateDependenciaExport();
+        $sheets[0] = new TemplateDependenciaExport($this->data);
 
-        $titles = ['paises','barrios', 'localidades','nivel_educativo',
+        $titles = ['canal_atencion','tipos_tramite','paises','barrios', 'localidades','nivel_educativo',
                 'tipo_ocupación','programa_social','parentescos','sedes',
                 'estados_cbi','gabinete_psicologico','escuela_primaria',
                 'escuela_dependencia', 'escuela_nivel', 'turno_escolar', 
@@ -33,7 +34,7 @@ class MainTemplateDependenciaExport implements WithMultipleSheets
 
         for ($id = 1; $id <= count($titles); $id++) {
             $param['title'] = $titles[$id-1];
-            $param['dependencia_id'] = 12;
+            $param['dependencia_id'] = $this->data['id'];
             $sheets[$id] = new MasterExport($param);
         }
 

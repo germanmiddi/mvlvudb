@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable'); 
     Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');  
 
+    Route::post('/import/templateDependencia', [ImportController::class, 'templateDependencia'])->name('import.templateDependencia');
+
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
     Route::post('/file/updoad', [FileController::class, 'uploadfile'])->name('file.upload');

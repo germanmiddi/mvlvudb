@@ -153,6 +153,9 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
             case 'estado_salud':
                 return EstadoSalud::where('activo', true)->get();
                 break;
+            case 'canal_atencion':
+                return CanalAtencion::get();
+                break;
             default:
                 # code...
                 break;

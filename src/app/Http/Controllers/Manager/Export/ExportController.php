@@ -110,6 +110,7 @@ class ExportController extends Controller
     public function exportTemplateDependencia($id)
     {
 
-        return Excel::download(new MainTemplateDependenciaExport(), 'Plantilla Importacion.xlsx');
+        $param['id'] = $id;
+        return Excel::download(new MainTemplateDependenciaExport($param), 'Plantilla Importacion.xlsx');
     }
 }

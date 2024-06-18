@@ -369,7 +369,7 @@ class PersonController extends Controller
         //getPersonDni
         public function getPersonDni($dni)
         {
-            return  Person::where('num_documento', $dni)->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud')->orderBy("created_at", 'DESC')
+            return  Person::where('num_documento', $dni)->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud', 'legajo_cb')->orderBy("created_at", 'DESC')
             ->paginate(999)
             ->withQueryString()
             ->through(fn ($person) => [

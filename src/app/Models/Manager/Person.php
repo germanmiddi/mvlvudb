@@ -75,4 +75,9 @@ class Person extends Model
     {
         return $this->hasOne(SaludData::class);
     }
+
+    public function legajo_cb()
+    {
+        return $this->hasOne(LegajoCB::class);
+    }
 }

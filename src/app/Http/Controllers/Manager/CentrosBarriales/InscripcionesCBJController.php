@@ -10,6 +10,7 @@ use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
+use App\Models\Manager\DetalleCB;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\Person;
@@ -62,8 +63,6 @@ class InscripcionesCBJController extends Controller
        //dd($request);
         DB::beginTransaction();
         try {
-            //dd($request->person);
-            // updateOrCreate de $person = Person
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request->person['tipo_documento_id'],
@@ -108,6 +107,17 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->inscripcion
             );
+
+            // Creo Detalles CB
+            DetalleCB::create([
+                [
+                    'fecha_inscripcion' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
+                    'fecha_inicio' => $request->inscripcion['fecha_inicio'],
+                    'observacion' => $request->inscripcion['observacion'],
+                    'legajo_id' => $legajo['id']
+                ]
+            ]);
+
             // Agrego legajo al array de autorizaciones.
             $request->merge([
                 'autorizaciones' => array_merge($request->input('autorizaciones', []), ['legajo_id' => $legajo->id])
@@ -123,23 +133,21 @@ class InscripcionesCBJController extends Controller
             /// Obtener el id del tipo tramite Inscripcion Centros Barriales.
             $tipo_tramite = TipoTramite::where('description','INSCRIPCIÓN A CENTROS BARRIALES')->first();
             // Crear Tramite de Inscripcion
-            if($person->tramites()->where('tipo_tramite_id', $tipo_tramite['id'])->count() === 0){ // si la persona posee un tramite de Inscripcion no genera un nuevo tramite.
-                $tramite_data = Tramite::Create(
-                    [
-                        'fecha' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
-                        'observacion' => $request->inscripcion['observacion'] ?? '',
-                        'sede_id' => $request->inscripcion['canal_atencion_id'],
-                        'canal_atencion_id' => $request->inscripcion['canal_atencion_id'],
-                        'tipo_tramite_id' => $tipo_tramite['id'],
-                        'dependencia_id' => $tipo_tramite['dependencia_id'],
-    
-                        'estado_id' => 1 // Abierto
-                    ]
-                );
-    
-                // Relacionar tramite con Persons.
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-            }
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
+                    'observacion' => $request->inscripcion['observacion'] ?? '',
+                    'sede_id' => $request->inscripcion['canal_atencion_id'],
+                    'canal_atencion_id' => $request->inscripcion['canal_atencion_id'],
+                    'tipo_tramite_id' => $tipo_tramite['id'],
+                    'dependencia_id' => $tipo_tramite['dependencia_id'],
+
+                    'estado_id' => 1 // Abierto
+                ]
+            );
+
+            // Relacionar tramite con Persons.
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);
@@ -169,4 +177,5 @@ class InscripcionesCBJController extends Controller
             ]
         );
     }
+
 }

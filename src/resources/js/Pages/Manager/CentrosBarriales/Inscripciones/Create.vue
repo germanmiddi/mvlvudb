@@ -31,27 +31,27 @@
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 2" :class="this.tabs === 2 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 2" :class="this.tabs === 2 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Dirección
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 3" :class="this.tabs === 3 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 3" :class="this.tabs === 3 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Salud
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 4" :class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 4" :class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Autorizaciones
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 5" :class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 5" :class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Educación
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Adulto Responsable
 						</a>
 					</li>
@@ -193,7 +193,7 @@
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
 									Atención</label>
-								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion" name="canal_atencion"
+								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion_id" name="canal_atencion_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.form.inscripcion.canal_atencion_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
@@ -227,11 +227,10 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="anio_inicio" class="block text-sm font-medium text-gray-700">Año de
-									inicio CBJ</label>
+								<label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha inicio CB</label>
 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.inscripcion.anio_inicio" auto-apply year-picker
+									v-model="form.inscripcion.fecha_inicio" auto-apply year-picker
 									:disabled="input_disable">
 								</Datepicker>
 							</div>
@@ -268,7 +267,6 @@
 				<TabAutorizaciones 	v-if="this.tabs === 4" 
 									:form="form.autorizaciones" 
 									:input_disable="input_disable"
-									:comedores="comedores"
 									@submit="handleAutorizaciones">
 				</TabAutorizaciones>
 
@@ -280,127 +278,12 @@
 				</TabEducacion>
 
 				<!-- ADULTO RESPONSABLE -->
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 6">
-					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-							<div class="">
-								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Datos de Adulto Responsable
-								</h3>
-							</div>
-							<div class="flex-shrink-0">
-							</div>
-						</div>
-
-						<!-- <div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
-									Documento</label>
-								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
-									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un tipo de documento
-									</option>
-									<option v-for="tipoDocumento in tiposDocumento" :key="tipoDocumento.id"
-										:value="tipoDocumento.id">
-										{{ tipoDocumento.description }}
-									</option>
-								</select>
-								<span v-if="v$.form.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<div class="relative">
-									<input type="text" v-model="form.num_documento_adulto" @keyup.enter="getPerson()" :class="v$.form.num_documento.$error ? 'border-red-500' : ''"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-									<a @click="getPerson()" 
-										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
-										Verificar
-									</a>
-								</div>
-								<span v-if="v$.form.num_documento.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name_adulto" type="text" name="name" id="name" autocomplete="name"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable" />
-								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname_adulto" type="text" name="lastname" id="lastname" autocomplete="name"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable" />
-								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de
-									Nacimiento</label>
-								<Datepicker
-									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac_adulto"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
-								</Datepicker>
-								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Situación Empleo</label>
-								<select v-model="form.tipo_documento_id_adulto" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
-									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
-									:disabled="input_disable"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un comedor
-									</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Busca Trabajo</label>
-									<Switch v-model="form.busca_trabajo_adulto"
-											@click="form.busca_trabajo = !form.busca_trabajo"
-											:class="form.busca_trabajo ? 'bg-blue-600' : 'bg-gray-200'"
-											class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-											<span :class="form.busca_trabajo ? 'translate-x-6' : 'translate-x-1'"
-												class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
-									</Switch>   
-							</div>
-							
-							<div class="col-span-12 xl:col-span-6">
-								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
-								</label>
-								<div class="mt-1">
-									<textarea v-model="form.observacion_adulto" id="observacion" name="observacion" rows="1"
-										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"/>
-								</div>
-								<p class="mt-2 text-sm text-gray-500">
-									Ingrese información adicional del tramite.
-								</p>
-							</div>
-
-						</div> -->
-					</div>
-				</div>
+				<TabResponsable 	v-if="this.tabs === 6" 
+									:form="form.responsable" 
+									:input_disable="input_disable"
+									:tiposDocumento="tiposDocumento"
+									@submit="handleResponsable">
+				</TabResponsable>
 
 			</form>
 		</div>
@@ -433,6 +316,7 @@ import TabAutorizaciones from './Components/TabAutorizaciones.vue';
 import TabDireccion from './Components/TabDireccion.vue';
 import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
+import TabResponsable from './Components/TabResponsable.vue';
 
 
 export default {
@@ -474,7 +358,8 @@ export default {
 		TabAutorizaciones,
 		TabDireccion,
 		TabSalud,
-		TabEducacion
+		TabEducacion,
+		TabResponsable
 	},
 	data() {
 		return {
@@ -487,7 +372,8 @@ export default {
 				autorizaciones: {},
 				direccion: {},
 				salud: {},
-				educacion: {}
+				educacion: {},
+				responsable: {}
 			},
 			
 			/* MENSAJERIA */
@@ -560,7 +446,8 @@ export default {
 				autorizaciones: {},
 				direccion: {},
 				salud: {},
-				educacion: {}
+				educacion: {},
+				responsable: {}
 			}
 		},
 		async submit() {
@@ -602,33 +489,47 @@ export default {
 			}
 		},
 		async getPerson() {
+			let num_documento = this.form.person.num_documento;
 			const get = `${route('persons.getPersonDni', this.form.person.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
 			if (!data.data.length == 0) {
-				this.labelType = "success";
-				this.toastMessage = "El DNI indicado se encuentra registrado";
-
+/* 				this.labelType = "success";
+				this.toastMessage = "El DNI indicado se encuentra registrado"; */
+				this.clearFormData()
 				data = data.data[0].person
-				/// Recuperar datos.
-				this.form.person.tipo_documento_id = data.tipo_documento_id
-				this.form.person.fecha_nac = data.fecha_nac
-				this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
-				this.form.person.name = data.name
-				this.form.person.lastname = data.lastname
-				this.form.contact.email = data.contact[0].email
-				this.form.contact.phone = data.contact[0].phone
-				this.form = this.removeNullValues(this.form);
 
+				if(data.legajo_cb){
+					this.labelType = "danger";
+					this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
+
+					this.input_disable = true;
+				}else{
+					/// Recuperar datos.
+					this.form.person.tipo_documento_id = data.tipo_documento_id
+					this.form.person.fecha_nac = data.fecha_nac
+					this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
+					this.form.person.name = data.name
+					this.form.person.lastname = data.lastname
+					this.form.contact.email = data.contact[0].email
+					this.form.contact.phone = data.contact[0].phone
+					this.form = this.removeNullValues(this.form);
+					this.input_disable = false;
+				}
 			} else {
 				this.labelType = "info";
 				this.toastMessage = "El DNI indicado no se encuentra registrado";
 				this.clearFormData()
+				this.form.person.num_documento = num_documento;
+				this.input_disable = false;
 			}
-			this.input_disable = false;
 		},
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
+		},
+		requiredPerson(){
+			this.labelType = "info";
+			this.toastMessage = "Debe ingresar un DNI.";
 		},
 		addBeneficiario() {
 		},
@@ -762,6 +663,9 @@ export default {
 		},
 		handleEducacion(data){
 			this.form.educacion = data;
+		},
+		handleResponsable(data){
+			this.form.responsable = data;
 		}
 	},
 	computed: {

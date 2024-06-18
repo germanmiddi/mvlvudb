@@ -237,5 +237,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/inscripcion-cbj/create', [InscripcionesCBJController::class, 'create'])->name('inscripcionCBJ.create');  
     Route::post('/inscripcion-cbj/store', [InscripcionesCBJController::class, 'store'])->name('inscripcionCBJ.store');   
     Route::get('/list-inscriptos-cbj', [InscripcionesCBJController::class, 'index_inscriptos'])->name('listInscriptosCBJ'); 
-    Route::get('/details-cb/{id}', [InscripcionesCBJController::class, 'view_inscripto_cb'])->name('detailsLegajoCB');    
+    Route::get('/details-cb/{id}', [InscripcionesCBJController::class, 'view_inscripto_cb'])->name('detailsLegajoCB');   
 });

@@ -14,7 +14,8 @@ class LegajoCB extends Model
     protected $fillable = [
         'person_id',
         'sede_id',
-        'estado_id'
+        'estado_id',
+        'canal_atencion_id'
     ];
 
     protected static function booted()
@@ -38,6 +39,11 @@ class LegajoCB extends Model
     public function sede()
     {
         return $this->BelongsTo(Sede::class, 'sede_id');
+    }
+
+    public function canal_atencion()
+    {
+        return $this->BelongsTo(CanalAtencion::class, 'canal_atencion_id');
     }
 
     public function estadocbj()

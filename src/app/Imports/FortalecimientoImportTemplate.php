@@ -46,21 +46,7 @@ class FortalecimientoImportTemplate implements ToModel, WithHeadingRow, WithBatc
         if (empty($row['nro'])) {
             return null;
         }
-        
         ++$this->rows;  
-
-        /* // Obtener encabezados
-        $headings = array_keys($row);
-
-        // Filtrar las columnas con encabezados vacíos
-        $filteredRow = [];
-        foreach ($headings as $heading) {
-            if (!empty($heading) && isset($row[$heading])) {
-                $filteredRow[$heading] = $row[$heading];
-            }
-        } */
-        // Verificar si la fila está vacía
-        
         try {
             $person = Person::updateOrCreate(
                 [
@@ -68,8 +54,8 @@ class FortalecimientoImportTemplate implements ToModel, WithHeadingRow, WithBatc
                     'num_documento' => $row['num_documento']
                 ],
                 [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['apellido'])) !== 'NULL' ? $row['apellido'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['nombre'])) !== 'NULL' ? $row['nombre'] : null,
+                    'lastname' => $row['apellido'] !== '' ? $row['apellido'] : null,
+                    'name' => $row['nombre'] !== '' ? $row['nombre'] : null,
                     'fecha_nac' => $this->transformDate($row['fecha_nac'] ?? null),
                     'tipo_documento_id' => 1,
                     'num_documento' => $row['num_documento']
@@ -82,7 +68,7 @@ class FortalecimientoImportTemplate implements ToModel, WithHeadingRow, WithBatc
                 ],
                 [
                     'cant_hijos' => $row['cantidad_hijos'],
-                    'situacion_conyugal_id' => $row['situacion_conyugal'] !== 'NULL' ? $row['situacion_conyugal'] : null
+                    'situacion_conyugal_id' => $row['situacion_conyugal'] !== '' ? $row['situacion_conyugal'] : null
                 ]
             );
 
@@ -91,73 +77,71 @@ class FortalecimientoImportTemplate implements ToModel, WithHeadingRow, WithBatc
                     'person_id' => $person->id
                 ],
                 [
-                    'tipo_ocupacion_id' => $row['ocupacion'] !== 'NULL' && $row['ocupacion'] !== -1 ? $row['ocupacion'] : null,
-                    'cobertura_medica_id' => $row['cobertura_salud'] !== 'NULL' && $row['cobertura_salud'] !== -1 ? $row['cobertura_salud'] : null,
-                    'tipo_pension_id' => $row['pension'] !== 'NULL' && $row['pension'] !== -1 ? $row['pension'] : null,
+                    'tipo_ocupacion_id' => $row['ocupacion'] !== '' ? $row['ocupacion'] : null,
+                    'cobertura_medica_id' => $row['cobertura_salud'] !== '' ? $row['cobertura_salud'] : null,
+                    'tipo_pension_id' => $row['pension'] !== '' ? $row['pension'] : null,
                 ]
             );
 
-            /* EducationData::updateOrCreate(
+            EducationData::updateOrCreate(
                 [
                     'person_id' => $person->id
                 ],
                 [
-                    'nivel_educativo_id' => $row['education_nivel_educativo_id'] !== 'NULL' && $row['education_nivel_educativo_id'] !== -1 ? $row['education_nivel_educativo_id'] : null,
-                    'estado_educativo_id' => $row['education_estado_educativo_id'] !== 'NULL' && $row['education_estado_educativo_id'] !== -1 ? $row['education_estado_educativo_id'] : null
+                    'nivel_educativo_id' => $row['nivel_educativo'] !== '' ? $row['nivel_educativo'] : null,
+                    'estado_educativo_id' => $row['estado_educativo'] !== '' ? $row['estado_educativo'] : null
                 ]
-            ); */
-
-            // address_data
+            );
 
             AddressData::updateOrCreate(
                 [
                     'person_id' => $person->id
                 ],
                 [
-                    'calle' => strtoupper(str_replace(' ', '', $row['calle'])) !== 'NULL' ? $row['calle'] : null,
-                    'number' => strtoupper(str_replace(' ', '', $row['numero'])) !== 'NULL' ? $row['numero'] : null,
-                    'piso' => strtoupper(str_replace(' ', '', $row['piso'])) !== 'NULL' ? $row['piso'] : null,
-                    'dpto' => strtoupper(str_replace(' ', '', $row['dpto'])) !== 'NULL' ? $row['dpto'] : null,
-                    'pais_id' => $row['nacionalidad'] !== 'NULL' && $row['nacionalidad'] !== -1 ? $row['nacionalidad'] : null,
-                    'localidad_id' => $row['localidad'] !== 'NULL' && $row['localidad'] !== -1 ? $row['localidad'] : null,
-                    'barrio_id' => $row['barrio'] !== 'NULL' ? $row['barrio'] : null
+                    'calle' => $row['calle'] !== '' ? $row['calle'] : null,
+                    'number' => $row['numero'] !== '' ? $row['numero'] : null,
+                    'piso' => $row['piso'] !== '' ? $row['piso'] : null,
+                    'dpto' => $row['dpto'] !== '' ? $row['dpto'] : null,
+                    'pais_id' => $row['nacionalidad'] !== ''  ? $row['nacionalidad'] : null,
+                    'localidad_id' => $row['localidad'] !== ''  ? $row['localidad'] : null,
+                    'barrio_id' => $row['barrio'] !== '' ? $row['barrio'] : null
 
                 ]
             );
-
-            // contact_data
 
             ContactData::updateOrCreate(
                 [
                     'person_id' => $person->id
                 ],
                 [
-                    'phone' => strtoupper(str_replace(' ', '', $row['telefono'])) !== 'NULL' ? $row['telefono'] : null,
-                    'email' => strtoupper(str_replace(' ', '', $row['celular'])) !== 'NULL' ? $row['celular'] : null
+                    'phone' => $row['telefono'] !== '' ? $row['telefono'] : null,
+                    'celular' => $row['celular'] !== '' ? $row['celular'] : null,
+                    'email' => $row['email'] !== '' ? $row['email'] : null
                 ]
             );
-
             
-                $tramite_data = Tramite::Create(
-                    [
-                        'fecha' => $this->transformDate($row['fecha'] ?? null),
-                        'canal_atencion_id' => $row['canal_atencion'],
-                        'tipo_tramite_id' => $row['tipo_tramite'],
-                        'dependencia_id' => 5,
-                        'estado_id' => 1
-                    ]
-                );
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => $this->transformDate($row['fecha'] ?? null),
+                    'canal_atencion_id' => $row['canal_atencion'],
+                    'tipo_tramite_id' => $row['tipo_tramite'],
+                    'observacion' => $row['observacion'],
+                    'dependencia_id' => 5,
+                    'estado_id' => 1
+                ]
+            );
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
-                ++$this->rowsSuccess;
-               // Log::info("Se ha importado correctamente el tramite N° ".$row['tramite_num_tramite_legacy']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportFortalecimiento:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+            ++$this->rowsSuccess;
+
+            Log::info("Se ha importado correctamente el tramite del registro NRO:  ".$row['nro']." , bajo el ID de Tramite N° ".$tramite_data['id'], ["Modulo" => "ImportFortalecimiento:template", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
             
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
             $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
-            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . strval($this->rows + 1), ["Modulo" => "ImportFortalecimiento:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . strval($this->rows + 1), ["Modulo" => "ImportFortalecimiento:template", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;
     }

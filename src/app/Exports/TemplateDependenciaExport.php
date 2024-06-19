@@ -115,7 +115,7 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
         switch ($this->data['id']) {
             case 12:
                 $title = [
-                    ['NUMERO','FECHA','SEDE','TIPO TRAMITE','ANIO_CBI', 'ESTADO_CBI', 'GABINETE_CBI', 'COMEDOR_CBI','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'NACIONALIDAD', 
+                    ['NRO','FECHA','SEDE','TIPO TRAMITE','ANIO_CBI', 'ESTADO_CBI', 'GABINETE_CBI', 'COMEDOR_CBI','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'NACIONALIDAD', 
                     'FECHA_NAC', 'DOMICILIO', 'ESTUDIO_ALCANZADO','OCUPACION','PROGRAMA_SOCIAL', 'PARENTESCO','TELEFONO','CELULAR', 'APELLIDO_MENOR',
                     'NOMBRE_MENOR','DNI_MENOR','FECHA_NAC_MENOR','DOMICILIO_MENOR','BARRIO_MENOR','ESCUELA_MENOR','DEPENDENCIA_ESCUELA_MENOR','LOCALIDAD_MENOR',
                     'NIVEL_EDUCATIVO_MENOR', 'ESCUELA_NIVEL_MENOR','TURNO_ESCOLAR_MENOR','PERMANENCIA_MENOR','CERTIFICADO_ESCOLAR','APTO_FISICO','LIBRETA_VACUNACION','CENTRO_SALUD','ESTADO_SALUD',
@@ -130,13 +130,13 @@ class TemplateDependenciaExport implements FromCollection, WithHeadings, WithSty
             
             default:
                 $title = [
-                    ['NUMERO','FECHA','CANAL_ATENCION','TIPO_TRAMITE','OBSERVACION','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'EMAIL','TELEFONO','CELULAR','NACIONALIDAD', 
-                    'FECHA_NAC','LOCALIDAD','BARRIO','CALLE', 'NUMERO', 'PISO',' DPTO', 'ESTUDIO_ALCANZADO','OCUPACION','PENSION','PROGRAMA_SOCIAL',
-                    'COBERTURA_SALUD','SITUACION_CONYUGAL','CANTIDAD_HIJOS','PROGRAMA_SOCIAL'],
+                    ['NRO','FECHA','CANAL_ATENCION','TIPO_TRAMITE','OBSERVACION','APELLIDO', 'NOMBRE', 'NUM_DOCUMENTO', 'EMAIL','TELEFONO','CELULAR','NACIONALIDAD', 
+                    'FECHA_NAC','LOCALIDAD','BARRIO','CALLE', 'NUMERO', 'PISO',' DPTO','NIVEL_EDUCATIVO' ,'ESTADO_EDUCATIVO','OCUPACION','PENSION','PROGRAMA_SOCIAL',
+                    'COBERTURA_SALUD','SITUACION_CONYUGAL','CANTIDAD_HIJOS'],
                     
-                    ['Numero secuencial','Formato "DD/MM/AAAA"','Hojas (canal_atencion)','Hojas (tipos_tramite)','Observación del tramite','Apellido del Responsable','Nombre del Responsable',
-                    'Sin Puntos (.)', 'correo electrónico','','', 'Hoja (paises)', 'Formato "DD/MM/AAAA"','Hoja (localidades)','Hoja (barrios)','Calle', 'Numero', 'Piso',' Dpto',
-                    'Hoja (escuela_nivel)','Hoja (tipo_ocupacion)','Hoja (pension)','Hoja (programa_social)','Hoja (cobertura_salud)','Hoja (situacion_conyugal','hijos']
+                    ['(*) Numero secuencial','(*) Formato "DD/MM/AAAA"','(*) Hojas (canal_atencion)','(*) Hojas (tipos_tramite)','Observación del tramite','(*) Apellido del Responsable','(*) Nombre del Responsable',
+                    '(*) Sin Puntos (.)', 'correo electrónico','','', 'Hoja (paises)', '(*) Formato "DD/MM/AAAA"','Hoja (localidades)','Hoja (barrios)','Calle', 'Numero', 'Piso',' Dpto',
+                    'Hoja (nivel_educativo)','Hoja (estado_educativo)','Hoja (tipo_ocupacion)','Hoja (tipo_pension)','Hoja (programa_social)','Hoja (cobertura_medica)','Hoja (situacion_conyugal','hijos']
                 ];
                 break;
             }

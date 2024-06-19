@@ -81,8 +81,8 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
             case 'cobertura_medica':
                 return CoberturaMedica::select('id','description')->get();
                 break;
-
-            case 'estado_educativo_alcanzado':
+            
+            case 'estado_educativo':
                 return EstadoEducativo::select('id','description')->get();
                 break;
 

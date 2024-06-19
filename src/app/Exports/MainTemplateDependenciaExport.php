@@ -26,11 +26,30 @@ class MainTemplateDependenciaExport implements WithMultipleSheets
 
         $sheets[0] = new TemplateDependenciaExport($this->data);
 
-        $titles = ['canal_atencion','tipos_tramite','paises','barrios', 'localidades','nivel_educativo',
-                'tipo_ocupación','programa_social','parentescos','sedes',
-                'estados_cbi','gabinete_psicologico','escuela_primaria',
-                'escuela_dependencia', 'escuela_nivel', 'turno_escolar', 
-                'centro_salud','estado_salud'];
+        $titles = [
+            'barrios', 
+            'canal_atencion',
+            'centro_salud',
+            'cobertura_medica',
+            'escuela_dependencia',
+            'escuela_nivel',
+            'escuela_primaria',
+            'estados_cbi',
+            'estado_educativo',
+            'estado_salud',
+            'localidades',
+            'gabinete_psicologico',
+            'nivel_educativo',
+            'sedes',
+            'situacion_conyugal',
+            'paises',
+            'parentescos',
+            'programa_social',
+            'tipos_tramite',
+            'tipo_ocupación',
+            'tipo_pension',
+            'turno_escolar'
+        ];
 
         for ($id = 1; $id <= count($titles); $id++) {
             $param['title'] = $titles[$id-1];

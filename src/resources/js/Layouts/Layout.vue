@@ -202,6 +202,11 @@
                         Inscripciones CBJ
                       </li>
                     </a>
+                    <a :href="route('inscripcionCBJ')">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Inscripciones CBI
+                      </li>
+                    </a>
                     <a :href="route('listInscriptosCBJ')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Lista Inscriptos

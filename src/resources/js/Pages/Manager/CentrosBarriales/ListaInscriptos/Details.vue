@@ -30,12 +30,22 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Legajo</h3>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{legajo[0].id}}</h3>
 					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Inscripción.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(legajo[0].fecha_inscripcion) }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].fecha_inicio }}</dd>
+						</div>
+						
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.fechaFormateada(legajo[0].created_at) }}</dd>
@@ -50,10 +60,20 @@
 							<dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].estadocbj?.description ?? '-' }}</dd>
 						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].canal_atencion?.description ?? '-' }}</dd>
+						</div>
 						
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Sede</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].sede?.description ?? '-' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Observación</dt>
+							<dd class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].observacion ?? '-' }}</dd>
 						</div>
 						
 					</dl>
@@ -68,7 +88,7 @@
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles del tramite.</p>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles del titular.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -99,9 +119,50 @@
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].person?.contact[0]?.phone ?? '-'}}</dd>
 						</div>
 
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Localidad</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].person?.address[0]?.localidad?.description ?? '-'}}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Direccion</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].person?.address[0]?.calle ?? '-'}}, {{legajo[0].person?.address[0]?.number ?? '-'}}, {{legajo[0].person?.address[0]?.piso ?? '-'}}, {{legajo[0].person?.address[0]?.dpto ?? '-'}}</dd>
+						</div>
+
 					</dl>
 				</div>
-				
+			</div>
+		</div>	
+		<!-- Fin  Datos Titular -->
+
+		<!-- Datos Responsale -->
+		<div class="px-4 mt-6 sm:px-6 lg:px-8" v-if="legajo[0].responsable">
+			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Adulto Responsable</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles del responsable.</p>
+				</div>
+
+				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+					<dl class="sm:divide-y sm:divide-gray-200">
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].responsable.lastname}}, {{ legajo[0].responsable.name }}</dd>
+						</div>
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Documento</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].responsable.num_documento}}</dd>
+						</div>
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{store.dateFormateada(legajo[0].responsable.fecha_nac)}}</dd>
+						</div>
+
+					</dl>
+				</div>
 			</div>
 		</div>	
 		<!-- Fin  Datos Titular -->
@@ -141,23 +202,75 @@
 							<dt class="text-sm font-medium text-gray-500">Autorización Uso de Imagen</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.autorizacion_uso_imagen ? 'SI' : 'NO'}}</dd>
 						</div>
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Inscripción a Comedor</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.inscripcion_comedor ? 'SI' : 'NO'}}</dd>
-						</div>
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Comedor</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
-						</div>
-
 					</dl>
 				</div>
 				
 			</div>
 		</div>	
 		<!-- Fin  Autorizaciones -->
+
+		<!-- Datos Salud -->
+		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Salud/Educacion</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Salud y Educación.</p>
+				</div>
+
+				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+					<dl class="sm:divide-y sm:divide-gray-200">
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Apto Medico</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.apto_medico ? 'SI' : 'NO'}}</dd>
+						</div>
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha Apto Médico</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_apto_medico ) ?? '-' }}</dd>
+						</div>
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Electrocardiograma</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.electrocardiograma ? 'SI' : 'NO'}}</dd>
+						</div>
+			
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha Electrocardiograma</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_electrocardiograma ) ?? '-' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Posee CUD</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud.posee_cud ? 'SI' : 'NO'}}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Presento CUD</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud.presento_cud ? 'SI' : 'NO'}}</dd>
+						</div>
+
+						<hr>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.nivel_educativo?.description ?? '-'}}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Estado Educativo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.estado_educativo?.description ?? '-'}}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Turno</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.escuela_turno?.description ?? '-'}}</dd>
+						</div>
+					</dl>
+				</div>
+				
+			</div>
+		</div>	
+		<!-- Fin  Salud -->
 
 		<!-- Datos Beneficiario -->
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">

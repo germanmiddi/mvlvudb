@@ -14,7 +14,9 @@ class Cud extends Model
     protected $fillable = [
         'codigo',
         'diagnostico',
-        'person_id'
+        'person_id',
+        'posee_cud',
+        'presento_cud'
     ];
 
     public function person()

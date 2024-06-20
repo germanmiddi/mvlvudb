@@ -57,11 +57,11 @@
 
                 <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
                   <label for="programa_social_id" class="block text-sm font-medium text-gray-700">CUD</label>
-                    <Switch v-model="form.cud"
-                        @click="localData.cud = !localData.cud"
-                        :class="localData.cud ? 'bg-blue-600' : 'bg-gray-200'"
+                    <Switch v-model="form.posee_cud"
+                        @click="localData.posee_cud = !localData.posee_cud"
+                        :class="localData.posee_cud ? 'bg-blue-600' : 'bg-gray-200'"
                         class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-                        <span :class="localData.cud ? 'translate-x-6' : 'translate-x-1'"
+                        <span :class="localData.posee_cud ? 'translate-x-6' : 'translate-x-1'"
                           class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                     </Switch>   
                 </div>
@@ -69,11 +69,11 @@
 
                 <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
                   <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Cud Presentado</label>
-                    <Switch v-model="localData.cud_presentado"
-                        @click="localData.cud_presentado = !localData.cud_presentado"
-                        :class="localData.cud_presentado ? 'bg-blue-600' : 'bg-gray-200'"
+                    <Switch v-model="localData.presento_cud"
+                        @click="localData.presento_cud = !localData.presento_cud"
+                        :class="localData.presento_cud ? 'bg-blue-600' : 'bg-gray-200'"
                         class="relative inline-flex h-6 w-11 mt-3 items-center rounded-full">
-                        <span :class="localData.cud_presentado ? 'translate-x-6' : 'translate-x-1'"
+                        <span :class="localData.presento_cud ? 'translate-x-6' : 'translate-x-1'"
                           class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                     </Switch>   
                 </div>

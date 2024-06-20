@@ -10,13 +10,18 @@ use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
-use App\Models\Manager\DetalleCB;
+use App\Models\Manager\Cud;
+use App\Models\Manager\EducationData;
+use App\Models\Manager\EscuelaTurno;
+use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
+use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Person;
 use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\TipoDocumento;
+use App\Models\Manager\TipoLegajoCb;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
@@ -53,6 +58,9 @@ class InscripcionesCBJController extends Controller
                 'comedores' => Comedor::where('activo', true)->get(),
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
+                'nivelesEducativo' => NivelEducativo::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'turnosEducativo' => EscuelaTurno::all(),
             ]
         );
     }
@@ -60,7 +68,6 @@ class InscripcionesCBJController extends Controller
     //create
     public function store(Request $request)
     {
-       //dd($request);
         DB::beginTransaction();
         try {
             $person = Person::updateOrCreate(
@@ -94,29 +101,56 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->salud
             );
+
+            Cud::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                $request->salud
+            );
+
+            // updateOrCreate de Datos de Salud $person
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                $request->educacion
+            );
             
             $request->merge([
                 'inscripcion' => array_merge($request->input('inscripcion', []), ['person_id' => $person->id])
             ]);
 
+            // Registro datos de persona responsable
+            if($request->responsable){
+                $responsable = Person::updateOrCreate(
+                    [
+                        'tipo_documento_id' => $request->responsable['tipo_documento_id'],
+                        'num_documento' => $request->responsable['num_documento']
+                    ],  
+                    $request->person
+                );
+            }
+
+            // Controla el Tipo de Centro Barrial.
+            if($request->tipo_cb === 'Juventud'){
+                $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Juventud')->first();
+            }else if($request->tipo_cb === 'Infancia'){
+                $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
+            }
+
             // Recupero si la persona posee legajoCB
-            // updateOrCreate de $legajo = Legajo($person.id)
             $legajo = LegajoCB::updateOrCreate(
                 [
-                    'person_id' => $request->inscripcion['person_id']
+                    'person_id' => $request->inscripcion['person_id'],
+                    'fecha_inscripcion' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
+                    'fecha_inicio' => $request->inscripcion['fecha_inicio'] ?? null,
+                    'observacion' => $request->inscripcion['observacion'] ?? null,
+                    'responsable_id' => $responsable['id'] ?? null,
+                    'tipo_legajo_id' => $tipo_legajo_cb['id']
                 ],
                 $request->inscripcion
             );
-
-            // Creo Detalles CB
-            DetalleCB::create([
-                [
-                    'fecha_inscripcion' => date("Y-m-d ", strtotime($request->inscripcion['fecha'])),
-                    'fecha_inicio' => $request->inscripcion['fecha_inicio'],
-                    'observacion' => $request->inscripcion['observacion'],
-                    'legajo_id' => $legajo['id']
-                ]
-            ]);
 
             // Agrego legajo al array de autorizaciones.
             $request->merge([
@@ -147,7 +181,12 @@ class InscripcionesCBJController extends Controller
             );
 
             // Relacionar tramite con Persons.
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            if(isset($responsable)){
+                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+                $responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            }else{
+                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            }
 
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);
@@ -173,7 +212,9 @@ class InscripcionesCBJController extends Controller
 
         return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Details',
             [   
-                'legajo' => LegajoCB::where('id',$id)->with('estadocbj', 'sede', 'person', 'person.contact', 'autorizacion')->get(),                
+                'legajo' => LegajoCB::where('id',$id)->with('estadocbj', 'sede', 'responsable', 'person', 'person.contact', 'autorizacion', 'canal_atencion','person.address', 
+                    'person.address.localidad','person.address.barrio','person.salud', 'person.cud', 'person.education', 'person.education.nivelEducativo', 
+                    'person.education.estadoEducativo', 'person.education.escuelaTurno')->get(),                
             ]
         );
     }

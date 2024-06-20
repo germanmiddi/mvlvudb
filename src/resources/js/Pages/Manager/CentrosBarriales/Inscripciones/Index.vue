@@ -43,40 +43,40 @@ const projects = [
     {
         id: 1,
         title: 'La Loma',
-      initials: 'LL',
-      bgColorClass: 'bg-red-600',
-      route: '#',
-      //module: 'CBI'
+        initials: 'LL',
+        bgColorClass: 'bg-red-600',
+        route: '#',
+        //module: 'CBI'
     },
     {
-      id: 2,
-      title: 'El Ceibo',
-      initials: 'EC',
-      bgColorClass: 'bg-yellow-600',
-      route: '#',
-      //module: 'CBJ'
+        id: 2,
+        title: 'El Ceibo',
+        initials: 'EC',
+        bgColorClass: 'bg-yellow-600',
+        route: '#',
+        //module: 'CBJ'
     },
     {
-      id: 5,
-      title: 'Munro',
-      initials: 'MUN',
-      bgColorClass: 'bg-pink-600',
-      route: '#',
-      //module:'DIS'
+        id: 5,
+        title: 'Munro',
+        initials: 'MUN',
+        bgColorClass: 'bg-pink-600',
+        route: '#',
+        //module:'DIS'
     },
     {
-      id: 6,
-      title: 'Villa Martelli',
-      initials: 'VM',
-      bgColorClass: 'bg-green-600',
-      route: '#',
-      //module: 'ENT'
+        id: 6,
+        title: 'Villa Martelli',
+        initials: 'VM',
+        bgColorClass: 'bg-green-600',
+        route: '#',
+        //module: 'ENT'
     }
     
     // More projects...
-  ]
+    ]
 const pinnedProjects = projects.filter((project) => project.pinned)
-  
+
 export default {
     props: {
 

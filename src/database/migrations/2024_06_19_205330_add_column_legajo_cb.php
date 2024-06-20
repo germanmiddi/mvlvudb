@@ -13,22 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detalles_cb', function (Blueprint $table) {
-            $table->id();
+        Schema::table('legajos_cb', function (Blueprint $table) {     
             $table->date('fecha_inscripcion');
             $table->date('fecha_inicio')->nullable(false);
             $table->string('observacion')->nullable();
-            $table->unsignedBigInteger('legajo_id');
-            $table->timestamps();
+            $table->unsignedBigInteger('responsable_id')->nullable()->after('observacion');       
 
-            $table->foreign('legajo_id')
+            $table->foreign('responsable_id')
                 ->references('id')
-                ->on('legajos_cb')
+                ->on('person')
                 ->onDelete('NO ACTION')
                 ->onUpdate('NO ACTION');
         });
     }
 
+    
     /**
      * Reverse the migrations.
      *
@@ -36,6 +35,12 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalles_cb');
+        Schema::table('legajos_cb', function (Blueprint $table) {
+            $table->dropColumn('fecha_inscripcion');
+            $table->dropColumn('fecha_inicio');
+            $table->dropColumn('observacion');
+            $table->dropForeign(['responsable_id']);
+            $table->dropColumn('responsable_id');
+        });
     }
 };

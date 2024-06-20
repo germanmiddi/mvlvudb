@@ -7,7 +7,7 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
 				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-					Nueva Inscripción CBJ
+					Nueva Inscripción CB
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -274,11 +274,15 @@
 				<TabEducacion 	v-if="this.tabs === 5" 
 									:form="form.educacion" 
 									:input_disable="input_disable"
+									:nivelesEducativo="nivelesEducativo"
+									:estadosEducativo="estadosEducativo"
+									:turnosEducativo="turnosEducativo"
 									@submit="handleEducacion">
 				</TabEducacion>
 
 				<!-- ADULTO RESPONSABLE -->
 				<TabResponsable 	v-if="this.tabs === 6" 
+									:v="v$"
 									:form="form.responsable" 
 									:input_disable="input_disable"
 									:tiposDocumento="tiposDocumento"
@@ -339,7 +343,9 @@ export default {
 		sedes: Object,
 		comedores: Object,
 		actividadesCbj: Object,
-		acompanamientosCbj: Object
+		acompanamientosCbj: Object,
+		turnosEducativo: Object,
+		estadosEducativo: Object,
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -400,7 +406,16 @@ export default {
 		};
 	},
 	validations() {
+		const dynamicValidations = this.form.responsable.num_documento
+				? { 
+					tipo_documento_id: { required: helpers.withMessage('Responsable: El campo Tipo de Documento es Obligatorio', required) },
+					name: { required: helpers.withMessage('Responsable: El campo Nombre es Obligatorio', required) },
+					lastname: { required: helpers.withMessage('Responsable: El campo Apellido es Obligatorio', required) },
+					fecha_nac: { required: helpers.withMessage('Responsable: El campo Fecha de Nacimiento es Obligatorio', required) }
+				}	
+				: {};
 		return {
+		
 			// Validaciones de campos obligatorios
 			form: {
 				person: {
@@ -414,7 +429,9 @@ export default {
 					fecha: { required: helpers.withMessage('El campo Fecha de Inscripcion es Obligatorio', required) },
 					canal_atencion_id: { required: helpers.withMessage('El campo Canal de Atencion es Obligatorio', required) },
 					sede_id: { required: helpers.withMessage('El campo Sede es Obligatorio', required) },
-				}
+				},
+				responsable:
+					dynamicValidations,
 			}
 		}
 	},
@@ -469,6 +486,7 @@ export default {
 				? new Date(this.form.fecha_nac).toISOString()
 				: null;
 
+			this.form.tipo_cb = 'Juventud'
 			// AXIOS STORE
 			try {
 				const response = await axios.post(rt, this.form);
@@ -494,17 +512,16 @@ export default {
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
 			if (!data.data.length == 0) {
-/* 				this.labelType = "success";
-				this.toastMessage = "El DNI indicado se encuentra registrado"; */
 				this.clearFormData()
 				data = data.data[0].person
-
+				
 				if(data.legajo_cb){
 					this.labelType = "danger";
 					this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
 
 					this.input_disable = true;
 				}else{
+					this.form.person.num_documento = num_documento;
 					/// Recuperar datos.
 					this.form.person.tipo_documento_id = data.tipo_documento_id
 					this.form.person.fecha_nac = data.fecha_nac
@@ -513,6 +530,28 @@ export default {
 					this.form.person.lastname = data.lastname
 					this.form.contact.email = data.contact[0].email
 					this.form.contact.phone = data.contact[0].phone
+
+					this.form.direccion.localidad_id = data.address[0].localidad_id
+					this.form.direccion.calle = data.address[0].calle
+					this.form.direccion.number = data.address[0].number
+					this.form.direccion.piso = data.address[0].piso
+					this.form.direccion.dpto = data.address[0].dpto
+
+					if (data.salud != null) {
+						this.form.salud.apto_medico = data.salud.apto_medico
+						this.form.salud.fecha_apto_medico = data.salud.fecha_apto_medico
+						this.form.salud.fecha_apto_medico = new Date(this.form.salud.fecha_apto_medico + "T00:00:00.000-03:00")
+						this.form.salud.electrocardiograma = data.salud.electrocardiograma
+						this.form.salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+						this.form.salud.fecha_electrocardiograma = new Date(this.form.salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+					}
+
+					if (data.education[0]) {
+						this.form.educacion.nivel_educativo_id = data.education[0].nivel_educativo_id
+						this.form.educacion.estado_educativo_id = data.education[0].estado_educativo_id
+						this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
+					}
+
 					this.form = this.removeNullValues(this.form);
 					this.input_disable = false;
 				}

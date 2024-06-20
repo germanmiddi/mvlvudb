@@ -15,7 +15,12 @@ class LegajoCB extends Model
         'person_id',
         'sede_id',
         'estado_id',
-        'canal_atencion_id'
+        'canal_atencion_id',
+        'fecha_inscripcion',
+        'fecha_inicio',
+        'observacion',
+        'responsable_id',
+        'tipo_legajo_id'
     ];
 
     protected static function booted()
@@ -34,6 +39,11 @@ class LegajoCB extends Model
     public function person()
     {
         return $this->BelongsTo(Person::class, 'person_id');
+    }
+
+    public function responsable()
+    {
+        return $this->BelongsTo(Person::class, 'responsable_id');
     }
 
     public function sede()

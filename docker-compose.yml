@@ -1,4 +1,4 @@
-version: '3.7'
+# version: '3.7'
 
 services:
  mvlvudb_app:
@@ -27,6 +27,8 @@ services:
     MYSQL_ROOT_PASSWORD: 123123
     MYSQL_PASSWORD: 123123
     MYSQL_USER: root
+  ports: # Agregamos este bloque para mapear el puerto de la base de datos al host
+  - "3399:3306"
   volumes:
   - mvlvudbdata:/var/lib/mysq
   networks:

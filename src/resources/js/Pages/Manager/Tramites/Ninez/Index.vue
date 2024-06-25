@@ -263,7 +263,7 @@ export default {
         toast: Object,
         tiposTramite: Object,
         estados: Object,
-        estados: Object
+        users: Object
     },
     components: {
         Menu,

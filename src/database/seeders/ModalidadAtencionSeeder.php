@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Manager\ModalidadAtencion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,15 +16,26 @@ class ModalidadAtencionSeeder extends Seeder
      */
     public function run()
     {
-        // Valores a insertar en la tabla modalidad_atencion
-        $modalidades = ['VIRTUAL', 'PRESENCIAL', 'TELEFÓNICA'];
-
-        foreach ($modalidades as $modalidad) {
-            DB::table('modalidad_atencion')->insert([
-                'description' => $modalidad,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        
+        ModalidadAtencion::updateOrCreate(
+            ['description' => 'VIRTUAL'],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
+        ModalidadAtencion::updateOrCreate(
+            ['description' => 'PRESENCIAL'],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
+        ModalidadAtencion::updateOrCreate(
+            ['description' => 'TELEFÓNICA'],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
+        ModalidadAtencion::updateOrCreate(
+            ['description' => 'WHATSAPP'],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
+        ModalidadAtencion::updateOrCreate(
+            ['description' => 'MAIL'],
+            ['created_at' => now(), 'updated_at' => now()]
+        );
     }
 }

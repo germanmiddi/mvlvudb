@@ -53,7 +53,7 @@
 									obligatorio</span>
 							</div>
 
-							<div class="col-span-12 sm:col-span-5">
+							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Tramite</label>
 								<select v-model="form.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
@@ -85,6 +85,18 @@
 								</select>
 								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
+							</div>
+
+							<div class="col-span-12 sm:col-span-3">
+								<label for="modalidad_atencion_id" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+								<select v-model="form.modalidad_atencion_id" id="modalidad_atencion_id" name="modalidad_atencion_id"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled selected>Selecciones una modalidad de atención</option>
+									<option v-for="modalidad in modalidadesAtencion" :key="modalidad.id" :value="modalidad.id">{{
+										modalidad.description
+									}}</option>
+								</select>
 							</div>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
@@ -600,6 +612,7 @@ export default {
 		tiposTramite: Object,
 		programasSocial: Object,
 		tramite: Object,
+        modalidadesAtencion: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -900,6 +913,7 @@ export default {
 		this.form.num_documento = titular[0].num_documento
 		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
+		this.form.modalidad_atencion_id = this.tramite[0].modalidad_atencion_id
 		this.form.observacion = this.tramite[0].observacion
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos

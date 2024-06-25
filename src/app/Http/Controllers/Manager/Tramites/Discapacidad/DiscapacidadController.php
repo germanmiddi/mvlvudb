@@ -36,6 +36,7 @@ use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\Tramite;
 use App\Models\Manager\Dependencia;
+use App\Models\Manager\ModalidadAtencion;
 use App\Models\Manager\TramiteEstado;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,7 @@ class DiscapacidadController extends Controller
             'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
             'estados' => TramiteEstado::all(),
             'users' => User::orderBy('name')->get(),
+            'modalidadesAtencion' => ModalidadAtencion::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -75,7 +77,8 @@ class DiscapacidadController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
-                'programasSocial' => ProgramaSocial::all()
+                'programasSocial' => ProgramaSocial::all(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -239,6 +242,7 @@ class DiscapacidadController extends Controller
                             'observacion' => $request['tramites_observacion'][$indice],
         
                             'canal_atencion_id' => $request['canal_atencion_id'],
+                            'modalidad_atencion_id' => $request['modalidad_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
                             'dependencia_id' => $dependencia['dependencia_id'],
 
@@ -309,7 +313,8 @@ class DiscapacidadController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -439,6 +444,7 @@ class DiscapacidadController extends Controller
                     'observacion' => $request['observacion'],
                     'canal_atencion_id' => $request['canal_atencion_id'],
                     'tipo_tramite_id' => $request['tipo_tramite_id'],
+                    'modalidad_atencion_id' => $request['modalidad_atencion_id'],
                     'dependencia_id' => $dependencia['dependencia_id']
                 ]
             );
@@ -521,6 +527,11 @@ class DiscapacidadController extends Controller
         if(request('estado_id')){
             $estado_id = json_decode(request('estado_id'));
             $result->where('estado_id', $estado_id);
+        }
+
+        if(request('modalidad_atencion_id')){
+            $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
+            $result->where('modalidad_atencion_id', $modalidad_atencion_id);
         }
 
        

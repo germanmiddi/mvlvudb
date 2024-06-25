@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Manager\Tramites\General;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manager\Category;
 use App\Models\Manager\Dependencia;
+use App\Models\Manager\ModalidadAtencion;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
 use App\Models\User;
@@ -21,6 +23,8 @@ class GeneralController extends Controller
             'tiposTramite' => TipoTramite::active()->get(),
             'dependencias' => Dependencia::all(),
             'users' => User::orderBy('name')->get(),
+            'modalidadesAtencion' => ModalidadAtencion::all(),
+            'categorias' => Category::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -76,6 +80,16 @@ class GeneralController extends Controller
         if(request('user_id')){
             $user_id = json_decode(request('user_id'));
             $result->where('assigned', $user_id);
+        }
+
+        if(request('modalidad_atencion_id')){
+            $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
+            $result->where('modalidad_atencion_id', $modalidad_atencion_id);
+        }
+
+        if(request('categoria_id')){
+            $categoria_id = json_decode(request('categoria_id'));
+            $result->where('category_id', $categoria_id);
         }
 
         return  $result->orderBy("tramites.fecha", 'DESC')

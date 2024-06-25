@@ -46,10 +46,10 @@ use Illuminate\Support\Facades\Redirect;
 
 class GeneroController extends Controller
 {
-    protected $notFamiliares = ['Hermanastra/o Mayor de Edad',
-                            'Hermana/o Mayor de Edad', 
-                            'Adulto/a Responsable'
-                        ];
+    protected $notFamiliares =  ['Hermanastra/o Mayor de Edad',
+                                    'Hermana/o Mayor de Edad', 
+                                    'Adulto/a Responsable'
+                                ];
     //index
 
     public function index()
@@ -59,6 +59,8 @@ class GeneroController extends Controller
             'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
             'estados' => TramiteEstado::all(),
             'users' => User::orderBy('name')->get(),
+            'modalidadesAtencion' => ModalidadAtencion::all(),
+            'categorias' => Category::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -553,6 +555,16 @@ class GeneroController extends Controller
         
         if(count($users_id) > 0){
             $result->whereIn('assigned', $users_id);
+        }
+
+        if(request('modalidad_atencion_id')){
+            $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
+            $result->where('modalidad_atencion_id', $modalidad_atencion_id);
+        }
+
+        if(request('categoria_id')){
+            $categoria_id = json_decode(request('categoria_id'));
+            $result->where('category_id', $categoria_id);
         }
         
         return  $result->orderBy("tramites.fecha", 'DESC')

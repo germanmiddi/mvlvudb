@@ -71,6 +71,19 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
+								<label for="modalidad_atencion_id" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+								<select v-model="form.modalidad_atencion_id" id="modalidad_atencion_id" name="modalidad_atencion_id"
+									autocomplete="off"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled selected>Selecciones una modalidad de atención</option>
+									<option v-for="modalidad in modalidadesAtencion" :key="modalidad.id" :value="modalidad.id">{{
+										modalidad.description
+									}}</option>
+								</select>
+							</div>
+							
+
+							<div class="col-span-12 sm:col-span-3">
 								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
 									Atención</label>
 								<select v-model="form.canal_atencion_id" id="canal_atencion" name="canal_atencion"
@@ -604,6 +617,7 @@ export default {
 		tiposTramite: Object,
 		programasSocial: Object,
 		tramite: Object,
+		modalidadesAtencion: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -905,6 +919,7 @@ export default {
 		this.form.num_documento = titular[0].num_documento
 		this.form.tipo_tramite_id = this.tramite[0].tipo_tramite_id
 		this.form.canal_atencion_id = this.tramite[0].canal_atencion_id
+		this.form.modalidad_atencion_id = this.tramite[0].modalidad_atencion_id
 		this.form.observacion = this.tramite[0].observacion
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos

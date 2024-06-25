@@ -98,6 +98,18 @@ class ReportController extends Controller
         if(isset($request->boton_antipanico)){
             $data['boton_antipanico'] = json_decode($request->boton_antipanico);
         } 
+
+        if(isset($request->modalidad_atencion_id)){
+            $data['modalidad_atencion_id'] = json_decode($request->modalidad_atencion_id);
+        } 
+
+        if(isset($request->categoria_id)){
+            $data['categoria_id'] = json_decode($request->categoria_id);
+        } 
+
+        if($request->user_id){
+            $data['user_id'] = json_decode($request->user_id);
+        }
         
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }

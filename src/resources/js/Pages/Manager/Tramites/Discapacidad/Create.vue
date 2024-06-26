@@ -579,21 +579,30 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
+								<div class="flex items-center">
+									<label for="name" class="block text-sm font-medium text-gray-700">Recibe
 									Programa Social</label>
-								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
-									autocomplete="off" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un programa social
-									</option>
-									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
-										:value="programaSocial.id" :bind:select="programaSocial.id ==
-											form.programa_social_id
-											">
-										{{ programaSocial.description }}
-									</option>
-								</select>
+									<a class="ml-2 items-center" @click="addPrograma"><Icons name="plus-circle" class="h-5 w-5 text-green-500 hover:text-green-700"/></a>
+								</div>
+								<div>
+									<select  v-model="programaSelect" id="label_id" name="label_id" autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+										<option value="" disabled>
+										Seleccione un programa
+										</option>
+										<option v-for="programa in programasSocial" :key="programa.id" :value="programa">
+										{{ programa.description }}
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-span-12 sm:col-span-6">
+								<label for="message" class="block text-sm font-semibold leading-6 text-gray-900 mb-2">Programas seleccionados</label>
+								<span  v-for="(programa, index) in this.programasSelected" :key="index" 
+									class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2 mb-2">
+									{{programa.description}} <Icons name="trash" @click="removePrograma(programa.id)" class="h-5 w-5 text-red-700 ml-2"></Icons>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -704,6 +713,7 @@ import {
 } from "@headlessui/vue";
 import ViewFile from "../Detail/ViewFile.vue";
 import store from '@/store.js'
+import Icons from '@/Layouts/Components/Icons.vue'
 
 const people = [
 	{ id: 1, name: "Durward Reynolds", unavailable: false },
@@ -748,7 +758,8 @@ export default {
 		helpers,
 		minLength,
 		ViewFile,
-		store
+		store,
+		Icons,
 	},
 	data() {
 		return {
@@ -785,7 +796,9 @@ export default {
 			input_disable: true,
 			fileView: '',
 			openModal: false,
-			fileInvalid: false
+			fileInvalid: false,
+			programaSelect: '',
+          	programasSelected: [],
 		};
 	},
 	validations() {
@@ -816,6 +829,28 @@ export default {
 		};
 	},
 	methods: {
+		addPrograma(){
+            let existe_programa = this.programasSelected.find( programa => programa.id === this.programaSelect.id );
+            if(this.programaSelect === ''){
+                this.programaType = "info";
+                this.toastMessage = "Debe ingresar un Programa";
+            }else{
+                if(!existe_programa)
+                {
+                    this.programasSelected.push(this.programaSelect);
+                }else{
+                    this.labelType = "info";
+                    this.toastMessage = "El Programa ya se encuentra asignada";
+                }
+            }
+            this.programaSelect = '';
+        },
+        removePrograma(id){
+            const index = this.programasSelected.findIndex(item => item.id === id);
+            this.programasSelected.splice(index, 1);
+            this.labelType = "success";
+            this.toastMessage = "Se ha eliminado correctamente el Programa";
+        },
 		closeModal() {
             this.openModal = false
         },

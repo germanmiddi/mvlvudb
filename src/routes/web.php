@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Manager\DashboardController;
+use App\Http\Controllers\Manager\Export\ExportController;
 use App\Http\Controllers\Manager\Import\ImportController;
 use App\Http\Controllers\Manager\Logs\LogController;
 use App\Http\Controllers\Manager\Persons\PersonController;
@@ -52,14 +53,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/report/exportPersonsExcel', [ReportController::class, 'exportPersonsExcel'])->name('report.exportPersonsExcel');
     Route::post('/report/exportEntidadExcel', [ReportController::class, 'exportEntidadExcel'])->name('report.exportEntidadExcel');
 
+    
     // Printer PDF
     Route::get('/pdf/acusepdf/{tramite}', [PdfController::class, 'acusepdf'])->name('pdf.acusepdf');
     Route::get('/pdf/acuseobservacionespdf/{tramite}', [PdfController::class, 'acuseObservacionPdf'])->name('pdf.acuseobservacionpdf');
-
+    
     // LOGS
     Route::get('/logs', [LogController::class, 'index'])->name('logs');  
     Route::get('/logs/listLast', [LogController::class, 'listLast'])->name('logs.listLast');    
 
+    // Exportar
+    Route::post('/export/tramitesExcel', [ExportController::class, 'exportTramiteExcel'])->name('export.tramitesExcel');
+    Route::get('/export/tramitesCBIExcel', [ExportController::class, 'exportTramiteCBIExcel'])->name('export.ramitesCBIExcel');
+    Route::post('/export/personsExcel', [ExportController::class, 'exportPersonsExcel'])->name('export.personsExcel');
+    Route::post('/export/entidadesExcel', [ExportController::class, 'exportEntidadExcel'])->name('export.entidadExcel');
+    Route::get('/export/templateDependencia/{id}', [ExportController::class, 'exportTemplateDependencia'])->name('export.templateDependencia');
+    
     // IMPORTADOR
     Route::get('/import', [ImportController::class, 'index'])->name('import');  
     Route::post('/import/entidad', [ImportController::class, 'importEntidades'])->name('import.entidad');
@@ -70,6 +79,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/cud', [ImportController::class, 'importCud'])->name('import.cud');
     Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable'); 
     Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');  
+
+    Route::post('/import/templateDependencia', [ImportController::class, 'templateDependencia'])->name('import.templateDependencia');
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');

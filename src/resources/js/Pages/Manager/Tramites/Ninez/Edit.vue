@@ -1255,6 +1255,7 @@ export default {
 		this.form.observacion = this.tramite[0].observacion
 		this.form.fecha = new Date(this.tramite[0].fecha + "T00:00:00.000-03:00")
 		this.form_archivo = this.tramite[0].archivos
+		this.form.parentesco_id = this.tramite[0].parentesco_id
 
 		if (beneficiario != '') {
 			this.beneficiario_control = true

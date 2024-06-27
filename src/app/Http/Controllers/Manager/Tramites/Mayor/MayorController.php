@@ -23,6 +23,7 @@ use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\ModalidadAtencion;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\TipoDocumento;
 use App\Models\Manager\TipoOcupacion;
@@ -52,6 +53,7 @@ class MayorController extends Controller
             'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
             'estados' => TramiteEstado::all(),
             'users' => User::orderBy('name')->get(),
+            'modalidadesAtencion' => ModalidadAtencion::all(),
             'toast' => Session::get('toast')
         ]);
     }
@@ -74,7 +76,8 @@ class MayorController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
-                'programasSocial' => ProgramaSocial::all()
+                'programasSocial' => ProgramaSocial::all(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -215,6 +218,7 @@ class MayorController extends Controller
                             'observacion' => $request['tramites_observacion'][$indice],
         
                             'canal_atencion_id' => $request['canal_atencion_id'],
+                            'modalidad_atencion_id' => $request['modalidad_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
                             'dependencia_id' => $dependencia['dependencia_id'],
                             'estado_id' => 1, // Estado Abierto
@@ -284,7 +288,8 @@ class MayorController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 14)->get(),
                 'programasSocial' => ProgramaSocial::all(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get()
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -398,6 +403,7 @@ class MayorController extends Controller
                     'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
                     'observacion' => $request['observacion'],
                     'canal_atencion_id' => $request['canal_atencion_id'],
+                    'modalidad_atencion_id' => $request['modalidad_atencion_id'],
                     'tipo_tramite_id' => $request['tipo_tramite_id'],
                     'dependencia_id' => $dependencia['dependencia_id']
                 ]
@@ -507,6 +513,11 @@ class MayorController extends Controller
             
             if(count($users_id) > 0){
                 $result->whereIn('assigned', $users_id);
+            }
+
+            if(request('modalidad_atencion_id')){
+                $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
+                $result->where('modalidad_atencion_id', $modalidad_atencion_id);
             }
         //}
 

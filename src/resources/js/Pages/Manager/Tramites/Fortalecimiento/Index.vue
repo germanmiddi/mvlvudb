@@ -9,8 +9,24 @@
                     Bandeja General de Fortalecimiento Comunitario
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
+            <div v-if="formImport" class="mt-4 flex sm:mt-0 sm:ml-4">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
+                <input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
+									autocomplete="off"
+									class="bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2" />
+                <a  @click="importFile()" v-if="!processImport"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Importar</a>
+
+                <a v-else
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
+                
+                <a :href="route('export.templateDependencia',5)" target="_blank"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Template</a>
+                
+                <a @click="formImport=false"
+                        class="order-0 inline-flex items-center px-4 py-2 border border-red-700 shadow-sm text-sm font-medium rounded-md text-red-700 hover:text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Cancelar</a>
+            </div>
+            <div v-else class="mt-4 flex sm:mt-0 sm:ml-4">
                 <a :href="route('fortalecimiento.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
 
@@ -19,6 +35,9 @@
 
                 <a v-else
                     class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
+                
+                <a @click="formImport=true"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Importar</a>
             </div>
         </div>
 
@@ -291,7 +310,10 @@ export default {
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            processReport: false
+            processReport: false,
+            processImport: false,
+            formImport: false,
+            file: '',
         };
     },
     setup() {
@@ -445,7 +467,38 @@ export default {
                 console.error(error);
             }
             this.processReport = false
-        }
+        },
+        async importFile() {
+            if (this.file != '') {
+                this.processImport = true
+                this.status = ''
+                let rt = route("import.templateDependencia");
+                const formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('dependencia_id', 5);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.status = response.data.status;
+                        this.getTramites();
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+                this.processImport = false
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
     },
     mounted() {
         if (this.toast) {

@@ -144,6 +144,18 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                     });
         }
 
+        if(isset($this->data['modalidad_atencion_id'])){
+            $result->where('tramites.modalidad_atencion_id', $this->data['modalidad_atencion_id']);
+        }
+
+        if(isset($this->data['categoria_id'])){
+            $result->where('tramites.category_id', $this->data['categoria_id']);
+        }
+
+        if(isset($this->data['user_id'])){
+            $result->where('tramites.assigned', $this->data['user_id']);
+        }
+
         return $result->get();
     }
 

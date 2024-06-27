@@ -80,12 +80,36 @@
                             <select v-model="filter.tipo_tramite_id" id="tipo_tramite_id" name="tipo_tramite_id"
                                 autocomplete="tipo_tramite_id_name"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="" selected>Selecciones un tipo de tramite</option>
+                                <option value="" disabled selected>Selecciones un tipo de tramite</option>
                                 <option v-for="tipoTramite in tiposTramite" :key="tipoTramite.id" :value="tipoTramite.id">{{
                                     tipoTramite.description
                                 }}</option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="modalidad_atencion_id" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+                            <select v-model="filter.modalidad_atencion_id" id="modalidad_atencion_id" name="modalidad_atencion_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled selected>Selecciones una modalidad de atención</option>
+                                <option v-for="modalidad in modalidadesAtencion" :key="modalidad.id" :value="modalidad.id">{{
+                                    modalidad.description
+                                }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="categoria_id" class="block text-sm font-medium text-gray-700">Categoria</label>
+                            <select v-model="filter.categoria_id" id="categoria_id" name="categoria_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled selected>Selecciones una modalidad de atención</option>
+                                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">{{
+                                    categoria.nombre
+                                }}</option>
+                            </select>
+                        </div>
+
                         <div class="col-span-12 sm:col-span-2">
 								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Ingreso Nuevo</label>
 								<select v-model="filter.ingreso_nuevo" id="ingreso_nuevo" name="ingreso_nuevo"
@@ -123,7 +147,7 @@
                             <input @click="filter.not_assigned = ''" v-model="filter.assigned_me" id="assigned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>
                         <!-- <div class="col-span-12 sm:col-span-2" v-show="store.userCan('ADM', $page.props.userGroups)"> -->
-                        <div class="col-span-12 sm:col-span-2">
+                        <div class="col-span-12 sm:col-span-1">
                             <label for="not_assigned" class="block text-sm font-medium text-gray-700">Sin Asignar</label>
                             <input @click="filter.user_id = '', filter.assigned_me = ''" v-model="filter.not_assigned" id="not_assigned" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>
@@ -284,6 +308,8 @@ export default {
         toast: Object,
         tiposTramite: Object,
         estados: Object,
+        modalidadesAtencion: Object,
+        categorias: Object,
         users: Object
     },
     components: {
@@ -369,6 +395,14 @@ export default {
 
             if (this.filter.boton_antipanico) {
                 filter += `&boton_antipanico=${JSON.stringify(this.filter.boton_antipanico)}`
+            }
+
+            if (this.filter.modalidad_atencion_id) {
+                filter += `&modalidad_atencion_id=${JSON.stringify(this.filter.modalidad_atencion_id)}`
+            }
+
+            if (this.filter.categoria_id) {
+                filter += `&categoria_id=${JSON.stringify(this.filter.categoria_id)}`
             }
 
             const get = `${route('genero.list')}?${filter}`

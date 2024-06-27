@@ -49,6 +49,7 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
     protected $data;
     protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
     protected $sedesAvailables = ['La Loma', 'El Ceibo', 'Habana', 'Las Flores', 'Sivori'];
+    protected $title = '';
 
     function __construct($param) {
         $this->data = $param;
@@ -56,100 +57,104 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
 
     public function collection()
     {
-        switch ($this->data['id']) {
-            case '0':
-                return TipoTramite::select('id','description')->where('dependencia_id', 12)->active()->get();
+        switch ($this->data['title']) {
+            case 'tipos_tramite':
+                return TipoTramite::select('id','description')->where('dependencia_id', $this->data['dependencia_id'])->active()->get();
                 break;
-            case '1':
+
+            case 'paises':
                 return Pais::select('id','description')->get();
                 break;
 
-            case '2':
+            case 'barrios':
                 return Barrio::select('id','description')->get();
                 break;
                 
-            case '3':
+            case 'localidades':
                 return Localidad::select('id','description')->get();
                 break;
 
-            case '4':
+            case 'canales_atencion':
                 return CanalAtencion::select('id','description')->get();
                 break;
 
-            case '5':
+            case 'cobertura_medica':
                 return CoberturaMedica::select('id','description')->get();
                 break;
-
-            case '6':
+            
+            case 'estado_educativo':
                 return EstadoEducativo::select('id','description')->get();
                 break;
 
-            case '7':
+            case 'nivel_educativo':
                 return NivelEducativo::select('id','description')->get();
                 break;
 
-            case '8':
+            case 'tipo_documento':
                 return TipoDocumento::select('id','description')->get();
                 break;
 
-            case '9':
+            case 'tipo_ocupación':
                 return TipoOcupacion::select('id','description')->get();
                 break;
 
-            case '10':
+            case 'tipo_pension':
                 return TipoPension::select('id','description')->get();
                 break;
 
-            case '11':
+            case 'situacion_conyugal':
                 return SituacionConyugal::select('id','description')->get();
                 break;
 
-            case '12':
+            case 'programa_social':
                 return ProgramaSocial::select('id','description')->get();
                 break;
 
-            case '13':
+            case 'parentescos':
                 return Parentesco::whereIn('description', $this->FamiliarConviviente)->get();
                 break;
 
-            case '14':
+            case 'sedes':
                 return Sede::whereIn('description', $this->sedesAvailables)->get();
                 break;
 
-            case '15':
+            case 'estados_cbi':
                 return EstadoCbi::select('id','description')->get();
                 break;
                 
-            case '16':
+            case 'gabinete_psicologico':
                 return EstadoGabinete::select('id','description')->get();
                 break;
                 
-            case '17':
-                return Escuela::select('id','description')->where('primaria', true)->where('dependencia_id',12)->get();
+            case 'escuela_primaria':
+                return Escuela::select('id','description')->where('primaria', true)->where('dependencia_id',$this->data['dependencia_id'])->get();
                 break;
 
-            case '18':
-                return Escuela::select('id','description')->where('infante', true)->where('dependencia_id',12)->get();
+            case 'escuela_infante':
+                return Escuela::select('id','description')->where('infante', true)->where('dependencia_id',$this->data['dependencia_id'])->get();
                 break;
 
-            case '19':
+            case 'escuela_dependencia':
                 return EscuelaDependencia::select('id','description')->get();
                 break;
 
-            case '20':
+            case 'escuela_nivel':
                 return EscuelaNivel::select('id','description')->get();
                 break;
                 
-            case '21':
+            case 'turno_escolar':
                 return EscuelaTurno::select('id','description')->get();
                 break;
 
-            case '22':
+            case 'centro_salud':
                 return CentroSalud::where('activo', true)->get();
                 break;
                 
-            case '23':
+            case 'estado_salud':
                 return EstadoSalud::where('activo', true)->get();
+                break;
+            case 'canal_atencion':
+                return CanalAtencion::get();
                 break;
             default:
                 # code...
@@ -166,7 +171,7 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
     // Titulo de la hoja de excel.
     public function title(): string
     {
-        return $this->data['titles'][$this->data['id']];
+        return $this->data['title'];
     }
 
     public function styles(Worksheet $sheet)
@@ -188,7 +193,7 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
 
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
-
+    
     // encabezados
     public function headings(): array
     {
@@ -213,5 +218,4 @@ class MasterExport implements FromCollection, WithHeadings, WithStyles, ShouldAu
     }
 
 
-    
 }

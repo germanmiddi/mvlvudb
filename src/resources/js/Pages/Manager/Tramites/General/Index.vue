@@ -68,7 +68,7 @@
                                     :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
 
-                        <div class="col-span-12 sm:col-span-4">
+                        <div class="col-span-12 sm:col-span-3">
                             <label for="dependencia_id" class="block text-sm font-medium text-gray-700">Dependencia</label>
                             <select v-model="filter.dependencia_id" id="dependencia_id" name="dependencia_id" @change="filtrarTiposTramite"
                                 autocomplete="off"
@@ -76,6 +76,30 @@
                                 <option value="" selected>Selecciones una dependencia</option>
                                 <option v-for="dependencia in dependencias" :key="dependencia.id" :value="dependencia.id">{{
                                     dependencia.description
+                                }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="modalidad_atencion_id" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+                            <select v-model="filter.modalidad_atencion_id" id="modalidad_atencion_id" name="modalidad_atencion_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled selected>Selecciones una modalidad de atención</option>
+                                <option v-for="modalidad in modalidadesAtencion" :key="modalidad.id" :value="modalidad.id">{{
+                                    modalidad.description
+                                }}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="categoria_id" class="block text-sm font-medium text-gray-700">Categoria</label>
+                            <select v-model="filter.categoria_id" id="categoria_id" name="categoria_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled selected>Selecciones una modalidad de atención</option>
+                                <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">{{
+                                    categoria.nombre
                                 }}</option>
                             </select>
                         </div>
@@ -268,6 +292,8 @@ export default {
         toast: Object,
         tiposTramite: Object,
         dependencias: Object,
+        modalidadesAtencion: Object,
+        categorias: Object,
         users: Object
     },
     components: {
@@ -350,6 +376,14 @@ export default {
 
             if (this.filter.user_id) {
                 filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
+            }
+
+            if (this.filter.modalidad_atencion_id) {
+                filter += `&modalidad_atencion_id=${JSON.stringify(this.filter.modalidad_atencion_id)}`
+            }
+
+            if (this.filter.categoria_id) {
+                filter += `&categoria_id=${JSON.stringify(this.filter.categoria_id)}`
             }
 
             const get = `${route('general.list')}?${filter}`

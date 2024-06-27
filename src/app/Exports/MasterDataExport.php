@@ -19,17 +19,17 @@ class MasterDataExport implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [];
-        $param = [];
 
-        $param['titles'] = ['Tipo Tramite', 'Paises','Barrios', 'Localidades', 
-            'Canales Atencion', 'Cobertura Medica', 'Estado Educativo Alcanzado', 'Nivel Educativo', 
-            'Tipo Documento', 'Tipo Ocupación', 'Tipo Pension', 'Situación Conyugal',
-            'Programa Social', 'Parentesco (Vinculo con el Menor)', 'Sede', 'Estado CBI', 'Gabinete Psicologico', 'Escuela Primaria', 
-            'Escuela Infante','Escuela Dependencia', 'Escuela Nivel (Año en Curso)', 'Turno Escolar',
-            'Centro de Salud','Estado Salud'];
+        $titles = ['tipos_tramite', 'paises','barrios', 'localidades', 
+            'canales_atencion', 'cobertura_medica', 'estado_educativo_alcanzado', 'nivel_educativo', 
+            'tipo_documento', 'tipo_ocupación', 'tipo_pension', 'situacion_conyugal',
+            'programa_social', 'parentescos', 'sedes', 'estados_cbi', 'gabinete_psicologico', 'escuela_primaria', 
+            'escuela_infante','escuela_dependencia', 'escuela_nivel', 'turno_escolar',
+            'centro_salud','estado_salud'];
 
-        for ($id = 0; $id < count($param['titles']); $id++) {
-            $param['id'] = $id;
+        for ($id = 0; $id < count($titles); $id++) {
+            $param['title'] = $titles[$id];
+            $param['dependencia_id'] = 12;
             $sheets[$id] = new MasterExport($param);
         }
 

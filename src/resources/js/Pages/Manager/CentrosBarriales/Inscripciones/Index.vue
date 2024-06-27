@@ -10,6 +10,7 @@
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Inscripción</a>
             </div>
         </div>
+        {{tramitesSede}}
         <!-- Pinned projects -->
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
             <h2 class="text-gray-500 text-xs font-medium uppercase tracking-wide">Sedes</h2>
@@ -22,7 +23,7 @@
                             <a href="#" class="text-gray-900 font-medium hover:text-gray-600">
                                 {{ project.title }}
                             </a>
-                            <p class="text-gray-400">15 Inscripciones</p>
+                            <p class="text-gray-400">{{project.totalInscripciones}} Inscripciones</p>
                             <a href="#" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
                         </div>
                     </div>
@@ -79,7 +80,6 @@ const pinnedProjects = projects.filter((project) => project.pinned)
 
 export default {
     props: {
-
     },
     components:{
         Menu, 
@@ -108,24 +108,21 @@ export default {
     methods: {
         async getStatistics(link) {
 
-            const get = `${route('dashboard.statistics')}`
+            const get = `${route('dashboard.statisticscb')}`
 
             const response = await fetch(get, { method: "GET" });
-            let dependencias = await response.json();
-
+            let tramites = await response.json();
+            //console.log(dependencias)
             this.data = this.projects
             this.data.forEach(element => {
 
-                const dat = dependencias.tramites.find((objeto) => objeto.dependencia_id === element.id);
-                if(element.id == 3){
-                  element.totalTramites = dependencias.entidades
-                }else{
+                const dat = tramites.find((objeto) => objeto.sede_id === element.id);
                   if(dat){
-                      element.totalTramites = dat.count
+                      element.totalInscripciones = dat.total
                   }else{
-                      element.totalTramites = 0
+                      element.totalInscripciones = 0
                   }
-                }
+                
             });
         },
     },

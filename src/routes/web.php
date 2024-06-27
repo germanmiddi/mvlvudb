@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/statistics', [DashboardController::class, 'getstatistics'])->name('dashboard.statistics');
+    Route::get('/statisticscb', [DashboardController::class, 'getstatisticscb'])->name('dashboard.statisticscb');
 
     // Report
     Route::get('/report', [ReportController::class, 'index'])->name('report');

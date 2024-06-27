@@ -36,13 +36,7 @@ class InscripcionesCBJController extends Controller
 
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Index',
-        [
-            /* 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
-            'estados' => TramiteEstado::all(),
-            'users' => User::orderBy('name')->get(),
-            'toast' => Session::get('toast') */
-        ]);
+        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Index');
     }
 
     //create
@@ -128,7 +122,7 @@ class InscripcionesCBJController extends Controller
                         'tipo_documento_id' => $request->responsable['tipo_documento_id'],
                         'num_documento' => $request->responsable['num_documento']
                     ],  
-                    $request->person
+                    $request->responsable
                 );
             }
 

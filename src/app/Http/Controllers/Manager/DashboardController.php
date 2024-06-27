@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Entidad;
+use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Tramite;
 
 class DashboardController extends Controller
@@ -98,6 +99,14 @@ class DashboardController extends Controller
         $entidades = Entidad::count();
         $data['tramites'] = $tramites;
         $data['entidades'] = $entidades;
+        return ($data);
+    }
+
+    public function getstatisticscb(){
+
+        $data = LegajoCB::selectRaw('sede_id, COUNT(*) as total')
+        ->groupBy('sede_id')
+        ->get();
         return ($data);
     }
 

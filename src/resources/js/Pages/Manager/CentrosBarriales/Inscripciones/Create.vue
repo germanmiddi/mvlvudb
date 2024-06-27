@@ -528,14 +528,18 @@ export default {
 					this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
 					this.form.person.name = data.name
 					this.form.person.lastname = data.lastname
-					this.form.contact.email = data.contact[0].email
-					this.form.contact.phone = data.contact[0].phone
+					if (data.contact != '') {
+						this.form.contact.email = data.contact[0].email
+						this.form.contact.phone = data.contact[0].phone
+					}
 
-					this.form.direccion.localidad_id = data.address[0].localidad_id
-					this.form.direccion.calle = data.address[0].calle
-					this.form.direccion.number = data.address[0].number
-					this.form.direccion.piso = data.address[0].piso
-					this.form.direccion.dpto = data.address[0].dpto
+					if (data.address != '') {
+						this.form.direccion.localidad_id = data.address[0].localidad_id
+						this.form.direccion.calle = data.address[0].calle
+						this.form.direccion.number = data.address[0].number
+						this.form.direccion.piso = data.address[0].piso
+						this.form.direccion.dpto = data.address[0].dpto
+					}
 
 					if (data.salud != null) {
 						this.form.salud.apto_medico = data.salud.apto_medico

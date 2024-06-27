@@ -32,19 +32,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
-
-class InscripcionesCBJController extends Controller
+class InscripcionesCBIController extends Controller
 {
-    protected $sedesAvailables = ['Munro','Villa Martelli', 'La Loma', 'El Ceibo'];
+    protected $sedesAvailables = ['Las Flores','Sivori', 'La Loma', 'El Ceibo', 'Habana'];
 
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Index');
+        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Infancia/Index');
     }
 
     public function create()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Create',
+        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Infancia/Create',
             [
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
@@ -123,7 +122,7 @@ class InscripcionesCBJController extends Controller
             }
 
             // Obtiene ID de Tipo de Legajo.
-            $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Juventud')->first();
+            $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
 
             $legajo = LegajoCB::updateOrCreate(
                 [
@@ -147,7 +146,7 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->autorizaciones
             );
-            $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES JUVENTUD')->first();
+            $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
 
             $tramite_data = Tramite::Create(
                 [
@@ -170,13 +169,11 @@ class InscripcionesCBJController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);
+            return response()->json(['message' => 'Se generado correctamente la inscripcion CBI.'], 200);
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBJ", ["Modulo" => "IncripcionCBJ:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
+            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBI", ["Modulo" => "IncripcionCBI:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBI. Verifique los datos ingresados.'], 203);
         }
     }
-
 }

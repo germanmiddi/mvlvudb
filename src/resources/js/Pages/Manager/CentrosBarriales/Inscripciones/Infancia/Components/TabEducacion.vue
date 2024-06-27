@@ -27,7 +27,9 @@
 						</option>
 					</select>
 				</div>
-
+			</div>
+             
+            <div class="grid grid-cols-12 gap-6">
 				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 					<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Estado Educativo</label>
 					<select v-model="localData.estado_educativo_id" id="estado_educativo_id" name="estado_educativo_id"
@@ -43,7 +45,9 @@
 						</option>
 					</select>
 				</div>
-
+			</div>
+            
+            <div class="grid grid-cols-12 gap-6">
 				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 					<label for="escuela_turno_id" class="block text-sm font-medium text-gray-700">Turno</label>
 					<select v-model="localData.escuela_turno_id" id="escuela_turno_id" name="escuela_turno_id"

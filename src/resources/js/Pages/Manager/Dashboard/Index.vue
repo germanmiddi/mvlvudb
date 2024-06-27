@@ -168,7 +168,7 @@ export default {
     methods: {
         async getStatistics(link) {
 
-            const get = `${route('dashboard.statistics')}`
+            const get = `${route('dashboard.tramites')}`
 
             const response = await fetch(get, { method: "GET" });
             let dependencias = await response.json();

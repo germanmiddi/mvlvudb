@@ -21,6 +21,16 @@ class TipoTramiteCBSeeder extends Seeder
               "dependencia_id" => 13,
               "description" => "INSCRIPCIÓN A CENTROS BARRIALES",
               "activo" => 1,
+            ],
+            [
+                "dependencia_id" => 13,
+                "description" => "INSCRIPCIÓN A CENTROS BARRIALES JUVENTUD",
+                "activo" => 1,
+            ],
+            [
+                "dependencia_id" => 12,
+                "description" => "INSCRIPCIÓN A CENTROS BARRIALES INFANCIA",
+                "activo" => 1,
             ]
           ];
 

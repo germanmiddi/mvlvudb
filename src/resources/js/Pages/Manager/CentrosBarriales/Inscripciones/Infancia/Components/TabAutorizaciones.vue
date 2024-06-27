@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="grid grid-cols-12 gap-6">
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Apoyo Escolar</label>
                         <Switch v-model="localData.apoyo_escolar" :disabled="input_disable"
                                 @click="localData.apoyo_escolar = !localData.apoyo_escolar"
@@ -23,7 +23,7 @@
                         </Switch>   
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Act. por Area Empleo</label>
                         <Switch v-model="localData.actividad_empleo" :disabled="input_disable"
                                 @click="localData.actividad_empleo = !localData.actividad_empleo"
@@ -33,8 +33,10 @@
                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                         </Switch>   
                 </div>
-
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+              </div>
+              <hr>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Firmada</label>
                         <Switch v-model="localData.autorizacion_firmada" :disabled="input_disable"
                                 @click="localData.autorizacion_firmada = !localData.autorizacion_firmada"
@@ -45,7 +47,7 @@
                         </Switch>   
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Retirarse</label>
                         <Switch v-model="localData.autorizacion_retirarse" :disabled="input_disable"
                                 @click="localData.autorizacion_retirarse = !localData.autorizacion_retirarse"
@@ -55,8 +57,10 @@
                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                         </Switch>   
                 </div>
-
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+              </div>
+              <hr>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Uso Imagen</label>
                         <Switch v-model="localData.autorizacion_uso_imagen" :disabled="input_disable"
                                 @click="localData.autorizacion_uso_imagen = !localData.autorizacion_uso_imagen"

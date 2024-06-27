@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="grid grid-cols-12 gap-6">
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
                     <label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
                     <select v-model="localData.localidad_id" id="localidad_id" name="localidad_id" autocomplete="off"
                         :disabled="input_disable" :class="input_disable ? bg_disable : ''"
@@ -26,13 +26,15 @@
                     </select>
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-4">
                     <label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
                     <input v-model="localData.calle" type="text" name="calle" id="calle" autocomplete="off"
                         :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
-                
+              </div>
+              
+              <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
                     <label for="number" class="block text-sm font-medium text-gray-700">Número</label>
                     <input v-model="localData.number" type="text" name="number" id="number" autocomplete="off"

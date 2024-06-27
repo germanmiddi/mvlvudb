@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="grid grid-cols-12 gap-6">
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="apto_medico" class="block text-sm font-medium text-gray-700">Apto Médico</label>
                     <Switch v-model="localData.apto_medico"
                         @click="localData.apto_medico = !localData.apto_medico"
@@ -23,7 +23,7 @@
                     </Switch>   
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="fecha_apto_medico" class="block text-sm font-medium text-gray-700">Fecha Apto Médico</label>
                   <Datepicker
                     class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -33,8 +33,10 @@
                   </Datepicker>
                   
                 </div>
-
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+              </div>
+              <hr>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Electrocardiograma</label>
                     <Switch v-model="localData.electrocardiograma"
                         @click="localData.electrocardiograma = !localData.electrocardiograma"
@@ -45,7 +47,7 @@
                     </Switch>   
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="fecha_electrocardiograma" class="block text-sm font-medium text-gray-700">Fecha Electrocardiograma</label>
                   <Datepicker
                     class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -55,7 +57,11 @@
                   </Datepicker>
                 </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+              </div>
+              <hr>
+            <div class="grid grid-cols-12 gap-6">
+
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="programa_social_id" class="block text-sm font-medium text-gray-700">CUD</label>
                     <Switch v-model="form.posee_cud"
                         @click="localData.posee_cud = !localData.posee_cud"
@@ -67,7 +73,7 @@
                 </div>
 
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
+                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                   <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Cud Presentado</label>
                     <Switch v-model="localData.presento_cud"
                         @click="localData.presento_cud = !localData.presento_cud"

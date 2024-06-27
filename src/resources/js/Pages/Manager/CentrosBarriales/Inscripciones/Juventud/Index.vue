@@ -3,7 +3,7 @@
         <!-- Page title & actions -->
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
-                <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Dashboard | Centros Barriales</h1>
+                <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Dashboard | Centros Barriales Juventud</h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
                 <a :href="route('inscripcionCBJ.create')"
@@ -40,7 +40,7 @@ import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
 import store from '@/store.js'
 
 const projects = [
-    
+
     {
         id: 1,
         title: 'La Loma',
@@ -73,7 +73,7 @@ const projects = [
         route: '#',
         //module: 'ENT'
     }
-    
+
     // More projects...
     ]
 const pinnedProjects = projects.filter((project) => project.pinned)
@@ -82,7 +82,7 @@ export default {
     props: {
     },
     components:{
-        Menu, 
+        Menu,
         MenuButton,
         MenuItems,
         MenuItem,
@@ -97,7 +97,7 @@ export default {
 
     setup() {
        const sidebarOpen = ref(false)
-  
+
       return {
         projects,
         pinnedProjects,
@@ -108,11 +108,10 @@ export default {
     methods: {
         async getStatistics(link) {
 
-            const get = `${route('dashboard.statisticscb')}`
+            const get = `${route('dashboard.cbj')}`
 
             const response = await fetch(get, { method: "GET" });
             let tramites = await response.json();
-            //console.log(dependencias)
             this.data = this.projects
             this.data.forEach(element => {
 
@@ -122,14 +121,14 @@ export default {
                   }else{
                       element.totalInscripciones = 0
                   }
-                
+
             });
         },
     },
     mounted() {
         this.getStatistics()
     }
-    
+
 
 }
 </script>

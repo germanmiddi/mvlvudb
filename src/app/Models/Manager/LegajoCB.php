@@ -65,4 +65,9 @@ class LegajoCB extends Model
     {
         return $this->hasOne(AutorizacionCb::class,'legajo_id', 'id');
     }
+
+    public function tipo_legajo()
+    {
+        return $this->BelongsTo(TipoLegajoCb::class, 'tipo_legajo_id');
+    }
 }

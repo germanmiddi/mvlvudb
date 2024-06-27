@@ -46,7 +46,7 @@
           </div>
         </Dialog>
       </TransitionRoot>
-  
+
       <!-- Static sidebar for desktop -->
       <div class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 lg:pt-5 lg:pb-4 lg:bg-gray-100">
         <div class="flex items-center flex-shrink-0 px-6 font-bold text-xl">
@@ -186,7 +186,7 @@
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
-                    
+
                     <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
@@ -197,29 +197,32 @@
                         Centros Barriales Juventud
                       </li>
                     </a>
-                    <a :href="route('inscripcionCBJ')">
+                    <hr>
+                    <a :href="route('inscripcionCBI')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Inscripciones CBJ
+                        Inscripción CBI
                       </li>
                     </a>
                     <a :href="route('inscripcionCBJ')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Inscripciones CBI
+                        Inscripción CBJ
                       </li>
                     </a>
-                    <a :href="route('listInscriptosCBJ')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Lista Inscriptos
-                      </li>
+                    <hr>
+                    <a :href="route('mil-dias')">
+                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                            Gabinete
+                        </li>
                     </a>
                     <a :href="route('mil-dias')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Gabinete
-                      </li>
+                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                            Mil Dias
+                        </li>
                     </a>
-                    <a :href="route('mil-dias')">
+                    <hr>
+                    <a :href="route('legajoCB')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Mil Dias
+                        Inscriptos
                       </li>
                     </a>
                   </DisclosurePanel>
@@ -246,13 +249,13 @@
 
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
-                    
+
                     <a :href="route('users')" >
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Usuarios y Permisos
                       </li>
                     </a>
-                    
+
                     <a :href="route('masterdata')">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Datos Maestros
@@ -276,7 +279,7 @@
                 <PowerIcon class="mr-3 flex-shrink-0 h-5 w-5" />
                 <span @click="logout" class="text-sm font-medium ">Cerrar Sesión</span>
 
-              </div>   
+              </div>
             </div>
 
           </nav>
@@ -344,11 +347,11 @@
           </div>
         </div>
         <slot> </slot>
-            
+
       </div>
     </div>
   </template>
-  
+
   <script>
 
  import { Inertia } from '@inertiajs/inertia-vue3';
@@ -444,9 +447,9 @@
       Bars3Icon,
       XMarkIcon,
       DocumentChartBarIcon,
-      Disclosure, 
-      DisclosureButton, 
-      DisclosurePanel, 
+      Disclosure,
+      DisclosureButton,
+      DisclosurePanel,
       InboxIcon,
       Inertia,
       Cog6ToothIcon,
@@ -454,11 +457,11 @@
       UserGroupIcon,
       CalendarDaysIcon,
       NewspaperIcon
-      
+
     },
     setup() {
       const sidebarOpen = ref(false)
-  
+
       return {
 
         navigation,
@@ -467,21 +470,21 @@
         // pinnedProjects,
         sidebarOpen,
         store
-        
+
       }
     },
     data() {
       return {
-        
+
       }
     },
     methods: {
       logout() {
           this.$inertia.post(route('logout'));
       },
-      
+
     },
 
-  
+
   }
   </script>

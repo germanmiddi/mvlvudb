@@ -7,7 +7,7 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
 				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-					Nueva Inscripción CB
+					Nueva Inscripción | Centro Barrial Juventud
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -106,7 +106,7 @@
 								<div class="relative">
 									<input type="text" v-model="form.person.num_documento" @keyup.enter="getPerson()" :class="v$.form.person.num_documento.$error ? 'border-red-500' : ''"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-									<a @click="getPerson()" 
+									<a @click="getPerson()"
 										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
 										Verificar
 									</a>
@@ -249,30 +249,30 @@
 				</div>
 
 				<!-- DOMICILIO -->
-				<TabDireccion 	v-if="this.tabs === 2" 
-									:form="form.direccion" 
+				<TabDireccion 	v-if="this.tabs === 2"
+									:form="form.direccion"
 									:input_disable="input_disable"
 									:localidades="localidades"
 									@submit="handleDireccion">
 				</TabDireccion>
-				
+
 				<!-- SALUD -->
-				<TabSalud 	v-if="this.tabs === 3" 
-									:form="form.salud" 
+				<TabSalud 	v-if="this.tabs === 3"
+									:form="form.salud"
 									:input_disable="input_disable"
 									@submit="handleSalud">
 				</TabSalud>
-				
+
 				<!-- AUTORIZACIONES -->
-				<TabAutorizaciones 	v-if="this.tabs === 4" 
-									:form="form.autorizaciones" 
+				<TabAutorizaciones 	v-if="this.tabs === 4"
+									:form="form.autorizaciones"
 									:input_disable="input_disable"
 									@submit="handleAutorizaciones">
 				</TabAutorizaciones>
 
 				<!-- Educacion -->
-				<TabEducacion 	v-if="this.tabs === 5" 
-									:form="form.educacion" 
+				<TabEducacion 	v-if="this.tabs === 5"
+									:form="form.educacion"
 									:input_disable="input_disable"
 									:nivelesEducativo="nivelesEducativo"
 									:estadosEducativo="estadosEducativo"
@@ -281,9 +281,9 @@
 				</TabEducacion>
 
 				<!-- ADULTO RESPONSABLE -->
-				<TabResponsable 	v-if="this.tabs === 6" 
+				<TabResponsable 	v-if="this.tabs === 6"
 									:v="v$"
-									:form="form.responsable" 
+									:form="form.responsable"
 									:input_disable="input_disable"
 									:tiposDocumento="tiposDocumento"
 									@submit="handleResponsable">
@@ -291,15 +291,6 @@
 
 			</form>
 		</div>
-		
-		<!-- <div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
-			<button
-			class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-			:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
-			:disabled="btnGuardar || input_disable">
-			Guardar
-			</button>
-		</div> -->
 	</main>
 </template>
 
@@ -325,47 +316,47 @@ import TabResponsable from './Components/TabResponsable.vue';
 
 export default {
 	props: {
-		paises: Object,
-		barrios: Object,
-		localidades: Object,
-		canalesAtencion: Object,
-		coberturasMedica: Object,
-		estadosEducativo: Object,
-		nivelesEducativo: Object,
-		tiposDocumento: Object,
-		tiposOcupacion: Object,
-		tiposPension: Object,
-		tiposVivienda: Object,
-		situacionesConyugal: Object,
-		rolesTramite: Object,
-		tiposTramite: Object,
-		programasSocial: Object,
-		sedes: Object,
-		comedores: Object,
-		actividadesCbj: Object,
 		acompanamientosCbj: Object,
-		turnosEducativo: Object,
-		estadosEducativo: Object,
+        actividadesCbj: Object,
+        barrios: Object,
+        canalesAtencion: Object,
+        coberturasMedica: Object,
+        comedores: Object,
+        estadosEducativo: Object,
+        localidades: Object,
+        nivelesEducativo: Object,
+        paises: Object,
+        programasSocial: Object,
+        rolesTramite: Object,
+        sedes: Object,
+        situacionesConyugal: Object,
+        tiposDocumento: Object,
+        tiposOcupacion: Object,
+        tiposPension: Object,
+        tiposTramite: Object,
+        tiposVivienda: Object,
+        turnosEducativo: Object
+
 	},
 	components: {
-		ArrowLeftCircleIcon,
-		Toast,
-		Datepicker,
-		required,
-		useVuelidate,
-		helpers,
-		minLength,
-		store,
-		Switch,
 		ArrowsPointingInIcon,
-		PlusCircleIcon,
-		TrashIcon,
-		// Tabs
-		TabAutorizaciones,
-		TabDireccion,
-		TabSalud,
-		TabEducacion,
-		TabResponsable
+        ArrowLeftCircleIcon,
+        PlusCircleIcon,
+        TabAutorizaciones,
+        TabDireccion,
+        TabEducacion,
+        TabResponsable,
+        TabSalud,
+        Toast,
+        TrashIcon,
+        Datepicker,
+        Switch,
+        helpers,
+        minLength,
+        required,
+        store,
+        useVuelidate,
+
 	},
 	data() {
 		return {
@@ -381,7 +372,7 @@ export default {
 				educacion: {},
 				responsable: {}
 			},
-			
+
 			/* MENSAJERIA */
 			toastMessage: "",
 			labelType: "info",
@@ -394,9 +385,9 @@ export default {
             acompanamientosSelected: [],
 			tallerSelect: '',
             talleresSelected: [],
-			
+
 			// Disabled - Enabled
-			bg_disable: 'bg-gray-100', 
+			bg_disable: 'bg-gray-100',
 			btnGuardar: false,
 			input_disable: true,
 			datepickerStyle: {
@@ -407,15 +398,15 @@ export default {
 	},
 	validations() {
 		const dynamicValidations = this.form.responsable.num_documento
-				? { 
+				? {
 					tipo_documento_id: { required: helpers.withMessage('Responsable: El campo Tipo de Documento es Obligatorio', required) },
 					name: { required: helpers.withMessage('Responsable: El campo Nombre es Obligatorio', required) },
 					lastname: { required: helpers.withMessage('Responsable: El campo Apellido es Obligatorio', required) },
 					fecha_nac: { required: helpers.withMessage('Responsable: El campo Fecha de Nacimiento es Obligatorio', required) }
-				}	
+				}
 				: {};
 		return {
-		
+
 			// Validaciones de campos obligatorios
 			form: {
 				person: {
@@ -457,14 +448,15 @@ export default {
 		},
 		clearFormData() {
 			this.form = {
-				person: {},
-				contact: {},
-				inscripcion: {},
 				autorizaciones: {},
-				direccion: {},
-				salud: {},
-				educacion: {},
-				responsable: {}
+                contact: {},
+                direccion: {},
+                educacion: {},
+                inscripcion: {},
+                person: {},
+                responsable: {},
+                salud: {},
+
 			}
 		},
 		async submit() {
@@ -475,7 +467,6 @@ export default {
 			}
 
 			// RUTA
-			//this.btnGuardar = true
 			let rt = route("inscripcionCBJ.store");
 
 			// FORMATEO DE FECHAS
@@ -486,8 +477,6 @@ export default {
 				? new Date(this.form.fecha_nac).toISOString()
 				: null;
 
-			this.form.tipo_cb = 'Juventud'
-			// AXIOS STORE
 			try {
 				const response = await axios.post(rt, this.form);
 				if (response.status == 200) {
@@ -495,7 +484,7 @@ export default {
 					this.toastMessage = response.data.message;
 					this.btnGuardar = false
 					setTimeout(() => {
-						window.location.href = "/inscripcion-cbj";
+						window.location.href = "/centros-barriales/juventud";
 					}, 3100);
 				} else {
 					this.labelType = "danger";
@@ -514,7 +503,7 @@ export default {
 			if (!data.data.length == 0) {
 				this.clearFormData()
 				data = data.data[0].person
-				
+
 				if(data.legajo_cb){
 					this.labelType = "danger";
 					this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
@@ -574,127 +563,6 @@ export default {
 			this.labelType = "info";
 			this.toastMessage = "Debe ingresar un DNI.";
 		},
-		addBeneficiario() {
-		},
-
-		/* ***********************
-		 ** * MANEJO DE GOOGLE MAPS
-		 */
-		getAddressData: function (addressData, placeResultData, id) {
-		},
-		coord_google($coord) {
-		},
-
-		/*
-		 ** * FIN MANEJO DE GOOGLE MAPS
-		 ******************************
-		 */
-
-		/* ********************
-		 ** * MANEJO DE ARCHIVOS
-		 */
-		handleFileChange(event) {
-		},
-		addFile() {
-		},
-		deleteFile(index) {
-		},
-
-		/*
-		 ** * FIN MANEJO DE ARCHIVOS
-		 ***************************
-		 */
-
-		/* ***************************
-		 ** * MANEJO DE TIPO DE TRAMITE
-		 */
-		addTramite() {
-		},
-		deleteTramite(index) {
-		},
-		/*
-		 ** * FIN MANEJO DE TIPO DE TRAMITE
-		 **********************************
-		 */
-
-		beneficiario(data) {
-			this.form_beneficiario = data;
-		},
-		addActividad(){
-			console.log(this.actividadSelect)
-            let existe_actividad = this.actividadesSelected.find( label => label.id === this.actividadSelect.id );
-            if(this.labelSelect === ''){
-                this.labelType = "info";
-                this.toastMessage = "Debe ingresar un valor de Actividad";
-            }else{
-                if(!existe_actividad)
-                {
-                    this.actividadesSelected.push(this.actividadSelect);
-                }else{
-                    this.labelType = "info";
-                    this.toastMessage = "La Actividad ya se encuentra asignada";
-                }
-            }
-            this.actividadSelect = '';
-        },
-		removeActividad(actividad){
-            const index = this.actividadesSelected.findIndex(item => item.id === actividad.id);
-            this.actividadesSelected.splice(index, 1);
-            this.labelType = "success";
-            this.toastMessage = "Se ha eliminado correctamente la etiqueta";
-        },
-
-		addAcompanamiento(){
-            let existe_actividad = this.acompanamientosSelected.find( label => label.id === this.acompanamientoSelect.id );
-            if(this.labelSelect === ''){
-                this.labelType = "info";
-                this.toastMessage = "Debe ingresar un valor de Acompañamiento";
-            }else{
-                if(!existe_actividad)
-                {
-                    this.acompanamientosSelected.push(this.acompanamientoSelect);
-                }else{
-                    this.labelType = "info";
-                    this.toastMessage = "El acompañamiento ya se encuentra asignada";
-                }
-            }
-            this.acompanamientoSelect = '';
-        },
-		removeAcompanamiento(actividad){
-            const index = this.acompanamientosSelected.findIndex(item => item.id === actividad.id);
-            this.acompanamientosSelected.splice(index, 1);
-            this.labelType = "success";
-            this.toastMessage = "Se ha eliminado correctamente el acompañamiento";
-        },
-		removeActividad(actividad){
-            const index = this.actividadesSelected.findIndex(item => item.id === actividad.id);
-            this.actividadesSelected.splice(index, 1);
-            this.labelType = "success";
-            this.toastMessage = "Se ha eliminado correctamente la etiqueta";
-        },
-
-		addTaller(){
-            let existe_actividad = this.talleresSelected.find( label => label === this.tallerSelect );
-            if(this.labelSelect === ''){
-                this.labelType = "info";
-                this.toastMessage = "Debe ingresar un valor de Taller";
-            }else{
-                if(!existe_actividad)
-                {
-                    this.talleresSelected.push(this.tallerSelect);
-                }else{
-                    this.labelType = "info";
-                    this.toastMessage = "El taller ya se encuentra asignada";
-                }
-            }
-            this.tallerSelect = '';
-        },
-		removeTaller(actividad){
-            const index = this.talleresSelected.findIndex(item => item === actividad);
-            this.talleresSelected.splice(index, 1);
-            this.labelType = "success";
-            this.toastMessage = "Se ha eliminado correctamente el taller";
-        },
 		handleAutorizaciones(data){
 			this.form.autorizaciones = data;
 		},

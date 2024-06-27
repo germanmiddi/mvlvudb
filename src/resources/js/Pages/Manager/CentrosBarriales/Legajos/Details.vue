@@ -8,7 +8,7 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</button>
 				<h1 class="font-sm font-medium text-gray-600 sm:truncate">
-					Detalle del Legajo 
+					Legajo N°: {{legajo[0].id}}
 					<!-- <span class="text-indigo-700 text-xl font-semibold ">{{tramite[0].dependencia.description}}</span> -->
 				</h1>
 			</div>
@@ -17,71 +17,15 @@
 						Administrar Documentos
 				</button>
 				<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3">
-					    Administrar Programas Sociales					
+					    Administrar Programas Sociales
 				</button>
 				<button class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3">
-					    Administrar Gabinete				
+					    Administrar Gabinete
 				</button>
 			</div>
 		</div>
 
 		<Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
-
-		<div class="px-4 mt-6 sm:px-6 lg:px-8">
-			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
-				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{legajo[0].id}}</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Inscripción.</p>
-				</div>
-
-				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-					<dl class="sm:divide-y sm:divide-gray-200">
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(legajo[0].fecha_inscripcion) }}</dd>
-						</div>
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].fecha_inicio }}</dd>
-						</div>
-						
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.fechaFormateada(legajo[0].created_at) }}</dd>
-						</div>
-						
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Última actualización</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.fechaFormateada(legajo[0].updated_at) }}</dd>
-						</div>
-						
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].estadocbj?.description ?? '-' }}</dd>
-						</div>
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].canal_atencion?.description ?? '-' }}</dd>
-						</div>
-						
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Sede</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].sede?.description ?? '-' }}</dd>
-						</div>
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Observación</dt>
-							<dd class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].observacion ?? '-' }}</dd>
-						</div>
-						
-					</dl>
-				</div>
-
-			</div>
-		</div>	
-
 
 		<!-- Datos Titular -->
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -93,17 +37,17 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person.lastname}}, {{ legajo[0].person.name }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Documento</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].person.num_documento}}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{store.dateFormateada(legajo[0].person.fecha_nac)}}</dd>
@@ -132,40 +76,68 @@
 					</dl>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<!-- Fin  Datos Titular -->
 
-		<!-- Datos Responsale -->
-		<div class="px-4 mt-6 sm:px-6 lg:px-8" v-if="legajo[0].responsable">
+		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Adulto Responsable</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles del responsable.</p>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos Inscripción</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Inscripción.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].responsable.lastname}}, {{ legajo[0].responsable.name }}</dd>
+							<dt class="text-sm font-medium text-gray-500">Tipo Legajo:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ legajo[0].tipo_legajo?.description ?? '-' }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Documento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].responsable.num_documento}}</dd>
+							<dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(legajo[0].fecha_inscripcion) }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{store.dateFormateada(legajo[0].responsable.fecha_nac)}}</dd>
+							<dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].fecha_inicio }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.fechaFormateada(legajo[0].created_at) }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Última actualización</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.fechaFormateada(legajo[0].updated_at) }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].estadocbj?.description ?? '-' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].canal_atencion?.description ?? '-' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Sede</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].sede?.description ?? '-' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Observación</dt>
+							<dd class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].observacion ?? '-' }}</dd>
 						</div>
 
 					</dl>
 				</div>
+
 			</div>
-		</div>	
-		<!-- Fin  Datos Titular -->
+		</div>
 
 		<!-- Datos Autorizaciones -->
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -177,17 +149,17 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Apoyo Escolar</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].autorizacion.apoyo_escolar ? 'SI' : 'NO'}}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Actividad por Area Empleo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.actividad_empleo ? 'SI' : 'NO'}}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Autoriazción Firmada</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.autorizacion_firmada ? 'SI' : 'NO'}}</dd>
@@ -204,9 +176,9 @@
 						</div>
 					</dl>
 				</div>
-				
+
 			</div>
-		</div>	
+		</div>
 		<!-- Fin  Autorizaciones -->
 
 		<!-- Datos Salud -->
@@ -219,22 +191,22 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Apto Medico</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.apto_medico ? 'SI' : 'NO'}}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha Apto Médico</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_apto_medico ) ?? '-' }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Electrocardiograma</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.electrocardiograma ? 'SI' : 'NO'}}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha Electrocardiograma</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_electrocardiograma ) ?? '-' }}</dd>
@@ -250,7 +222,24 @@
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud.presento_cud ? 'SI' : 'NO'}}</dd>
 						</div>
 
-						<hr>
+					</dl>
+				</div>
+
+			</div>
+		</div>
+		<!-- Fin  Salud -->
+
+		<!-- Datos Educación -->
+		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Educacion</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación.</p>
+				</div>
+
+				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+					<dl class="sm:divide-y sm:divide-gray-200">
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.nivel_educativo?.description ?? '-'}}</dd>
@@ -267,32 +256,42 @@
 						</div>
 					</dl>
 				</div>
-				
-			</div>
-		</div>	
-		<!-- Fin  Salud -->
 
-		<!-- Datos Beneficiario -->
-		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+			</div>
+		</div>
+		<!-- Fin  Educación -->
+
+		<!-- Datos Responsale -->
+		<div class="px-4 mt-6 sm:px-6 lg:px-8" v-if="legajo[0].responsable">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Programas Sociales</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Programas Sociales vigentes.</p>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Adulto Responsable</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles del responsable.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Programa Social</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > <ul><li>- Vivienda</li><li>- Progresar</li></ul></dd>
+							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].responsable.lastname}}, {{ legajo[0].responsable.name }}</dd>
 						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Documento</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].responsable.num_documento}}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{store.dateFormateada(legajo[0].responsable.fecha_nac)}}</dd>
+						</div>
+
 					</dl>
 				</div>
-				
 			</div>
-		</div>			
-		<!-- Fin Datos Beneficiario -->
+		</div>
+		<!-- Fin  Datos Responsable -->
 
 		<!-- <div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -305,7 +304,7 @@
 						<div v-if="nivelEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ nivelEducativo }}</dd>
-						</div>				
+						</div>
 
 						<div v-if="ocupacion !=''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ocupación</dt>
@@ -325,9 +324,9 @@
 						<div v-if="tipoPension != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Tipo Pensión</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tipoPension}}</dd>
-						</div> 
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
 		</div>	 -->
 
@@ -342,10 +341,10 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Estado</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase" >
-								<span :class="estado[estadoTramite]"> {{ estadoTramite }}</span>	
-							
+								<span :class="estado[estadoTramite]"> {{ estadoTramite }}</span>
+
 							</dd>
-						</div>		
+						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 flex items-center">
 							<dt class="text-sm font-medium text-gray-500">Responsable</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase flex items-center " >
@@ -356,16 +355,16 @@
 										:bind:select="u.id == tramite[0].assigned">
 										{{ u.name }}
 									</option>
-								</select>	
+								</select>
 								<button type="button"
 										class="relative ml-4 inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
 										@click="changeAssignment()">
-										Confirmar</button>						
+										Confirmar</button>
 							</dd>
-						</div>		
+						</div>
 						<div v-if="tramite[0].estado_id != 2"  class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Re Asignar</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >
 								<select v-model="newDependencia" id="newDependencia" name="newDependencia" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option v-for="d in dependencias" :key="d.id" :value="d.id"
@@ -379,18 +378,18 @@
 									<textarea v-model="newDepObservacion" id="newDepObservacion" name="newDepObservacion" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
-					
+
 								<button type="button"
 										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
 										@click="changeDependencia()">
 										Confirmar
 								</button>
 							</dd>
-						</div>				
+						</div>
 					</dl>
-				</div>	
+				</div>
 
-			
+
 
 			</div>
 		</div>	 -->
@@ -401,13 +400,13 @@
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Observaciones</h3>
 					<p class="mt-1 max-w-2xl text-sm text-gray-500"></p>
 				</div>
-				
+
 				<div v-if="tramite[0].estado_id != 2" class="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-		
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nueva Observación</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >
 								<div class="mt-1">
 									<textarea v-model="form.newObservacion" id="observacion" name="observacion" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
@@ -415,17 +414,17 @@
 								<p class="mt-1 mb-5 text-xs text-gray-500">
 									Ingrese información adicional del tramite.
 								</p>
-					
+
 								<button type="button"
 										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
 										@click="addObservacion()">
 										Agregar Observación
 								</button>
 							</dd>
-						</div>				
+						</div>
 					</dl>
-				</div>	
-				
+				</div>
+
 				<div class="grid grid-cols-12 gap-2">
 					<div class="px-4 py-5 sm:px-6">
 						<h3 class="text-lg leading-6 font-medium text-gray-900">Comentarios</h3>
@@ -433,14 +432,14 @@
 					</div>
 					<div v-for="(comment, index) in comments" :key="index" class="min-w-full divide-y divide-gray-200 w-full col-span-12">
 						<Comment v-if="comment.activo === 1"
-									:comment=comment 
+									:comment=comment
 									@message="handleMessage"
 									@deleteComment="handleDeleteComment" >
 						</Comment>
 					</div>
-				</div>				
+				</div>
 			</div>
-		</div> -->	
+		</div> -->
 
 		<!-- <div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST" enctype="multipart/form-data">
@@ -454,7 +453,7 @@
 							</div>
 
 						</div>
-						
+
 						<div class="grid grid-cols-12 gap-6">
 							<div v-if="tramite[0].estado_id != 2" class="col-span-12 sm:col-span-10 ">
 								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
@@ -563,7 +562,7 @@ export default {
 	},
 	data() {
 		return {
-			
+
 		}
 	},
 	setup() {
@@ -594,7 +593,7 @@ export default {
 			this.getComments();
         },
 		async changeAssignment(){
-			
+
 			if(this.assignment == this.tramite[0].assigned){
 				this.labelType = "danger";
 				this.toastMessage = "Debe seleccionar un responsable distinto";
@@ -703,17 +702,17 @@ export default {
 			} catch (error) {
 				console.log(error)
 			}
-	
+
 		},
 
 		async addObservacion(){
-			
+
 				let rt = route('detail.addComment');
 
 				let formData = new FormData();
 				formData.append('observacion', this.form.newObservacion)
 				formData.append('tramite_id', this.tramite[0].id)
-				
+
 				try {
 					const response = await axios.post(rt, formData);
 					if (response.status == 200) {
@@ -728,7 +727,7 @@ export default {
 				} catch (error) {
 					console.log(error)
 				}
-			
+
 		},
 
 		clearMessage() {
@@ -819,7 +818,7 @@ export default {
 						this.toastMessage = response.data.message;
 						this.form_archivo.push(response.data.archivo)
 						this.form.description_file = ''
-						
+
 						this.file = null
 						const fileValue = this.$refs.inputfile;
 						fileValue.value = null;

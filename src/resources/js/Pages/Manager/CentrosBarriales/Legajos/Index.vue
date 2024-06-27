@@ -7,10 +7,6 @@
                     Listado de Inscriptos
                 </h1>
             </div>
-           <!--  <div class="mt-4 flex sm:mt-0 sm:ml-4">
-                <a  :href="route('inscripcionCBJ.create')"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
-            </div> -->
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
@@ -27,37 +23,51 @@
                             <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
                                     @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getLegajos()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
-                        <div class="col-span-12 sm:col-span-3 ">
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha Alta</label>
+                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
+                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        <div class="col-span-12 sm:col-span-3 ">
-                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                            <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
-                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div>
+
                         
-                        <div class="col-span-12 sm:col-span-3">
-                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha Alta</label>
-                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
-                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
-                        </div>
-                        <div class="col-span-12 sm:col-span-3">
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
                             <select v-model="filter.estado_id" id="estado_id" name="estado_id"
                                 autocomplete="off"
-                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="">TODOS</option>
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Seleccione un Estado</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
+                                }}</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="estado_id" class="block text-sm font-medium text-gray-700">Tipo Legajo</label>
+                            <select v-model="filter.tipo_legajo_id" id="tipo_legajo_id" name="tipo_legajo_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Seleccione un Tipo Legajo</option>
+                                <option v-for="tl in tiposLegajo" :key="tl.id" :value="tl.id">{{
+                                    tl.description
                                 }}</option>
                             </select>
                         </div>
@@ -88,7 +98,11 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Fecha Alta
+                                        Fecha Inscripción
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tipo Legajo
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -101,78 +115,7 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <!-- <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-l-8 border-green-500">
-                                        Alberto Bernar
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        42515823
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        Munro
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        04/05/2024
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Activo</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
-                                        <Menu as="div" class="inline-node">
-                                            <div>
-                                                <MenuButton class="btn-blue h-7">
-                                                    <EllipsisVerticalIcon name="options-vertical"
-                                                        class="w-7 h-7 inline-flex items-center bg-blue-100 p-1 rounded-full shadow-sm text-gray-600  hover:bg-blue-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" />
-                                                </MenuButton>
-                                            </div>
-                                            <transition enter-active-class="transition ease-out duration-100"
-                                                enter-from-class="transform opacity-0 scale-95"
-                                                enter-to-class="transform opacity-100 scale-100"
-                                                leave-active-class="transition ease-in duration-75"
-                                                leave-from-class="transform opacity-100 scale-100"
-                                                leave-to-class="transform opacity-0 scale-95">
-                                                <MenuItems
-                                                    class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
-                                                    <div class="py-1 text-left">
-                                                        
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Detalle</a>
-                                                        </MenuItem>
-                                                    </div>
-                                                    <div class="px-1 py-1 text-left">
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Cambiar a Regular</a>
-                                                        </MenuItem>
-                                                        
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Cambiar a No Participa</a>
-                                                        </MenuItem>
-
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Cambiar a Baja</a>
-                                                        </MenuItem>
-
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
-                                                            Cambiar a Egreso</a>
-                                                        </MenuItem>
-                                                    </div>
-
-                                                </MenuItems>
-                                            </transition>
-                                        </Menu>
-                                    </td>
-                                </tr> -->
-                                <tr v-for="data in legajos" :key="data.id">
+                                <tr v-for="data in legajos.data" :key="data.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{data.person?.lastname ?? '-'}}, {{data.person?.name ?? '-'}}
                                     </td>
@@ -183,7 +126,10 @@
                                         {{data.sede?.description ?? '-'}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ store.fechaFormateada(data.created_at) }}
+                                        {{ store.dateFormateada(data.fecha_inscripcion) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{data.tipo_legajo?.description ?? '-'}}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{{data.estadocbj?.description ?? '-'}}</span>
@@ -206,9 +152,9 @@
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="px-1 py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a :href="route('detailsLegajoCB', data.id)"
+                                                        <a :href="route('legajoCB.legajo', data.id)"
                                                             class="block px-4 py-2 text-sm">
-                                                            Detalle</a>
+                                                            Ver Legajo</a>
                                                         </MenuItem>
                                                     </div>
                                                     <div class="px-1 py-1 text-left">
@@ -217,7 +163,7 @@
                                                             class="block px-4 py-2 text-sm">
                                                             Cambiar a Regular</a>
                                                         </MenuItem>
-                                                        
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a href="#"
                                                             class="block px-4 py-2 text-sm">
@@ -236,30 +182,29 @@
                                                             Cambiar a Egreso</a>
                                                         </MenuItem>
                                                     </div>
-
                                                 </MenuItems>
                                             </transition>
                                         </Menu>
                                     </td>
-                                </tr>
+                                </tr> 
                             </tbody>
                         </table>
                         <hr>
                         <div class="flex justify-between mx-5 my-3 px-2 items-center">
                             <div>
-                                Mostrando: {{ this.tramites.from }} a {{ this.tramites.to }} - Entradas encontradas:
-                                {{ this.tramites.total }}
+                                Mostrando: {{ this.legajos.from }} a {{ this.legajos.to }} - Entradas encontradas:
+                                {{ this.legajos.total }}
                             </div>
 
                             <div class="flex flex-wrap -mb-1">
-                                <template v-for="link in tramites.links">
+                                <template v-for="link in legajos.links">
                                     <div v-if="link.url === null"
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
                                         v-html="link.label"> </div>
                                     <div v-else
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
                                         :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
-                                        @click="getTramitesPaginate(link.url)" v-html="link.label"> </div>
+                                        @click="getLegajosPaginate(link.url)" v-html="link.label"> </div>
                                 </template>
                             </div>
                         </div>
@@ -290,10 +235,8 @@ import store from '@/store.js'
 
 export default {
     props: {
-        toast: Object,
-        legajos: Object,
         estados: Object,
-        users: Object
+        tiposLegajo: Object
     },
     components: {
         Menu,
@@ -312,7 +255,7 @@ export default {
     },
     data() {
         return {
-            tramites: "",
+            legajos: {},
             toastMessage: "",
             labelType: "info",
             message: "",
@@ -331,31 +274,15 @@ export default {
     methods: {
         clearFilter(){
             this.filter = {}
-            this.tiposTramiteFiltrados = this.tiposTramite
-            this.getTramites()
+            this.getLegajos()
         },
         clearMessage() {
             this.toastMessage = "";
         },
-        async getTramites() {
+        async getLegajos() {
+            
             this.tramites = ''
             let filter = `&length=${this.length}`
-
-            if (this.filter.tramite_id) {
-                filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
-            }
-
-            if (this.filter.user_id) {
-                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
-            }
-
-            if (this.filter.assigned_me) {
-                filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
-            }
-
-            if (this.filter.not_assigned) {
-                filter += `&not_assigned=${JSON.stringify(this.filter.not_assigned)}`
-            }
 
             if (this.filter.name) {
                 filter += `&name=${JSON.stringify(this.filter.name)}`
@@ -373,72 +300,22 @@ export default {
                 filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`
             }
 
-            if (this.filter.tipo_tramite_id) {
-                filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
+            if (this.filter.tipo_legajo_id) {
+                filter += `&tipo_legajo_id=${JSON.stringify(this.filter.tipo_legajo_id)}`
             }
 
-            const get = `${route('discapacidad.list')}?${filter}`
+            const get = `${route('legajoCB.list')}?${filter}`
 
             const response = await fetch(get, { method: "GET" });
-            this.tramites = await response.json();
+            this.legajos = await response.json();
         },
-        async getTramitesPaginate(link) {
+        async getLegajosPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })
 
-            this.tramites = await response.json()
-            //console.log(this.orders)  
+            this.legajos = await response.json()
+            //console.log(this.orders)
         },
-        async generateReport() {
-
-            this.filter.dependencia_id = 2
-            this.processReport = true
-            let rt = route("report.exportTramiteExcel");
-
-            try {
-                const response = await axios.post(rt, this.filter, {
-                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
-                });
-
-                // Crear un objeto Blob con la respuesta
-                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-                // Crear una URL de objeto para el Blob
-                const url = window.URL.createObjectURL(blob);
-
-                // Crear un enlace <a> para iniciar la descarga
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
-                a.style.display = 'none';
-
-                // Agregar el enlace al cuerpo del documento y hacer clic en él
-                document.body.appendChild(a);
-                a.click();
-
-                // Liberar la URL del objeto después de la descarga
-                window.URL.revokeObjectURL(url);
-            } catch (error) {
-                console.error(error);
-            }
-            this.processReport = false
-        },
-        /* fechaFormateada(fecha) {
-            const fechaObjeto = new Date(fecha);
-            fechaObjeto.setDate(fechaObjeto.getDate() + 1); // Restar un día
-
-            const dia = fechaObjeto.getDate();
-            const mes = fechaObjeto.getMonth() + 1; // Los meses en JavaScript son indexados desde 0
-            const anio = fechaObjeto.getFullYear();
-
-            // Agregar ceros iniciales si es necesario
-            const diaFormateado = dia < 10 ? `0${dia}` : dia;
-            const mesFormateado = mes < 10 ? `0${mes}` : mes;
-
-            return `${diaFormateado}-${mesFormateado}-${anio}`;
-
-            return fecha;
-        }, */
         namePersons(data){
             let name_titular = ''
             let name_benef = ''
@@ -465,16 +342,7 @@ export default {
         }
     },
     mounted() {
-        if (this.toast) {
-            if (this.toast["status"] == 200) {
-                this.labelType = "success";
-                this.toastMessage = this.toast["message"];
-            } else {
-                this.labelType = "danger";
-                this.toastMessage = this.toast["message"];
-            }
-        }
-        this.getTramites();
+        this.getLegajos();
     }
 };
 </script>

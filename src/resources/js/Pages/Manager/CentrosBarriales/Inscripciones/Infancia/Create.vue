@@ -277,6 +277,7 @@
 									:nivelesEducativo="nivelesEducativo"
 									:estadosEducativo="estadosEducativo"
 									:turnosEducativo="turnosEducativo"
+									:escuelas="escuelas"
 									@submit="handleEducacion">
 				</TabEducacion>
 
@@ -323,6 +324,7 @@ export default {
         coberturasMedica: Object,
         comedores: Object,
         estadosEducativo: Object,
+		escuelas: Object,
         localidades: Object,
         nivelesEducativo: Object,
         paises: Object,

@@ -31,7 +31,7 @@ class LegajosCBController extends Controller
                         'person.address.localidad','person.address.barrio',
                         'person.salud', 'person.cud', 'person.education', 
                         'person.education.nivelEducativo','person.education.estadoEducativo', 
-                        'person.education.escuelaTurno', 'tipo_legajo')->get(),
+                        'person.education.escuelaTurno','person.education.escuelaPrimaria' ,'tipo_legajo', )->get(),
             ]
         );
     }

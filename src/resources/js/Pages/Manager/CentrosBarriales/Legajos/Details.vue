@@ -83,7 +83,7 @@
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos Inscripción</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Inscripción.</p>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de la Inscripción.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -185,8 +185,8 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Salud/Educacion</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Salud y Educación.</p>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Salud</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Salud.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -233,12 +233,17 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Educacion</h3>
-					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación.</p>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Educación</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de Educación.</p>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Escuela</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.escuela_primaria?.description ?? '-'}}</dd>
+						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>

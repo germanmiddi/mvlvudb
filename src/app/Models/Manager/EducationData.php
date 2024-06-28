@@ -78,4 +78,9 @@ class EducationData extends Model
     {
         return $this->belongsTo(EscuelaTurno::class, 'escuela_turno_id');
     }
+
+    public function escuelaPrimaria()
+    {
+        return $this->belongsTo(Escuela::class, 'escuela_primaria_id');
+    }
 }

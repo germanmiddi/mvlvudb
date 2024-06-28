@@ -13,6 +13,7 @@ use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\Escuela;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\LegajoCB;
@@ -50,6 +51,7 @@ class InscripcionesCBJController extends Controller
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
                 'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
+                'escuelas' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'localidades' => Localidad::all(),
                 'nivelesEducativo' => NivelEducativo::all(),

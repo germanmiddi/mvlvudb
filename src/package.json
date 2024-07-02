@@ -32,6 +32,7 @@
         "@vuelidate/core": "^2.0.3",
         "@vuelidate/validators": "^2.0.3",
         "@vuepic/vue-datepicker": "^3.6.8",
+        "@vueup/vue-quill": "^1.2.0",
         "chart.js": "^4.4.0",
         "vue-chartjs": "^5.2.0",
         "vue-google-autocomplete": "^1.1.4",

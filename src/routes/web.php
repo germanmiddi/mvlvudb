@@ -33,6 +33,8 @@ use App\Http\Controllers\Manager\Tramites\Details\DetailController;
 use App\Http\Controllers\MilDias\MilDiasController;
 use Illuminate\Support\Facades\URL;
 
+use App\Http\Controllers\Manager\CentrosBarriales\LegajoController;
+
 
 if (App::environment('production')) {
     URL::forceScheme('https');
@@ -250,4 +252,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/inscripcion-cbj/store', [InscripcionesCBJController::class, 'store'])->name('inscripcionCBJ.store');   
     Route::get('/list-inscriptos-cbj', [InscripcionesCBJController::class, 'index_inscriptos'])->name('listInscriptosCBJ'); 
     Route::get('/details-cb/{id}', [InscripcionesCBJController::class, 'view_inscripto_cb'])->name('detailsLegajoCB');   
+    
+
+    Route::get('/legajo/{id}', [LegajoController::class, 'index'])->name('legajo.index');   
+
+
 });

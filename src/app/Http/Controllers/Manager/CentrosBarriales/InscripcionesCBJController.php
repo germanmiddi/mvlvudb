@@ -160,6 +160,11 @@ class InscripcionesCBJController extends Controller
             );
             /// Obtener el id del tipo tramite Inscripcion Centros Barriales.
             $tipo_tramite = TipoTramite::where('description','INSCRIPCIÓN A CENTROS BARRIALES')->first();
+            if(!$tipo_tramite){
+                DB::rollBack();
+                return response()->json(['message' => 'No se ha encontrado el tipo de tramite para la inscripcion.'], 203);
+            }
+
             // Crear Tramite de Inscripcion
             $tramite_data = Tramite::Create(
                 [
@@ -206,9 +211,23 @@ class InscripcionesCBJController extends Controller
 
         return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Details',
             [   
-                'legajo' => LegajoCB::where('id',$id)->with('estadocbj', 'sede', 'responsable', 'person', 'person.contact', 'autorizacion', 'canal_atencion','person.address', 
-                    'person.address.localidad','person.address.barrio','person.salud', 'person.cud', 'person.education', 'person.education.nivelEducativo', 
-                    'person.education.estadoEducativo', 'person.education.escuelaTurno')->get(),                
+                'legajo' => LegajoCB::where('id',$id)
+                                    ->with('estadocbj', 
+                                           'sede', 
+                                           'responsable', 
+                                           'person', 
+                                           'person.contact', 
+                                           'autorizacion', 
+                                           'canal_atencion',
+                                           'person.address', 
+                                           'person.address.localidad',
+                                           'person.address.barrio',
+                                           'person.salud',
+                                           'person.cud',
+                                           'person.education',
+                                           'person.education.nivelEducativo', 
+                                           'person.education.estadoEducativo',
+                                           'person.education.escuelaTurno')->get(),                
             ]
         );
     }

@@ -15,7 +15,7 @@ class LegajosCBController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Legajos/Index',
+        return Inertia::render('Manager/CentrosBarriales/Inscriptos/Index',
         [
             'tiposLegajo' => TipoLegajoCb::all(),
             'estados' => EstadoCbj::all(),
@@ -24,7 +24,7 @@ class LegajosCBController extends Controller
 
     public function legajo($id)
     {
-        return Inertia::render('Manager/CentrosBarriales/Legajos/Details',
+        return Inertia::render('Manager/CentrosBarriales/Inscriptos/Details',
             [
                 'legajo' => LegajoCB::where('id',$id)->with('estadocbj', 'sede', 'responsable', 'person', 'person.contact', 
                         'autorizacion', 'canal_atencion','person.address',

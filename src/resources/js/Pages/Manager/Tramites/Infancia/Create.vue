@@ -273,7 +273,7 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="estado_gabinete_id" class="block text-sm font-medium text-gray-700">Gabinete Psicologico</label>
+								<label for="estado_gabinete_id" class="block text-sm font-medium text-gray-700">Gabinete</label>
 								<select v-model="form_cbi.estado_gabinete_id" id="estado_gabinete_id" name="estado_gabinete_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -688,7 +688,7 @@
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
 							<div class="">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">
-									Datos del Niño
+									Datos del Niño/a
 								</h3>
 							</div>
 						</div>
@@ -784,7 +784,7 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Niño</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Dirección | Niño/a</h3>
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -881,7 +881,7 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | Niño</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Estudios | Niño/a</h3>
 						</div>
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
@@ -1024,7 +1024,7 @@
 									<textarea v-model="form_nino.observacion_educacion" id="observacion_educacion" name="observacion_educacion" rows="3" :class="input_nino_disable ? bg_disable : ''" :disabled="input_nino_disable"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
-								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional sobre la educación del niño.</p>
+								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional sobre la educación del niño/a.</p>
 							</div>
 						</div>
 
@@ -1035,7 +1035,7 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Salud | Niño</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Salud | Niño/a</h3>
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -1099,7 +1099,7 @@
 									<textarea v-model="form_nino.observacion_salud" id="nino_observacion_salud" name="nino_observacion_salud" rows="3" :class="input_nino_disable ? bg_disable : ''" :disabled="input_nino_disable"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
-								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional a la salud del niño.</p>
+								<p class="mt-2 text-sm text-gray-500">Ingrese información adicional a la salud del niño/a.</p>
 							</div>
 						</div>
 					</div>
@@ -1310,11 +1310,11 @@ export default {
 				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento es Obligatorio', required) },
 			},
 			form_nino: {
-				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento del Niño es Obligatorio', required) },
-				num_documento: { required: helpers.withMessage('El campo N° de documento del Niño es Obligatorio', required) }, // Matches this.contact.email
-				name: { required: helpers.withMessage('El campo Nombre del Niño es Obligatorio', required) },
-				lastname: { required: helpers.withMessage('El campo Apellido del Niño es Obligatorio', required) },
-				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento del Niño es Obligatorio', required) },
+				tipo_documento_id: { required: helpers.withMessage('El campo Tipo de Documento del Niño/a es Obligatorio', required) },
+				num_documento: { required: helpers.withMessage('El campo N° de documento del Niño/a es Obligatorio', required) }, // Matches this.contact.email
+				name: { required: helpers.withMessage('El campo Nombre del Niño/a es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('El campo Apellido del Niño/a es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('El campo Fecha de Nacimiento del Niño/a es Obligatorio', required) },
 			},
 		}
 	},

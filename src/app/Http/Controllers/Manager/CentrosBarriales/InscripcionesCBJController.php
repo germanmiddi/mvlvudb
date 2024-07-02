@@ -150,6 +150,11 @@ class InscripcionesCBJController extends Controller
                 $request->autorizaciones
             );
             $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES JUVENTUD')->first();
+            if(!$tipo_tramite){
+                DB::rollBack();
+                return response()->json(['message' => 'No se ha encontrado el tipo de tramite para la inscripcion.'], 203);
+            }
+
 
             $tramite_data = Tramite::Create(
                 [
@@ -179,6 +184,41 @@ class InscripcionesCBJController extends Controller
             Log::error("Se ha generado un error al momento de almacenar la inscripcion CBJ", ["Modulo" => "IncripcionCBJ:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
         }
+
+    }
+
+    public function index_inscriptos()
+    {
+        return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Index',
+        [
+            'legajos' => LegajoCB::with('person','sede', 'estadocbj')->get()
+        ]);
+    }
+
+    public function view_inscripto_cb($id){
+        $legajo = LegajoCB::find($id);
+
+        return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Details',
+            [   
+                'legajo' => LegajoCB::where('id',$id)
+                                    ->with('estadocbj', 
+                                           'sede', 
+                                           'responsable', 
+                                           'person', 
+                                           'person.contact', 
+                                           'autorizacion', 
+                                           'canal_atencion',
+                                           'person.address', 
+                                           'person.address.localidad',
+                                           'person.address.barrio',
+                                           'person.salud',
+                                           'person.cud',
+                                           'person.education',
+                                           'person.education.nivelEducativo', 
+                                           'person.education.estadoEducativo',
+                                           'person.education.escuelaTurno')->get(),                
+            ]
+        );
     }
 
 }

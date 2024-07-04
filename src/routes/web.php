@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\MilDias\MilDiasController;
 use App\Http\Controllers\Manager\CentrosBarriales\InscripcionesCBIController;
 use App\Http\Controllers\Manager\CentrosBarriales\InscripcionesCBJController;
+use App\Http\Controllers\Manager\CentrosBarriales\LegajoController;
 use App\Http\Controllers\Manager\CentrosBarriales\LegajosCBController;
 use App\Http\Controllers\Manager\Export\ExportController;
 use App\Http\Controllers\Manager\Import\ImportController;
@@ -211,20 +212,28 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/entidad/add_autoridad/', [EntidadController::class, 'addAutoridad'])->name('entidad.addAutoridad');
 
     // Masterdata
+    Route::prefix('masterdata')->group(function () {
 
-    Route::get('/masterdata', [MasterdataController::class, 'index'])->name('masterdata');
-    Route::get('/masterdata/get_tipo_tramite/{d}', [MasterdataController::class, 'get_tipo_tramite'])->name('masterdata.get_tipo_tramite');
-    Route::post('/masterdata/store_tipo_tramite/', [MasterdataController::class, 'store_tipo_tramite'])->name('masterdata.store_tipo_tramite');
-    Route::post('/masterdata/update_tipo_tramite/', [MasterdataController::class, 'update_tipo_tramite'])->name('masterdata.update_tipo_tramite');
-    Route::post('/masterdata/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
-    Route::post('/masterdata/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
-
-    Route::get('/masterdata/get_escuela/{d}', [MasterdataController::class, 'get_escuela'])->name('masterdata.get_escuela');
-    Route::post('/masterdata/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
-    Route::post('/masterdata/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
-    Route::post('/masterdata/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
-
-    Route::post('/masterdata/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
+        Route::get('/', [MasterdataController::class, 'index'])->name('masterdata');
+        Route::get('/get_tipo_tramite/{d}', [MasterdataController::class, 'get_tipo_tramite'])->name('masterdata.get_tipo_tramite');
+        Route::post('/store_tipo_tramite/', [MasterdataController::class, 'store_tipo_tramite'])->name('masterdata.store_tipo_tramite');
+        Route::post('/update_tipo_tramite/', [MasterdataController::class, 'update_tipo_tramite'])->name('masterdata.update_tipo_tramite');
+        Route::post('/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
+        Route::post('/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
+    
+        Route::get('/get_escuela/{d}', [MasterdataController::class, 'get_escuela'])->name('masterdata.get_escuela');
+        Route::post('/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
+        Route::post('/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
+        Route::post('/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
+    
+        Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
+    
+        Route::get('/centros-barriales/get-programas-sociales-cb', [MasterdataController::class, 'get_programas_sociales_cb'])->name('masterdata.centros_barriales.get_programas_sociales_cb');
+        Route::post('/store_programas_sociales_cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
+        Route::post('/update_programas_sociales_cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
+        Route::post('/hide_programas_sociales_cb/', [MasterdataController::class, 'hideProgramaSocialCB'])->name('masterdata.centros_barriales.hide_programas_sociales_cb');
+        Route::post('/destroy_programas_sociales_cbe/', [MasterdataController::class, 'destroyProgramasocialCB'])->name('masterdata.centros_barriales.destroy_programas_sociales_cb');
+    });
 
     // Users
 
@@ -273,5 +282,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/inscripcion', [MilDiasController::class, 'store'])->name('mil-dias.store');
          });
     });
+
+    Route::get('/legajo/{id}', [LegajoController::class, 'index'])->name('legajo.index');
 
 });

@@ -37,7 +37,8 @@ class LegajoController extends Controller
                                            'person.education',
                                            'person.education.nivelEducativo', 
                                            'person.education.estadoEducativo',
-                                           'person.education.escuelaTurno')->get(),                
+                                           'person.education.escuelaTurno',
+                                           'tipo_legajo')->get(),                
             ]
         );        
         

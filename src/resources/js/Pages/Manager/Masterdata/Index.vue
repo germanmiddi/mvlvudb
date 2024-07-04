@@ -54,6 +54,7 @@
     import Ninez from './Ninez.vue';
     import Mayores from './Mayores.vue';
     import Vivienda from './Vivienda.vue';
+    import CentrosBarriales from './CentrosBarriales.vue';
     
     const subNavigation = [
         { dependencia_id:12 , name: 'Centros Barriales Infancia', componentName: 'Cbi'},
@@ -66,6 +67,7 @@
         { dependencia_id:8 ,  name: 'Niñez y Adolescencia', componentName: 'Ninez'},
         { dependencia_id:14 , name: 'Personas Mayores', componentName: 'Mayores'},
         { dependencia_id:11 , name: 'Vivienda social', componentName: 'Vivienda'},
+        { dependencia_id:0 , name: 'Centros Barriales', componentName: 'CentrosBarriales'},
         
     ]
     
@@ -86,7 +88,8 @@
             Habitat,
             Ninez,
             Mayores,
-            Vivienda
+            Vivienda,
+            CentrosBarriales
         },
     
         setup() {

@@ -15,7 +15,7 @@ class LegajosCBController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscriptos/Index',
+        return Inertia::render('Manager/CentrosBarriales/Legajos/Index',
         [
             'tiposLegajo' => TipoLegajoCb::all(),
             'estados' => EstadoCbj::all(),
@@ -24,14 +24,26 @@ class LegajosCBController extends Controller
 
     public function legajo($id)
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscriptos/Details',
+        return Inertia::render('Manager/CentrosBarriales/Legajos/Legajo',
             [
-                'legajo' => LegajoCB::where('id',$id)->with('estadocbj', 'sede', 'responsable', 'person', 'person.contact', 
-                        'autorizacion', 'canal_atencion','person.address',
-                        'person.address.localidad','person.address.barrio',
-                        'person.salud', 'person.cud', 'person.education', 
-                        'person.education.nivelEducativo','person.education.estadoEducativo', 
-                        'person.education.escuelaTurno','person.education.escuelaPrimaria' ,'tipo_legajo', )->get(),
+                'legajo' => LegajoCB::where('id',$id)
+                                    ->with('estadocbj',
+                                           'sede',
+                                           'responsable',
+                                           'person',
+                                           'person.contact',
+                                           'autorizacion',
+                                           'canal_atencion',
+                                           'person.address',
+                                           'person.address.localidad',
+                                           'person.address.barrio',
+                                           'person.salud',
+                                           'person.cud',
+                                           'person.education',
+                                           'person.education.nivelEducativo',
+                                           'person.education.estadoEducativo',
+                                           'person.education.escuelaTurno',
+                                           'tipo_legajo')->get(),
             ]
         );
     }
@@ -39,11 +51,11 @@ class LegajosCBController extends Controller
     public function list()
     {
         $length = request('length');
-        
+
         $result = LegajoCB::query();
 
         if(request('name')){
-            $name = json_decode(request('name'));  
+            $name = json_decode(request('name'));
             $result->whereIn('id', function ($sub) use($name) {
                         $sub->selectRaw('legajos_cb.id')
                             ->from('legajos_cb')
@@ -54,7 +66,7 @@ class LegajosCBController extends Controller
         }
 
         if(request('num_documento')){
-            $num_documento = json_decode(request('num_documento'));  
+            $num_documento = json_decode(request('num_documento'));
             $result->whereIn('id', function ($sub) use($num_documento) {
                         $sub->selectRaw('legajos_cb.id')
                             ->from('legajos_cb')
@@ -67,7 +79,7 @@ class LegajosCBController extends Controller
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
             $result->where('fecha_inscripcion','>=', $from)
                     ->where('fecha_inscripcion', '<', $to);
         }

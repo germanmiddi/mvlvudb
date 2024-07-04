@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Escuela;
+use App\Models\Manager\ProgramaSocialCB;
 use Carbon\Carbon;
 use App\Models\Manager\TipoTramite;
 use Maatwebsite\Excel\Facades\Excel;
@@ -204,6 +205,85 @@ class MasterdataController extends Controller
 
     public function export_datos(Request $request){
         return Excel::download(new MasterDataExport(), 'masteData.xlsx');
+    }
+
+    /// Programas Sociales - Centros Barriales..
+
+    public function get_programas_sociales_cb(){
+
+        $programas_sociales = ProgramaSocialCB::get();
+        return response()->json($programas_sociales);
+        
+    }
+
+    public function store_programa_social_cb(Request $request){
+        
+        $description = $request->input('description');
+
+        $item = ProgramaSocialCB::create([
+            'description' => $description,
+            'activo' => 1,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+
+    }
+
+    public function update_programa_social_cb(Request $request){
+        
+        $itemId   = $request->input('id'); // Obtener el id del item desde la solicitud
+        $itemDescription = $request->input('description'); // Obtener los datos del item desde la solicitud
+        $activo = $request->input('activo'); // Obtener los datos del item desde la solicitud
+
+        // Buscar el registro TipoTramite por su id
+        $programaSocial = ProgramaSocialCB::find($itemId);
+    
+        if (!$programaSocial) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+    
+        // Actualizar los campos del registro con los nuevos datos
+        $programaSocial->update([
+            'description' => $itemDescription,
+            'activo'     => $activo,
+            'updated_at' => Carbon::now()
+        ]);
+    
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function hideProgramaSocialCB(Request $request){
+        
+        $programaSocial = ProgramaSocialCB::find($request->id);
+
+        if (!$programaSocial) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        
+        $programaSocial->activo = $programaSocial->activo == 1 ? 0 : 1;
+        // dd($tipoTramite->activo);
+        $programaSocial->save();
+               
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+
+    }
+
+    public function destroyProgramaSocialCB(Request $request){
+            
+            $programaSocial = ProgramaSocialCB::find($request->id);
+    
+            if (!$programaSocial) {
+                return response()->json(['message' => 'Registro no encontrado'], 404);
+            }
+            /* $tramitesAsociados = $programaSocial->tramites()->count();
+            if ($tramitesAsociados > 0) {
+                return response()->json(['message' => 'No se puede eliminar este TipoTramite porque está siendo utilizado en trámites'], 422);
+            } */
+            // TODO: Verificar la existencia legajos antes de Eliminar.
+            $programaSocial->delete();
+                
+            return response()->json(['message' => 'Datos eliminados correctamente'], 200);
     }
 
 }

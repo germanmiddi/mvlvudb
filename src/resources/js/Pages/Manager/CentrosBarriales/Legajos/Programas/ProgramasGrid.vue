@@ -1,16 +1,14 @@
 <template>
-      <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
-        <li v-for="programa in programas" :key="programa.email"
-            class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+      <div class="divide-gray-200">
             <div class="w-full flex items-center justify-between p-6 space-x-6">
                 <div class="flex-1 truncate">
                     <div class="flex items-center space-x-3">
-                        <h3 class="text-gray-900 text-base font-medium truncate">{{ programa.name }}</h3>
-                        <span v-if="programa.role"
+                        <h3 class="text-gray-900 text-base font-medium truncate">{{ programa.description }}</h3>
+                        <span
                             class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
-                            {{ programa.role }}</span>
+                            activo</span>
                     </div>
-                    <p class="mt-1 text-gray-500 text-sm truncate">{{ programa.title }}</p>
+                    <p class="mt-1 text-gray-500 text-xs truncate">{{ programa.description }}</p>
                     <div class="mt-3">
                         <div class="flex text-sm">
                             <UserCircleIcon class="w-5 text-gray-300"/> <span class="ml-2">Valeria Perez</span>
@@ -40,19 +38,26 @@
                     </div>
                 </div>
             </div>
-        </li>
-    </ul>
+        </div>
 </template>
 
 <script>
 
+import {UserCircleIcon,
+     CalendarIcon } from '@heroicons/vue/24/solid'
 
 export default {
+
+    props: {
+        programa: Object
+    },
+    components: {
+        UserCircleIcon,
+        CalendarIcon
+    },
     data() {
         return {
-            programas,
-            showDetail: false,
-            showEditor: false,
+            
         }
     }
 }

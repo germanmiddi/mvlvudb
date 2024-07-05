@@ -32,16 +32,36 @@
                         <div class="grid grid-cols-5 gap-4 pt-5" v-if="selectedOption==='programa_social'">
                             <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Programa Social: </label>
                             <div class="mt-1 col-span-4">
-                                <input v-model="form.actividad_id" type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                    class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                <select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
+                                    autocomplete="off"
+                                    :class="input_disable ? bg_disable : ''"
+                                    :disabled="input_disable"
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled>
+                                        Seleccione un Programa Social
+                                    </option>
+                                    <option v-for="p in programasSociales" :key="p.id" :value="p.id">
+                                        {{ p.description ?? '' }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-5 gap-4 pt-5" v-if="selectedOption==='actividades'">
                             <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Actividades: </label>
                             <div class="mt-1 col-span-4">
-                                <input v-model="form.programa_social_id" type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                    class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
+                                    autocomplete="off"
+                                    :class="input_disable ? bg_disable : ''"
+                                    :disabled="input_disable"
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled>
+                                        Seleccione un Profesional
+                                    </option>
+                                    <option v-for="p in users" :key="p.id" :value="p.id">
+                                        {{ p.name ?? '' }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -50,7 +70,7 @@
                             <div class="mt-1 col-span-4">
                                 <Datepicker
                                     class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    v-model="form.fecha_apto_medico"
+                                    v-model="form.fecha_inscripcion"
                                     :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                                     :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
                                 </Datepicker>
@@ -59,8 +79,18 @@
                         <div class="grid grid-cols-5 gap-4 pt-5" v-if="selectedOption==='programa_social'">
                             <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Profesional: </label>
                             <div class="mt-1 col-span-4">
-                                <input v-model="form.profesional_id" type="text" name="first-name" id="first-name" autocomplete="given-name"
-                                    class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
+                                    autocomplete="off"
+                                    :class="input_disable ? bg_disable : ''"
+                                    :disabled="input_disable"
+                                    class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="" disabled>
+                                        Seleccione un Profesional
+                                    </option>
+                                    <option v-for="p in users" :key="p.id" :value="p.id">
+                                        {{ p.name ?? '' }}
+                                    </option>
+                                </select>
                             </div>
                         </div>
 
@@ -84,6 +114,10 @@ import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
+    props: {
+        users: Object,
+        programasSociales: Object
+    },
     components: {
 		Datepicker,
 	},
@@ -106,8 +140,12 @@ export default {
 		};
 	},
     methods: {
-        submit(){
+        async submit(){
+            // RUTA
+            let rt = route("legajoCB.storeProgramaSocial");
 
+            this.form.selectedOption = this.selectedOption
+            this.$emit('submitStore', this.form);
         }
     }
 }

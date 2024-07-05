@@ -70,4 +70,9 @@ class LegajoCB extends Model
     {
         return $this->BelongsTo(TipoLegajoCb::class, 'tipo_legajo_id');
     }
+
+    public function programas_sociales(){
+        return $this->belongsToMany(ProgramaSocialCB::class, 'legajo_programa_social_cb', 'legajo_id', 'programa_social_id')
+        ->using(LegajoProgramaSocialCB::class)->withPivot('fecha_inscripcion', 'profesional_id', 'estado_id');
+    }
 }

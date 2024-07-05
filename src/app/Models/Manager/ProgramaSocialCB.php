@@ -16,8 +16,8 @@ class ProgramaSocialCB extends Model
         'activo',
     ];
 
-    /* public function programasSociales()
-    {
-        return $this->belongsToMany(ProgramaSocial::class, 'person_programa_social', 'person_id', 'programa_social_id');
-    } */
+    public function legajos(){
+        return $this->belongsToMany(LegajoCB::class, 'legajo_programa_social_cb', 'programa_social_id', 'legajo_id')
+            ->using(LegajoProgramaSocialCB::class)->withPivot('fecha_inscripcion', 'profesional_id', 'estado_id');
+    }
 }

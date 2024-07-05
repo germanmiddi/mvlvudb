@@ -24,8 +24,8 @@ return new class extends Migration
             $table->foreign('profesional_id')->references('id')->on('users')
                 ->onDelete('NO ACTION')->onUpdate('NO ACTION');
 
-            $table->foreign('legajo_programa_social_cb_id')->references('id')->on('legajo_programa_social_cb')
-                ->onDelete('NO ACTION')->onUpdate('NO ACTION');
+            /* $table->foreign('legajo_programa_social_cb_id')->references('id')->on('legajo_programa_social_cb')
+                ->onDelete('NO ACTION')->onUpdate('NO ACTION'); */
         });
     }
 

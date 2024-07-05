@@ -220,14 +220,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update_tipo_tramite/', [MasterdataController::class, 'update_tipo_tramite'])->name('masterdata.update_tipo_tramite');
         Route::post('/hide_tipo_tramite/', [MasterdataController::class, 'hideTipoTramite'])->name('masterdata.hide_tipo_tramite');
         Route::post('/destroy_tipo_tramite/', [MasterdataController::class, 'destroyTipoTramite'])->name('masterdata.destroy_tipo_tramite');
-    
+
         Route::get('/get_escuela/{d}', [MasterdataController::class, 'get_escuela'])->name('masterdata.get_escuela');
         Route::post('/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
         Route::post('/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
         Route::post('/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
-    
+
         Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
-    
+
         Route::get('/centros-barriales/get-programas-sociales-cb', [MasterdataController::class, 'get_programas_sociales_cb'])->name('masterdata.centros_barriales.get_programas_sociales_cb');
         Route::post('/store_programas_sociales_cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
         Route::post('/update_programas_sociales_cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
@@ -273,6 +273,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LegajosCBController::class, 'index'])->name('legajoCB');
             Route::get('/detail/{id}', [LegajosCBController::class, 'legajo'])->name('legajoCB.legajo');
             Route::get('/list', [LegajosCBController::class, 'list'])->name('legajoCB.list');
+
+            Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
         });
 
         // Rutas para Gabinete

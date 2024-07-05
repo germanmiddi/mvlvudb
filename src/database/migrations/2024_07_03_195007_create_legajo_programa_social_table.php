@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('estado_id');
             $table->timestamps();
 
-            $table->foreign('legajo_id')->references('id')->on('legajos')
+            $table->foreign('legajo_id')->references('id')->on('legajos_cb')
                 ->onDelete('NO ACTION')->onUpdate('NO ACTION');
 
             $table->foreign('programa_social_id')->references('id')->on('programas_sociales_cb')

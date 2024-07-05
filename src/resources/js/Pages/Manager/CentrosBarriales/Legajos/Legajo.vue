@@ -25,8 +25,8 @@
 	<Toast :toast="toastMessage" :type="labelType" @clear="clearMessage"></Toast>
 	<div class="py-10" >
 		<div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
-			<div class="lg:col-span-8 xl:col-span-8" v-if="!showForm">
-				<div v-if="!showForm" class="border-b border-gray-200 dark:border-gray-700">
+			<div class="lg:col-span-8 xl:col-span-8">
+				<div class="border-b border-gray-200 dark:border-gray-700">
 					<ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
 						<li v-for="(item, index) in subNavigation" :key="item.name" class="me-2 w-1/3">
 							<a	href="#" @click.prevent="selectItem(index)"
@@ -37,15 +37,11 @@
 						</li>
 					</ul>
 				</div>
-				<component 	v-if="!showForm"
-							:is="selectedItem.componentName"
+				<component 	:is="selectedItem.componentName"
 						   	:data="selectedItem.componentData"
 						   	:legajo="legajo" />
 			</div>
-            <div class="lg:col-span-8 xl:col-span-8" v-if="showForm">
-                <FormCreate v-if="showForm" @closeForm="showForm=false"/>
-            </div>
-
+            
 			<div class="lg:col-span-4 xl:col-span-4">
 				<div class="sticky top-4">
 					<!-- Datos Titular -->
@@ -77,12 +73,6 @@
 									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{legajo[0].person?.contact[0]?.phone ?? '-'}}</dd>
 								</div>
 
-								<!-- <div class="py-4 grid grid-cols-2 gap-4">
-									<dt class="text-sm font-medium text-gray-500 col-span-1">Email</dt>
-									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{legajo[0].person?.contact[0]?.email ?? "-" }}</dd>
-								</div> -->
-
-
 								<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 									<dt class="text-sm font-medium text-gray-500 col-span-1">Localidad</dt>
 									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{legajo[0].person?.address[0]?.localidad?.description ?? '-'}}</dd>
@@ -96,6 +86,13 @@
 		</div>
 	</div>
 
+	<CreateModal v-if="showForm"
+		:open="showForm" 
+		:programasSociales="programasSociales"
+		:users="users"
+		@closeForm="showForm=false"
+		@submitStore="submitStore"/>
+
 </main>
 
 </template>
@@ -108,22 +105,25 @@ import Programas from './Programas/Programas.vue';
 import Actividades from './Actividades/Actividades.vue';
 import FormCreate from './FormCreate.vue';
 
-// import CreateModal from './CreateModal.vue';
+import CreateModal from './CreateModal.vue';
 
 import { ArrowLeftCircleIcon, CubeIcon } from '@heroicons/vue/24/outline'
 import store from '@/store.js'
 
 const props = defineProps({
 	legajo: Object,
+    users: Object,
+    programasSociales: Object
 });
 
 const legajo = props.legajo;
+const users = props.users;
+const programasSociales = props.programasSociales;
 
 const subNavigation = [
     { name: 'General', icon: CubeIcon, componentName: InformacionGeneral },
     { name: 'Programas', icon: CubeIcon, componentName: Programas },
 	{ name: 'Actividades', icon: CubeIcon, componentName: Actividades },
-
 ]
 
 const tabs = ref(0);
@@ -141,12 +141,34 @@ const selectedItem = computed(() => {
 });
 
 function clearMessage() {
-	toastMessage = "";
-	//return toastMessage
+	toastMessage.value = "";
 }
 
 function viewForm() {
 	showForm.value = true;
+}
+
+async function submitStore(data) {
+    // RUTA
+    data.legajo_id = legajo[0].id
+        let rt = route("legajoCB.storeProgramaSocial");
+
+    try {
+        const response = await axios.post(rt, data);
+        if (response.status == 200) {
+            labelType.value = "success";
+            toastMessage.value = response.data.message; 
+			showForm.value = false
+			legajo[0].programas_sociales = response.data.programas[0].programas_sociales
+			// TODO: Actualizar los datos de los programas sociales
+        } else {
+            labelType.value = "info";
+            toastMessage.value = response.data.message;
+        }
+    } catch (error) {
+       	labelType.value = "danger";
+        toastMessage.value = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+    }
 }
 
 </script>

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Manager\CentrosBarriales;
 
 use App\Http\Controllers\Controller;
 use App\Models\Manager\EstadoCbj;
+use App\Models\Manager\EstadoProgramaSocialCb;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\ProgramaSocialCB;
+use App\Models\User;
 use App\Models\Manager\TipoLegajoCb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -43,9 +46,34 @@ class LegajosCBController extends Controller
                                            'person.education.nivelEducativo',
                                            'person.education.estadoEducativo',
                                            'person.education.escuelaTurno',
-                                           'tipo_legajo')->get(),
+                                           'tipo_legajo',
+                                           'programas_sociales')->get(),
+                'users' => User::all(),
+                'programasSociales' => ProgramaSocialCB::all()
             ]
         );
+    }
+
+    // Store Programa Social
+    public function store_programa_social(Request $request){
+        try {
+            $estado = EstadoProgramaSocialCb::where('description', 'Activo')->first();
+            $legajo = LegajoCB::where('id', $request->legajo_id)->first();
+
+            if (!$legajo->programas_sociales()->where('programa_social_id', $request->programa_social_id)->exists()) {
+                $legajo->programas_sociales()->attach($request->programa_social_id, [
+                    'profesional_id' => $request->profesional_id,
+                    'fecha_inscripcion' => $request->fecha_inscripcion,
+                    'estado_id' => $estado->id
+                ]);
+            }else{
+                return response()->json(['message' => 'El programa social ya ha sido agrego previamente. Verifique los datos ingresados.'], 203);
+            }
+            $programas = $legajo = LegajoCB::where('id', $request->legajo_id)->with('programas_sociales')->get();
+            return response()->json(['message' => 'Se registrado correctamente la el Programa Social.', 'programas' => $programas], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
+        }
     }
 
     public function list()

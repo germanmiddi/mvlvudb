@@ -27,13 +27,9 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     */
 
     protected $data;
-    protected $results;
-    protected $modAttention;
 
     function __construct($param) {
         $this->data = $param;
-        $this->results = $this->collection();
-        $this->modAttention = $this->shouldmodAttention();
     }
 
     public function collection()
@@ -197,13 +193,6 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
         ]);
 
         $sheet->getRowDimension(1)->setRowHeight(30);
-    }
-    private function shouldmodAttention()
-    {
-        // Comprueba si algún resultado tiene un valor para 'modalidad_atencion'
-        return $this->results->contains(function($result) {
-            return !is_null($result->modalidad_atencion);
-        });
     }
 
     // encabezados

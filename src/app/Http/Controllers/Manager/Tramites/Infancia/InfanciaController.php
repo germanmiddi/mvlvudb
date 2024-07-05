@@ -68,7 +68,8 @@ class InfanciaController extends Controller
             'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
             'estados' => TramiteEstado::all(),
             'users' => User::orderBy('name')->get(),
-            'toast' => Session::get('toast')
+            'toast' => Session::get('toast'),
+            'canalesAtencion' => CanalAtencion::all(),
         ]);
     }
 
@@ -707,6 +708,11 @@ class InfanciaController extends Controller
         if(request('estado_id')){
             $estado_id = json_decode(request('estado_id'));
             $result->where('estado_id', $estado_id);
+        }
+
+        if(request('canal_atencion_id')){
+            $canal_atencion_id = json_decode(request('canal_atencion_id'));
+            $result->where('canal_atencion_id', $canal_atencion_id);
         }
 
         /* $generalController = new GeneralController();

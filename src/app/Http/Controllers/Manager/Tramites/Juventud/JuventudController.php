@@ -74,7 +74,8 @@ class JuventudController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 13)->active()->get(),
                 'estados' => TramiteEstado::all(),
                 'users' => User::orderBy('name')->get(),
-                'toast' => Session::get('toast')
+                'toast' => Session::get('toast'),
+                'canalesAtencion' => CanalAtencion::all(),
             ]
         );
     }
@@ -739,6 +740,11 @@ class JuventudController extends Controller
             $estado_id = json_decode(request('estado_id'));
             $result->where('estado_id', $estado_id);
         }
+        
+        if(request('canal_atencion_id')){
+            $canal_atencion_id = json_decode(request('canal_atencion_id'));
+            $result->where('canal_atencion_id', $canal_atencion_id);
+        }
 
         /* $generalController = new GeneralController();
         if($generalController->_check_permission()){
@@ -762,6 +768,7 @@ class JuventudController extends Controller
             if(count($users_id) > 0){
                 $result->whereIn('assigned', $users_id);
             }
+            
         //}
         
         return  $result->orderBy("tramites.fecha", 'DESC')

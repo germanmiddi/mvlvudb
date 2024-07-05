@@ -87,6 +87,17 @@
                             </select>
                         </div>
                         <div class="col-span-12 sm:col-span-2">
+                            <label for="canal_atencion_id" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
+                            <select v-model="filter.canal_atencion_id" id="canal_atencion_id" name="canal_atencion_id"
+                                autocomplete="off"
+                                class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">TODOS</option>
+                                <option v-for="canal in canalesAtencion" :key="canal.id" :value="canal.id">{{
+                                    canal.description
+                                }}</option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="modalidad_atencion_id" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
                             <select v-model="filter.modalidad_atencion_id" id="modalidad_atencion_id" name="modalidad_atencion_id"
                                 autocomplete="off"
@@ -310,7 +321,8 @@ export default {
         estados: Object,
         modalidadesAtencion: Object,
         categorias: Object,
-        users: Object
+        users: Object,
+        canalesAtencion: Object,
     },
     components: {
         Menu,
@@ -395,6 +407,10 @@ export default {
 
             if (this.filter.boton_antipanico) {
                 filter += `&boton_antipanico=${JSON.stringify(this.filter.boton_antipanico)}`
+            }
+            
+            if (this.filter.canal_atencion_id) {
+                filter += `&canal_atencion_id=${JSON.stringify(this.filter.canal_atencion_id)}`
             }
 
             if (this.filter.modalidad_atencion_id) {

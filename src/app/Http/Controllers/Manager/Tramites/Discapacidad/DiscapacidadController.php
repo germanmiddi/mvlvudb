@@ -55,7 +55,8 @@ class DiscapacidadController extends Controller
             'estados' => TramiteEstado::all(),
             'users' => User::orderBy('name')->get(),
             'modalidadesAtencion' => ModalidadAtencion::all(),
-            'toast' => Session::get('toast')
+            'toast' => Session::get('toast'),
+            'canalesAtencion' => CanalAtencion::all(),
         ]);
     }
     //create
@@ -529,6 +530,11 @@ class DiscapacidadController extends Controller
             $result->where('estado_id', $estado_id);
         }
 
+        if(request('canal_atencion_id')){
+            $canal_atencion_id = json_decode(request('canal_atencion_id'));
+            $result->where('canal_atencion_id', $canal_atencion_id);
+        }
+        
         if(request('modalidad_atencion_id')){
             $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
             $result->where('modalidad_atencion_id', $modalidad_atencion_id);

@@ -27,9 +27,13 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     */
 
     protected $data;
+    protected $results;
+    protected $modAttention;
 
     function __construct($param) {
         $this->data = $param;
+        $this->results = $this->collection();
+        $this->modAttention = $this->shouldmodAttention();
     }
 
     public function collection()
@@ -58,8 +62,10 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 'tipo_tramite.description AS tipo_tramite_description',
                 'dependencias.description AS dependencia_description',
                 'tramites.observacion',
+                'modalidad_atencion.description AS modalidad_atencion_description',
                 DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.ingreso_nuevo IS NOT NULL, IF(tramite_data.ingreso_nuevo, 'SI', 'NO'), '-'), '') AS ingreso_nuevo"),
-                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"))
+                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"),
+                'categories.nombre AS categories_nombre')
 
             ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
             ->join('person', 'person.id', '=', 'person_tramite.person_id')
@@ -75,6 +81,8 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
             ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
             ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+            ->leftjoin('modalidad_atencion', 'modalidad_atencion.id', '=', 'tramites.modalidad_atencion_id')
+            ->leftjoin('categories', 'categories.id', '=', 'tramites.category_id')
             ->where('person_tramite.rol_tramite_id', '1');
 
         if(isset($this->data['dependencia_id'])){
@@ -190,6 +198,13 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
 
         $sheet->getRowDimension(1)->setRowHeight(30);
     }
+    private function shouldmodAttention()
+    {
+        // Comprueba si algún resultado tiene un valor para 'modalidad_atencion'
+        return $this->results->contains(function($result) {
+            return !is_null($result->modalidad_atencion);
+        });
+    }
 
     // encabezados
     public function headings(): array
@@ -216,11 +231,15 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             'Tipo Tramite',
             'Dependencia',
             //'Nomenclatura', //No se utiliza
-            'Observacion'
+            'Observacion',
         ];
-        if($this->data['dependencia_id'] === 6){
-            $title[] = 'Ingreso Nuevo';
-            $title[] = 'Boton Antipanico';
+        if ($this->data['dependencia_id'] === 2 || $this->data['dependencia_id'] === 6 || $this->data['dependencia_id'] === 14) {
+            $title[] = 'Modalidad de Atencion';
+            if($this->data['dependencia_id'] === 6){
+                $title[] = 'Ingreso Nuevo';
+                $title[] = 'Boton Antipanico';
+                $title[] = 'Categoría';
+            }
         }
         return $title;
     }

@@ -1,8 +1,46 @@
 <template>
     <!-- eslint-disable -->
     <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
-        <li v-for="programa in legajo[0].programas_sociales" :key="programa.key" class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-            <ProgramasGrid :programa="programa" />
+        <li v-for="programa in programas" :key="programa.email"
+            class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+            <div class="w-full flex items-center justify-between p-6 space-x-6">
+                <div class="flex-1 truncate">
+                    <div class="flex items-center space-x-3">
+                        <h3 class="text-gray-900 text-base font-medium truncate">{{ programa.name }}</h3>
+                        <span v-if="programa.role"
+                            class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
+                            {{ programa.role }}</span>
+                    </div>
+                    <p class="mt-1 text-gray-500 text-sm truncate">{{ programa.title }}</p>
+                    <div class="mt-3">
+                        <div class="flex text-sm">
+                            <UserCircleIcon class="w-5 text-gray-300"/> <span class="ml-2">Valeria Perez</span>
+                        </div>
+                        <div class="flex text-sm mt-1">
+                            <CalendarIcon class="w-5 text-gray-300"/><span class="ml-2">01/06/2024</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
+            </div>
+            <div>
+                <div class="-mt-px flex divide-x divide-gray-200">
+                    <div class="w-0 flex-1 flex">
+                        <button @click="showDetail = !showDetail, showEditor = false"
+                            class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
+                            <!-- <MailIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
+                            <span  class="ml-3">Detalle</span>
+                        </button>
+                    </div>
+                    <div class="-ml-px w-0 flex-1 flex">
+                        <button @click="showDetail = !showDetail, showEditor = true"
+                            class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
+                            <!-- <PhoneIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
+                            <span class="ml-3">Interveción</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </li>
     </ul>
 
@@ -179,7 +217,7 @@
                             </transition>
                         </Menu>
                       </div>                    
-                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="item.content" />
+                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4 text-justify" v-html="item.content" />
                 </li>
             </ul>
         </div>
@@ -242,7 +280,7 @@
                                     class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div class="py-1">
                                         <MenuItem v-slot="{ active }">
-                                            <button type="button" @click="showEditor = !showEditor"
+                                            <button type="button" @click="showEditor = true"
                                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                 <span>Nueva Intervención</span>
                                             </button>
@@ -298,6 +336,7 @@
                     <QuillEditor theme="snow"/>
                 </div>
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end">
+                    <button @click="showEditor = false" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                 </div>
 
@@ -331,16 +370,7 @@ const programaSelected = {
 }
 const programas = [
     {
-        name: 'Emprendedores',
-        title: 'Regional Paradigm Technician',
-        role: null,
-        email: 'janecooper@example.com',
-        telephone: '+1-202-555-0170',
-        imageUrl:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-        name: 'Gabinete',
+        name: 'Familias',
         title: 'Regional Paradigm Technician',
         role: 'Activo',
         email: 'janecooper@example.com',
@@ -349,7 +379,7 @@ const programas = [
             'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
     },
     {
-        name: 'Psicopedagogía',
+        name: '1000 días',
         title: 'Regional Paradigm Technician',
         role: 'Activo',
         email: 'janecooper@example.com',
@@ -360,7 +390,16 @@ const programas = [
     {
         name: 'Vivamos sin violencia',
         title: 'Regional Paradigm Technician',
-        role: null,
+        role: 'Activo',
+        email: 'janecooper@example.com',
+        telephone: '+1-202-555-0170',
+        imageUrl:
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+    },
+    {
+        name: 'Prevención del delito infanto juvenil',
+        title: 'Regional Paradigm Technician',
+        role: 'Activo',
         email: 'janecooper@example.com',
         telephone: '+1-202-555-0170',
         imageUrl:
@@ -395,9 +434,6 @@ const pages = [
   { name: 'Programas', href: '#', current: true },
 ]
 export default {
-    props: {
-        legajo: Object
-    },
     components: {
         PhoneIcon,
         Menu,

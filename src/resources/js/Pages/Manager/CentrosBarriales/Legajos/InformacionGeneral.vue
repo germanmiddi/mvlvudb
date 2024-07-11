@@ -104,27 +104,27 @@
         
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apoyo Escolar</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].autorizacion.apoyo_escolar ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].autorizacion?.apoyo_escolar ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Actividad por Area Empleo</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.actividad_empleo ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion?.actividad_empleo ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Autoriazción Firmada</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.autorizacion_firmada ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion?.autorizacion_firmada ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Autorización para Retirarse</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.autorizacion_retirarse ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion?.autorizacion_retirarse ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Autorización Uso de Imagen</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion.autorizacion_uso_imagen ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].autorizacion?.autorizacion_uso_imagen ? 'SI' : 'NO'}}</dd>
                     </div>
                 </dl>
             </div>
@@ -146,32 +146,32 @@
         
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apto Medico</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.apto_medico ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud?.apto_medico ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha Apto Médico</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_apto_medico ) ?? '-' }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud?.fecha_apto_medico ) ?? '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Electrocardiograma</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud.electrocardiograma ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud?.electrocardiograma ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha Electrocardiograma</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud.fecha_electrocardiograma ) ?? '-' }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud?.fecha_electrocardiograma ) ?? '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Posee CUD</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud.posee_cud ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud?.posee_cud ? 'SI' : 'NO'}}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Presento CUD</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud.presento_cud ? 'SI' : 'NO'}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.cud?.presento_cud ? 'SI' : 'NO'}}</dd>
                     </div>
                 </dl>
             </div>

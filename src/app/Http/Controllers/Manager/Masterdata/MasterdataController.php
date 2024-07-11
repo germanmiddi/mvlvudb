@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
+use App\Models\Manager\ActividadCB;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\ProgramaSocialCB;
 use Carbon\Carbon;
@@ -282,6 +283,85 @@ class MasterdataController extends Controller
             } */
             // TODO: Verificar la existencia legajos antes de Eliminar.
             $programaSocial->delete();
+                
+            return response()->json(['message' => 'Datos eliminados correctamente'], 200);
+    }
+
+    /// Actividades - Centros Barriales..
+
+    public function get_actividades_cb(){
+
+        $actividades = ActividadCB::get();
+        return response()->json($actividades);
+        
+    }
+
+    public function store_actividad_cb(Request $request){
+        
+        $description = $request->input('description');
+
+        $item = ActividadCB::create([
+            'description' => $description,
+            'activo' => 1,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+
+    }
+
+    public function update_actividad_cb(Request $request){
+        
+        $itemId   = $request->input('id'); // Obtener el id del item desde la solicitud
+        $itemDescription = $request->input('description'); // Obtener los datos del item desde la solicitud
+        $activo = $request->input('activo'); // Obtener los datos del item desde la solicitud
+
+        // Buscar el registro TipoTramite por su id
+        $actividad = ActividadCB::find($itemId);
+    
+        if (!$actividad) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+    
+        // Actualizar los campos del registro con los nuevos datos
+        $actividad->update([
+            'description' => $itemDescription,
+            'activo'     => $activo,
+            'updated_at' => Carbon::now()
+        ]);
+    
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function hideActividadCB(Request $request){
+        
+        $actividad = ActividadCB::find($request->id);
+
+        if (!$actividad) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        
+        $actividad->activo = $actividad->activo == 1 ? 0 : 1;
+        // dd($tipoTramite->activo);
+        $actividad->save();
+        
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+
+    }
+
+    public function destroyActividadCB(Request $request){
+            
+            $actividad = ActividadCB::find($request->id);
+    
+            if (!$actividad) {
+                return response()->json(['message' => 'Registro no encontrado'], 404);
+            }
+            /* $tramitesAsociados = $programaSocial->tramites()->count();
+            if ($tramitesAsociados > 0) {
+                return response()->json(['message' => 'No se puede eliminar este TipoTramite porque está siendo utilizado en trámites'], 422);
+            } */
+            // TODO: Verificar la existencia legajos antes de Eliminar.
+            $actividad->delete();
                 
             return response()->json(['message' => 'Datos eliminados correctamente'], 200);
     }

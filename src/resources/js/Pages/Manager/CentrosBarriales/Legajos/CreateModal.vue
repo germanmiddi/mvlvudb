@@ -10,7 +10,7 @@
           <!-- This element is to trick the browser into centering the modal contents. -->
           <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
           <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
               <div>
                 <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
                   <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
@@ -66,16 +66,16 @@
                                       <div class="grid grid-cols-5 gap-4 pt-5" v-if="selectedOption==='actividades'">
                                           <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Actividades: </label>
                                           <div class="mt-1 col-span-4">
-                                              <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
+                                              <select v-model="form.actividad_id" id="actividad_id" name="actividad_id"
                                                   autocomplete="off"
                                                   :class="input_disable ? bg_disable : ''"
                                                   :disabled="input_disable"
                                                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                                   <option value="" disabled>
-                                                      Seleccione un Profesional
+                                                      Seleccione una Actividad
                                                   </option>
-                                                  <option v-for="p in users" :key="p.id" :value="p.id">
-                                                      {{ p.name ?? '' }}
+                                                  <option v-for="a in actividades" :key="a.id" :value="a.id">
+                                                      {{ a.description ?? '' }}
                                                   </option>
                                               </select>
                                           </div>
@@ -142,7 +142,8 @@
     props: {
       open: Boolean,
       users: Object,
-      programasSociales: Object
+      programasSociales: Object,
+      actividades: Object
     },
     components: {
       Dialog,

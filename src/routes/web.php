@@ -229,10 +229,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
 
         Route::get('/centros-barriales/get-programas-sociales-cb', [MasterdataController::class, 'get_programas_sociales_cb'])->name('masterdata.centros_barriales.get_programas_sociales_cb');
-        Route::post('/store_programas_sociales_cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
-        Route::post('/update_programas_sociales_cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
-        Route::post('/hide_programas_sociales_cb/', [MasterdataController::class, 'hideProgramaSocialCB'])->name('masterdata.centros_barriales.hide_programas_sociales_cb');
-        Route::post('/destroy_programas_sociales_cbe/', [MasterdataController::class, 'destroyProgramasocialCB'])->name('masterdata.centros_barriales.destroy_programas_sociales_cb');
+        Route::post('/store-programas-sociales-cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
+        Route::post('/update-programas-sociales-cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
+        Route::post('/hide-programas-sociales-cb/', [MasterdataController::class, 'hideProgramaSocialCB'])->name('masterdata.centros_barriales.hide_programas_sociales_cb');
+        Route::post('/destroy-programas-sociales-cbe/', [MasterdataController::class, 'destroyProgramasocialCB'])->name('masterdata.centros_barriales.destroy_programas_sociales_cb');
+
+        Route::get('/centros-barriales/get-actividades-cb', [MasterdataController::class, 'get_actividades_cb'])->name('masterdata.centros_barriales.get_actividades_cb');
+        Route::post('/store-actividad_cb/', [MasterdataController::class, 'store_actividad_cb'])->name('masterdata.centros_barriales.store_actividad_cb');
+        Route::post('/update-actividad-cb/', [MasterdataController::class, 'update_actividad_cb'])->name('masterdata.centros_barriales.update_actividad_cb');
+        Route::post('/hide-actividad-cb/', [MasterdataController::class, 'hideActividadCB'])->name('masterdata.centros_barriales.hide_actividad_cb');
+        Route::post('/destroy-actividad-cbe/', [MasterdataController::class, 'destroyActividadCB'])->name('masterdata.centros_barriales.destroy_actividad_cb');
     });
 
     // Users
@@ -275,6 +281,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/list', [LegajosCBController::class, 'list'])->name('legajoCB.list');
 
             Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
+            Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
         });
 
         // Rutas para Gabinete

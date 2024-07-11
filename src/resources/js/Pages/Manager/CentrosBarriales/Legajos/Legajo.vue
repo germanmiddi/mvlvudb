@@ -89,6 +89,7 @@
 	<CreateModal v-if="showForm"
 		:open="showForm" 
 		:programasSociales="programasSociales"
+		:actividades="actividades"
 		:users="users"
 		@closeForm="showForm=false"
 		@submitStore="submitStore"/>
@@ -113,12 +114,14 @@ import store from '@/store.js'
 const props = defineProps({
 	legajo: Object,
     users: Object,
-    programasSociales: Object
+    programasSociales: Object,
+	actividades: Object
 });
 
 const legajo = props.legajo;
 const users = props.users;
 const programasSociales = props.programasSociales;
+const actividades = props.actividades;
 
 const subNavigation = [
     { name: 'General', icon: CubeIcon, componentName: InformacionGeneral },
@@ -151,7 +154,16 @@ function viewForm() {
 async function submitStore(data) {
     // RUTA
     data.legajo_id = legajo[0].id
-        let rt = route("legajoCB.storeProgramaSocial");
+		console.log(data);
+		let rt = ''
+		if(data.selectedOption === 'programa_social'){
+			rt = route("legajoCB.storeProgramaSocial");
+		}else if(data.selectedOption === 'actividades'){
+			rt = route("legajoCB.storeActividad");
+		}else{
+			labelType.value = "info";
+            toastMessage.value = 'No se ha seleccionado un tipo de inscripcion';
+		}
 
     try {
         const response = await axios.post(rt, data);
@@ -159,7 +171,11 @@ async function submitStore(data) {
             labelType.value = "success";
             toastMessage.value = response.data.message; 
 			showForm.value = false
-			legajo[0].programas_sociales = response.data.programas[0].programas_sociales
+			if(data.selectedOption === 'programa_social'){
+				legajo[0].programas_sociales = response.data.programas[0].programas_sociales
+			}else{
+				legajo[0].actividades = response.data.actividades[0].actividades
+			}
 			// TODO: Actualizar los datos de los programas sociales
         } else {
             labelType.value = "info";

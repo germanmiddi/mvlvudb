@@ -34,11 +34,14 @@
 
     </div>
 
+    <ActividadesCB @toast-message="setMessage"/>
+
 </template>
 
 <script>
 import axios from 'axios'
 import ListItem from './ListItem.vue'
+import ActividadesCB from './ActividadesCB.vue'
 
 export default {
 
@@ -46,7 +49,8 @@ export default {
         
     },
     components:{
-        ListItem
+        ListItem,
+        ActividadesCB
     },
     setup(){
 
@@ -152,7 +156,10 @@ export default {
                                 {'message' : response.data.message, 
                                  'type' : 'danger'} )
             }            
-        }
+        },
+        setMessage(message){
+            this.$emit('toast-message', message )
+        },
 
     },
 }

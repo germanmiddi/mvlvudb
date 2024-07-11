@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Manager\CentrosBarriales;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manager\ActividadCB;
+use App\Models\Manager\EstadoActividadCB;
 use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\EstadoProgramaSocialCb;
 use App\Models\Manager\LegajoCB;
@@ -49,7 +51,8 @@ class LegajosCBController extends Controller
                                            'tipo_legajo',
                                            'programas_sociales')->get(),
                 'users' => User::all(),
-                'programasSociales' => ProgramaSocialCB::all()
+                'programasSociales' => ProgramaSocialCB::all(),
+                'actividades' => ActividadCB::all()
             ]
         );
     }
@@ -71,6 +74,27 @@ class LegajosCBController extends Controller
             }
             $programas = $legajo = LegajoCB::where('id', $request->legajo_id)->with('programas_sociales')->get();
             return response()->json(['message' => 'Se registrado correctamente la el Programa Social.', 'programas' => $programas], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+    // Store Actividad
+    public function store_actividad(Request $request){
+        try {
+            $estado = EstadoActividadCB::where('description', 'Activo')->first();
+            $legajo = LegajoCB::where('id', $request->legajo_id)->first();
+
+            if (!$legajo->actividades()->where('actividad_id', $request->actividad_id)->exists()) {
+                $legajo->actividades()->attach($request->actividad_id, [
+                    'fecha_inscripcion' => $request->fecha_inscripcion,
+                    'estado_id' => $estado->id
+                ]);
+            }else{
+                return response()->json(['message' => 'La Actividad ya ha sido agrego previamente. Verifique los datos ingresados.'], 203);
+            }
+            $actividades = $legajo = LegajoCB::where('id', $request->legajo_id)->with('actividades')->get();
+            return response()->json(['message' => 'Se registrado correctamente la Actividad.', 'actividades' => $actividades], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
         }

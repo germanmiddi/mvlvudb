@@ -75,4 +75,9 @@ class LegajoCB extends Model
         return $this->belongsToMany(ProgramaSocialCB::class, 'legajo_programa_social_cb', 'legajo_id', 'programa_social_id')
         ->using(LegajoProgramaSocialCB::class)->withPivot('fecha_inscripcion', 'profesional_id', 'estado_id');
     }
+
+    public function actividades(){
+        return $this->belongsToMany(ActividadCB::class, 'actividad_cb_legajo', 'legajo_id', 'actividad_id')
+        ->using(ActividadCBLegajo::class)->withPivot('fecha_inscripcion', 'estado_id');
+    }
 }

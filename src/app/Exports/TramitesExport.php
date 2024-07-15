@@ -37,7 +37,9 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
         
         $result = Tramite::query();
         $depe = true;
-        $result->select('person.name', 
+        $result->select(
+                'tramites.id',
+                'person.name', 
                 'person.lastname', 
                 'person.num_documento',
                 DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
@@ -51,9 +53,16 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 'address_data.piso',
                 'address_data.dpto',
                 'address_data.google_address',
+                'paises.description as paises_description',
+                'situacion_conyugal.description as situacion_conyugal_description',
+                'aditional_data.cant_hijos as aditional_data_cant_hijos',
+                'nivel_educativo.description as nivel_educativo_actual',
                 'escuelas.description AS escuela_description', 
                 'estado_educativo.description AS estado_educativo',
                 'tipo_ocupacion.description AS tipo_ocupacion_description',
+                'tipo_pension.description AS tipo_pension_description',
+                'cobertura_medica.description AS cobertura_medica_description',
+                'programa_social.description AS programa_social_description',
                 DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
                 'tipo_tramite.description AS tipo_tramite_description',
                 'dependencias.description AS dependencia_description',
@@ -79,6 +88,13 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
             ->leftjoin('modalidad_atencion', 'modalidad_atencion.id', '=', 'tramites.modalidad_atencion_id')
             ->leftjoin('categories', 'categories.id', '=', 'tramites.category_id')
+            ->leftjoin('paises', 'paises.id', '=', 'address_data.pais_id')
+            ->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id')
+            ->leftjoin('situacion_conyugal', 'situacion_conyugal.id', '=', 'aditional_data.situacion_conyugal_id')
+            ->leftjoin('nivel_educativo', 'nivel_educativo.id', '=', 'education_data.nivel_educativo_id')
+            ->leftjoin('tipo_pension', 'tipo_pension.id', '=', 'social_data.tipo_pension_id')
+            ->leftjoin('cobertura_medica', 'cobertura_medica.id', '=', 'social_data.cobertura_medica_id')
+            ->leftjoin('programa_social', 'programa_social.id', '=', 'social_data.programa_social_id')
             ->where('person_tramite.rol_tramite_id', '1');
 
         if(isset($this->data['dependencia_id'])){
@@ -199,6 +215,7 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     public function headings(): array
     {
         $title = [
+            'Nro Trámite',
             'Nombre',
             'Apellido',
             'Num. Documento',
@@ -213,9 +230,16 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             'Piso',
             'Dpto',
             'Direccion Google',
+            'País',
+            'Situacion Conyugal',
+            'Cant. Hijos',
+            'Niv. Educ. en curso',
             'Escuela',
             'Estado Educativo',
             'Ocupación',
+            'Jub./Pens.',
+            'Cobertura Salud',
+            'Programa Social',
             'Fecha Tramite',
             'Tipo Tramite',
             'Dependencia',

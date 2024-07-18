@@ -1,58 +1,20 @@
 <template>
     <!-- eslint-disable -->
     <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
-        <li v-for="programa in programas" :key="programa.email"
-            class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-            <div class="w-full flex items-center justify-between p-6 space-x-6">
-                <div class="flex-1 truncate">
-                    <div class="flex items-center space-x-3">
-                        <h3 class="text-gray-900 text-base font-medium truncate">{{ programa.name }}</h3>
-                        <span v-if="programa.role"
-                            class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
-                            {{ programa.role }}</span>
-                    </div>
-                    <p class="mt-1 text-gray-500 text-sm truncate">{{ programa.title }}</p>
-                    <div class="mt-3">
-                        <div class="flex text-sm">
-                            <UserCircleIcon class="w-5 text-gray-300"/> <span class="ml-2">Valeria Perez</span>
-                        </div>
-                        <div class="flex text-sm mt-1">
-                            <CalendarIcon class="w-5 text-gray-300"/><span class="ml-2">01/06/2024</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
-            </div>
-            <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                    <div class="w-0 flex-1 flex">
-                        <button @click="showDetail = !showDetail, showEditor = false"
-                            class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
-                            <!-- <MailIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
-                            <span  class="ml-3">Detalle</span>
-                        </button>
-                    </div>
-                    <div class="-ml-px w-0 flex-1 flex">
-                        <button @click="showDetail = !showDetail, showEditor = true"
-                            class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
-                            <!-- <PhoneIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
-                            <span class="ml-3">Interveción</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <li v-for="programa in legajo[0].programas_sociales" :key="programa.key" class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+            <ProgramasGrid :programa="programa" 
+                @fnEditor="fnEditor"/>
         </li>
     </ul>
 
     <div v-if="showDetail && !showEditor" aria-labelledby="message-heading"
         class="min-w-0 flex-1 h-full flex flex-col overflow-hidden xl:order-last mt-10 px-4">
-
         <div class="min-h-0 flex-1 overflow-y-auto">
             <div class="bg-white pt-5 pb-6 shadow mt-2 rounded-lg">
                 <div class="px-4 sm:flex sm:justify-between sm:items-center sm:px-6 lg:px-8">
                     <div class="sm:w-0 sm:flex-1">
                         <h1 id="message-heading" class="text-lg font-medium text-gray-900">
-                            {{ programaSelected.title }}
+                            {{ this.programaSelected.programa_social.description ?? '' }}
                         </h1>
                         <nav class="flex mt-1" aria-label="Breadcrumb">
                             <ol role="list" class="flex items-center space-x-2 text-xs">
@@ -81,7 +43,7 @@
                     <div class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                             <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                         <svg class="-ml-1 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>
-                        {{ programaSelected.status }}</span>                            
+                        {{ this.programaSelected.estado.description ?? '' }}</span>                            
                         <Menu as="div" class="ml-3 relative inline-block text-left">
                             <div>
                                 <MenuButton
@@ -133,22 +95,14 @@
             </div>
             <!-- Thread section-->
             <ul role="list" class="py-4 space-y-2 sm:space-y-4 ">
-                <li v-for="item in intervenciones" :key="item.id"
+                <li v-for="item in this.programaSelected.intervenciones" :key="item.id"
                     class="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6">
-                    <!-- <div class="sm:flex sm:justify-between sm:items-baseline">
-                        <h3 class="text-base font-medium">
-                            <span class="text-gray-900">{{ item.user }}</span>
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-600 whitespace-nowrap sm:mt-0 sm:ml-3">
-                            <time :datetime="item.datetime">{{ item.date }}</time>
-                        </p>
-                    </div> -->
                     <div class="flex space-x-3">
                         <div class="min-w-0 flex-1">
-                          <h3 class="text-base font-medium text-gray-900">{{ item.user }}</h3>
+                          <h3 class="text-base font-medium text-gray-900">{{ item.profesional?.name ?? '-' }}</h3>
                           <p class="text-sm text-gray-500">
                             <a href="#" class="hover:underline">
-                              <time datetime="2020-12-08T18:02:00">28 Junio 2024 - 18:02 </time>
+                              <time datetime="2020-12-08T18:02:00">{{ store.dateFormateada(item.fecha)}} </time>
                             </a>
                           </p>
                         </div>
@@ -170,40 +124,6 @@
                                         Editar
                                         </a>
                                     </MenuItem>
-                                    <!-- <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Duplicate
-                                        </a>
-                                    </MenuItem>
-                                    </div>
-                                    <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Archive
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Move
-                                        </a>
-                                    </MenuItem>
-                                    </div>
-                                    <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Share
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Add to favorites
-                                        </a>
-                                    </MenuItem> -->
                                     </div>
                                     <div class="py-1">
                                     <MenuItem v-slot="{ active }">
@@ -217,7 +137,7 @@
                             </transition>
                         </Menu>
                       </div>                    
-                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4 text-justify" v-html="item.content" />
+                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="item.description ?? '-'" />
                 </li>
             </ul>
         </div>
@@ -231,7 +151,7 @@
                 <div class="px-4 sm:flex sm:justify-between sm:items-center sm:px-6 lg:px-8">
                     <div class="sm:w-0 sm:flex-1">
                         <h1 id="message-heading" class="text-lg font-medium text-gray-900">
-                            {{ programaSelected.title }}
+                            {{ this.programaSelected.programa_social.description ?? '' }}
                         </h1>
                         <nav class="flex mt-1" aria-label="Breadcrumb">
                             <ol role="list" class="flex items-center space-x-2 text-xs">
@@ -260,7 +180,7 @@
                     <div class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                             <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                         <svg class="-ml-1 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>
-                        {{ programaSelected.status }}</span>                            
+                        {{ this.programaSelected.estado.description ?? '' }}</span>                            
                         <Menu as="div" class="ml-3 relative inline-block text-left">
                             <div>
                                 <MenuButton
@@ -280,7 +200,7 @@
                                     class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                     <div class="py-1">
                                         <MenuItem v-slot="{ active }">
-                                            <button type="button" @click="showEditor = true"
+                                            <button type="button" @click="showEditor = !showEditor"
                                                 :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                 <span>Nueva Intervención</span>
                                             </button>
@@ -321,27 +241,39 @@
                     <div class="grid grid-cols-3 gap-4 pt-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Fecha: </label>
                         <div class="mt-1 col-span-2">
-                            <input type="text" name="first-name" id="first-name" autocomplete="given-name" 
-                                class="block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-lg sm:text-sm border-gray-300 rounded-md" />
+                            <Datepicker
+                                class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="form.fecha_intervencion"
+                                :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+                                :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+                            </Datepicker>
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-3 gap-4 py-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Profesional: </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
-                            <input type="text" name="first-name" id="first-name" autocomplete="given-name" 
-                                class="w-full block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-lg sm:text-sm border-gray-300 rounded-md" />
+                            <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
+                                autocomplete="off"
+                                :class="input_disable ? bg_disable : ''"
+                                :disabled="input_disable"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>
+                                    Seleccione un Profesional
+                                </option>
+                                <option v-for="p in users" :key="p.id" :value="p.id">
+                                    {{ p.name ?? '' }}
+                                </option>
+                            </select>
                         </div>
                     </div>
-                    <QuillEditor theme="snow"/>
+                    <QuillEditor theme="snow" ref="editor" v-model:content="form.description" content-type="html"/>
                 </div>
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end">
-                    <button @click="showEditor = false" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
+                    <button @click="this.showEditor=false" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
+                    <button @click="storeIntervencion()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -363,14 +295,23 @@ import ProgramasGrid from './ProgramasGrid.vue'
 
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import Datepicker from "@vuepic/vue-datepicker";
+  import "@vuepic/vue-datepicker/dist/main.css";
+  import store from '@/store.js'
 
-const programaSelected = {
-    title: "Psicopedagogía",
-    status: "Activo"
-}
+
 const programas = [
     {
-        name: 'Familias',
+        name: 'Emprendedores',
+        title: 'Regional Paradigm Technician',
+        role: null,
+        email: 'janecooper@example.com',
+        telephone: '+1-202-555-0170',
+        imageUrl:
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+    },
+    {
+        name: 'Gabinete',
         title: 'Regional Paradigm Technician',
         role: 'Activo',
         email: 'janecooper@example.com',
@@ -379,7 +320,7 @@ const programas = [
             'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
     },
     {
-        name: '1000 días',
+        name: 'Psicopedagogía',
         title: 'Regional Paradigm Technician',
         role: 'Activo',
         email: 'janecooper@example.com',
@@ -390,16 +331,7 @@ const programas = [
     {
         name: 'Vivamos sin violencia',
         title: 'Regional Paradigm Technician',
-        role: 'Activo',
-        email: 'janecooper@example.com',
-        telephone: '+1-202-555-0170',
-        imageUrl:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-    },
-    {
-        name: 'Prevención del delito infanto juvenil',
-        title: 'Regional Paradigm Technician',
-        role: 'Activo',
+        role: null,
         email: 'janecooper@example.com',
         telephone: '+1-202-555-0170',
         imageUrl:
@@ -433,7 +365,12 @@ const pages = [
   { name: 'Legajo', href: '#', current: false },
   { name: 'Programas', href: '#', current: true },
 ]
+
 export default {
+    props: {
+        legajo: Object,
+        users: Object
+    },
     components: {
         PhoneIcon,
         Menu,
@@ -449,25 +386,75 @@ export default {
         UserCircleIcon,
         CalendarIcon,
         QuillEditor,
-        ProgramasGrid
+        ProgramasGrid,
+        Datepicker,
     },
 
     setup() {
+        const format = (date) => {
+			const day = date.getDate();
+			const month = date.getMonth() + 1;
+			const year = date.getFullYear();
+
+			return `${day}/${month}/${year}`;
+		};
+
         return {
+            format,
             programas,
-            programaSelected,
             intervenciones,
-            pages
+            pages, 
+            store
         }
     },
     data() {
         return {
+            form: {},
             showDetail: false,
-            showEditor: false
+            showEditor: false,
+            programaSelected: {}
         }
-    }
+    },
+    methods: {
+        async storeIntervencion(){
+            let data = {}
+            this.form.programa_social_id = this.programaSelected.id
+            // RUTA
+            let rt = route("legajoCB.storeIntervencion");
+
+            try {
+                const response = await axios.post(rt, this.form);
+                if (response.status == 200) {
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                    this.showDetail = false
+                    this.showEditor = false
+                    this.form = {}
+                    this.legajo[0].programas_sociales.forEach(element => {
+                        if(element.id === response.data.programas[0].id){
+                            element.intervenciones = response.data.programas[0].intervenciones
+                        }
+                    });
+                } else {
+                    data.message = response.data.message
+                    data.labelType = 'info'
+                }
+            } catch (error) {
+                data.message = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+                data.labelType = 'danger'
+            }
+            this.$emit('message', data)
+        },
+        fnEditor(data){
+            this.showDetail = data.showDetail
+            this.showEditor = data.showEditor
+            this.programaSelected = data.programa
+        }
+    },
+
 }
 </script>
+
 <style scope>
     .ql-toolbar {
         border-radius: 15px 15px 0px 0px;

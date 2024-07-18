@@ -1,6 +1,12 @@
 <template>
     <!-- eslint-disable -->
     <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
+        <li v-for="actividad in legajo[0].actividades" :key="actividad.key" class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
+            <ActividadesGrid :actividad="actividad"/>
+        </li>
+    </ul>
+
+    <!-- <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
         <li v-for="programa in programas" :key="programa.email"
             class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
             <div class="w-full flex items-center justify-between p-6 space-x-6">
@@ -13,38 +19,16 @@
                     </div>
                     <p class="mt-1 text-gray-500 text-sm truncate">{{ programa.title }}</p>
                     <div class="mt-3">
-                        <!-- <div class="flex text-sm">
-                            <UserCircleIcon class="w-5 text-gray-300"/> <span class="ml-2">Valeria Perez</span>
-                        </div> -->
                         <div class="flex text-sm mt-1">
                             <CalendarIcon class="w-5 text-gray-300"/><span class="ml-2">01/06/2024</span>
                         </div>
                     </div>
                 </div>
-                <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
             </div>
-            <!-- <div>
-                <div class="-mt-px flex divide-x divide-gray-200">
-                    <div class="w-0 flex-1 flex">
-                        <button @click="showDetail = !showDetail, showEditor = false"
-                            class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"> -->
-                            <!-- <MailIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
-                            <!--  <span  class="ml-3">Detalle</span>
-                        </button>
-                    </div>
-                    <div class="-ml-px w-0 flex-1 flex">
-                        <button
-                            class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">-->
-                            <!-- <PhoneIcon class="w-5 h-5 text-gray-400" aria-hidden="true" /> -->
-                            <!-- <span class="ml-3">Interveción</span>
-                        </button>
-                    </div>
-                </div>
-            </div> -->
         </li>
-    </ul>
+    </ul> -->
 
-    <div v-if="showDetail && !showEditor" aria-labelledby="message-heading"
+    <!-- <div v-if="showDetail && !showEditor" aria-labelledby="message-heading"
         class="min-w-0 flex-1 h-full flex flex-col overflow-hidden xl:order-last mt-10 px-4">
 
         <div class="min-h-0 flex-1 overflow-y-auto">
@@ -131,18 +115,9 @@
                     </div>
                 </div>
             </div>
-            <!-- Thread section-->
             <ul role="list" class="py-4 space-y-2 sm:space-y-4 ">
                 <li v-for="item in intervenciones" :key="item.id"
                     class="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6">
-                    <!-- <div class="sm:flex sm:justify-between sm:items-baseline">
-                        <h3 class="text-base font-medium">
-                            <span class="text-gray-900">{{ item.user }}</span>
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-600 whitespace-nowrap sm:mt-0 sm:ml-3">
-                            <time :datetime="item.datetime">{{ item.date }}</time>
-                        </p>
-                    </div> -->
                     <div class="flex space-x-3">
                         <div class="min-w-0 flex-1">
                           <h3 class="text-base font-medium text-gray-900">{{ item.user }}</h3>
@@ -154,7 +129,6 @@
                         </div>
                         <Menu as="div" class="relative inline-block text-left">
                             <div>
-                                <!-- <MenuButton class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> -->
                                     <MenuButton class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Opciones
                                     <ChevronDownIcon class="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
@@ -170,40 +144,6 @@
                                         Editar
                                         </a>
                                     </MenuItem>
-                                    <!-- <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Duplicate
-                                        </a>
-                                    </MenuItem>
-                                    </div>
-                                    <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Archive
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Move
-                                        </a>
-                                    </MenuItem>
-                                    </div>
-                                    <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Share
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                                        <Bars4Icon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                                        Add to favorites
-                                        </a>
-                                    </MenuItem> -->
                                     </div>
                                     <div class="py-1">
                                     <MenuItem v-slot="{ active }">
@@ -221,9 +161,9 @@
                 </li>
             </ul>
         </div>
-    </div>
+    </div> -->
 
-    <div v-if="showEditor" aria-labelledby="message-heading"
+    <!-- <div v-if="showEditor" aria-labelledby="message-heading"
         class="min-w-0 flex-1 h-full flex flex-col overflow-hidden xl:order-last mt-10 px-4">
 
         <div class="min-h-0 flex-1 overflow-y-auto">
@@ -342,7 +282,7 @@
             </div>
 
         </div>
-    </div>
+    </div> -->
 
 </template>
 
@@ -359,7 +299,6 @@ import { PhoneIcon,
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
 import ActividadesGrid from './ActividadesGrid.vue'
-
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -433,6 +372,9 @@ const pages = [
   { name: 'Programas', href: '#', current: true },
 ]
 export default {
+    props: {
+        legajo: Object,
+    },
     components: {
         PhoneIcon,
         Menu,

@@ -16,7 +16,7 @@
 				</h1>
 			</div>
 			<div class="flex">
-				<button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Editar</button>
+                <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Editar</button>
 				<button type="button" @click="showForm = true" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Crear</button>
 			</div>
 		</div>
@@ -39,9 +39,11 @@
 				</div>
 				<component 	:is="selectedItem.componentName"
 						   	:data="selectedItem.componentData"
-						   	:legajo="legajo" />
+						   	:legajo="legajo"
+							:users="users"
+							@message="messageToast"/>
 			</div>
-            
+
 			<div class="lg:col-span-4 xl:col-span-4">
 				<div class="sticky top-4">
 					<!-- Datos Titular -->
@@ -87,7 +89,7 @@
 	</div>
 
 	<CreateModal v-if="showForm"
-		:open="showForm" 
+		:open="showForm"
 		:programasSociales="programasSociales"
 		:actividades="actividades"
 		:users="users"
@@ -115,7 +117,7 @@ const props = defineProps({
 	legajo: Object,
     users: Object,
     programasSociales: Object,
-	actividades: Object
+	actividades: Object,
 });
 
 const legajo = props.legajo;
@@ -147,6 +149,11 @@ function clearMessage() {
 	toastMessage.value = "";
 }
 
+function messageToast(data){
+	labelType.value = data.labelType;
+	toastMessage.value = data.message;
+}
+
 function viewForm() {
 	showForm.value = true;
 }
@@ -169,7 +176,7 @@ async function submitStore(data) {
         const response = await axios.post(rt, data);
         if (response.status == 200) {
             labelType.value = "success";
-            toastMessage.value = response.data.message; 
+            toastMessage.value = response.data.message;
 			showForm.value = false
 			if(data.selectedOption === 'programa_social'){
 				legajo[0].programas_sociales = response.data.programas[0].programas_sociales

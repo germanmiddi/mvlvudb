@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Manager\ActividadCB;
 use App\Models\Manager\EstadoActividadCB;
 use App\Models\Manager\EstadoCbj;
-use App\Models\Manager\EstadoProgramaSocialCb;
+use App\Models\Manager\EstadoProgramaSocialCB;
+use App\Models\Manager\IntervencionProgramaSocialCB;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\LegajoProgramaSocialCB;
 use App\Models\Manager\ProgramaSocialCB;
 use App\Models\User;
 use App\Models\Manager\TipoLegajoCb;
@@ -49,7 +51,13 @@ class LegajosCBController extends Controller
                                            'person.education.estadoEducativo',
                                            'person.education.escuelaTurno',
                                            'tipo_legajo',
-                                           'programas_sociales')->get(),
+                                           'programas_sociales',
+                                           'programas_sociales.profesional',
+                                           'programas_sociales.programa_social',
+                                           'programas_sociales.estado',
+                                           'programas_sociales.intervenciones',
+                                           'programas_sociales.intervenciones.profesional',
+                                           'actividades')->get(),
                 'users' => User::all(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all()
@@ -60,22 +68,57 @@ class LegajosCBController extends Controller
     // Store Programa Social
     public function store_programa_social(Request $request){
         try {
-            $estado = EstadoProgramaSocialCb::where('description', 'Activo')->first();
+            $estado = EstadoProgramaSocialCB::where('description', 'Activo')->first();
             $legajo = LegajoCB::where('id', $request->legajo_id)->first();
 
-            if (!$legajo->programas_sociales()->where('programa_social_id', $request->programa_social_id)->exists()) {
-                $legajo->programas_sociales()->attach($request->programa_social_id, [
-                    'profesional_id' => $request->profesional_id,
-                    'fecha_inscripcion' => $request->fecha_inscripcion,
-                    'estado_id' => $estado->id
-                ]);
+            // Control de la existencia del programa social asociado al legajo.
+            if (!LegajoProgramaSocialCB::where('programa_social_id', $request->programa_social_id)->where('legajo_id', $legajo->id)->where('estado_id',$estado->id)->exists()) {
+                LegajoProgramaSocialCB::Create(
+                    [
+                        'legajo_id' => $legajo->id,
+                        'programa_social_id' => $request->programa_social_id,
+                        'profesional_id' => $request->profesional_id,
+                        'fecha_inscripcion' => $request->fecha_inscripcion,
+                        'estado_id' => $estado->id
+                    ]
+                );
             }else{
-                return response()->json(['message' => 'El programa social ya ha sido agrego previamente. Verifique los datos ingresados.'], 203);
+                return response()->json(['message' => 'El programa social ya ha sido agrego previamente o se encuentra activo. Verifique los datos ingresados.'], 203);
             }
-            $programas = $legajo = LegajoCB::where('id', $request->legajo_id)->with('programas_sociales')->get();
+
+            $programas = LegajoCB::where('id', $request->legajo_id)->with('programas_sociales','programas_sociales.profesional',
+            'programas_sociales.programa_social',
+            'programas_sociales.estado',
+            'programas_sociales.intervenciones',
+            'programas_sociales.intervenciones.profesional')->get();
+
             return response()->json(['message' => 'Se registrado correctamente la el Programa Social.', 'programas' => $programas], 200);
         } catch (\Throwable $th) {
+            dd($th);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+    public function store_intervencion(Request $request){
+        try {
+            $intervencion = IntervencionProgramaSocialCB::Create(
+                [
+                    'description' => $request->description,
+                    'fecha' => $request->fecha_intervencion,
+                    'profesional_id' => $request->profesional_id,
+                    'legajo_programa_social_cb_id' => $request->programa_social_id,
+                ]
+            );
+
+            $programas = LegajoProgramaSocialCB::where('id', $intervencion->legajo_programa_social_cb_id)->with('profesional',
+                'programa_social',
+                'estado',
+                'intervenciones',
+                'intervenciones.profesional')->get();
+            return response()->json(['message' => 'Se registrado correctamente la intervencion.', 'programas' => $programas], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion. Verifique los datos ingresados.'], 500);
         }
     }
 

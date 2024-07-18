@@ -5,9 +5,9 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EstadoProgramaSocialCb extends Model
+class EstadoCB extends Model
 {
-    protected $table = 'estados_programa_social_cb';
+    protected $table = 'estados_cb';
     protected $primaryKey = 'id';
     public $timestamps = true;
 
@@ -15,9 +15,4 @@ class EstadoProgramaSocialCb extends Model
         'description',
         'activo',
     ];
-
-    public function legajo_programa_social()
-    {
-        return $this->hasMany(LegajoProgramaSocialCB::class, 'estado_id');
-    }
 }

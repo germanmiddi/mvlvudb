@@ -23,6 +23,7 @@ use App\Http\Controllers\Manager\Tramites\Vivienda\ViviendaController;
 use App\Http\Controllers\Manager\Tramites\Entidad\EntidadController;
 use App\Http\Controllers\Manager\Uploads\FileController;
 
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Manager\Masterdata\MasterdataController;
 use App\Http\Controllers\Manager\Report\ReportController;
 use App\Http\Controllers\Manager\Users\UserController;
@@ -45,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report', [ReportController::class, 'index'])->name('report');
     Route::get('/report/summary', [ReportController::class, 'summary'])->name('report.summary');
     Route::post('/report/exportTramiteExcel', [ReportController::class, 'exportTramiteExcel'])->name('report.exportTramiteExcel');
+    Route::get('/report/exportTest', [ReportController::class, 'exportTest'])->name('report.exportTest');
     Route::get('/report/exportTramiteCBIExcel', [ReportController::class, 'exportTramiteCBIExcel'])->name('report.exportTramiteCBIExcel');
     Route::post('/report/exportPersonsExcel', [ReportController::class, 'exportPersonsExcel'])->name('report.exportPersonsExcel');
     Route::post('/report/exportEntidadExcel', [ReportController::class, 'exportEntidadExcel'])->name('report.exportEntidadExcel');
@@ -226,5 +228,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/detail/changeEstado/', [DetailController::class, 'changeEstado'])->name('detail.changeEstado');
     Route::post('/detail/changeAssigment/', [DetailController::class, 'changeAssigment'])->name('detail.changeAssigment');
     
+    // Downloads
+    Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads'); 
+
+    Route::get('/downloads/getfieldsItems/{dependencia}', [DownloadController::class, 'getfieldsItems'])->name('downloads.fieldsItems'); 
 
 });

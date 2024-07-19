@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager\Report;
 
 use App\Exports\EntidadesExport;
 use App\Exports\PersonsExport;
+use App\Exports\TestExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
 use App\Http\Controllers\Controller;
@@ -112,6 +113,36 @@ class ReportController extends Controller
         }
         
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
+    }
+    public function exportTest(Request $request){
+        // $data = [$request];
+        // if($request->dependencia_id){
+        //     $data['dependencia_id'] = json_decode($request->dependencia_id);
+        // }
+        // return Excel::download(new TestExport($request), 'tramitesTest.xlsx');
+       // Extrae los datos del request en un arreglo
+        
+    //    $headers 
+    
+       $data = $request->only([
+        'dependencia_id',
+        'tipo_tramite_id',
+        'from',
+        'to',
+        'estado_id',
+        'asigned_me',
+        'name',
+        'num_documento',
+        'boton_antipanico',
+        'ingreso_nuevo',
+        'modalidad_atencion_id',
+        'categoria_id',
+        'user_id'
+    ]);
+
+    // Si algunos valores están vacíos o no existen en el request, podrían no ser necesarios
+    $data = array_filter($data);
+        return Excel::download(new TestExport($data, $headers), 'tramites.xlsx');
     }
 
     public function exportTramiteCBIExcel(){

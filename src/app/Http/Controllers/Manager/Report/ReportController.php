@@ -115,6 +115,58 @@ class ReportController extends Controller
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }
     public function exportTest(Request $request){
+        $updateOrder = $request->input('updateOrder');
+        $filteredArray = array_filter($updateOrder, function ($item) {
+            return $item['is_active'];
+        });
+
+        $query = Tramite::query();
+        $query = $query->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
+        ->join('person', 'person.id', '=', 'person_tramite.person_id')
+        ->leftjoin('education_data','education_data.person_id','=', 'person.id')
+        ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
+        ->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id')
+        ->leftjoin('social_data', 'social_data.person_id', '=', 'person.id')
+        ->leftjoin('escuelas', 'escuelas.id', '=', 'education_data.escuela_id')
+        ->leftjoin('estado_educativo', 'estado_educativo.id', '=', 'education_data.estado_educativo_id')
+        ->leftjoin('tipo_ocupacion', 'tipo_ocupacion.id', '=', 'social_data.tipo_ocupacion_id')
+        ->leftjoin('tipo_tramite', 'tipo_tramite.id', '=', 'tramites.tipo_tramite_id')
+        ->leftjoin('dependencias', 'dependencias.id', '=', 'tramites.dependencia_id')
+        ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
+        ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
+        ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+        ->where('person_tramite.rol_tramite_id', '1');
+        $columns = [];
+        $titles = [];
+        foreach ($filteredArray as $item) {
+            switch ($item['name']){
+                case 'Nombre':
+                    $columns[] = 'person.name as Nombre';
+                    break;
+                case 'Apellido':
+                    $columns[] = 'person.lastname as Apellido';
+                    break;
+                case 'Numero de Documento':
+                    $columns[] = 'person.num_documento as Numero de Documento';
+                    break;
+            }
+            $titles[] = $item['name'];
+        }
+    
+        if (empty($columns)) {
+            return response()->json(['error' => 'No hay columnas activas para exportar.'], 400);
+        }
+    
+        $query->select($columns);
+        
+        $data = $query->get();
+        // dd($data);
+        return Excel::download(new TestExport($data, $titles), 'tramites.xlsx');
+        
+        
+        
+        
+        
         // $data = [$request];
         // if($request->dependencia_id){
         //     $data['dependencia_id'] = json_decode($request->dependencia_id);
@@ -123,26 +175,23 @@ class ReportController extends Controller
        // Extrae los datos del request en un arreglo
         
     //    $headers 
-    
-       $data = $request->only([
-        'dependencia_id',
-        'tipo_tramite_id',
-        'from',
-        'to',
-        'estado_id',
-        'asigned_me',
-        'name',
-        'num_documento',
-        'boton_antipanico',
-        'ingreso_nuevo',
-        'modalidad_atencion_id',
-        'categoria_id',
-        'user_id'
-    ]);
-
+    //    $data = $request->only([
+    //     'dependencia_id',
+    //     'tipo_tramite_id',
+    //     'from',
+    //     'to',
+    //     'estado_id',
+    //     'asigned_me',
+    //     'name',
+    //     'num_documento',
+    //     'boton_antipanico',
+    //     'ingreso_nuevo',
+    //     'modalidad_atencion_id',
+    //     'categoria_id',
+    //     'user_id'
+    // ]);
     // Si algunos valores están vacíos o no existen en el request, podrían no ser necesarios
-    $data = array_filter($data);
-        return Excel::download(new TestExport($data, $headers), 'tramites.xlsx');
+    // $data = array_filter($data);
     }
 
     public function exportTramiteCBIExcel(){

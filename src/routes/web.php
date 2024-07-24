@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report', [ReportController::class, 'index'])->name('report');
     Route::get('/report/summary', [ReportController::class, 'summary'])->name('report.summary');
     Route::post('/report/exportTramiteExcel', [ReportController::class, 'exportTramiteExcel'])->name('report.exportTramiteExcel');
-    Route::get('/report/exportTest', [ReportController::class, 'exportTest'])->name('report.exportTest');
+    Route::post('/report/exportTest', [ReportController::class, 'exportTest'])->name('report.exportTest');
     Route::get('/report/exportTramiteCBIExcel', [ReportController::class, 'exportTramiteCBIExcel'])->name('report.exportTramiteCBIExcel');
     Route::post('/report/exportPersonsExcel', [ReportController::class, 'exportPersonsExcel'])->name('report.exportPersonsExcel');
     Route::post('/report/exportEntidadExcel', [ReportController::class, 'exportEntidadExcel'])->name('report.exportEntidadExcel');

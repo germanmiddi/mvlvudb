@@ -104,10 +104,30 @@ export default {
 
     data() {
         const myArray = ref([
-            { name: "Numero de Documento", id: 0, is_active: true, value:"person.num_documento" },
-            { name: "Canal de Atencion", id: 1, is_active: true, value:"modalidad_atencion_id"  },
-            { name: "Tipo Tramite", id: 2, is_active: true, value:"tipo_tramite_id"  },
-            { name: "Observaciones", id: 3, is_active: true, value:"tramites.observacion"  },
+            { name: "Numero de Documento", index: 0, is_active: true },
+            { name: "Canal de Atencion", index: 1, is_active: true },
+            { name: "Tipo Tramite", index: 2, is_active: true },
+            { name: "Observaciones", index: 3, is_active: true },
+            { name: "Nombre", index: 4, is_active: true },
+            { name: "Apellido", index: 5, is_active: true },
+            { name: "Mail", index: 6, is_active: true },
+            { name: "Teléfono", index: 7, is_active: true },
+            { name: "Celular", index: 8, is_active: true },
+            { name: "Localidad", index: 9, is_active: true },
+            { name: "Barrio", index: 10, is_active: true },
+            { name: "Calle", index: 11, is_active: true },
+            { name: "Número", index: 12, is_active: true },
+            { name: "Piso", index: 13, is_active: true },
+            { name: "Departamento", index: 14, is_active: true },
+            { name: "País de origen", index: 15, is_active: true },
+            { name: "Situación Conyugal", index: 16, is_active: true },
+            { name: "Cant. Hijos", index: 17, is_active: true },
+            { name: "Niv. Ed. en curso", index: 18, is_active: true },
+            { name: "Niv. Ed. Alcanzado", index: 19, is_active: true },
+            { name: "Ocupación", index: 20, is_active: true },
+            { name: "Jubilación/Pensión", index: 21, is_active: true },
+            { name: "Cobertura de Salud", index: 22, is_active: true },
+            { name: "Recibe Programa Social", index: 23, is_active: true }
         ]);
 
         const orderedItems = ref([]);
@@ -119,7 +139,7 @@ export default {
 
         const updateOrder = () => {
             myArray.value.forEach((item, index) => {
-                item.id = index;
+                item.index = index;
             });
             orderedItems.value = [...myArray.value];
             console.log("Nuevo orden almacenado en orderedItems:", orderedItems.value);
@@ -152,23 +172,19 @@ export default {
         // },
 
         async generateReport() {
-
-            this.filter.dependencia_id = 5
             this.processReport = true
-
-            // this.$http
-            //     .get('report.exportTest', this.updateOrder)
-            //     .catch((error) => {
-            //         console.log(error);
-            //     })
-            const activeFields = this.myArray.filter(item => item.is_active).map(item => item.name);
+            const updateOrder = this.myArray.map((item, index) => {
+                return {
+                    name: item.name,
+                    index: index,
+                    is_active: item.is_active
+                };
+            });
             let rt = route("report.exportTest");
-
             try {
-                const response = await axios.post(rt, this.filter, {
+                const response = await axios.post(rt, { updateOrder: updateOrder }, {
                     responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
                 });
-
                 // Crear un objeto Blob con la respuesta
                 const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
@@ -188,10 +204,53 @@ export default {
                 // Liberar la URL del objeto después de la descarga
                 window.URL.revokeObjectURL(url);
             } catch (error) {
-                console.error(error);
+                console.log(error);
             }
             this.processReport = false
         }
+
+
+        // async generateReport() {
+
+        //     this.filter.dependencia_id = 5
+        //     this.processReport = true
+
+        //     // this.$http
+        //     //     .get('report.exportTest', this.updateOrder)
+        //     //     .catch((error) => {
+        //     //         console.log(error);
+        //     //     })
+        //     const activeFields = this.myArray.filter(item => item.is_active).map(item => item.name);
+        //     let rt = route("report.exportTest");
+
+        //     try {
+        //         const response = await axios.post(rt, this.filter, {
+        //             responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+        //         });
+
+        //         // Crear un objeto Blob con la respuesta
+        //         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        //         // Crear una URL de objeto para el Blob
+        //         const url = window.URL.createObjectURL(blob);
+
+        //         // Crear un enlace <a> para iniciar la descarga
+        //         const a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
+        //         a.style.display = 'none';
+
+        //         // Agregar el enlace al cuerpo del documento y hacer clic en él
+        //         document.body.appendChild(a);
+        //         a.click();
+
+        //         // Liberar la URL del objeto después de la descarga
+        //         window.URL.revokeObjectURL(url);
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        //     this.processReport = false
+        // }
 
     },
 

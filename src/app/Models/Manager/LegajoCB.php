@@ -87,4 +87,9 @@ class LegajoCB extends Model
         return $this->belongsToMany(ActividadCB::class, 'actividad_cb_legajo', 'legajo_id', 'actividad_id')
         ->using(ActividadCBLegajo::class)->withPivot('fecha_inscripcion', 'estado_id');
     }
+
+    public function informes()
+    {
+        return $this->hasMany(InformeCB::class, 'legajo_id');
+    }
 }

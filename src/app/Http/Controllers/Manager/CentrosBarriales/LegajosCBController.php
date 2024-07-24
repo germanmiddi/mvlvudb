@@ -57,7 +57,8 @@ class LegajosCBController extends Controller
                                            'programas_sociales.estado',
                                            'programas_sociales.intervenciones',
                                            'programas_sociales.intervenciones.profesional',
-                                           'actividades')->get(),
+                                           'actividades',
+                                           'informes')->get(),
                 'users' => User::all(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all()

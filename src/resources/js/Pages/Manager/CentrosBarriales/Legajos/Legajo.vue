@@ -1,5 +1,5 @@
 <template>
-<!-- eslint-disable -->
+<!-- eslint-disable -->|
 <!-- <CreateModal :open="showModal" @close="showModal = false" /> -->
 
 <main class="flex-1 bg-gray-50 pb-40">
@@ -28,7 +28,7 @@
 			<div class="lg:col-span-8 xl:col-span-8">
 				<div class="border-b border-gray-200 dark:border-gray-700">
 					<ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-						<li v-for="(item, index) in subNavigation" :key="item.name" class="me-2 w-1/3">
+						<li v-for="(item, index) in subNavigation" :key="item.name" class="me-2 w-1/5">
 							<a	href="#" @click.prevent="selectItem(index)"
 								:class="tabs === index ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
 								class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
@@ -105,6 +105,8 @@ import { ref, computed } from 'vue';
 import Toast from "@/Layouts/Components/Toast.vue";
 import InformacionGeneral from './InformacionGeneral.vue';
 import Programas from './Programas/Programas.vue';
+import Archivos from './Archivos/Archivos.vue';
+import Informes from './Informes/Informes.vue';
 import Actividades from './Actividades/Actividades.vue';
 import FormCreate from './FormCreate.vue';
 
@@ -129,6 +131,8 @@ const subNavigation = [
     { name: 'General', icon: CubeIcon, componentName: InformacionGeneral },
     { name: 'Programas', icon: CubeIcon, componentName: Programas },
 	{ name: 'Actividades', icon: CubeIcon, componentName: Actividades },
+	{ name: 'Informes', icon: CubeIcon, componentName: Informes },
+	{ name: 'Archivos', icon: CubeIcon, componentName: Archivos },
 ]
 
 const tabs = ref(0);

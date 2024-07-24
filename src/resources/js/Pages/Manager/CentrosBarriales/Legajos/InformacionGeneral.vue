@@ -16,7 +16,7 @@
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(legajo[0].fecha_inscripcion) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ legajo[0].fecha_inscripcion ? store.dateFormateada(legajo[0].fecha_inscripcion) : '-'}}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -26,12 +26,12 @@
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.fechaFormateada(legajo[0].created_at) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ legajo[0].created_at ? store.fechaFormateada(legajo[0].created_at) :'-' }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Última actualización</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.fechaFormateada(legajo[0].updated_at) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].updated_at ? store.fechaFormateada(legajo[0].updated_at) : '-'}}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -53,12 +53,12 @@
 							<dt class="text-sm font-medium text-gray-500">Observación</dt>
 							<dd class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].observacion ?? '-' }}</dd>
 						</div>
-                    
+
                 </dl>
             </div>
 
         </div>
-	</div>	
+	</div>
 
     <!-- Datos Responsale -->
     <div class="px-4 mt-6" v-if="legajo[0].responsable">
@@ -69,7 +69,7 @@
 
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
-        
+
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].responsable.lastname}}, {{ legajo[0].responsable.name }}</dd>
@@ -82,13 +82,13 @@
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{store.dateFormateada(legajo[0].responsable.fecha_nac)}}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].responsable?.fecha_nac ? store.dateFormateada(legajo[0].responsable.fecha_nac) : '-'}}</dd>
                     </div>
 
                 </dl>
             </div>
         </div>
-    </div>	
+    </div>
     <!-- Fin  Datos Titular -->
 
     <!-- Datos Autorizaciones -->
@@ -101,7 +101,7 @@
 
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
-        
+
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apoyo Escolar</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].autorizacion?.apoyo_escolar ? 'SI' : 'NO'}}</dd>
@@ -128,9 +128,9 @@
                     </div>
                 </dl>
             </div>
-            
+
         </div>
-    </div>	
+    </div>
     <!-- Fin  Autorizaciones -->
 
     <!-- Datos Salud -->
@@ -143,7 +143,7 @@
 
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
-        
+
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apto Medico</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud?.apto_medico ? 'SI' : 'NO'}}</dd>
@@ -151,7 +151,7 @@
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha Apto Médico</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud?.fecha_apto_medico ) ?? '-' }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].person?.salud?.fecha_apto_medico ? store.dateFormateada(legajo[0].person?.salud?.fecha_apto_medico ) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -161,7 +161,7 @@
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha Electrocardiograma</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(legajo[0].person?.salud?.fecha_electrocardiograma ) ?? '-' }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].person?.salud?.fecha_electrocardiograma ? store.dateFormateada(legajo[0].person?.salud?.fecha_electrocardiograma ) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -175,9 +175,9 @@
                     </div>
                 </dl>
             </div>
-            
+
         </div>
-    </div>	
+    </div>
     <!-- Fin  Salud -->
 
     <!-- Datos Educación -->
@@ -190,7 +190,7 @@
 
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
-        
+
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Escuela</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.education[0]?.escuela_primaria?.description ?? '-'}}</dd>
@@ -212,12 +212,12 @@
                     </div>
                 </dl>
             </div>
-            
+
         </div>
-    </div>	
+    </div>
     <!-- Fin  Educación -->
 </div>
-  
+
 </template>
 
 <script setup>

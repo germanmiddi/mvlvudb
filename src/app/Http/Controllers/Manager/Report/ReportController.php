@@ -116,10 +116,7 @@ class ReportController extends Controller
     }
     public function exportTest(Request $request){
         $updateOrder = $request->input('updateOrder');
-        $filteredArray = array_filter($updateOrder, function ($item) {
-            return $item['is_active'];
-        });
-
+        
         $query = Tramite::query();
         $query = $query->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
         ->join('person', 'person.id', '=', 'person_tramite.person_id')
@@ -135,63 +132,34 @@ class ReportController extends Controller
         ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
         ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
         ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+        ->leftjoin('salud_data', 'salud_data.person_id', '=', 'person.id')
+        ->leftjoin('cobertura_medica', 'cobertura_medica.id', '=', 'social_data.cobertura_medica_id')
+        ->leftjoin('tipo_pension', 'tipo_pension.id', '=', 'social_data.tipo_pension_id')
+        ->leftjoin('modalidad_atencion', 'modalidad_atencion.id', '=', 'tramites.modalidad_atencion_id')
+        ->leftjoin('categories', 'categories.id', '=', 'tramites.category_id')
+        ->leftjoin('paises', 'paises.id', '=', 'address_data.pais_id')
+        ->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id')
+        ->leftjoin('nivel_educativo', 'nivel_educativo.id', '=', 'education_data.nivel_educativo_id')
+        ->leftjoin('programa_social', 'programa_social.id', '=', 'social_data.programa_social_id')
+        ->leftjoin('tipo_vivienda', 'tipo_vivienda.id', '=', 'aditional_data.tipo_vivienda_id')
+        ->leftjoin('tipo_vinculo_familiar', 'tipo_vinculo_familiar.id', '=', 'aditional_data.tipo_vinculo_familiar_id')
+        ->leftjoin('situacion_conyugal', 'situacion_conyugal.id', '=', 'aditional_data.situacion_conyugal_id')
         ->where('person_tramite.rol_tramite_id', '1');
         $columns = [];
         $titles = [];
-        foreach ($filteredArray as $item) {
-            switch ($item['name']){
-                case 'Nombre':
-                    $columns[] = 'person.name as Nombre';
-                    break;
-                case 'Apellido':
-                    $columns[] = 'person.lastname as Apellido';
-                    break;
-                case 'Numero de Documento':
-                    $columns[] = 'person.num_documento as Numero de Documento';
-                    break;
-            }
-            $titles[] = $item['name'];
+        foreach ($updateOrder as $item) {
+            $columns[] = $item['table'] . '.' . $item['column'] . ' ' . 'as' . ' ' . $item['label'];
+            $titles[] = $item['label'];
         }
-    
+
         if (empty($columns)) {
             return response()->json(['error' => 'No hay columnas activas para exportar.'], 400);
         }
     
         $query->select($columns);
-        
         $data = $query->get();
-        // dd($data);
+
         return Excel::download(new TestExport($data, $titles), 'tramites.xlsx');
-        
-        
-        
-        
-        
-        // $data = [$request];
-        // if($request->dependencia_id){
-        //     $data['dependencia_id'] = json_decode($request->dependencia_id);
-        // }
-        // return Excel::download(new TestExport($request), 'tramitesTest.xlsx');
-       // Extrae los datos del request en un arreglo
-        
-    //    $headers 
-    //    $data = $request->only([
-    //     'dependencia_id',
-    //     'tipo_tramite_id',
-    //     'from',
-    //     'to',
-    //     'estado_id',
-    //     'asigned_me',
-    //     'name',
-    //     'num_documento',
-    //     'boton_antipanico',
-    //     'ingreso_nuevo',
-    //     'modalidad_atencion_id',
-    //     'categoria_id',
-    //     'user_id'
-    // ]);
-    // Si algunos valores están vacíos o no existen en el request, podrían no ser necesarios
-    // $data = array_filter($data);
     }
 
     public function exportTramiteCBIExcel(){

@@ -57,8 +57,10 @@ class ColumnExportSeeder extends Seeder
             ['id' => 29, 'table' => 'aditional_data', 'column' => 'cant_hijos', 'label' => 'Cantidad de Hijos', 'order' => 29],
             ['id' => 30, 'table' => 'tipo_vivienda', 'column' => 'description', 'label' => 'Tipo de Vivienda', 'order' => 30],
             ['id' => 31, 'table' => 'tipo_vinculo_familiar', 'column' => 'description', 'label' => 'Vinculo Familiar', 'order' => 31],
-            ['id' => 32, 'table' => 'situación_conyugal', 'column' => 'description', 'label' => 'Situación Conyugal', 'order' => 32],
-            
+            ['id' => 32, 'table' => 'situacion_conyugal', 'column' => 'description', 'label' => 'Situación Conyugal', 'order' => 32],
+            //Trámite
+            ['id' => 33, 'table' => 'dependencias', 'column' => 'description', 'label' => 'Dependencia', 'order' => 33],
+            ['id' => 34, 'table' => 'tipo_tramite', 'column' => 'description', 'label' => 'Tipo de Trámite', 'order' => 34],
         ];
 
         foreach ($data as $value) {

@@ -45,7 +45,10 @@ class TestExport implements ShouldAutoSize, FromView, WithStyles
     }
     public function styles(Worksheet $sheet): array
     {
-        $sheet->getStyle('1:1')->applyFromArray([
+        $lastColumn = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($this->titles));
+        $headerRange = "A1:{$lastColumn}1";
+
+        $sheet->getStyle($headerRange)->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
@@ -53,7 +56,7 @@ class TestExport implements ShouldAutoSize, FromView, WithStyles
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'rgb' => '4CAF50' // Color verde para el fondo
+                    'rgb' => '4CAF50'
                 ]
             ],
             'alignment' => [
@@ -63,15 +66,12 @@ class TestExport implements ShouldAutoSize, FromView, WithStyles
             'borders' => [
                 'outline' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['rgb' => '000000'], // Color negro para el borde
+                    'color' => ['rgb' => '000000'],
                 ],
-                'bottom' => [
-                    'borderStyle' => Border::BORDER_NONE, // Sin borde inferior
-                ]
             ]
         ]);
-        
-        $sheet->getStyle('A:Z')->applyFromArray([
+
+        $sheet->getStyle("A1:{$lastColumn}" . $sheet->getHighestRow())->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,

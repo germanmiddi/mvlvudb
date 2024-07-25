@@ -15,8 +15,7 @@
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
                         <div class="">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Elige la Dependencia y los campos a
-                                Exportar</h3>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Crea tu template para exportar</h3>
                         </div>
                         <div class="mt-4 flex sm:mt-0 sm:ml-4">
 
@@ -55,7 +54,7 @@
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                     <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-                        <draggable v-model="myArray" :options="dragOptions" @end="updateOrder">
+                        <draggable v-model="localColumnsExport" :options="dragOptions" @end="updateOrder">
                             <template #item="{ element }">
                                 <div :key="element.id"
                                     :class="{ 'bg-gray-200': !element.is_active, 'bg-white': element.is_active }"
@@ -63,7 +62,7 @@
                                     <Bars3Icon class="w-6 h-6 text-gray-500 mr-3 cursor-move" />
 
                                     <div class="block text-sm font-medium text-gray-700 flex-grow">
-                                        {{ element.name }}
+                                        {{ element.label }}
                                     </div>
                                     <div class="ml-4">
                                         <Switch v-model="element.is_active" @click="toggleActive(element)"
@@ -94,6 +93,7 @@ import { Bars3Icon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 export default {
     props: {
         dependencias: Object,
+        columnsExport: Object,
     },
     components: {
         draggable,
@@ -103,155 +103,77 @@ export default {
     },
 
     data() {
-        const myArray = ref([
-            { name: "Numero de Documento", index: 0, is_active: true },
-            { name: "Canal de Atencion", index: 1, is_active: true },
-            { name: "Tipo Tramite", index: 2, is_active: true },
-            { name: "Observaciones", index: 3, is_active: true },
-            { name: "Nombre", index: 4, is_active: true },
-            { name: "Apellido", index: 5, is_active: true },
-            { name: "Mail", index: 6, is_active: true },
-            { name: "Teléfono", index: 7, is_active: true },
-            { name: "Celular", index: 8, is_active: true },
-            { name: "Localidad", index: 9, is_active: true },
-            { name: "Barrio", index: 10, is_active: true },
-            { name: "Calle", index: 11, is_active: true },
-            { name: "Número", index: 12, is_active: true },
-            { name: "Piso", index: 13, is_active: true },
-            { name: "Departamento", index: 14, is_active: true },
-            { name: "País de origen", index: 15, is_active: true },
-            { name: "Situación Conyugal", index: 16, is_active: true },
-            { name: "Cant. Hijos", index: 17, is_active: true },
-            { name: "Niv. Ed. en curso", index: 18, is_active: true },
-            { name: "Niv. Ed. Alcanzado", index: 19, is_active: true },
-            { name: "Ocupación", index: 20, is_active: true },
-            { name: "Jubilación/Pensión", index: 21, is_active: true },
-            { name: "Cobertura de Salud", index: 22, is_active: true },
-            { name: "Recibe Programa Social", index: 23, is_active: true }
-        ]);
-
-        const orderedItems = ref([]);
-
-        const dragOptions = {
-            handle: ".drag-handle",
-            filter: ".drag-handle",
-        };
-
-        const updateOrder = () => {
-            myArray.value.forEach((item, index) => {
-                item.index = index;
-            });
-            orderedItems.value = [...myArray.value];
-            console.log("Nuevo orden almacenado en orderedItems:", orderedItems.value);
-        };
-
-        const toggleActive = (element) => {
-            element.is_active = !element.is_active;
-            updateOrder();
-        };
 
         return {
-            dragOptions,
-            myArray,
-            orderedItems,
-            updateOrder,
-            toggleActive,
-            filter: {},
+            localColumnsExport: this.columnsExport.map(column => ({
+                ...column,
+                is_active: true
+            })),
+            orderedItems: [],
+            dragOptions: {
+                handle: ".drag-handle",
+                filter: ".drag-handle",
+            },
             processReport: false
-            // fieldsItems: [],
-            // selectedDependencyId: null,
         };
     },
 
     methods: {
-        // async getFields(){
-        //     console.log("Accediendo a getFields");
-        //     const response = await axios.get(route('downloads.fieldsItems', this.selectedDependencyId))
-        //     this.fieldsItems = response.data
-        //     console.log(this.fieldsItems);
-        // },
 
+        updateOrder() {
+            this.localColumnsExport.forEach((item, index) => {
+                item.order = index;
+            });
+            this.orderedItems = [...this.localColumnsExport];
+            console.log("Nuevo orden almacenado en orderedItems:", this.orderedItems);
+        },
+        toggleActive(element) {
+            element.is_active = !element.is_active;
+            this.updateOrder();
+        },
         async generateReport() {
-            this.processReport = true
-            const updateOrder = this.myArray.map((item, index) => {
+            this.processReport = true;
+            
+            const updateOrder = this.localColumnsExport
+            .filter(item => item.is_active)
+            .map((item, index) => {
                 return {
-                    name: item.name,
-                    index: index,
+                    id: item.id,
+                    table: item.table,
+                    column: item.column,
+                    label: item.label,
+                    order: index,
                     is_active: item.is_active
                 };
             });
             let rt = route("report.exportTest");
             try {
                 const response = await axios.post(rt, { updateOrder: updateOrder }, {
-                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                    responseType: 'blob', 
                 });
-                // Crear un objeto Blob con la respuesta
+
                 const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-                // Crear una URL de objeto para el Blob
                 const url = window.URL.createObjectURL(blob);
-
-                // Crear un enlace <a> para iniciar la descarga
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
+                a.download = 'Resumen de Tramites.xlsx'; 
                 a.style.display = 'none';
 
-                // Agregar el enlace al cuerpo del documento y hacer clic en él
                 document.body.appendChild(a);
                 a.click();
-
-                // Liberar la URL del objeto después de la descarga
                 window.URL.revokeObjectURL(url);
             } catch (error) {
                 console.log(error);
             }
-            this.processReport = false
+            this.processReport = false;
         }
 
-
-        // async generateReport() {
-
-        //     this.filter.dependencia_id = 5
-        //     this.processReport = true
-
-        //     // this.$http
-        //     //     .get('report.exportTest', this.updateOrder)
-        //     //     .catch((error) => {
-        //     //         console.log(error);
-        //     //     })
-        //     const activeFields = this.myArray.filter(item => item.is_active).map(item => item.name);
-        //     let rt = route("report.exportTest");
-
-        //     try {
-        //         const response = await axios.post(rt, this.filter, {
-        //             responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
-        //         });
-
-        //         // Crear un objeto Blob con la respuesta
-        //         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        //         // Crear una URL de objeto para el Blob
-        //         const url = window.URL.createObjectURL(blob);
-
-        //         // Crear un enlace <a> para iniciar la descarga
-        //         const a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
-        //         a.style.display = 'none';
-
-        //         // Agregar el enlace al cuerpo del documento y hacer clic en él
-        //         document.body.appendChild(a);
-        //         a.click();
-
-        //         // Liberar la URL del objeto después de la descarga
-        //         window.URL.revokeObjectURL(url);
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        //     this.processReport = false
-        // }
-
+        // async getFields(){
+        //     console.log("Accediendo a getFields");
+        //     const response = await axios.get(route('downloads.fieldsItems', this.selectedDependencyId))
+        //     this.fieldsItems = response.data
+        //     console.log(this.fieldsItems);
+        // },
     },
 
 };

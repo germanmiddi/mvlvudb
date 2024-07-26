@@ -17,16 +17,4 @@ class DownloadController extends Controller
 
         return Inertia::render('Manager/Downloads/Index', ['dependencias' => $dependencies, 'columnsExport' => $columnsExport]);
     }
-
-    public function getfieldsItems($dependencia)
-    {
-        // return 1;
-        // if ($dependencia == 2){
-        //     return[ ['name' => 'N tramite', 'id' => 0],
-        //     ['name' => 'Boton antipanico', 'id' => 1],
-        //     ['name' => 'Nombre', 'id' => 2] ];
-        // }else {
-        //     return ['4', '5', '6'];
-        // }
-    }
 }

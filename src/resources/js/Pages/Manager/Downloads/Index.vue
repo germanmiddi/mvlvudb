@@ -82,7 +82,7 @@
                         <div class="flex">
                             <div class="w-1/2 py-3 px-4" v-if="inactiveItems.length > 0">
                                 <h4 class="text-lg font-medium leading-6 text-gray-900 mb-4">Campos Inactivos</h4>
-                                <draggable v-model="inactiveItems" :options="{ disabled: true }" @end="updateOrder"
+                                <draggable v-model="inactiveItems" :options="dragOptions" @end="updateOrder"
                                     :item-key="'id'" class="flex flex-col">
                                     <template #item="{ element, index }">
                                         <div :key="element.id"
@@ -108,7 +108,7 @@
 
                             <ul class="space-y-2 py-3 px-4 w-1/2">
                                 <h4 class="text-lg font-medium leading-6 text-gray-900">Campos a Exportar</h4>
-                                <li v-for="(element, index) in localColumnsExport.filter(item => item.is_active)"
+                                <li v-for="(element, index) in activeItems"
                                     :key="element.id" class="flex items-center">
                                     <span class="mr-4 text-gray-500">{{ index + 1 }}.</span>
                                     <span class="text-sm font-medium text-gray-700">{{ element.label }}</span>
@@ -224,40 +224,20 @@ export default {
 
         setTimeout(() => {
             this.activeItems = this.localColumnsExport.filter(item => item.is_active);
-            // this.inactiveItems = this.localColumnsExport.filter(item => !item.is_active);
         }, 300);
-    },
-
-    // watch: {
-    //     localColumnsExport: {
-    //         immediate: true,
-    //         handler() {
-    //             this.activeItems = this.activeColumnsExport;
-    //             this.inactiveItems = this.inactiveColumnsExport;
-    //         }
-    //     }
-    // },
-    computed: {
-        // activeColumnsExport() {
-        //     return this.localColumnsExport.filter(item => item.is_active);
-        // },
-        // inactiveColumnsExport() {
-        //     return this.localColumnsExport.filter(item => !item.is_active);
-        // }
     },
     methods: {
         updateOrder() {
-            this.localColumnsExport.forEach((item, index) => {
+            this.activeItems.forEach((item, index) => {
                 item.order = index;
             });
             this.orderedItems = [...this.localColumnsExport];
             setTimeout(() => {
+                this.activeItems = this.localColumnsExport.filter(item => item.is_active).sort((a, b) => a.order - b.order);
                 this.inactiveItems = this.localColumnsExport.filter(item => !item.is_active);
-                this.activeItems = this.localColumnsExport.filter(item => item.is_active);
+                
             }, 150);
-            // this.activeItems = this.activeColumnsExport; // Actualiza activeItems
-            // this.inactiveItems = this.inactiveColumnsExport; // Actualiza inactiveItems
-            console.log("Nuevo orden almacenado en orderedItems:", this.orderedItems);
+            console.log("Nuevo orden almacenado en orderedItems:", this.activeItems);
         },
         toggleActive(element) {
             element.is_active = !element.is_active;
@@ -266,14 +246,15 @@ export default {
         async generateReport() {
             this.processReport = true;
 
-            const updateOrder = this.localColumnsExport
-                .filter(item => item.is_active)
+            const updateOrder = this.activeItems
                 .map((item, index) => {
                     return {
                         id: item.id,
                         table: item.table,
                         column: item.column,
                         label: item.label,
+                        needs: item.needs,
+                        joined_table_column: item.joined_table_column,
                         order: index,
                         is_active: item.is_active
                     };

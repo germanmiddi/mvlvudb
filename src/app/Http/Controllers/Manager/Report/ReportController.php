@@ -116,92 +116,71 @@ class ReportController extends Controller
     }
     public function exportTest(Request $request){
         $updateOrder = $request->input('updateOrder');
-        $arrayTest = [
-            'table' => 'situacion_conyugal',
-            'column' => 'description',
-            'label' => 'Situacion Conyugal',
-            'lf_table' => 'situacion_conyugal',
-            'lf_column_coinc' => 'situacion_conyugal.id',
-            'lf_coinc' => 'aditional_data.situacion_conyugal_id',
-            'needs' => 'aditional_data',
-        ];
         $query = Tramite::query();
         
         $query = $query
         ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
         ->join('person', 'person.id', '=', 'person_tramite.person_id');
-        // ->leftjoin('education_data','education_data.person_id','=', 'person.id')
-        // ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
-        // ->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id')
-        // ->leftjoin('social_data', 'social_data.person_id', '=', 'person.id')
-        // ->leftjoin('salud_data', 'salud_data.person_id', '=', 'person.id')
-        // ->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id')
-        // ->leftjoin('escuelas', 'escuelas.id', '=', 'education_data.escuela_id')
-        // ->leftjoin('estado_educativo', 'estado_educativo.id', '=', 'education_data.estado_educativo_id')
-        // ->leftjoin('tipo_ocupacion', 'tipo_ocupacion.id', '=', 'social_data.tipo_ocupacion_id')
-        // ->leftjoin('tipo_tramite', 'tipo_tramite.id', '=', 'tramites.tipo_tramite_id')
-        // ->leftjoin('dependencias', 'dependencias.id', '=', 'tramites.dependencia_id')
-        // ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
-        // ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
-        // ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-        // ->leftjoin('cobertura_medica', 'cobertura_medica.id', '=', 'social_data.cobertura_medica_id')
-        // ->leftjoin('tipo_pension', 'tipo_pension.id', '=', 'social_data.tipo_pension_id')
-        // ->leftjoin('modalidad_atencion', 'modalidad_atencion.id', '=', 'tramites.modalidad_atencion_id')
-        // ->leftjoin('categories', 'categories.id', '=', 'tramites.category_id')
-        // ->leftjoin('paises', 'paises.id', '=', 'address_data.pais_id')
-        // ->leftjoin('nivel_educativo', 'nivel_educativo.id', '=', 'education_data.nivel_educativo_id')
-        // ->leftjoin('programa_social', 'programa_social.id', '=', 'social_data.programa_social_id')
-        // ->leftjoin('tipo_vivienda', 'tipo_vivienda.id', '=', 'aditional_data.tipo_vivienda_id')
-        // ->leftjoin('tipo_vinculo_familiar', 'tipo_vinculo_familiar.id', '=', 'aditional_data.tipo_vinculo_familiar_id')
-        // ->leftjoin('situacion_conyugal', 'situacion_conyugal.id', '=', 'aditional_data.situacion_conyugal_id');
-        // ->leftjoin($arrayTest['table'], $arrayTest['lf_column_coinc'], '=', $arrayTest['lf_coinc'])
-        // ->where('person_tramite.rol_tramite_id', '1');
         $columns = [];
         $titles = [];
+        $uniqueNeeds = [];
+
         foreach ($updateOrder as $item) {
-            if($arrayTest['needs']){
-                // $query = $query->leftJoin($arrayTest['needs'][0], $arrayTest['needs'][0][0], '=', ['needs'][0][1]);
-                $query = $this->getLeftJoinNeeded($query, $arrayTest['needs']);
+            if (isset($item['needs']) && !in_array($item['needs'], $uniqueNeeds) ) {
+                $uniqueNeeds[] = $item['needs'];
             }
-            $query = $query->leftJoin($arrayTest['table'], $arrayTest['lf_column_coinc'], '=', $arrayTest['lf_coinc']);
+        }
+
+        if(!empty($uniqueNeeds)){
+            $query = $this->getLeftJoinNeeded($query, $uniqueNeeds);
+        }
+        foreach ($updateOrder as $item) {
+            if (isset($item['needs']) && $item['needs'] != $item['table']) {
+                $query = $query->leftJoin($item['table'], $item['table'] . '.id', '=', $item['needs'] . '.' . $item['joined_table_column']);
+            }
             $columns[] = $item['table'] . '.' . $item['column'] . ' ' . 'as' . ' ' . $item['label'];
             $titles[] = $item['label'];
         }
-
+        
         if (empty($columns)) {
             return response()->json(['error' => 'No hay columnas activas para exportar.'], 400);
         }
-    
+        
         $query->select($columns)->where('person_tramite.rol_tramite_id', '1');
+        
         $data = $query->get();
 
         return Excel::download(new TestExport($data, $titles), 'tramites.xlsx');
     }
 
-    public function getLeftJoinNeeded($query, $need)
+    public function getLeftJoinNeeded($query, $needs)
     {
-        switch ($need) {
-            case 'aditional_data':
-                $query->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id');
-                break;
-            case 'education_data':
-                $query->leftjoin('education_data','education_data.person_id','=', 'person.id');
-                break;
-            case 'address_data':
-                $query->leftjoin('address_data', 'address_data.person_id', '=', 'person.id');
-                break;
-            case 'contact_data':
-                $query->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id');
-                break;
-            case 'social_data':
-                $query->leftjoin('social_data', 'social_data.person_id', '=', 'person.id');
-                break;
-            case 'salud_data':
-                $query->leftjoin('salud_data', 'salud_data.person_id', '=', 'person.id');
-                break;
-            
-            default:
-                break;
+        foreach ($needs as $need) {
+            switch ($need) {
+                case 'aditional_data':
+                    $query->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id');
+                    break;
+                case 'education_data':
+                    $query->leftjoin('education_data','education_data.person_id','=', 'person.id');
+                    break;
+                case 'address_data':
+                    $query->leftjoin('address_data', 'address_data.person_id', '=', 'person.id');
+                    break;
+                case 'contact_data':
+                    $query->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id');
+                    break;
+                case 'social_data':
+                    $query->leftjoin('social_data', 'social_data.person_id', '=', 'person.id');
+                    break;
+                case 'salud_data':
+                    $query->leftjoin('salud_data', 'salud_data.person_id', '=', 'person.id');
+                    break;
+                case 'tramites':
+                    break;
+                
+                default:
+                    break;
+            }
         }
         return $query;
     }

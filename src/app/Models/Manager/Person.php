@@ -20,6 +20,7 @@ class Person extends Model
         'num_documento',
         'num_cuit',
         'tipo_documento_id',
+        'genero'
     ];
 
     public function tipoDoc()

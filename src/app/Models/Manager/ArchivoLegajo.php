@@ -5,19 +5,23 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EscuelaDependencia extends Model
+class ArchivoLegajo extends Model
 {
-    protected $table = 'escuelas_dependencia';
+    use HasFactory;
+    
+    protected $table = 'archivos_legajo_cb';
     protected $primaryKey = 'id';
     public $timestamps = true;
-
+    
     protected $fillable = [
+        'name',
         'description',
-        'activo',
+        'ext',
+        'legajo_id',
     ];
 
-    public function scopeActive($query)
+    public function legajo()
     {
-        return $query->where('activo', true);
+        return $this->belongsTo(LegajoCB::class);
     }
 }

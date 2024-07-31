@@ -1,10 +1,10 @@
 <template>
     <div class="flex space-x-3">
         <div class="min-w-0 flex-1">
-            <h3 class="text-base font-medium text-gray-900">{{ informe.profesional?.name ?? '-' }}</h3>
+            <h3 class="text-base font-medium text-gray-900">{{ archivo.description ?? '-' }}</h3>
             <p class="text-sm text-gray-500">
             <a href="#" class="hover:underline">
-                <time datetime="2020-12-08T18:02:00">{{ store.fechaFormateada(informe.fecha_informe)}} </time>
+                <time datetime="2020-12-08T18:02:00">{{ store.fechaFormateada(archivo.created_at)}} </time>
             </a>
             </p>
         </div>
@@ -18,12 +18,13 @@
             </div>
 
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                <MenuItems class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
+                <MenuItems class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                     <div class="py-1">
                     <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                        <PencilSquareIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                        Editar
+                        <a :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']"
+                        :href="'/file/download/' + archivo.id +'/legajo'" target="_blank" title="Descargar Archivo">
+                        <DocumentArrowDownIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                        Descargar
                         </a>
                     </MenuItem>
                     </div>
@@ -39,12 +40,12 @@
             </transition>
         </Menu>
         </div>                    
-    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="informe.description ?? '-'" />
+    <!-- <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="informe.description ?? '-'" /> -->
 </template>
 
 <script>
 
-import { Bars4Icon, CalendarIcon, ChevronDownIcon, EllipsisVerticalIcon, HomeIcon, PencilSquareIcon, PhoneIcon, TrashIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
+import { Bars4Icon, CalendarIcon, ChevronDownIcon, EllipsisVerticalIcon, HomeIcon, PencilSquareIcon, DocumentArrowDownIcon, TrashIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import store from '@/store.js';
 
@@ -52,7 +53,7 @@ import store from '@/store.js';
 export default {
 
     props: {
-        informe: Object
+        archivo: Object
     },
     components: {
         UserCircleIcon,
@@ -61,7 +62,7 @@ export default {
         MenuButton, 
         MenuItems, 
         MenuItem,
-        PhoneIcon, 
+        DocumentArrowDownIcon, 
         Bars4Icon, 
         HomeIcon, 
         EllipsisVerticalIcon, 

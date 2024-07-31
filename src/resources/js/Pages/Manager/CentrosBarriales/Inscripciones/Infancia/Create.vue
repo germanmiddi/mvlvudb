@@ -163,6 +163,27 @@
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
+							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+								<label for="genero" class="block text-sm font-medium text-gray-700">Genero</label>
+								<select v-model="form.person.genero" id="genero" name="genero"
+									autocomplete="off"
+									:class="input_disable ? bg_disable : ''"
+									:disabled="input_disable"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un Genero
+									</option>
+									<option value="F">
+										Femenino
+									</option>
+									<option value="M">
+										Masculino
+									</option>
+								</select>
+								<span v-if="v$.form.person.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
+							</div>
+
 						</div>
 
 					</div>
@@ -260,6 +281,7 @@
 				<TabSalud 	v-if="this.tabs === 3"
 									:form="form.salud"
 									:input_disable="input_disable"
+									:centrosSalud="centrosSalud"
 									@submit="handleSalud">
 				</TabSalud>
 
@@ -275,9 +297,10 @@
 									:form="form.educacion"
 									:input_disable="input_disable"
 									:nivelesEducativo="nivelesEducativo"
-									:estadosEducativo="estadosEducativo"
 									:turnosEducativo="turnosEducativo"
 									:escuelas="escuelas"
+									:escuelasDependencia="escuelasDependencia"
+									:localidades="localidades"
 									@submit="handleEducacion">
 				</TabEducacion>
 
@@ -321,10 +344,12 @@ export default {
         actividadesCbj: Object,
         barrios: Object,
         canalesAtencion: Object,
+		centrosSalud: Object,
         coberturasMedica: Object,
         comedores: Object,
         estadosEducativo: Object,
 		escuelas: Object,
+		escuelasDependencia: Object,
         localidades: Object,
         nivelesEducativo: Object,
         paises: Object,
@@ -519,6 +544,7 @@ export default {
 					this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
 					this.form.person.name = data.name
 					this.form.person.lastname = data.lastname
+					this.form.person.genero = data.genero
 					if (data.contact != '') {
 						this.form.contact.email = data.contact[0].email
 						this.form.contact.phone = data.contact[0].phone
@@ -539,12 +565,18 @@ export default {
 						this.form.salud.electrocardiograma = data.salud.electrocardiograma
 						this.form.salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
 						this.form.salud.fecha_electrocardiograma = new Date(this.form.salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+						this.form.salud.libreta_vacunacion = data.salud.libreta_vacunacion
+						this.form.salud.fecha_libreta_vacunacion = data.salud.fecha_libreta_vacunacion
+						this.form.salud.fecha_libreta_vacunacion = new Date(this.form.salud.fecha_libreta_vacunacion + "T00:00:00.000-03:00")
+						this.form.salud.centro_salud_id = data.salud.centro_salud_id
+						this.form.salud.observacion = data.salud.observacion
 					}
 
 					if (data.education[0]) {
 						this.form.educacion.nivel_educativo_id = data.education[0].nivel_educativo_id
-						this.form.educacion.estado_educativo_id = data.education[0].estado_educativo_id
 						this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
+						this.form.educacion.escuela_dependencia_id = data.education[0].escuela_dependencia_id
+						this.form.educacion.escuela_localidad_id = data.education[0].escuela_localidad_id
 					}
 
 					this.form = this.removeNullValues(this.form);

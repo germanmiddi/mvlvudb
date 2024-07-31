@@ -40,6 +40,11 @@ return [
             'root' => storage_path('app/tramites'),
         ],
 
+        'legajo_cb' => [
+            'driver' => 'local',
+            'root' => storage_path('app/legajo_cb'),
+        ],
+
         'restore_legacy' => [
             'driver' => 'local',
             'root' => storage_path('app/public/restore_legacy'),

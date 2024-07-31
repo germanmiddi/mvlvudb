@@ -15,4 +15,9 @@ class CentroSalud extends Model
         'description',
         'activo',
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('activo', true);
+    }
 }

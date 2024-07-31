@@ -92,4 +92,9 @@ class LegajoCB extends Model
     {
         return $this->hasMany(InformeCB::class, 'legajo_id');
     }
+
+    public function archivos()
+    {
+        return $this->hasMany(ArchivoLegajo::class, 'legajo_id');
+    }
 }

@@ -9,11 +9,13 @@ use App\Models\Manager\AcompanamientoCbj;
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CanalAtencion;
+use App\Models\Manager\CentroSalud;
 use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\Escuela;
+use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\LegajoCB;
@@ -49,15 +51,18 @@ class InscripcionesCBIController extends Controller
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
                 'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'escuelas' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
+                'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'localidades' => Localidad::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
                 'tiposDocumento' => TipoDocumento::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
+
             ]
         );
     }

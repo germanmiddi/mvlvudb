@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Archivo;
+use App\Models\Manager\ArchivoLegajo;
 use App\Models\Manager\Tramite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,6 +68,27 @@ class FileController extends Controller
             //dd($th);
             Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha generado un error al momento de almacenar el Archivo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function uploadFileLegajo($data)
+    {
+        try {
+            $extension = $data['file']->getClientOriginalExtension();
+            $fileName = 'Legajo-ID-'.$data['legajo_id'].'-'.$data['description'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
+            Storage::putFileAs('legajo_cb', $data['file'], $fileName);
+    
+            ArchivoLegajo::Create(
+                [
+                    'name' => $fileName,
+                    'description' => $data['description'],
+                    'ext' => $extension,
+                    'legajo_id' => $data['legajo_id']
+                ]
+            );
+            Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);
+        } catch (\Throwable $th) {
+            Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
         }
     }
 
@@ -141,6 +163,21 @@ class FileController extends Controller
         // Generar la respuesta de descarga
         Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:downloadfile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
         return response()->download(storage_path('app/public/' . $archivo['name']));
+    }
+
+    public function downloadfilelegajo($id)
+    {
+
+        $archivo = ArchivoLegajo::where('id', $id)->first();
+
+        // Verificar si el archivo existe
+        if (!Storage::disk('legajo_cb')->exists($archivo['name'])) {
+            Log::error("Se ha generado un error al momento de descargar el FILE", ["Modulo" => "File:downloadfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => 'File no existente' ]);
+            abort(404);
+        }
+        // Generar la respuesta de descarga
+        Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:downloadfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
+        return response()->download(storage_path('app/legajo_cb/' . $archivo['name']));
     }
 
     public function deletefile($id){

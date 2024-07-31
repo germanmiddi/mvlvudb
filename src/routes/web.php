@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
+    Route::get('/file/download/{id}/legajo', [FileController::class, 'downloadfilelegajo'])->name('file.download.legajo');
     Route::post('/file/updoad', [FileController::class, 'uploadfile'])->name('file.upload');
     Route::delete('/file/delete/{id}', [FileController::class, 'deletefile'])->name('file.delete');
 
@@ -283,6 +284,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
             Route::post('/store-intervencion', [LegajosCBController::class, 'store_intervencion'])->name('legajoCB.storeIntervencion');
+            Route::post('/store-informe', [LegajosCBController::class, 'store_informe'])->name('legajoCB.storeInforme');
+            Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
         });
 
         // Rutas para Gabinete

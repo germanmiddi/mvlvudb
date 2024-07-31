@@ -71,6 +71,11 @@
 								</div>
 
 								<div class="pl-4 py-4 grid grid-cols-2 gap-4">
+									<dt class="text-sm font-medium text-gray-500 col-span-1">Genero:</dt>
+									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{ legajo[0].person.genero ?? '-'}}</dd>
+								</div>
+
+								<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 									<dt class="text-sm font-medium text-gray-500 col-span-1">Teléfono</dt>
 									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{legajo[0].person?.contact[0]?.phone ?? '-'}}</dd>
 								</div>

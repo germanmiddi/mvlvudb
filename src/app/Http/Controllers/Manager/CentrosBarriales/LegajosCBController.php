@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Manager\CentrosBarriales;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Models\Manager\ActividadCB;
 use App\Models\Manager\EstadoActividadCB;
 use App\Models\Manager\EstadoCbj;
+use App\Models\Manager\EstadoInformeCB;
 use App\Models\Manager\EstadoProgramaSocialCB;
+use App\Models\Manager\InformeCB;
 use App\Models\Manager\IntervencionProgramaSocialCB;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\LegajoProgramaSocialCB;
@@ -45,11 +48,14 @@ class LegajosCBController extends Controller
                                            'person.address.localidad',
                                            'person.address.barrio',
                                            'person.salud',
+                                           'person.salud.centroSalud',
                                            'person.cud',
                                            'person.education',
                                            'person.education.nivelEducativo',
                                            'person.education.estadoEducativo',
                                            'person.education.escuelaTurno',
+                                           'person.education.escuelaDependencia',
+                                           'person.education.escuelaLocalidad',
                                            'tipo_legajo',
                                            'programas_sociales',
                                            'programas_sociales.profesional',
@@ -58,7 +64,10 @@ class LegajosCBController extends Controller
                                            'programas_sociales.intervenciones',
                                            'programas_sociales.intervenciones.profesional',
                                            'actividades',
-                                           'informes')->get(),
+                                           'informes',
+                                           'informes.profesional',
+                                           'informes.estado',
+                                           'archivos')->get(),
                 'users' => User::all(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all()
@@ -144,6 +153,28 @@ class LegajosCBController extends Controller
         }
     }
 
+    // Store Informe
+    public function store_informe(Request $request){
+        try {
+            $estado = EstadoInformeCB::where('description', 'Activo')->first();
+            $legajo = LegajoCB::where('id', $request->legajo_id)->first();
+
+            $informe = InformeCB::Create(
+                [
+                    'description' => $request->description,
+                    'fecha_informe' => $request->fecha_informe,
+                    'profesional_id' => $request->profesional_id,
+                    'legajo_id' => $legajo->id,
+                    'estado_id' => $estado->id
+                ]
+            );
+            $informes = $legajo = LegajoCB::where('id', $request->legajo_id)->with('informes', 'informes.profesional', 'informes.estado')->get();
+            return response()->json(['message' => 'Se registrado correctamente el informe.', 'informes' => $informes], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar el informe CBJ. Verifique los datos ingresados.'], 203);
+        }
+    }
+
     public function list()
     {
         $length = request('length');
@@ -194,5 +225,29 @@ class LegajosCBController extends Controller
             ->orderBy("legajos_cb.id", 'DESC')
             ->paginate($length)
             ->withQueryString();
+    }
+
+    public function store_archivo(Request $request)
+    {
+        try {
+            if ($request->hasFile('file')) {
+
+                $fileController = new FileController;
+                $data = [];
+    
+                $data['file'] = $request->file('file');
+                $data['legajo_id'] =  $request['legajo_id'];
+                $data['description'] =  $request['description'];
+                
+                $fileController->uploadFileLegajo($data);
+            }else{
+                return response()->json(['message' => 'Se se ha detectado el archivo.'], 203);
+            }
+            $archivos = LegajoCB::where('id', $request->legajo_id)->with('archivos')->get();
+            return response()->json(['message' => 'Se registrado correctamente el archivo.', 'archivos' => $archivos], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar el Archivo. Verifique los datos ingresados.'], 203);
+        }
     }
 }

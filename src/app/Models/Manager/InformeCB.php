@@ -14,7 +14,7 @@ class InformeCB extends Model
 
     protected $fillable = [
         'description',
-        'fecha_inscripcion',
+        'fecha_informe',
         'activo',
         'legajo_id',
         'profesional_id',

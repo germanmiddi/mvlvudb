@@ -4,7 +4,7 @@
             <h3 class="text-base font-medium text-gray-900">{{ archivo.description ?? '-' }}</h3>
             <p class="text-sm text-gray-500">
             <a href="#" class="hover:underline">
-                <time datetime="2020-12-08T18:02:00">{{ store.fechaFormateada(archivo.created_at)}} </time>
+                <time datetime="2020-12-08T18:02:00">{{ store.dateTimeFormateada(archivo.created_at)}} </time>
             </a>
             </p>
         </div>
@@ -27,6 +27,13 @@
                         Descargar
                         </a>
                     </MenuItem>
+                    <MenuItem v-slot="{ active }">
+                        <a :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']"
+                        :href="'/file/render/' + archivo.id +'/legajo'" target="_blank" title="Descargar Archivo">
+                        <DocumentIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                        Ver Archivo
+                        </a>
+                    </MenuItem>
                     </div>
                     <div class="py-1">
                     <MenuItem v-slot="{ active }">
@@ -45,7 +52,7 @@
 
 <script>
 
-import { Bars4Icon, CalendarIcon, ChevronDownIcon, EllipsisVerticalIcon, HomeIcon, PencilSquareIcon, DocumentArrowDownIcon, TrashIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
+import { Bars4Icon, CalendarIcon, ChevronDownIcon, EllipsisVerticalIcon, HomeIcon, PencilSquareIcon, DocumentArrowDownIcon, TrashIcon, UserCircleIcon, DocumentIcon } from '@heroicons/vue/24/solid';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import store from '@/store.js';
 
@@ -68,7 +75,8 @@ export default {
         EllipsisVerticalIcon, 
         ChevronDownIcon, 
         TrashIcon, 
-        PencilSquareIcon
+        PencilSquareIcon,
+        DocumentIcon
     },
     data() {
         return {

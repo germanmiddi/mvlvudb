@@ -3,7 +3,7 @@
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
                 <div class="flex justify-between">
-                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Actividades</h2>
+                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Areas</h2>
                     <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" 
                             @click="showNew = !showNew">Crear</button>
                 </div>
@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                           <ListActividades v-for="t in this.actividades" :key="t.id" :item=t 
+                           <ListAreas v-for="t in this.areas" :key="t.id" :item=t 
                                       @edit-item="editItem" 
                                       @hide-item="hideItem" 
                                       />
@@ -37,7 +37,7 @@
 
 <script>
 import axios from 'axios'
-import ListActividades from './ListActividades.vue'
+import ListAreas from './ListAreas.vue'
 
 export default {
 
@@ -48,7 +48,7 @@ export default {
         }
     },
     components: {
-        ListActividades
+        ListAreas
     },
     setup() {
 
@@ -57,10 +57,9 @@ export default {
     data() {
 
         return {
-            actividades: "",
+            areas: "",
             showNew: false,
-            newDescription: "",
-            turnos: {},
+            newDescription: ""
         }
     },
     created() {
@@ -68,8 +67,8 @@ export default {
     },
     methods: {
         async getData() {
-            let response = await fetch(route('masterdata.centros_barriales.get_actividades_cb', this.dependencia_id), { method: 'GET' })
-            this.actividades = await response.json()
+            let response = await fetch(route('masterdata.centros_barriales.get_areas_legajo_cb'), { method: 'GET' })
+            this.areas = await response.json()
         },
 
         async newItem() {
@@ -77,7 +76,7 @@ export default {
             formData.append('description', this.newDescription);
 
             try {
-                const response = await axios.post(route('masterdata.centros_barriales.store_actividad_cb'), formData);
+                const response = await axios.post(route('masterdata.centros_barriales.store_areas_legajo_cb'), formData);
 
                 if (response.status == 200) {
                     this.$emit('toast-message',
@@ -87,7 +86,6 @@ export default {
                         })
 
                     this.newDescription = ""
-                    this.turnos = {}
                     this.showNew = false
                     this.getData()
 
@@ -112,7 +110,7 @@ export default {
 
 
             try {
-                const response = await axios.post(route('masterdata.centros_barriales.update_actividad_cb'), formData);
+                const response = await axios.post(route('masterdata.centros_barriales.update_areas_legajo_cb'), formData);
 
                 if (response.status == 200) {
                     this.$emit('toast-message',
@@ -135,7 +133,7 @@ export default {
 
         async hideItem(id) {
 
-            const response = await axios.post(route('masterdata.centros_barriales.hide_actividad_cb'), { id: id });
+            const response = await axios.post(route('masterdata.centros_barriales.hide_areas_legajo_cb'), { id: id });
 
             if (response.status == 200) {
                 this.$emit('toast-message',

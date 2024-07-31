@@ -130,7 +130,6 @@ class InscripcionesCBIController extends Controller
 
             // Obtiene ID de Tipo de Legajo.
             $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
-
             $legajo = LegajoCB::updateOrCreate(
                 [
                     'person_id' => $request->inscripcion['person_id'],
@@ -178,6 +177,7 @@ class InscripcionesCBIController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBI.'], 200);
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar la inscripcion CBI", ["Modulo" => "IncripcionCBI:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBI. Verifique los datos ingresados.'], 203);

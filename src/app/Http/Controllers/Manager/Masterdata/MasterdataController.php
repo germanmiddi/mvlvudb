@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\ActividadCB;
+use App\Models\Manager\AreaLegajoCB;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\ProgramaSocialCB;
 use Carbon\Carbon;
@@ -362,6 +363,85 @@ class MasterdataController extends Controller
             } */
             // TODO: Verificar la existencia legajos antes de Eliminar.
             $actividad->delete();
+                
+            return response()->json(['message' => 'Datos eliminados correctamente'], 200);
+    }
+
+    /// Areas - Legajo
+
+    public function get_areas_legajo_cb(){
+
+        $areas = AreaLegajoCB::get();
+        return response()->json($areas);
+        
+    }
+
+    public function store_areas_legajo_cb(Request $request){
+        
+        $description = $request->input('description');
+
+        $item = AreaLegajoCB::create([
+            'description' => $description,
+            'activo' => 1,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+
+    }
+
+    public function update_areas_legajo_cb(Request $request){
+        
+        $itemId   = $request->input('id'); // Obtener el id del item desde la solicitud
+        $itemDescription = $request->input('description'); // Obtener los datos del item desde la solicitud
+        $activo = $request->input('activo'); // Obtener los datos del item desde la solicitud
+
+        // Buscar el registro TipoTramite por su id
+        $area = AreaLegajoCB::find($itemId);
+    
+        if (!$area) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+    
+        // Actualizar los campos del registro con los nuevos datos
+        $area->update([
+            'description' => $itemDescription,
+            'activo'     => $activo,
+            'updated_at' => Carbon::now()
+        ]);
+    
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function hideAreaLegajoCB(Request $request){
+        
+        $area = AreaLegajoCB::find($request->id);
+
+        if (!$area) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        
+        $area->activo = $area->activo == 1 ? 0 : 1;
+        // dd($tipoTramite->activo);
+        $area->save();
+        
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+
+    }
+
+    public function destroyAreaLegajoCB(Request $request){
+            
+            $area = AreaLegajoCB::find($request->id);
+    
+            if (!$area) {
+                return response()->json(['message' => 'Registro no encontrado'], 404);
+            }
+            /* $tramitesAsociados = $programaSocial->tramites()->count();
+            if ($tramitesAsociados > 0) {
+                return response()->json(['message' => 'No se puede eliminar este TipoTramite porque está siendo utilizado en trámites'], 422);
+            } */
+            // TODO: Verificar la existencia legajos antes de Eliminar.
+            $area->delete();
                 
             return response()->json(['message' => 'Datos eliminados correctamente'], 200);
     }

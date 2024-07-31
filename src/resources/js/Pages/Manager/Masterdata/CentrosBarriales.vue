@@ -36,12 +36,15 @@
 
     <ActividadesCB @toast-message="setMessage"/>
 
+    <AreasCB @toast-message="setMessage"/>
+
 </template>
 
 <script>
 import axios from 'axios'
 import ListItem from './ListItem.vue'
 import ActividadesCB from './ActividadesCB.vue'
+import AreasCB from './AreasCB.vue'
 
 export default {
 
@@ -50,7 +53,8 @@ export default {
     },
     components:{
         ListItem,
-        ActividadesCB
+        ActividadesCB,
+        AreasCB
     },
     setup(){
 

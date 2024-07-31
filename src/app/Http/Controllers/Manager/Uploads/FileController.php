@@ -180,6 +180,22 @@ class FileController extends Controller
         return response()->download(storage_path('app/legajo_cb/' . $archivo['name']));
     }
 
+    public function renderfilelegajo($id)
+    {
+
+        $archivo = ArchivoLegajo::where('id', $id)->first();
+
+        // Verificar si el archivo existe
+        if (!Storage::disk('legajo_cb')->exists($archivo['name'])) {
+            Log::error("Se ha generado un error al momento de descargar el FILE", ["Modulo" => "File:renderfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => 'File no existente' ]);
+            abort(404);
+        }
+        // Generar la respuesta de descarga
+        Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:renderfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
+        return response()->file(storage_path('app/legajo_cb/' . $archivo['name']));
+
+    }
+
     public function deletefile($id){
 
         try {

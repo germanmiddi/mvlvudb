@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
     Route::get('/file/download/{id}/legajo', [FileController::class, 'downloadfilelegajo'])->name('file.download.legajo');
+    Route::get('/file/render/{id}/legajo', [FileController::class, 'renderfilelegajo'])->name('file.render.legajo');
     Route::post('/file/updoad', [FileController::class, 'uploadfile'])->name('file.upload');
     Route::delete('/file/delete/{id}', [FileController::class, 'deletefile'])->name('file.delete');
 
@@ -230,16 +231,22 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
 
         Route::get('/centros-barriales/get-programas-sociales-cb', [MasterdataController::class, 'get_programas_sociales_cb'])->name('masterdata.centros_barriales.get_programas_sociales_cb');
-        Route::post('/store-programas-sociales-cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
-        Route::post('/update-programas-sociales-cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
-        Route::post('/hide-programas-sociales-cb/', [MasterdataController::class, 'hideProgramaSocialCB'])->name('masterdata.centros_barriales.hide_programas_sociales_cb');
-        Route::post('/destroy-programas-sociales-cbe/', [MasterdataController::class, 'destroyProgramasocialCB'])->name('masterdata.centros_barriales.destroy_programas_sociales_cb');
+        Route::post('/centros-barriales/store-programas-sociales-cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
+        Route::post('/centros-barriales/update-programas-sociales-cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');
+        Route::post('/centros-barriales/hide-programas-sociales-cb/', [MasterdataController::class, 'hideProgramaSocialCB'])->name('masterdata.centros_barriales.hide_programas_sociales_cb');
+        Route::post('/centros-barriales/destroy-programas-sociales-cbe/', [MasterdataController::class, 'destroyProgramasocialCB'])->name('masterdata.centros_barriales.destroy_programas_sociales_cb');
 
         Route::get('/centros-barriales/get-actividades-cb', [MasterdataController::class, 'get_actividades_cb'])->name('masterdata.centros_barriales.get_actividades_cb');
-        Route::post('/store-actividad_cb/', [MasterdataController::class, 'store_actividad_cb'])->name('masterdata.centros_barriales.store_actividad_cb');
-        Route::post('/update-actividad-cb/', [MasterdataController::class, 'update_actividad_cb'])->name('masterdata.centros_barriales.update_actividad_cb');
-        Route::post('/hide-actividad-cb/', [MasterdataController::class, 'hideActividadCB'])->name('masterdata.centros_barriales.hide_actividad_cb');
-        Route::post('/destroy-actividad-cbe/', [MasterdataController::class, 'destroyActividadCB'])->name('masterdata.centros_barriales.destroy_actividad_cb');
+        Route::post('/centros-barriales/store-actividad_cb/', [MasterdataController::class, 'store_actividad_cb'])->name('masterdata.centros_barriales.store_actividad_cb');
+        Route::post('/centros-barriales/update-actividad-cb/', [MasterdataController::class, 'update_actividad_cb'])->name('masterdata.centros_barriales.update_actividad_cb');
+        Route::post('/centros-barriales/hide-actividad-cb/', [MasterdataController::class, 'hideActividadCB'])->name('masterdata.centros_barriales.hide_actividad_cb');
+        Route::post('/centros-barriales/destroy-actividad-cbe/', [MasterdataController::class, 'destroyActividadCB'])->name('masterdata.centros_barriales.destroy_actividad_cb');
+
+        Route::get('/centros-barriales/get-areas-legajo-cb', [MasterdataController::class, 'get_areas_legajo_cb'])->name('masterdata.centros_barriales.get_areas_legajo_cb');
+        Route::post('/centros-barriales/store-areas-legajo-cb/', [MasterdataController::class, 'store_areas_legajo_cb'])->name('masterdata.centros_barriales.store_areas_legajo_cb');
+        Route::post('/centros-barriales/update-areas-legajo-cb/', [MasterdataController::class, 'update_areas_legajo_cb'])->name('masterdata.centros_barriales.update_areas_legajo_cb');
+        Route::post('/centros-barriales/hide-areas-legajo-cb/', [MasterdataController::class, 'hideAreaLegajoCB'])->name('masterdata.centros_barriales.hide_areas_legajo_cb');
+        Route::post('/centros-barriales/destroy-areas-legajo-cbe/', [MasterdataController::class, 'destroyAreaLegajoCB'])->name('masterdata.centros_barriales.destroy_areas_legajo_cb');
     });
 
     // Users

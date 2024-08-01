@@ -2,10 +2,11 @@
     <div class="flex space-x-3">
         <div class="min-w-0 flex-1">
             <h3 class="text-base font-medium text-gray-900">{{ archivo.description ?? '-' }}</h3>
+            <h3 class="text-sm text-gray-900">Area: {{ archivo.area?.description ?? '-' }}</h3>
             <p class="text-sm text-gray-500">
-            <a href="#" class="hover:underline">
-                <time datetime="2020-12-08T18:02:00">{{ store.dateTimeFormateada(archivo.created_at)}} </time>
-            </a>
+
+            <time datetime="2020-12-08T18:02:00">{{ store.dateTimeFormateada(archivo.created_at)}} </time>
+
             </p>
         </div>
         <Menu as="div" class="relative inline-block text-left">
@@ -46,7 +47,7 @@
                 </MenuItems>
             </transition>
         </Menu>
-        </div>                    
+        </div>
     <!-- <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="informe.description ?? '-'" /> -->
 </template>
 
@@ -65,16 +66,16 @@ export default {
     components: {
         UserCircleIcon,
         CalendarIcon,
-        Menu, 
-        MenuButton, 
-        MenuItems, 
+        Menu,
+        MenuButton,
+        MenuItems,
         MenuItem,
-        DocumentArrowDownIcon, 
-        Bars4Icon, 
-        HomeIcon, 
-        EllipsisVerticalIcon, 
-        ChevronDownIcon, 
-        TrashIcon, 
+        DocumentArrowDownIcon,
+        Bars4Icon,
+        HomeIcon,
+        EllipsisVerticalIcon,
+        ChevronDownIcon,
+        TrashIcon,
         PencilSquareIcon,
         DocumentIcon
     },

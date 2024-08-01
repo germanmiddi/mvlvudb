@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('person', function (Blueprint $table) {            
+        Schema::table('person', function (Blueprint $table) {
             $table->enum('genero', ['M', 'F'])->nullable()->after('fecha_nac');
         });
     }
 
-    
+
     /**
      * Reverse the migrations.
      *

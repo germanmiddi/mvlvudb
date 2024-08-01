@@ -2,7 +2,7 @@
     <!-- eslint-disable -->
     <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
         <li v-for="programa in legajo[0].programas_sociales" :key="programa.key" class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-            <ProgramasGrid :programa="programa" 
+            <ProgramasGrid :programa="programa"
                 @fnEditor="fnEditor"/>
         </li>
     </ul>
@@ -43,7 +43,7 @@
                     <div class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                             <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                         <svg class="-ml-1 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>
-                        {{ this.programaSelected.estado.description ?? '' }}</span>                            
+                        {{ this.programaSelected.estado.description ?? '' }}</span>
                         <Menu as="div" class="ml-3 relative inline-block text-left">
                             <div>
                                 <MenuButton
@@ -101,9 +101,7 @@
                         <div class="min-w-0 flex-1">
                           <h3 class="text-base font-medium text-gray-900">{{ item.profesional?.name ?? '-' }}</h3>
                           <p class="text-sm text-gray-500">
-                            <a href="#" class="hover:underline">
-                              <time datetime="2020-12-08T18:02:00">{{ store.dateFormateada(item.fecha)}} </time>
-                            </a>
+                            <time datetime="2020-12-08T18:02:00">{{ store.dateFormateada(item.fecha)}} </time>
                           </p>
                         </div>
                         <Menu as="div" class="relative inline-block text-left">
@@ -136,8 +134,8 @@
                                 </MenuItems>
                             </transition>
                         </Menu>
-                      </div>                    
-                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="item.description ?? '-'" />
+                      </div>
+                    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4 text-justify" v-html="item.description ?? '-'" />
                 </li>
             </ul>
         </div>
@@ -180,7 +178,7 @@
                     <div class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                             <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                         <svg class="-ml-1 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>
-                        {{ this.programaSelected.estado.description ?? '' }}</span>                            
+                        {{ this.programaSelected.estado.description ?? '' }}</span>
                         <Menu as="div" class="ml-3 relative inline-block text-left">
                             <div>
                                 <MenuButton
@@ -236,8 +234,8 @@
                     <div>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Detalle de la Intervención</h3>
                         <p class="mt-1 max-w-2xl text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, odit magnam.</p>
-                    </div>            
-                
+                    </div>
+
                     <div class="grid grid-cols-3 gap-4 pt-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Fecha: </label>
                         <div class="mt-1 col-span-2">
@@ -249,7 +247,7 @@
                             </Datepicker>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-3 gap-4 py-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Profesional: </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -280,12 +278,12 @@
 </template>
 
 <script>
-import { PhoneIcon, 
-         Bars4Icon, 
-         HomeIcon, 
-         EllipsisVerticalIcon, 
-         ChevronDownIcon, 
-         TrashIcon, 
+import { PhoneIcon,
+         Bars4Icon,
+         HomeIcon,
+         EllipsisVerticalIcon,
+         ChevronDownIcon,
+         TrashIcon,
          PencilSquareIcon,
          UserCircleIcon,
          CalendarIcon } from '@heroicons/vue/24/solid'
@@ -342,7 +340,7 @@ const programas = [
 
 
 const intervenciones = [
-    //build faker 
+    //build faker
     {
         user: 'John Doe',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet accumsan arcu. Nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla. Nullam nec nunc nec nulla sit amet turpis tincidunt fringilla.',
@@ -403,7 +401,7 @@ export default {
             format,
             programas,
             intervenciones,
-            pages, 
+            pages,
             store
         }
     },

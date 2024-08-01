@@ -83,7 +83,8 @@ class FileController extends Controller
                     'name' => $fileName,
                     'description' => $data['description'],
                     'ext' => $extension,
-                    'legajo_id' => $data['legajo_id']
+                    'legajo_id' => $data['legajo_id'],
+                    'area_id' => $data['area_id']
                 ]
             );
             Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);

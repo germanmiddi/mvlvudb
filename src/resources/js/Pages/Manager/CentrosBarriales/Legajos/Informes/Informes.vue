@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-3 gap-4 py-5">
+                    <div class="grid grid-cols-3 gap-4 pt-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Profesional: </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                             <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
@@ -81,6 +81,25 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="grid grid-cols-3 gap-4 pt-5 pb-5">
+                        <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Area: </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <select v-model="form.area_id" id="area_id" name="area_id"
+                                autocomplete="off"
+                                :class="input_disable ? bg_disable : ''"
+                                :disabled="input_disable"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>
+                                    Seleccione un Area
+                                </option>
+                                <option v-for="a in areas" :key="a.id" :value="a.id">
+                                    {{ a.description ?? '' }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
                     <QuillEditor theme="snow" ref="editor" v-model:content="form.description" content-type="html"/>
                 </div>
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end">
@@ -114,7 +133,8 @@ const pages = [
 export default {
     props: {
         legajo: Object,
-        users: Object
+        users: Object,
+        areas: Object
     },
     components: {
         Menu,

@@ -18,10 +18,16 @@ class ArchivoLegajo extends Model
         'description',
         'ext',
         'legajo_id',
+        'area_id'
     ];
 
     public function legajo()
     {
         return $this->belongsTo(LegajoCB::class);
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(AreaLegajoCB::class, 'area_id');
     }
 }

@@ -10,7 +10,7 @@
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{legajo[0].id}}</h3>
                 </div>
-                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <a href="#" title="Editar" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
                         <PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     </a>
@@ -79,7 +79,7 @@
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Adulto Responsable</h3>
                 </div>
-                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <a href="#" title="Editar" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
                         <PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     </a>
@@ -122,7 +122,7 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Autorizaciones</h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles de las autorizaciones Vigentes.</p>
                 </div>
-                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <Menu as="div" class="ml-3 relative inline-block text-left">
                         <div>
                             <MenuButton
@@ -165,7 +165,7 @@
                     </Menu>
                 </div>
             </div>
-            
+
 
             <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl class="sm:divide-y sm:divide-gray-200">
@@ -213,7 +213,7 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Salud</h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Salud</p>
                 </div>
-                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <Menu as="div" class="ml-3 relative inline-block text-left">
                         <div>
                             <MenuButton
@@ -271,6 +271,11 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Vencimiento Apto Médico</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].person?.salud?.vencimiento_apto_medico ? store.dateFormateada(legajo[0].person?.salud?.vencimiento_apto_medico ) : '-' }}</dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Electrocardiograma</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud?.electrocardiograma ? 'SI' : 'NO'}}</dd>
                     </div>
@@ -283,11 +288,6 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Libreta vacunación</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{legajo[0].person?.salud?.libreta_vacunacion ? 'SI' : 'NO'}}</dd>
-                    </div>
-
-                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Fecha libreta vacunación</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].person?.salud?.fecha_libreta_vacunacion ? store.dateFormateada(legajo[0].person?.salud?.fecha_libreta_vacunacion ) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -311,7 +311,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Observación de salud</dt>
+                        <dt class="text-sm font-medium text-gray-500">Observación</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 text-justify" > {{legajo[0].person?.salud?.observacion ?? '-'}}</dd>
                     </div>
                 </dl>
@@ -333,7 +333,7 @@
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Educación</h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación</p>
                 </div>
-                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <Menu as="div" class="ml-3 relative inline-block text-left">
                         <div>
                             <MenuButton
@@ -415,6 +415,244 @@
         </div>
     </div>
     <!-- Fin  Educación -->
+
+    <!-- Datos Gabinete -->
+    <div class="px-4 mt-6">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <!-- <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Educación</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación</p>
+            </div> -->
+            <div class="sm:flex sm:justify-between sm:items-center">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Gabinete</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Gabinete</p>
+                </div>
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                    <Menu as="div" class="ml-3 relative inline-block text-left">
+                        <div>
+                            <MenuButton
+                                class="-my-2 p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                <span class="sr-only">Open options</span>
+                                <Bars4Icon class="h-5 w-5" aria-hidden="true" />
+                            </MenuButton>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95"
+                            enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
+                            leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems
+                                class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1">
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button" @click="showEditor = true"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Editar</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Nuevo Informe</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                    <a href="#"
+                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex justify-between px-4 py-2 text-sm']">
+                                        <span>Adjuntar Archivo</span>
+                                    </a>
+                                    </MenuItem>
+                                </div>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                <dl class="sm:divide-y sm:divide-gray-200">
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Estado</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > - </dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Observación</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > - </dd>
+                    </div>
+
+                </dl>
+            </div>
+
+        </div>
+    </div>
+    <!-- Fin  Gabinete -->
+
+    <!-- Datos Emprendedores -->
+    <div class="px-4 mt-6">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <!-- <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Educación</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación</p>
+            </div> -->
+            <div class="sm:flex sm:justify-between sm:items-center">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Emprendedores</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Emprendedores</p>
+                </div>
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                    <Menu as="div" class="ml-3 relative inline-block text-left">
+                        <div>
+                            <MenuButton
+                                class="-my-2 p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                <span class="sr-only">Open options</span>
+                                <Bars4Icon class="h-5 w-5" aria-hidden="true" />
+                            </MenuButton>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95"
+                            enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
+                            leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems
+                                class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1 z-50">
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button" @click="showEditor = true"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Editar</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Nuevo Informe</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                    <a href="#"
+                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex justify-between px-4 py-2 text-sm']">
+                                        <span>Adjuntar Archivo</span>
+                                    </a>
+                                    </MenuItem>
+                                </div>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                <dl class="sm:divide-y sm:divide-gray-200">
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Participa</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > SI </dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Fecha Inscripción</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 09/07/2024 </dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Fecha Finalización</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 19/10/2024 </dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Oficio</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > Indumentaria </dd>
+                    </div>
+
+                </dl>
+            </div>
+
+        </div>
+    </div>
+    <!-- Fin  Emprendedores -->
+
+    <!-- Datos PEdagogia -->
+    <div class="px-4 mt-6">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <!-- <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Educación</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Educación</p>
+            </div> -->
+            <div class="sm:flex sm:justify-between sm:items-center">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Pedagogía</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Pedagogía</p>
+                </div>
+                <div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                    <Menu as="div" class="ml-3 relative inline-block text-left">
+                        <div>
+                            <MenuButton
+                                class="-my-2 p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                <span class="sr-only">Open options</span>
+                                <Bars4Icon class="h-5 w-5" aria-hidden="true" />
+                            </MenuButton>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95"
+                            enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
+                            leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems
+                                class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div class="py-1 z-50">
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button" @click="showEditor = true"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Editar</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                        <button type="button"
+                                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                            <span>Nuevo Informe</span>
+                                        </button>
+                                    </MenuItem>
+                                    <MenuItem v-slot="{ active }">
+                                    <a href="#"
+                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex justify-between px-4 py-2 text-sm']">
+                                        <span>Adjuntar Archivo</span>
+                                    </a>
+                                    </MenuItem>
+                                </div>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                <dl class="sm:divide-y sm:divide-gray-200">
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Estado</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > - </dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Observación</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > - </dd>
+                    </div>
+
+                </dl>
+            </div>
+
+        </div>
+    </div>
+    <!-- Fin  Pedagogia -->
 </div>
 
 </template>

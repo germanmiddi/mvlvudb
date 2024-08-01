@@ -17,6 +17,11 @@ class AreaLegajoCB extends Pivot
         'dependencia_id'
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('activo', true);
+    }
+
     public function dependencia()
     {
         return $this->belongsTo(Dependencia::class, 'dependencia_id');

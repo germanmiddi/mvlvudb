@@ -1,5 +1,5 @@
 <template>
-<!-- eslint-disable -->|
+<!-- eslint-disable -->
 <!-- <CreateModal :open="showModal" @close="showModal = false" /> -->
 
 <main class="flex-1 bg-gray-50 pb-40">
@@ -41,6 +41,7 @@
 						   	:data="selectedItem.componentData"
 						   	:legajo="legajo"
 							:users="users"
+							:areas="areas"
 							@message="messageToast"/>
 			</div>
 
@@ -97,7 +98,7 @@
 							<div class="px-4 py-5 sm:px-6">
 								<h3 class="text-lg leading-6 font-medium text-gray-900">Asignado</h3>
 							</div>
-							<div class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">                        
+							<div class="mt-4 pr-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
 								<button type="submit" class="inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Reasignar</button>
 							</div>
 						</div>
@@ -106,11 +107,11 @@
 							<dl class="sm:divide-y sm:divide-gray-200">
 								<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 									<dt class="text-sm font-medium text-gray-500 col-span-1">Usuario:</dt>
-									<dd class="mt-1 mr-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1" > <select id="profesional_id" name="profesional_id"
+									<dd class="mt-1 pr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1" > <select id="profesional_id" name="profesional_id"
 										autocomplete="off"
 										:class="input_disable ? bg_disable : ''"
 										:disabled="input_disable"
-										class="mt-1 pr-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+										class="mt- block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 										<option value="" disabled>
 											Seleccione un Profesional
 										</option>
@@ -118,7 +119,7 @@
 											{{ p.name ?? '' }}
 										</option>
 									</select></dd>
-									
+
 								</div>
 							</dl>
 						</div>
@@ -126,9 +127,8 @@
 					<!-- Fin  Datos Asignado -->
 				</div>
 
-				
-			</div>
 
+			</div>
 
 		</div>
 	</div>
@@ -138,6 +138,7 @@
 		:programasSociales="programasSociales"
 		:actividades="actividades"
 		:users="users"
+		:areas="areas"
 		@closeForm="showForm=false"
 		@submitStore="submitStore"/>
 
@@ -165,6 +166,7 @@ const props = defineProps({
     users: Object,
     programasSociales: Object,
 	actividades: Object,
+	areas: Object
 });
 
 const legajo = props.legajo;

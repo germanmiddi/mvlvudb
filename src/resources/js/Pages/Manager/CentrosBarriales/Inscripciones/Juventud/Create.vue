@@ -52,6 +52,21 @@
 					</li>
 					<li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Gabinete
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 7" :class="this.tabs === 7 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Emprendedor
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8" :class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Pedagogia
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Adulto Responsable
 						</a>
 					</li>
@@ -161,6 +176,25 @@
 								<input v-model="form.contact.phone" type="text" name="phone" id="phone" autocomplete="off"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+								<label for="genero" class="block text-sm font-medium text-gray-700">Genero</label>
+								<select v-model="form.person.genero" id="genero" name="genero"
+									autocomplete="off"
+									:class="input_disable ? bg_disable : ''"
+									:disabled="input_disable"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option value="" disabled>
+										Seleccione un Genero
+									</option>
+									<option value="F">
+										Femenino
+									</option>
+									<option value="M">
+										Masculino
+									</option>
+								</select>
 							</div>
 
 						</div>
@@ -281,6 +315,27 @@
 									@submit="handleEducacion">
 				</TabEducacion>
 
+				<!-- GABINETE -->
+				<TabGabinete 	v-if="this.tabs === 6"
+									:form="form.gabinete"
+									:input_disable="input_disable"
+									@submit="handleGabinete">
+				</TabGabinete>
+
+				<!-- EMPRENDEDOR -->
+				<TabEmprendedor 	v-if="this.tabs === 7"
+									:form="form.emprendedor"
+									:input_disable="input_disable"
+									@submit="handleEmprendedor">
+				</TabEmprendedor>
+
+				<!-- PEDAGOGIA -->
+				<TabPedagogia 	v-if="this.tabs === 8"
+									:form="form.pedagogia"
+									:input_disable="input_disable"
+									@submit="handlePedagogia">
+				</TabPedagogia>
+
 				<!-- ADULTO RESPONSABLE -->
 				<TabResponsable 	v-if="this.tabs === 6"
 									:v="v$"
@@ -313,6 +368,9 @@ import TabDireccion from './Components/TabDireccion.vue';
 import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
 import TabResponsable from './Components/TabResponsable.vue';
+import TabGabinete from './Components/TabGabinete.vue';
+import TabPedagogia from './Components/TabPedagogia.vue';
+import TabEmprendedor from './Components/TabEmprendedor.vue';
 
 
 export default {
@@ -321,10 +379,12 @@ export default {
         actividadesCbj: Object,
         barrios: Object,
         canalesAtencion: Object,
+		centrosSalud: Object,
         coberturasMedica: Object,
         comedores: Object,
         estadosEducativo: Object,
 		escuelas: Object,
+		escuelasDependencia: Object,
         localidades: Object,
         nivelesEducativo: Object,
         paises: Object,
@@ -348,6 +408,9 @@ export default {
         TabDireccion,
         TabEducacion,
         TabResponsable,
+		TabGabinete,
+		TabPedagogia,
+		TabEmprendedor,
         TabSalud,
         Toast,
         TrashIcon,
@@ -519,6 +582,7 @@ export default {
 					this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
 					this.form.person.name = data.name
 					this.form.person.lastname = data.lastname
+					this.form.person.genero = data.genero
 					if (data.contact != '') {
 						this.form.contact.email = data.contact[0].email
 						this.form.contact.phone = data.contact[0].phone
@@ -536,15 +600,21 @@ export default {
 						this.form.salud.apto_medico = data.salud.apto_medico
 						this.form.salud.fecha_apto_medico = data.salud.fecha_apto_medico
 						this.form.salud.fecha_apto_medico = new Date(this.form.salud.fecha_apto_medico + "T00:00:00.000-03:00")
+						this.form.salud.vencimiento_apto_medico = data.salud.vencimiento_apto_medico
+						this.form.salud.vencimiento_apto_medico = new Date(this.form.salud.vencimiento_apto_medico + "T00:00:00.000-03:00")
 						this.form.salud.electrocardiograma = data.salud.electrocardiograma
 						this.form.salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
 						this.form.salud.fecha_electrocardiograma = new Date(this.form.salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+						this.form.salud.libreta_vacunacion = data.salud.libreta_vacunacion
+						this.form.salud.centro_salud_id = data.salud.centro_salud_id
+						this.form.salud.observacion = data.salud.observacion
 					}
 
 					if (data.education[0]) {
 						this.form.educacion.nivel_educativo_id = data.education[0].nivel_educativo_id
 						this.form.educacion.estado_educativo_id = data.education[0].estado_educativo_id
 						this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
+						this.form.educacion.escuela_localidad_id = data.education[0].escuela_localidad_id
 					}
 
 					this.form = this.removeNullValues(this.form);
@@ -576,6 +646,15 @@ export default {
 		},
 		handleEducacion(data){
 			this.form.educacion = data;
+		},
+		handleGabinete(data){
+			this.form.gabinete = data;
+		},
+		handleEmprendedor(data){
+			this.form.emprendedor = data;
+		},
+		handlePedagogia(data){
+			this.form.pedagogia = data;
 		},
 		handleResponsable(data){
 			this.form.responsable = data;

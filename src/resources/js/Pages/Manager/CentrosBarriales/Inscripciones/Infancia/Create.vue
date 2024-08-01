@@ -52,6 +52,21 @@
 					</li>
 					<li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Gabinete
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 7" :class="this.tabs === 7 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Emprendedor
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8" :class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+							Pedagogia
+						</a>
+					</li>
+					<li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 9" :class="this.tabs === 9 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Adulto Responsable
 						</a>
 					</li>
@@ -180,8 +195,6 @@
 										Masculino
 									</option>
 								</select>
-								<span v-if="v$.form.person.tipo_documento_id.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
 							</div>
 
 						</div>
@@ -304,8 +317,29 @@
 									@submit="handleEducacion">
 				</TabEducacion>
 
+				<!-- GABINETE -->
+				<TabGabinete 	v-if="this.tabs === 6"
+									:form="form.gabinete"
+									:input_disable="input_disable"
+									@submit="handleGabinete">
+				</TabGabinete>
+
+				<!-- EMPRENDEDOR -->
+				<TabEmprendedor 	v-if="this.tabs === 7"
+									:form="form.emprendedor"
+									:input_disable="input_disable"
+									@submit="handleEmprendedor">
+				</TabEmprendedor>
+
+				<!-- PEDAGOGIA -->
+				<TabPedagogia 	v-if="this.tabs === 8"
+									:form="form.pedagogia"
+									:input_disable="input_disable"
+									@submit="handlePedagogia">
+				</TabPedagogia>
+
 				<!-- ADULTO RESPONSABLE -->
-				<TabResponsable 	v-if="this.tabs === 6"
+				<TabResponsable 	v-if="this.tabs === 9"
 									:v="v$"
 									:form="form.responsable"
 									:input_disable="input_disable"
@@ -336,6 +370,9 @@ import TabDireccion from './Components/TabDireccion.vue';
 import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
 import TabResponsable from './Components/TabResponsable.vue';
+import TabGabinete from './Components/TabGabinete.vue';
+import TabPedagogia from './Components/TabPedagogia.vue';
+import TabEmprendedor from './Components/TabEmprendedor.vue';
 
 
 export default {
@@ -373,6 +410,9 @@ export default {
         TabDireccion,
         TabEducacion,
         TabResponsable,
+		TabGabinete,
+		TabPedagogia,
+		TabEmprendedor,
         TabSalud,
         Toast,
         TrashIcon,
@@ -562,12 +602,12 @@ export default {
 						this.form.salud.apto_medico = data.salud.apto_medico
 						this.form.salud.fecha_apto_medico = data.salud.fecha_apto_medico
 						this.form.salud.fecha_apto_medico = new Date(this.form.salud.fecha_apto_medico + "T00:00:00.000-03:00")
+						this.form.salud.vencimiento_apto_medico = data.salud.vencimiento_apto_medico
+						this.form.salud.vencimiento_apto_medico = new Date(this.form.salud.vencimiento_apto_medico + "T00:00:00.000-03:00")
 						this.form.salud.electrocardiograma = data.salud.electrocardiograma
 						this.form.salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
 						this.form.salud.fecha_electrocardiograma = new Date(this.form.salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
 						this.form.salud.libreta_vacunacion = data.salud.libreta_vacunacion
-						this.form.salud.fecha_libreta_vacunacion = data.salud.fecha_libreta_vacunacion
-						this.form.salud.fecha_libreta_vacunacion = new Date(this.form.salud.fecha_libreta_vacunacion + "T00:00:00.000-03:00")
 						this.form.salud.centro_salud_id = data.salud.centro_salud_id
 						this.form.salud.observacion = data.salud.observacion
 					}
@@ -608,6 +648,15 @@ export default {
 		},
 		handleEducacion(data){
 			this.form.educacion = data;
+		},
+		handleGabinete(data){
+			this.form.gabinete = data;
+		},
+		handleEmprendedor(data){
+			this.form.emprendedor = data;
+		},
+		handlePedagogia(data){
+			this.form.pedagogia = data;
 		},
 		handleResponsable(data){
 			this.form.responsable = data;

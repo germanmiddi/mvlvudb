@@ -1,11 +1,11 @@
 <template>
     <div class="flex space-x-3">
         <div class="min-w-0 flex-1">
-            <h3 class="text-base font-medium text-gray-900">{{ informe.profesional?.name ?? '-' }}</h3>
+            <h3 class="text-base font-medium text-gray-900">{{informe.area?.description ?? '-'}} - {{ informe.profesional?.name ?? '-' }}</h3>
             <p class="text-sm text-gray-500">
-            <a href="#" class="hover:underline">
-                <time datetime="2020-12-08T18:02:00">{{ store.fechaFormateada(informe.fecha_informe)}} </time>
-            </a>
+
+            <time datetime="2020-12-08T18:02:00">{{ store.dateTimeFormateada(informe.fecha_informe)}} </time>
+
             </p>
         </div>
         <Menu as="div" class="relative inline-block text-left">
@@ -38,8 +38,8 @@
                 </MenuItems>
             </transition>
         </Menu>
-        </div>                    
-    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="informe.description ?? '-'" />
+        </div>
+    <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4 text-justify" v-html="informe.description ?? '-'" />
 </template>
 
 <script>
@@ -57,16 +57,16 @@ export default {
     components: {
         UserCircleIcon,
         CalendarIcon,
-        Menu, 
-        MenuButton, 
-        MenuItems, 
+        Menu,
+        MenuButton,
+        MenuItems,
         MenuItem,
-        PhoneIcon, 
-        Bars4Icon, 
-        HomeIcon, 
-        EllipsisVerticalIcon, 
-        ChevronDownIcon, 
-        TrashIcon, 
+        PhoneIcon,
+        Bars4Icon,
+        HomeIcon,
+        EllipsisVerticalIcon,
+        ChevronDownIcon,
+        TrashIcon,
         PencilSquareIcon
     },
     data() {

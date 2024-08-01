@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Manager\ActividadCbj;
 use App\Models\Manager\AcompanamientoCbj;
 use App\Models\Manager\AddressData;
+use App\Models\Manager\AreaLegajoCB;
 use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\CentroSalud;

@@ -18,7 +18,8 @@ class InformeCB extends Model
         'activo',
         'legajo_id',
         'profesional_id',
-        'estado_id'
+        'estado_id',
+        'area_id'
     ];
 
     public function legajo()
@@ -34,5 +35,10 @@ class InformeCB extends Model
     public function estado()
     {
         return $this->BelongsTo(EstadoInformeCB::class, 'estado_id');
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(AreaLegajoCB::class, 'area_id');
     }
 }

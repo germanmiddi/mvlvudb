@@ -56,6 +56,22 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-3 gap-4 py-5">
+                        <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Area: </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <select v-model="form.area_id" id="area_id" name="area_id"
+                                autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>
+                                    Seleccione un Area
+                                </option>
+                                <option v-for="a in areas" :key="a.id" :value="a.id">
+                                    {{ a.description ?? '' }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-3 gap-4 pt-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Archivo: </label>
                         <div class="mt-1 col-span-2">
@@ -102,7 +118,8 @@ const pages = [
 export default {
     props: {
         legajo: Object,
-        users: Object
+        users: Object,
+        areas: Object
     },
     components: {
         Menu,
@@ -147,6 +164,7 @@ export default {
             let rt = route("legajoCB.storeArchivo");
             const formData = new FormData();
             formData.append("legajo_id", this.legajo[0].id);
+            formData.append("area_id", this.form.area_id);
             formData.append("file", this.file);
             formData.append("description", this.form.description);
 

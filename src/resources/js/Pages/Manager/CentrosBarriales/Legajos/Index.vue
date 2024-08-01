@@ -48,7 +48,7 @@
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
-                        
+
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
                             <select v-model="filter.estado_id" id="estado_id" name="estado_id"
@@ -181,12 +181,18 @@
                                                             class="block px-4 py-2 text-sm">
                                                             Cambiar a Egreso</a>
                                                         </MenuItem>
+
+                                                        <MenuItem v-slot="{ active }">
+                                                        <a href="#"
+                                                            class="block px-4 py-2 text-sm">
+                                                            Cambiar a Solo en Vacaciones</a>
+                                                        </MenuItem>
                                                     </div>
                                                 </MenuItems>
                                             </transition>
                                         </Menu>
                                     </td>
-                                </tr> 
+                                </tr>
                             </tbody>
                         </table>
                         <hr>
@@ -280,7 +286,7 @@ export default {
             this.toastMessage = "";
         },
         async getLegajos() {
-            
+
             this.tramites = ''
             let filter = `&length=${this.length}`
 

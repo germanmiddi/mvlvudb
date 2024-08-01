@@ -66,7 +66,7 @@
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 9" :class="this.tabs === 9 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Adulto Responsable
 						</a>
 					</li>
@@ -312,6 +312,8 @@
 									:estadosEducativo="estadosEducativo"
 									:turnosEducativo="turnosEducativo"
 									:escuelas="escuelas"
+									:escuelasDependencia="escuelasDependencia"
+									:localidades="localidades"
 									@submit="handleEducacion">
 				</TabEducacion>
 

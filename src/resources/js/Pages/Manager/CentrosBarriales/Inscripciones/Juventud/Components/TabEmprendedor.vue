@@ -1,92 +1,119 @@
 <template>
-    <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
-        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-            <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
-                <div class="">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Emprendedor
-                    </h3>
-                </div>
-                <div class="flex-shrink-0">
-                    
-                </div>
-            </div>
-            <div class="grid grid-cols-12 gap-6">
-                <!-- <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-                    <label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
-                    <select v-model="localData.localidad_id" id="localidad_id" name="localidad_id" autocomplete="off"
-                        :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="" disabled>
-                            Seleccione una localidad
-                        </option>
-                        <option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
-                            {{ localidad.description }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-4">
-                    <label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
-                    <input v-model="localData.calle" type="text" name="calle" id="calle" autocomplete="off"
-                        :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
+  <div class="shadow sm:rounded-md sm:overflow-hidden mt-6">
+      <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+          <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+              <div class="">
+                  <h3 class="text-lg leading-6 font-medium text-gray-900">
+                      Emprendedor
+                  </h3>
               </div>
-              
-              <div class="grid grid-cols-12 gap-6">
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-                    <label for="number" class="block text-sm font-medium text-gray-700">Número</label>
-                    <input v-model="localData.number" type="text" name="number" id="number" autocomplete="off"
-                        :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-                    <label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-                    <input v-model="localData.piso" type="text" name="piso" id="piso" autocomplete="off"
-                        :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div>
-                
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-2">
-                    <label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-                    <input v-model="localData.dpto" type="text" name="dpto" id="dpto" autocomplete="off"
-                        :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                </div> -->
-            </div>
-        </div>
-    </div>
+              <div class="flex-shrink-0">
+
+              </div>
+          </div>
+          <div class="grid grid-cols-12 gap-6">
+              <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+        <label for="escuela_primaria_id" class="block text-sm font-medium text-gray-700">Participa</label>
+        <select id="escuela_primaria_id" name="escuela_primaria_id"
+          autocomplete="off"
+          :class="input_disable ? bg_disable : ''"
+          :disabled="input_disable"
+          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value="" disabled>
+            Seleccione participación
+          </option>
+          <option value="1">SI</option>
+                      <option value="2">NO</option>
+        </select>
+      </div>
+
+              <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+            <label for="fecha_vencimiento_cud" class="block text-sm font-medium text-gray-700">Fecha de Inscripción</label>
+            <Datepicker
+              v-model="dateTest.fecha_inscripcion"
+              class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+              :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+            </Datepicker>
+          </div>
+
+          <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+            <label for="fecha_vencimiento_cud" class="block text-sm font-medium text-gray-700">Fecha de Finalización</label>
+            <Datepicker
+              class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              v-model="dateTest.fecha_finalizacion"
+              :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+              :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+            </Datepicker>
+          </div>
+
+              <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+        <label for="escuela_primaria_id" class="block text-sm font-medium text-gray-700">Oficio</label>
+        <select id="escuela_primaria_id" name="escuela_primaria_id"
+          autocomplete="off"
+          :class="input_disable ? bg_disable : ''"
+          :disabled="input_disable"
+          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value="" disabled>
+            Seleccione un oficio
+          </option>
+          <option value="1">Artesanías</option>
+                      <option value="2">Indumentaria</option>
+                      <option value="3">Panadería</option>
+                      <option value="4">Manicuría</option>
+        </select>
+      </div>
+          </div>
+      </div>
+  </div>
 </template>
 
 <script>
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
 export default {
-  props: {
-    form: Object,
-    input_disable: Boolean,
-    localidades: Object
-  },
-  data() {
-    return {
-      localData: this.data,
-      //input_disable: this.disabled
-    };
-  },
-  watch: {
-    value(newValue) {
-      this.localData = newValue;
-    }
-  },
-  created() {
-    // Inicializar localForm con los valores del form prop si existen
-    this.localData = this.form;
-    //if (this.form.email) this.localForm.email = this.form.email;
-  },
-  methods: {
-    updateParent() {
-      this.$emit('data_emprendedor', this.localData);
-    }
+props: {
+  form: Object,
+  input_disable: Boolean,
+  localidades: Object
+},
+components: {
+  Datepicker,
+},
+data() {
+  return {
+    localData: this.data,
+    dateTest: {}
+    //input_disable: this.disabled
+  };
+},
+setup() {
+const format = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+return {
+  format,
+};
+},
+watch: {
+  value(newValue) {
+    this.localData = newValue;
   }
+},
+created() {
+  // Inicializar localForm con los valores del form prop si existen
+  this.localData = this.form;
+  //if (this.form.email) this.localForm.email = this.form.email;
+},
+methods: {
+  updateParent() {
+    this.$emit('data_emprendedor', this.localData);
+  }
+}
 };
 </script>

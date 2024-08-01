@@ -337,7 +337,7 @@
 				</TabPedagogia>
 
 				<!-- ADULTO RESPONSABLE -->
-				<TabResponsable 	v-if="this.tabs === 6"
+				<TabResponsable 	v-if="this.tabs === 9"
 									:v="v$"
 									:form="form.responsable"
 									:input_disable="input_disable"

@@ -24,6 +24,7 @@ class AddressData extends Model
         'localidad_id',
         'pais_id',
         'barrio_id',
+        'observacion'
     ];
 
     public function person()

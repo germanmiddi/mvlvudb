@@ -56,11 +56,6 @@
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 7" :class="this.tabs === 7 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
-							Emprendedor
-						</a>
-					</li>
-					<li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8" :class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Pedagogia
 						</a>
@@ -262,9 +257,15 @@
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha inicio CB</label>
-								<Datepicker
+<!-- 								<Datepicker
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									v-model="form.inscripcion.fecha_inicio" auto-apply year-picker
+									:disabled="input_disable">
+								</Datepicker> -->
+								<Datepicker
+									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+									v-model="form.inscripcion.fecha_inicio" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+									:formatinscripcionCBJ="format"
 									:disabled="input_disable">
 								</Datepicker>
 							</div>
@@ -314,6 +315,7 @@
 									:escuelas="escuelas"
 									:escuelasDependencia="escuelasDependencia"
 									:localidades="localidades"
+									:escuelasNivel="escuelasNivel"
 									@submit="handleEducacion">
 				</TabEducacion>
 
@@ -324,12 +326,6 @@
 									@submit="handleGabinete">
 				</TabGabinete>
 
-				<!-- EMPRENDEDOR -->
-				<TabEmprendedor 	v-if="this.tabs === 7"
-									:form="form.emprendedor"
-									:input_disable="input_disable"
-									@submit="handleEmprendedor">
-				</TabEmprendedor>
 
 				<!-- PEDAGOGIA -->
 				<TabPedagogia 	v-if="this.tabs === 8"
@@ -344,6 +340,12 @@
 									:form="form.responsable"
 									:input_disable="input_disable"
 									:tiposDocumento="tiposDocumento"
+									:paises="paises"
+									:parentescos="parentescos"
+									:situacionesConyugal="situacionesConyugal"
+									:tiposOcupacion="tiposOcupacion"
+									:estadosEducativo="estadosEducativo"
+									:nivelesEducativo="nivelesEducativo"
 									@submit="handleResponsable">
 				</TabResponsable>
 
@@ -372,7 +374,6 @@ import TabEducacion from './Components/TabEducacion.vue';
 import TabResponsable from './Components/TabResponsable.vue';
 import TabGabinete from './Components/TabGabinete.vue';
 import TabPedagogia from './Components/TabPedagogia.vue';
-import TabEmprendedor from './Components/TabEmprendedor.vue';
 
 
 export default {
@@ -387,6 +388,7 @@ export default {
         estadosEducativo: Object,
 		escuelas: Object,
 		escuelasDependencia: Object,
+		escuelasNivel: Object,
         localidades: Object,
         nivelesEducativo: Object,
         paises: Object,
@@ -399,7 +401,11 @@ export default {
         tiposPension: Object,
         tiposTramite: Object,
         tiposVivienda: Object,
-        turnosEducativo: Object
+        turnosEducativo: Object,
+		paises: Object,
+		parentescos: Object,
+		situacionesConyugal: Object,
+		tiposOcupacion: Object,
 
 	},
 	components: {
@@ -412,7 +418,6 @@ export default {
         TabResponsable,
 		TabGabinete,
 		TabPedagogia,
-		TabEmprendedor,
         TabSalud,
         Toast,
         TrashIcon,
@@ -617,6 +622,10 @@ export default {
 						this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
 						this.form.educacion.escuela_dependencia_id = data.education[0].escuela_dependencia_id
 						this.form.educacion.escuela_localidad_id = data.education[0].escuela_localidad_id
+						this.form.educacion.observacion = data.education[0].observacion
+						this.form.educacion.certificado_escolar = data.education[0].certificado_escolar
+						this.form.educacion.permanencia = data.education[0].permanencia
+						this.form.educacion.escuela_nivel_id = data.education[0].escuela_nivel_id
 					}
 
 					this.form = this.removeNullValues(this.form);

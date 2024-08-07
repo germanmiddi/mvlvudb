@@ -16,16 +16,21 @@ use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\EscuelaDependencia;
+use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\Pais;
+use App\Models\Manager\Parentesco;
 use App\Models\Manager\Person;
 use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
+use App\Models\Manager\SituacionConyugal;
 use App\Models\Manager\TipoDocumento;
 use App\Models\Manager\TipoLegajoCb;
+use App\Models\Manager\TipoOcupacion;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
 
@@ -38,6 +43,7 @@ use Inertia\Inertia;
 
 class InscripcionesCBJController extends Controller
 {
+    protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
     protected $sedesAvailables = ['Munro','Villa Martelli', 'La Loma', 'El Ceibo'];
 
     public function index()
@@ -63,6 +69,12 @@ class InscripcionesCBJController extends Controller
                 'tiposDocumento' => TipoDocumento::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
+                'escuelasNivel' => EscuelaNivel::where('cbj', true)->get(),
+
+                'paises' => Pais::all(),
+                'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
             ]
         );
     }

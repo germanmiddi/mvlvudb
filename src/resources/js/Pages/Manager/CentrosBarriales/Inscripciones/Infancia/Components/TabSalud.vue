@@ -117,10 +117,10 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-              <label for="fecha_vencimiento_cud" class="block text-sm font-medium text-gray-700">Fecha vencimiento CUD</label>
+              <label for="vencimiento_cud" class="block text-sm font-medium text-gray-700">Fecha vencimiento CUD</label>
               <Datepicker
                 class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                v-model="localData.fecha_vencimiento_cud"
+                v-model="localData.vencimiento_cud"
                 :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                 :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
               </Datepicker>

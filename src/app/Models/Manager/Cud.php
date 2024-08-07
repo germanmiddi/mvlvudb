@@ -16,7 +16,8 @@ class Cud extends Model
         'diagnostico',
         'person_id',
         'posee_cud',
-        'presento_cud'
+        'presento_cud',
+        'vencimiento_cud'
     ];
 
     public function person()

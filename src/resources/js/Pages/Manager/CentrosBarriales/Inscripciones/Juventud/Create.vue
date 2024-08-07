@@ -263,8 +263,9 @@
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha inicio CB</label>
 								<Datepicker
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									v-model="form.inscripcion.fecha_inicio" auto-apply year-picker
+									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
+									v-model="form.inscripcion.fecha_inicio" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
+									:formatinscripcionCBJ="format"
 									:disabled="input_disable">
 								</Datepicker>
 							</div>
@@ -314,6 +315,7 @@
 									:escuelas="escuelas"
 									:escuelasDependencia="escuelasDependencia"
 									:localidades="localidades"
+									:escuelasNivel="escuelasNivel"
 									@submit="handleEducacion">
 				</TabEducacion>
 
@@ -344,6 +346,12 @@
 									:form="form.responsable"
 									:input_disable="input_disable"
 									:tiposDocumento="tiposDocumento"
+									:paises="paises"
+									:parentescos="parentescos"
+									:situacionesConyugal="situacionesConyugal"
+									:tiposOcupacion="tiposOcupacion"
+									:estadosEducativo="estadosEducativo"
+									:nivelesEducativo="nivelesEducativo"
 									@submit="handleResponsable">
 				</TabResponsable>
 
@@ -387,6 +395,7 @@ export default {
         estadosEducativo: Object,
 		escuelas: Object,
 		escuelasDependencia: Object,
+		escuelasNivel: Object,
         localidades: Object,
         nivelesEducativo: Object,
         paises: Object,
@@ -399,7 +408,11 @@ export default {
         tiposPension: Object,
         tiposTramite: Object,
         tiposVivienda: Object,
-        turnosEducativo: Object
+        turnosEducativo: Object,
+		paises: Object,
+		parentescos: Object,
+		situacionesConyugal: Object,
+		tiposOcupacion: Object,
 
 	},
 	components: {
@@ -617,6 +630,10 @@ export default {
 						this.form.educacion.estado_educativo_id = data.education[0].estado_educativo_id
 						this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
 						this.form.educacion.escuela_localidad_id = data.education[0].escuela_localidad_id
+						this.form.educacion.observacion = data.education[0].observacion
+						this.form.educacion.certificado_escolar = data.education[0].certificado_escolar
+						this.form.educacion.permanencia = data.education[0].permanencia
+						this.form.educacion.escuela_nivel_id = data.education[0].escuela_nivel_id
 					}
 
 					this.form = this.removeNullValues(this.form);

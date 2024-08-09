@@ -16,6 +16,7 @@ class SaludData extends Model
         'libreta_vacunacion',
         'observacion',
         'fecha_apto_medico',
+        'vencimiento_apto_medico',
         'electrocardiograma',
         'fecha_electrocardiograma',
         'medicacion',

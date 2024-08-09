@@ -85,9 +85,17 @@
 						:class="input_disable ? bg_disable : ''" :disabled="input_disable"
 						class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 				</div>
+
 				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 					<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
 					<input v-model="localData.celular" type="text" name="celular" id="phone" autocomplete="off"
+						:class="input_disable ? bg_disable : ''" :disabled="input_disable"
+						class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+				</div>
+
+				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+					<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono de Emergencia</label>
+					<input v-model="localData.phone_emergency" type="text" name="phone" id="phone" autocomplete="off"
 						:class="input_disable ? bg_disable : ''" :disabled="input_disable"
 						class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 				</div>

@@ -292,7 +292,10 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
             Route::post('/store-intervencion', [LegajosCBController::class, 'store_intervencion'])->name('legajoCB.storeIntervencion');
             Route::post('/store-informe', [LegajosCBController::class, 'store_informe'])->name('legajoCB.storeInforme');
+            Route::put('/update-informe', [LegajosCBController::class, 'update_informe'])->name('legajoCB.updateInforme');
+            Route::delete('/delete-informe/{id}', [LegajosCBController::class, 'delete_informe'])->name('legajoCB.deleteInforme');
             Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
+            Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
         });
 
         // Rutas para Gabinete

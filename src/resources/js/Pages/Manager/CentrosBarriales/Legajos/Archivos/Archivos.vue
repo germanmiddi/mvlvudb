@@ -38,7 +38,7 @@
             <!-- Thread section-->
             <ul v-if="!showEditor" role="list" class="py-4 space-y-2 sm:space-y-4 ">
                 <li v-for="archivo in legajo[0].archivos" :key="archivo.key" class="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6">
-                    <ArchivosGrid :archivo="archivo" />
+                    <ArchivosGrid :archivo="archivo" @fnDelete="fnDelete"/>
                 </li>
             </ul>
 
@@ -195,6 +195,30 @@ export default {
             this.file = event.target.files[0];
             this.fileName = this.file ? this.file.name : '';
         },
+        async fnDelete(id)
+        {
+            let data = {}
+            // RUTA
+            let rt = route("legajoCB.deleteArchivo", id);
+
+            try {
+                const response = await axios.delete(rt);
+                if (response.status == 200) {
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                    this.showEditor = false
+                    this.form = {}
+                    this.legajo[0].archivos =  response.data.archivos[0].archivos
+                } else {
+                    data.message = response.data.message
+                    data.labelType = 'info'
+                }
+            } catch (error) {
+                data.message = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+                data.labelType = 'danger'
+            }
+            this.$emit('message', data)
+        }
     },
 }
 </script>

@@ -5,9 +5,6 @@
             <div class="bg-white pt-5 pb-6 shadow mt-2 rounded-lg">
                 <div class="px-4 sm:flex sm:justify-between sm:items-center sm:px-6 lg:px-8">
                     <div class="sm:w-0 sm:flex-1">
-                        <h1 id="message-heading" class="text-lg font-medium text-gray-900">
-                            {{ this.programaSelected.programa_social?.description ?? '' }}
-                        </h1>
                         <nav class="flex mt-1" aria-label="Breadcrumb">
                             <ol role="list" class="flex items-center space-x-2 text-xs">
                                 <li>
@@ -41,7 +38,7 @@
             <!-- Thread section-->
             <ul v-if="!showEditor" role="list" class="py-4 space-y-2 sm:space-y-4 ">
                 <li v-for="informe in legajo[0].informes" :key="informe.key" class="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6">
-                    <InformesGrid :informe="informe" />
+                    <InformesGrid :informe="informe" @fnEditor="fnEditor" @fnDelete="fnDelete"/>
                 </li>
             </ul>
 
@@ -64,24 +61,6 @@
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-3 gap-4 pt-5">
-                        <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Profesional: </label>
-                        <div class="mt-1 sm:mt-0 sm:col-span-2">
-                            <select v-model="form.profesional_id" id="profesional_id" name="profesional_id"
-                                autocomplete="off"
-                                :class="input_disable ? bg_disable : ''"
-                                :disabled="input_disable"
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="" disabled>
-                                    Seleccione un Profesional
-                                </option>
-                                <option v-for="p in users" :key="p.id" :value="p.id">
-                                    {{ p.name ?? '' }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-3 gap-4 pt-5 pb-5">
                         <label for="first-name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Area: </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -103,8 +82,9 @@
                     <QuillEditor theme="snow" ref="editor" v-model:content="form.description" content-type="html"/>
                 </div>
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end">
-                    <button @click="this.showEditor=false" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
-                    <button @click="storeInforme()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
+                    <button @click="this.showEditor=false, this.form={}" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
+                    <button v-if="!edit" @click="storeInforme()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
+                    <button v-else @click="updateInforme()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Actualizar</button>
                 </div>
             </div>
         </div>
@@ -133,7 +113,6 @@ const pages = [
 export default {
     props: {
         legajo: Object,
-        users: Object,
         areas: Object
     },
     components: {
@@ -167,7 +146,7 @@ export default {
         return {
             form: {},
             showEditor: false,
-            programaSelected: {}
+            edit: false,
         }
     },
     methods: {
@@ -195,9 +174,58 @@ export default {
             }
             this.$emit('message', data)
         },
+        async updateInforme(){
+            let data = {}
+            // RUTA
+            let rt = route("legajoCB.updateInforme");
+            
+            try {
+                const response = await axios.put(rt, this.form);
+                if (response.status == 200) {
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                    this.showEditor = false
+                    this.edit = false
+                    this.form = {}
+                    this.legajo[0].informes =  response.data.informes[0].informes
+                } else {
+                    data.message = response.data.message
+                    data.labelType = 'info'
+                }
+            } catch (error) {
+                data.message = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+                data.labelType = 'danger'
+            }
+            this.$emit('message', data)
+        },
         fnEditor(data){
             this.showEditor = data.showEditor
-            this.programaSelected = data.programa
+            this.edit=true
+            this.form = data.form
+        },
+        async fnDelete(id)
+        {
+            let data = {}
+            // RUTA
+            let rt = route("legajoCB.deleteInforme", id);
+
+            try {
+                const response = await axios.delete(rt);
+                if (response.status == 200) {
+                    data.message = response.data.message
+                    data.labelType = 'success'
+                    this.showEditor = false
+                    this.form = {}
+                    this.legajo[0].informes =  response.data.informes[0].informes
+                } else {
+                    data.message = response.data.message
+                    data.labelType = 'info'
+                }
+            } catch (error) {
+                data.message = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+                data.labelType = 'danger'
+            }
+            this.$emit('message', data)
         }
     },
 

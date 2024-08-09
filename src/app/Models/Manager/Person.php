@@ -2,6 +2,7 @@
 
 namespace App\Models\Manager;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,15 @@ class Person extends Model
         'tipo_documento_id',
         'genero'
     ];
+
+    protected $appends = ['age']; 
+
+    public function getAgeAttribute()
+    {
+        return Carbon::parse($this->fecha_nac)->age;
+    }
+
+    // Relaciones.
 
     public function tipoDoc()
     {
@@ -81,4 +91,5 @@ class Person extends Model
     {
         return $this->hasOne(LegajoCB::class);
     }
+
 }

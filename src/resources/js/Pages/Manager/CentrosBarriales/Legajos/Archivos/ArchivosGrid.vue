@@ -38,7 +38,7 @@
                     </div>
                     <div class="py-1">
                     <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
+                        <a @click="showDelete=true" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
                         <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                         Borrar
                         </a>
@@ -48,7 +48,10 @@
             </transition>
         </Menu>
         </div>
-    <!-- <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4" v-html="informe.description ?? '-'" /> -->
+        <DeleteModal :show="showDelete" :id="archivo.id"
+                    :title="`¿Está seguro que desea eliminar el archivo - ${archivo.description}?`"
+                    @viewDeleted="fnShowDelete" 
+                    @responseDeleted="fnDelete" />
 </template>
 
 <script>
@@ -56,7 +59,7 @@
 import { Bars4Icon, CalendarIcon, ChevronDownIcon, EllipsisVerticalIcon, HomeIcon, PencilSquareIcon, DocumentArrowDownIcon, TrashIcon, UserCircleIcon, DocumentIcon } from '@heroicons/vue/24/solid';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import store from '@/store.js';
-
+import DeleteModal from '@/Layouts/Components/DeleteModal.vue';
 
 export default {
 
@@ -77,12 +80,12 @@ export default {
         ChevronDownIcon,
         TrashIcon,
         PencilSquareIcon,
-        DocumentIcon
+        DocumentIcon,
+        DeleteModal
     },
     data() {
         return {
-            showDetail: Boolean,
-            showEditor: Boolean
+            showDelete: false
         }
     },
     setup() {
@@ -92,14 +95,17 @@ export default {
     },
     methods: {
         fnIntervencion(data){
-            this.showDetail = true
-            this.showEditor = true
             this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
         },
         fnDetails(data){
-            this.showDetail = true
-            this.showEditor = false
             this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
+        },
+        fnShowDelete(){
+            this.showDelete = false
+        },
+        fnDelete(){
+            this.showDelete = false
+            this.$emit('fnDelete', {'id' : this.archivo.id})
         }
     },
 }

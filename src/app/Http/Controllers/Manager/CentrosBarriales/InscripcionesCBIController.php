@@ -191,6 +191,7 @@ class InscripcionesCBIController extends Controller
                     'fecha_inicio' => $request->inscripcion['fecha_inicio'] ?? null,
                     'observacion' => $request->inscripcion['observacion'] ?? null,
                     'responsable_id' => $responsable['id'] ?? null,
+                    'parentesco_id' => $request->responsable['parentesco_id'] ?? null,
                     'tipo_legajo_id' => $tipo_legajo_cb['id']
                 ],
                 $request->inscripcion

@@ -165,6 +165,13 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+								<label for="age" class="block text-sm font-medium text-gray-700">Edad</label>
+								<input v-model="form.age" type="text" name="age" id="age" autocomplete="off"
+									:disabled="true" :class="bg_disable"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+							
+							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
 								<input v-model="form.contact.email" type="text" name="email" id="email" autocomplete="email"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
@@ -556,6 +563,8 @@ export default {
 			this.form.fecha_nac = this.form.fecha_nac
 				? new Date(this.form.fecha_nac).toISOString()
 				: null;
+			
+			this.form.inscripcion.phone_emergency = this.form.responsable.phone_emergency
 
 			try {
 				const response = await axios.post(rt, this.form);
@@ -677,11 +686,29 @@ export default {
 		},
 		handleResponsable(data){
 			this.form.responsable = data;
+		},
+		calculateAge() {
+			if (this.form.person.fecha_nac) {
+				const today = new Date();
+				const birthDate = new Date(this.form.person.fecha_nac);
+				let age = today.getFullYear() - birthDate.getFullYear();
+				const m = today.getMonth() - birthDate.getMonth();
+				if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+				    age--;
+				}
+				this.form.age = age;
+			} else {
+				this.form.age = null;
+			}
 		}
 	},
 	computed: {
 	},
-
+	watch: {
+		'form.person.fecha_nac'(newValue) {
+			this.calculateAge();
+		}
+	},
 	mounted() {
 		this.form.tipo_tramite_id = "";
 		this.form.observacion = "";

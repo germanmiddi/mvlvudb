@@ -198,7 +198,7 @@ class DiscapacidadController extends Controller
                         'num_documento' => $request['beneficiario_num_documento'],
                     ]
                 );
-    
+
                 ContactData::updateOrCreate(
                     [
                         'person_id' => $beneficiario->id
@@ -208,7 +208,7 @@ class DiscapacidadController extends Controller
                         'email' => $request['beneficiario_email']
                     ]
                 );
-    
+
                 Cud::updateOrCreate(
                     [
                         'person_id' => $beneficiario->id
@@ -226,21 +226,21 @@ class DiscapacidadController extends Controller
              */
 
             $list_tramites_id = array();
-            
+
             // tramite
             if($request['tramites_id'] != null){
 
                 foreach ($request['tramites_id'] as $indice => $valor) {
-                    
+
                     // Obtengo ID de la dependencia.
-                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
-    
+                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();
+
                     // Tramites del Titular
                     $tramite_data = Tramite::Create(
                         [
                             'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
                             'observacion' => $request['tramites_observacion'][$indice],
-        
+
                             'canal_atencion_id' => $request['canal_atencion_id'],
                             'modalidad_atencion_id' => $request['modalidad_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
@@ -253,24 +253,24 @@ class DiscapacidadController extends Controller
                     if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
-       
+
                     if($request['files'] != null){
                         foreach ($request['files'] as $indice => $valor) {
-        
+
                             $fileController = new FileController;
                             $data = [];
-                
+
                             $data['base64'] = $request['files'][$indice];
                             $data['tramite_id'] =  $tramite_data['id'];
-                            $data['description'] =  $request['files_descripcion'][$indice]; 
+                            $data['description'] =  $request['files_descripcion'][$indice];
                             $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
-                            
+
                             $fileController->uploadbase64($data);
                         }
                     }
 
 
-                    
+
                     $list_tramites_id[] = $tramite_data['id'];
                     Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
                 }
@@ -323,7 +323,7 @@ class DiscapacidadController extends Controller
     {
         DB::beginTransaction();
         try {
-           
+
             Person::where('id',$request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -418,7 +418,7 @@ class DiscapacidadController extends Controller
                         'email' => $request['beneficiario_email']
                     ]
                 );
-    
+
                 //cud
                 Cud::where('person_id', $request['beneficiario_id'])->update(
                     [
@@ -434,7 +434,7 @@ class DiscapacidadController extends Controller
              */
 
             // Obtengo ID de la dependencia.
-            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();
 
 
             // tramite
@@ -452,12 +452,12 @@ class DiscapacidadController extends Controller
             if ($request->hasFile('file')) {
                 $fileController = new FileController;
                 $data = [];
-    
+
                 $data['file'] = $request->file('file');
                 $data['tramite_id'] =  $request['tramite_id'];
-                $data['description'] =  $request['description_file']; 
+                $data['description'] =  $request['description_file'];
                 $data['dependencia'] =  $dependencia['description'];
-                
+
                 $fileController->upload($data );
             }
 
@@ -479,7 +479,7 @@ class DiscapacidadController extends Controller
     public function list()
     {
         $length = request('length');
-        
+
         $result = Tramite::query();
 
         $result->where('dependencia_id', 2);
@@ -490,7 +490,7 @@ class DiscapacidadController extends Controller
         }
 
         if(request('name')){
-            $name = json_decode(request('name'));  
+            $name = json_decode(request('name'));
             $result->whereIn('id', function ($sub) use($name) {
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
@@ -501,7 +501,7 @@ class DiscapacidadController extends Controller
                     });
         }
         if(request('num_documento')){
-            $num_documento = json_decode(request('num_documento'));  
+            $num_documento = json_decode(request('num_documento'));
             $result->whereIn('id', function ($sub) use($num_documento) {
                         $sub->selectRaw('tramites.id')
                             ->from('tramites')
@@ -514,8 +514,8 @@ class DiscapacidadController extends Controller
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
             $result->where('fecha','>=', $from)
                     ->where('fecha', '<', $to);
         }
@@ -534,7 +534,7 @@ class DiscapacidadController extends Controller
             $result->where('modalidad_atencion_id', $modalidad_atencion_id);
         }
 
-       
+
         // Si no posee rol operador ejecuta los filtros.
         $users_id = [];
         if(request('assigned_me')){
@@ -548,11 +548,11 @@ class DiscapacidadController extends Controller
         if(request('not_assigned')){
             $result->whereNull('assigned');
         }
-        
+
         if(count($users_id) > 0){
             $result->whereIn('assigned', $users_id);
         }
-        
+
         return  $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()

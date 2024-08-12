@@ -34,35 +34,63 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
 
     public function collection()
     {
-        
         $result = Tramite::query();
         $depe = true;
-        $result->select('person.name', 
-                'person.lastname', 
-                'person.num_documento',
-                DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
-                'contact_data.phone',
-                'contact_data.celular',
-                'contact_data.email',
-                'localidades.description', 
-                'barrios.description as barrio_description',
-                'address_data.calle',
-                'address_data.number',
-                'address_data.piso',
-                'address_data.dpto',
-                'address_data.google_address',
-                'escuelas.description AS escuela_description', 
-                'estado_educativo.description AS estado_educativo',
-                'tipo_ocupacion.description AS tipo_ocupacion_description',
-                DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
-                'tipo_tramite.description AS tipo_tramite_description',
-                'dependencias.description AS dependencia_description',
-                'tramites.observacion',
-                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.ingreso_nuevo IS NOT NULL, IF(tramite_data.ingreso_nuevo, 'SI', 'NO'), '-'), '') AS ingreso_nuevo"),
-                DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"))
+        if($this->data['dependencia_id'] !== 2){
+            $result->select('person.name', 
+                    'person.lastname', 
+                    'person.num_documento',
+                    DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
+                    'contact_data.phone',
+                    'contact_data.celular',
+                    'contact_data.email',
+                    'localidades.description', 
+                    'barrios.description as barrio_description',
+                    'address_data.calle',
+                    'address_data.number',
+                    'address_data.piso',
+                    'address_data.dpto',
+                    'address_data.google_address',
+                    'escuelas.description AS escuela_description', 
+                    'estado_educativo.description AS estado_educativo',
+                    'tipo_ocupacion.description AS tipo_ocupacion_description',
+                    DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
+                    'tipo_tramite.description AS tipo_tramite_description',
+                    'dependencias.description AS dependencia_description',
+                    'tramites.observacion',
+                    DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.ingreso_nuevo IS NOT NULL, IF(tramite_data.ingreso_nuevo, 'SI', 'NO'), '-'), '') AS ingreso_nuevo"),
+                    DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"));
+        } else {
+            $result->select('person.name', 
+            'person.lastname', 
+            'person.num_documento',
+            'address_data.calle',
+            'address_data.number',
+            'localidades.description', 
+            'contact_data.phone',
+            'cobertura_medica.description AS cobertura_medica_description',
+            DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
+            'users.name AS users_name',
+            DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"),
+            'contact_data.celular',
+            'contact_data.email',
+            'barrios.description as barrio_description',
+            'address_data.piso',
+            'address_data.dpto',
+            'address_data.google_address',
+            'escuelas.description AS escuela_description', 
+            'estado_educativo.description AS estado_educativo',
+            'tipo_ocupacion.description AS tipo_ocupacion_description',
+            'tipo_tramite.description AS tipo_tramite_description',
+            'dependencias.description AS dependencia_description',
+            'tramites.observacion',
+            DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.ingreso_nuevo IS NOT NULL, IF(tramite_data.ingreso_nuevo, 'SI', 'NO'), '-'), '') AS ingreso_nuevo"),
+            DB::raw("IF(".$this->data['dependencia_id']." = 6, IF(tramite_data.boton_antipanico IS NOT NULL, IF(tramite_data.boton_antipanico, 'SI', 'NO'), '-'), '') AS boton_antipanico"));
+        }
 
-            ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
+        $result->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
             ->join('person', 'person.id', '=', 'person_tramite.person_id')
+            ->leftjoin('users','users.id','=', 'tramites.assigned')
             ->leftjoin('education_data','education_data.person_id','=', 'person.id')
             ->leftjoin('address_data', 'address_data.person_id', '=', 'person.id')
             ->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id')
@@ -74,6 +102,7 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             ->leftjoin('dependencias', 'dependencias.id', '=', 'tramites.dependencia_id')
             ->leftjoin('localidades', 'localidades.id', '=', 'address_data.localidad_id')
             ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
+            ->leftjoin('cobertura_medica', 'cobertura_medica.id', '=', 'social_data.cobertura_medica_id')
             ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
             ->where('person_tramite.rol_tramite_id', '1');
 
@@ -194,34 +223,65 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
     // encabezados
     public function headings(): array
     {
-        $title = [
-            'Nombre',
-            'Apellido',
-            'Num. Documento',
-            'Fecha Nacimiento',
-            'Telefono',
-            'Celular',
-            'Email',
-            'Localidad',
-            'Barrio',
-            'Calle',
-            'Numero',
-            'Piso',
-            'Dpto',
-            'Direccion Google',
-            'Escuela',
-            'Estado Educativo',
-            'Ocupación',
-            'Fecha Tramite',
-            'Tipo Tramite',
-            'Dependencia',
-            //'Nomenclatura', //No se utiliza
-            'Observacion'
-        ];
-        if($this->data['dependencia_id'] === 6){
-            $title[] = 'Ingreso Nuevo';
-            $title[] = 'Boton Antipanico';
+        if($this->data['dependencia_id'] !== 2){ 
+            $title = [
+                'Nombre',
+                'Apellido',
+                'Num. Documento',
+                'Fecha Nacimiento',
+                'Telefono',
+                'Celular',
+                'Email',
+                'Localidad',
+                'Barrio',
+                'Calle',
+                'Numero',
+                'Piso',
+                'Dpto',
+                'Direccion Google',
+                'Escuela',
+                'Estado Educativo',
+                'Ocupación',
+                'Fecha Tramite',
+                'Tipo Tramite',
+                'Dependencia',
+                //'Nomenclatura', //No se utiliza
+                'Observacion'
+            ];
+            if($this->data['dependencia_id'] === 6){
+                $title[] = 'Ingreso Nuevo';
+                $title[] = 'Boton Antipanico';
+            }
+        } else {
+            $title = [
+                'Nombre',
+                'Apellido',
+                'Num. Documento',
+                'Calle',
+                'Número',
+                'Localidad',
+                'Telefono',
+                'Cobertura Social',
+                'Fecha',
+                'Profesional',
+                'Fecha Nacimiento',
+                'Celular',
+                'Email',
+                'Barrio',
+                'Piso',
+                'Dpto',
+                'Direccion Google',
+                'Escuela',
+                'Estado Educativo',
+                'Ocupación',
+                'Fecha Tramite',
+                'Tipo Tramite',
+                'Dependencia',
+                //'Nomenclatura', //No se utiliza
+                'Observacion'
+            ];
         }
+
         return $title;
     }
 

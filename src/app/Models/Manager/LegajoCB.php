@@ -78,6 +78,16 @@ class LegajoCB extends Model
         return $this->belongsTo(Parentesco::class);
     }
 
+    public function gabinete()
+    {
+        return $this->hasOne(GabineteCB::class,'legajo_id', 'id');
+    }
+
+    public function emprendedor()
+    {
+        return $this->hasOne(EmprendedorCB::class,'legajo_id', 'id');
+    }
+
 
     // CENTROS BARRIALES
     // Relacion con Programas sociales legajo..

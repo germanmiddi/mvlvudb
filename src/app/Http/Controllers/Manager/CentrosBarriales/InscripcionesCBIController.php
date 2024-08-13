@@ -16,11 +16,13 @@ use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\EmprendedorCB;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
@@ -179,7 +181,6 @@ class InscripcionesCBIController extends Controller
                     $request->responsable
                 );
     
-                
             }
 
             // Obtiene ID de Tipo de Legajo.
@@ -207,6 +208,16 @@ class InscripcionesCBIController extends Controller
                 ],
                 $request->autorizaciones
             );
+
+            if($request->gabinete){
+                GabineteCB::updateOrCreate(
+                    [
+                        'legajo_id' => $legajo['id']
+                    ],
+                    $request->gabinete
+                );
+            }
+
             $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
 
             $tramite_data = Tramite::Create(

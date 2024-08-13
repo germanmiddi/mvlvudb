@@ -55,13 +55,19 @@
 								<div class="px-4 py-5 sm:px-6">
 									<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
 								</div>
-								<div
-									class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
-									<a href="#" title="Editar"
+								<div v-if="!editTitular" class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+									<a @click="editTitular = true" title="Editar"
 										:class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
 										<PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500"
 											aria-hidden="true" />
 									</a>
+								</div>
+                                <div v-else class="mt-4 mr-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                                    <button type="submit" @click="editTitular=false"
+										class="inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
+
+                                        <button type="submit" @click="editTitular=false"
+										class="ml-1 inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
 								</div>
 							</div>
 
@@ -69,15 +75,33 @@
 								<dl class="sm:divide-y sm:divide-gray-200">
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
+										<dt class="text-sm font-medium text-gray-500 col-span-1">Apellido:</dt>
+										<dd v-if="!editTitular" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+											{{ legajo[0].person.lastname }}</dd>
+                                        <dd v-else class="mt-1 mr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                            <input v-model="legajo[0].person.lastname" type="text" name="name" id="name" autocomplete="name-level2"
+                                            class="py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                        </dd>
+									</div>
+
+                                    <div class="pl-4 py-4 grid grid-cols-2 gap-4">
 										<dt class="text-sm font-medium text-gray-500 col-span-1">Nombre:</dt>
-										<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
-											{{ legajo[0].person.lastname }}, {{ legajo[0].person.name }}</dd>
+										<dd  v-if="!editTitular" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+											{{ legajo[0].person.name }}</dd>
+                                        <dd v-else class="mt-1 mr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                            <input v-model="legajo[0].person.name" type="text" name="name" id="name" autocomplete="name-level2"
+                                            class="py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                        </dd>
 									</div>
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 										<dt class="text-sm font-medium text-gray-500 col-span-1">Documento:</dt>
-										<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+										<dd v-if="!editTitular" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
 											{{ legajo[0].person.num_documento }}</dd>
+                                        <dd v-else class="mt-1 mr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                            <input v-model="legajo[0].person.num_documento" type="text" name="name" id="name" autocomplete="name-level2"
+                                            class="py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                        </dd>
 									</div>
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
@@ -94,14 +118,36 @@
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 										<dt class="text-sm font-medium text-gray-500 col-span-1">Genero:</dt>
-										<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{
+										<dd v-if="!editTitular" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">{{
 											legajo[0].person.genero ?? '-' }}</dd>
+                                        <dd v-else class="mt-1 mr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                            <select v-model="legajo[0].person.genero" id="genero" name="genero"
+                                                autocomplete="off"
+                                                :class="input_disable ? bg_disable : ''"
+                                                :disabled="input_disable"
+                                                class="py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                <option value="" disabled>
+                                                    Seleccione un Genero
+                                                </option>
+                                                <option value="F">
+                                                    Femenino
+                                                </option>
+                                                <option value="M">
+                                                    Masculino
+                                                </option>
+								            </select>
+                                        </dd>
+
 									</div>
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
 										<dt class="text-sm font-medium text-gray-500 col-span-1">Teléfono</dt>
-										<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+										<dd v-if="!editTitular" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
 											{{ legajo[0].person?.contact[0]?.phone ?? '-' }}</dd>
+                                        <dd v-else class="mt-1 mr-4 text-sm text-gray-900 sm:mt-0 sm:col-span-1">
+                                            <input v-model="legajo[0].person.contact[0].phone" type="text" name="name" id="name" autocomplete="name-level2"
+                                            class="py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                        </dd>
 									</div>
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
@@ -115,9 +161,6 @@
 						<!-- Fin  Datos Titular -->
 						<!-- Datos Asignado -->
 						<div class="bg-white shadow overflow-hidden sm:rounded-lg mt-4">
-							<!-- <div class="px-4 py-5 sm:px-6">
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Asignado</h3>
-						</div> -->
 							<div class="sm:flex sm:justify-between sm:items-center">
 								<div class="px-4 py-5 sm:px-6">
 									<h3 class="text-lg leading-6 font-medium text-gray-900">Asignado</h3>
@@ -144,7 +187,6 @@
 													{{ p.name ?? '' }}
 												</option>
 											</select></dd>
-
 									</div>
 								</dl>
 							</div>
@@ -184,7 +226,8 @@ const props = defineProps({
 	users: Object,
 	programasSociales: Object,
 	actividades: Object,
-	areas: Object
+	areas: Object,
+    localidades: Object
 });
 
 const legajo = props.legajo;
@@ -205,6 +248,7 @@ const toastMessage = ref("");
 const labelType = ref("info");
 const showModal = ref(false);
 const showForm = ref(false);
+const editTitular = ref(false);
 
 const selectItem = (index) => {
 	tabs.value = index;

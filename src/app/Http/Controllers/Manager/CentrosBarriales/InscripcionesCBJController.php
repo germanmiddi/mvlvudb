@@ -14,11 +14,14 @@ use App\Models\Manager\Comedor;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\EmprendedorCB;
 use App\Models\Manager\Escuela;
 use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
@@ -75,6 +78,7 @@ class InscripcionesCBJController extends Controller
                 'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
+                'estadosGabinete' => EstadoGabineteCB::all()
             ]
         );
     }
@@ -166,6 +170,24 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->autorizaciones
             );
+            if($request->emprendedor){
+                EmprendedorCB::updateOrCreate(
+                    [
+                        'legajo_id' => $legajo['id']
+                    ],
+                    $request->emprendedor
+                );
+            }
+
+            if($request->gabinete){
+                GabineteCB::updateOrCreate(
+                    [
+                        'legajo_id' => $legajo['id']
+                    ],
+                    $request->gabinete
+                );
+            }
+            
             $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES JUVENTUD')->first();
             if(!$tipo_tramite){
                 DB::rollBack();

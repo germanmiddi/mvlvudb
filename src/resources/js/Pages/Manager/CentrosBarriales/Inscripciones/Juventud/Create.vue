@@ -330,6 +330,7 @@
 				<TabGabinete 	v-if="this.tabs === 6"
 									:form="form.gabinete"
 									:input_disable="input_disable"
+									:estadosGabinete="estadosGabinete"
 									@submit="handleGabinete">
 				</TabGabinete>
 
@@ -420,6 +421,7 @@ export default {
 		parentescos: Object,
 		situacionesConyugal: Object,
 		tiposOcupacion: Object,
+		estadosGabinete: Object
 
 	},
 	components: {
@@ -457,7 +459,9 @@ export default {
 				direccion: {},
 				salud: {},
 				educacion: {},
-				responsable: {}
+				responsable: {},
+				emprendedor: {},
+				gabinete: {}
 			},
 
 			/* MENSAJERIA */
@@ -535,14 +539,16 @@ export default {
 		},
 		clearFormData() {
 			this.form = {
+				person:{},
+				contact: {},
+				inscripcion: {},
 				autorizaciones: {},
-                contact: {},
-                direccion: {},
-                educacion: {},
-                inscripcion: {},
-                person: {},
-                responsable: {},
-                salud: {},
+				direccion: {},
+				salud: {},
+				educacion: {},
+				responsable: {},
+				emprendedor: {},
+				gabinete: {}
 
 			}
 		},

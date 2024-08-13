@@ -14,6 +14,7 @@ use App\Models\Manager\EstadoProgramaSocialCB;
 use App\Models\Manager\InformeCB;
 use App\Models\Manager\IntervencionProgramaSocialCB;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\Localidad;
 use App\Models\Manager\LegajoProgramaSocialCB;
 use App\Models\Manager\ProgramaSocialCB;
 use App\Models\User;
@@ -33,6 +34,7 @@ class LegajosCBController extends Controller
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
                 'estados' => EstadoCbj::all(),
+                'localidades' => Localidad::all(),
             ]
         );
     }
@@ -88,7 +90,10 @@ class LegajosCBController extends Controller
                         'informes.area',
                         'archivos',
                         'archivos.area',
-                        'parentesco'
+                        'parentesco',
+                        'gabinete',
+                        'gabinete.estado',
+                        'emprendedor'
                     )->get(),
                 'users' => User::all(),
                 'programasSociales' => ProgramaSocialCB::all(),

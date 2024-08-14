@@ -1,34 +1,36 @@
 <template>
-
     <div class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-          <div class="w-full flex items-center justify-between p-6 space-x-6">
-              <div class="flex-1 truncate">
-                  <div class="flex items-center space-x-3">
-                      <h3 class="text-gray-900 text-base font-medium truncate">{{ actividad.description ?? '-' }}</h3>
-                      <span
-                          class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
-                          {{actividad.estado?.description ?? 'Activo'}}</span>
-                  </div>
-                  <p class="mt-1 text-gray-500 text-xs truncate">Descripción de la actividad</p>
-                  <div class="mt-3">
-                      <!-- <div class="flex text-sm">
+        <div class="w-full flex items-center justify-between p-6 space-x-6">
+            <div class="flex-1 truncate">
+                <div class="flex items-center space-x-3">
+                    <h3 class="text-gray-900 text-base font-medium truncate">{{ actividad.description ?? '-' }}</h3>
+                    <span
+                        class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
+                        {{ actividad.estado?.description ?? 'Activo' }}</span>
+                </div>
+                <p class="mt-1 text-gray-500 text-xs truncate">Descripción de la actividad</p>
+                <div class="mt-3">
+                    <!-- <div class="flex text-sm">
                           <UserCircleIcon class="w-5 text-gray-300"/> <span class="ml-2">{{ store.capitalize(programa.profesional?.name ?? '-') }}</span>
                       </div> -->
-                      <div class="flex text-sm mt-1">
-                          <CalendarIcon class="w-5 text-gray-300"/><span class="ml-2">{{store.dateTimeFormateada(actividad.pivot.fecha_inscripcion)}}</span>
-                      </div>
-                  </div>
-              </div>
-              <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
-          </div>
-      </div>
+                    <div class="flex text-sm mt-1">
+                        <CalendarIcon class="w-5 text-gray-300" /><span
+                            class="ml-2">{{ store.dateTimeFormateada(actividad.pivot.fecha_inscripcion) }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
+        </div>
+    </div>
 </template>
 
 <script>
 
-import {UserCircleIcon,
-   CalendarIcon } from '@heroicons/vue/24/solid'
-   import store from '@/store.js'
+import {
+    UserCircleIcon,
+    CalendarIcon
+} from '@heroicons/vue/24/solid'
+import store from '@/store.js'
 
 export default {
 
@@ -51,21 +53,19 @@ export default {
         }
     },
     methods: {
-        fnIntervencion(data){
+        fnIntervencion(data) {
             this.showDetail = true
             this.showEditor = true
-            this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
+            this.$emit('fnEditor', { 'showDetail': this.showDetail, 'showEditor': this.showEditor, 'programa': data })
         },
-        fnDetails(data){
+        fnDetails(data) {
             this.showDetail = true
             this.showEditor = false
-            this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
+            this.$emit('fnEditor', { 'showDetail': this.showDetail, 'showEditor': this.showEditor, 'programa': data })
         }
     },
 }
 
 </script>
 
-<style>
-
-</style>
+<style></style>

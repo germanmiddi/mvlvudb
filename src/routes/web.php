@@ -298,6 +298,10 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
 
             Route::put('/update-legajo', [LegajosCBController::class, 'update_legajo'])->name('legajoCB.updateLegajo');
+            Route::put('/update-legajo-direccion', [LegajosCBController::class, 'update_legajoDireccion'])->name('legajoCB.updateLegajoDireccion');
+            Route::put('/update-legajo-responsable', [LegajosCBController::class, 'update_legajoResponsable'])->name('legajoCB.updateLegajoResponsable');
+            Route::put('/update-legajo-autorizaciones', [LegajosCBController::class, 'update_legajoAutorizaciones'])->name('legajoCB.updateLegajoAutorizaciones');
+            
         });
 
         // Rutas para Gabinete

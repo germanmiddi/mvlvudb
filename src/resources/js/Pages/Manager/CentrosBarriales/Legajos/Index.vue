@@ -20,18 +20,22 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
                         </div>
                         <div class="flex-shrink-0">
-                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
-                                    @click="clearFilter">Limpiar Filtro</button>
+                            <button v-if="Object.keys(this.filter).length"
+                                class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getLegajos()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                                @click="getLegajos()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha Alta</label>
-                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
-                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                            <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
+                                :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
 
                         <div class="col-span-12 sm:col-span-3">
@@ -51,8 +55,7 @@
 
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
-                            <select v-model="filter.estado_id" id="estado_id" name="estado_id"
-                                autocomplete="off"
+                            <select v-model="filter.estado_id" id="estado_id" name="estado_id" autocomplete="off"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" disabled>Seleccione un Estado</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
@@ -117,22 +120,24 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in legajos.data" :key="data.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{data.person?.lastname ?? '-'}}, {{data.person?.name ?? '-'}}
+                                        {{ data.person?.lastname ?? '-' }}, {{ data.person?.name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{data.person?.num_documento ?? '-'}}
+                                        {{ data.person?.num_documento ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{data.sede?.description ?? '-'}}
+                                        {{ data.sede?.description ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ store.dateFormateada(data.fecha_inscripcion) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{data.tipo_legajo?.description ?? '-'}}
+                                        {{ data.tipo_legajo?.description ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{{data.estadocbj?.description ?? '-'}}</span>
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{{ data.estadocbj?.description
+                                                ?? '-' }}</span>
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
                                         <Menu as="div" class="inline-node">
@@ -159,32 +164,27 @@
                                                     </div>
                                                     <div class="px-1 py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Cambiar a Regular</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Cambiar a No Participa</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Cambiar a Baja</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Cambiar a Egreso</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Cambiar a Solo en Vacaciones</a>
                                                         </MenuItem>
                                                     </div>
@@ -278,7 +278,7 @@ export default {
         }
     },
     methods: {
-        clearFilter(){
+        clearFilter() {
             this.filter = {}
             this.getLegajos()
         },
@@ -322,29 +322,29 @@ export default {
             this.legajos = await response.json()
             //console.log(this.orders)
         },
-        namePersons(data){
+        namePersons(data) {
             let name_titular = ''
             let name_benef = ''
             data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
-                    name_titular = element.lastname + ', '+element.name
-                }else{
-                    name_benef = element.lastname + ', '+element.name
+                if (element.pivot.rol_tramite_id == 1) {
+                    name_titular = element.lastname + ', ' + element.name
+                } else {
+                    name_benef = element.lastname + ', ' + element.name
                 }
             });
-            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+            return name_titular + '<br><p class="text-xs text-red-900 italic mt-1">' + name_benef + '</p>'
         },
-        dniPersons(data){
+        dniPersons(data) {
             let name_titular = ''
             let name_benef = ''
             data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
+                if (element.pivot.rol_tramite_id == 1) {
                     name_titular = element.num_documento
-                }else{
+                } else {
                     name_benef = element.num_documento
                 }
             });
-            return name_titular+'<br><p class="text-xs text-red-900 italic mt-1">'+name_benef+'</p>'
+            return name_titular + '<br><p class="text-xs text-red-900 italic mt-1">' + name_benef + '</p>'
         }
     },
     mounted() {

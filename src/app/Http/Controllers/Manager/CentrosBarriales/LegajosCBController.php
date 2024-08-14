@@ -15,12 +15,25 @@ use App\Models\Manager\EstadoProgramaSocialCB;
 use App\Models\Manager\InformeCB;
 use App\Models\Manager\IntervencionProgramaSocialCB;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\AddressData;
+use App\Models\Manager\AditionalData;
+use App\Models\Manager\AutorizacionCb;
+use App\Models\Manager\ContactData;
+use App\Models\Manager\EducationData;
+use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\LegajoProgramaSocialCB;
+use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\Pais;
+use App\Models\Manager\Parentesco;
+use App\Models\Manager\Person;
 use App\Models\Manager\ProgramaSocialCB;
 use App\Models\Manager\Sede;
+use App\Models\Manager\SituacionConyugal;
+use App\Models\Manager\SocialData;
 use App\Models\User;
 use App\Models\Manager\TipoLegajoCb;
+use App\Models\Manager\TipoOcupacion;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +42,8 @@ use Inertia\Inertia;
 
 class LegajosCBController extends Controller
 {
+    protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
+    
     public function index()
     {
         return Inertia::render(
@@ -104,7 +119,14 @@ class LegajosCBController extends Controller
                 'sedes' => Sede::all(),
                 'canalesAtencion' => CanalAtencion::all(),
                 'tiposLegajo' => TipoLegajoCb::all(),
-                'estados' => EstadoCbj::all()
+                'estados' => EstadoCbj::all(),
+                
+                'paises' => Pais::all(),
+                'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
+                'situacionesConyugal' => SituacionConyugal::all(),
+                'tiposOcupacion' => TipoOcupacion::all(),
+                'estadosEducativo' => EstadoEducativo::all(),
+                'nivelesEducativo' => NivelEducativo::all(),
 
             ]
         );
@@ -362,8 +384,103 @@ class LegajosCBController extends Controller
             );
             return response()->json(['message' => 'Se ha actualizado correctamente el legajo.'], 200);
         } catch (\Throwable $th) {
-            dd($th);
             return response()->json(['message' => 'Se ha producido un error al momento de intentar eliminar el archivo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_legajoDireccion(Request $request)
+    {
+        try {
+            //code...
+            $person_id =  LegajoCB::where('id', $request->id)->value('person_id');
+
+            AddressData::where('person_id', $person_id)->update(
+                [
+                    'calle' => $request->calle,
+                    'piso' => $request->piso,
+                    'dpto' => $request->dpto,
+                    'localidad_id' => $request->localidad_id,
+                    'observacion' => $request->observacion
+                ]
+            );
+            return response()->json(['message' => 'Se ha actualizado correctamente la dirección del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de la dirección del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_legajoResponsable(Request $request)
+    {
+        try {
+            $person_id = LegajoCB::where('id', $request->id)->value('responsable_id');
+
+            LegajoCB::where('id', $request->id)->update(
+                [
+                    'parentesco_id' => $request->parentesco_id,
+                    'phone_emergency' => $request->phone_emergency
+                ]
+            );
+
+            Person::where('id',$person_id)->update(
+                [
+                    'lastname' => $request->lastname ?? null,
+                    'name' => $request->name ?? null,
+                    'fecha_nac' => $request->fecha_nac ?? null,
+                ]
+            );
+
+            ContactData::where('person_id',$person_id)->update(
+                [
+                    'phone' => $request->phone ?? null,
+                    'celular' => $request->celular ?? null
+                ]
+            );
+
+            AddressData::where('person_id',$person_id)->update(
+                [
+                    'pais_id' => $request->pais_id ?? null
+                ]
+            );
+
+            EducationData::where('person_id',$person_id)->update(
+                [
+                    'nivel_educativo_id' => $request->nivel_educativo_id ?? null,
+                    'estado_educativo_id' => $request->estado_educativo_id ?? null
+                ]
+            );
+
+            AditionalData::where('person_id',$person_id)->update(
+                [
+                    'situacion_conyugal_id' => $request->situacion_conyugal_id ?? null
+                ]
+            );
+
+            SocialData::where('person_id',$person_id)->update(
+                [
+                    'tipo_ocupacion_id' => $request->tipo_ocupacion_id ?? null
+                ]
+            );
+            return response()->json(['message' => 'Se ha actualizado correctamente los datos del adulto responsable del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del adulto responsable del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_legajoAutorizaciones(Request $request)
+    {
+        try {
+            AutorizacionCb::where('legajo_id', $request->id)->update(
+                [
+                    'apoyo_escolar' => $request->apoyo_escolar,
+                    'actividad_empleo' => $request->actividad_empleo,
+                    'autorizacion_firmada' => $request->autorizacion_firmada,
+                    'autorizacion_retirarse' => $request->autorizacion_retirarse,
+                    'autorizacion_uso_imagen' => $request->autorizacion_uso_imagen
+                ]
+            );
+            return response()->json(['message' => 'Se ha actualizado correctamente las autorizaciones del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los autorizaciones del legajo. Comuniquese con el administrador.'], 203);
         }
     }
 }

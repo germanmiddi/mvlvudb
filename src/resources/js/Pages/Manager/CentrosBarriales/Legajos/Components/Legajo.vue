@@ -102,52 +102,55 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Tipo Legajo:</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
-                                legajo[0].tipo_legajo?.description ?? '-' }}</dd>
+                            legajo[0].tipo_legajo?.description ?? '-' }}</dd>
 
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].created_at ?
-                                store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
+                            store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Última actualización</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].updated_at ?
-                                store.fechaFormateada(legajo[0].updated_at) : '-' }}</dd>
+                            store.fechaFormateada(legajo[0].updated_at) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
-                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ this.form.fecha_inscripcion ?
-                                store.dateTimeFormateada(this.form.fecha_inscripcion) : '-' }}</dd>
+                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+                            this.form.fecha_inscripcion ?
+                            store.dateTimeFormateada(this.form.fecha_inscripcion) : '-' }}</dd>
                         <Datepicker v-else
                             class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            v-model="this.form.fecha_inscripcion" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                            :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+                            v-model="this.form.fecha_inscripcion" :disabled="input_disable"
+                            :class="input_disable ? bg_disable : ''" :enableTimePicker="false" :monthChangeOnScroll="false"
+                            autoApply :format="format">
                         </Datepicker>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
-                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ this.form.fecha_inicio ?
-                                store.dateTimeFormateada(this.form.fecha_inicio) : '-' }}</dd>
+                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+                            this.form.fecha_inicio ?
+                            store.dateTimeFormateada(this.form.fecha_inicio) : '-' }}</dd>
                         <Datepicker v-else
                             class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            v-model="this.form.fecha_inicio" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                            :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+                            v-model="this.form.fecha_inicio" :disabled="input_disable"
+                            :class="input_disable ? bg_disable : ''" :enableTimePicker="false" :monthChangeOnScroll="false"
+                            autoApply :format="format">
                         </Datepicker>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
-                                this.form.estado ?? '-' }}</dd>
+                            this.form.estado ?? '-' }}</dd>
 
-                        <select v-else v-model="form.estado_id" id="estado_id"
-                            name="estado_id" autocomplete="off" :class="input_disable ? bg_disable : ''"
-                            :disabled="input_disable"
+                        <select v-else v-model="form.estado_id" id="estado_id" name="estado_id" autocomplete="off"
+                            :class="input_disable ? bg_disable : ''" :disabled="input_disable"
                             class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="" disabled>
                                 Seleccione un estado
@@ -161,11 +164,10 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
-                                this.form.canal_atencion ?? '-' }}</dd>
+                            this.form.canal_atencion ?? '-' }}</dd>
 
-                        <select v-else v-model="form.canal_atencion_id" id="canal_atencion_id"
-                            name="canal_atencion_id" autocomplete="off" :class="input_disable ? bg_disable : ''"
-                            :disabled="input_disable"
+                        <select v-else v-model="form.canal_atencion_id" id="canal_atencion_id" name="canal_atencion_id"
+                            autocomplete="off" :class="input_disable ? bg_disable : ''" :disabled="input_disable"
                             class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="" disabled>
                                 Seleccione un canal
@@ -181,9 +183,8 @@
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ this.form.sede ??
                             '-' }}</dd>
 
-                        <select v-else v-model="form.sede_id" id="sede_id"
-                            name="sede_id" autocomplete="off" :class="input_disable ? bg_disable : ''"
-                            :disabled="input_disable"
+                        <select v-else v-model="form.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+                            :class="input_disable ? bg_disable : ''" :disabled="input_disable"
                             class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="" disabled>
                                 Seleccione una Sede
@@ -212,7 +213,7 @@
 </template>
 
 <script>
-import { PencilSquareIcon, SunIcon } from '@heroicons/vue/24/solid'
+import { PencilSquareIcon, SunIcon, ChevronDownIcon} from '@heroicons/vue/24/solid'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -227,16 +228,16 @@ export default {
         estados: Object
     },
     components: {
-        PencilSquareIcon, SunIcon, Menu, MenuButton, MenuItems, MenuItem, Datepicker
+        PencilSquareIcon, SunIcon, ChevronDownIcon, Menu, MenuButton, MenuItems, MenuItem, Datepicker
     },
 
     setup() {
         const format = (date) => {
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
 
-        return `${day}/${month}/${year}`;
+            return `${day}/${month}/${year}`;
         };
 
         return {
@@ -270,12 +271,12 @@ export default {
             this.form.sede_id = this.legajo[0].sede?.id ?? null
 
             // Registro datos temporales PreEdicion
-            this.form_temp = this.form
+            this.form_temp = JSON.parse(JSON.stringify(this.form));
         },
         resetForm() {
-            this.form = this.form_temp
+            this.form = JSON.parse(JSON.stringify(this.form_temp));
         },
-        async updateLegajo(){
+        async updateLegajo() {
             let data = {}
             // RUTA
             let rt = route("legajoCB.updateLegajo");

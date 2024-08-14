@@ -357,8 +357,7 @@ class LegajosCBController extends Controller
                     'canal_atencion_id' => $request->canal_atencion_id,
                     'fecha_inscripcion' => $request->fecha_inscripcion,
                     'fecha_inicio' => $request->fecha_inicio,
-                    'observacion' => $request->observacion,
-                    'tipo_legajo_id' => $request->tipo_legajo_id,
+                    'observacion' => $request->observacion
                 ]
             );
             return response()->json(['message' => 'Se ha actualizado correctamente el legajo.'], 200);

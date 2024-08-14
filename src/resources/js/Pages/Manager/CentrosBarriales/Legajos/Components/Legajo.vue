@@ -102,7 +102,20 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Tipo Legajo:</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
-                                this.form.tipo_legajo ?? '-' }}</dd>
+                                legajo[0].tipo_legajo?.description ?? '-' }}</dd>
+
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].created_at ?
+                                store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Última actualización</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].updated_at ?
+                                store.fechaFormateada(legajo[0].updated_at) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -125,18 +138,6 @@
                             v-model="this.form.fecha_inicio" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
                             :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
                         </Datepicker>
-                    </div>
-
-                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].created_at ?
-                                store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
-                    </div>
-
-                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Última actualización</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].updated_at ?
-                                store.fechaFormateada(legajo[0].updated_at) : '-' }}</dd>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -254,7 +255,6 @@ export default {
         initForm() {
             this.form = {}
             this.form.id = this.legajo[0].id
-            this.form.tipo_legajo = this.legajo[0].tipo_legajo?.description ?? null
 
             this.form.canal_atencion = this.legajo[0].canal_atencion?.description ?? null
             this.form.canal_atencion_id = this.legajo[0].canal_atencion?.id ?? null

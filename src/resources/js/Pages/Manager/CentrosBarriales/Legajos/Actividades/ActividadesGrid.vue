@@ -21,23 +21,6 @@
               </div>
               <!-- <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" :src="programa.imageUrl" alt="" /> -->
           </div>
-          <!-- <div>
-              <div class="-mt-px flex divide-x divide-gray-200">
-                  <div class="w-0 flex-1 flex">
-                      <button @click="fnDetails(programa)"
-                          class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
-
-                          <span  class="ml-3">Detalle</span>
-                      </button>
-                  </div>
-                  <div class="-ml-px w-0 flex-1 flex">
-                      <button  @click="fnIntervencion(programa)"
-                          class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
-                          <span class="ml-3">Interveción</span>
-                      </button>
-                  </div>
-              </div>
-          </div> -->
       </div>
 </template>
 

@@ -12,7 +12,6 @@
 					</a>
 					<h1 class="font-sm font-medium text-gray-600 sm:truncate">
 						Detalle del Legajo
-						<!-- <span class="text-indigo-700 text-xl font-semibold ">{{tramite[0].dependencia.description}}</span> -->
 					</h1>
 				</div>
 				<div class="flex">
@@ -39,17 +38,22 @@
 							</li>
 						</ul>
 					</div>
-					<component :is="selectedItem.componentName" :data="selectedItem.componentData" :legajo="legajo"
-						:users="users" :areas="areas" @message="messageToast" />
+					<component :is="selectedItem.componentName" 
+						:data="selectedItem.componentData" 
+						:legajo="legajo"
+						:sedes="sedes"
+						:users="users" 
+						:areas="areas" 
+						:canalesAtencion="canalesAtencion"
+						:tiposLegajo="tiposLegajo"
+						:estados="estados"
+						@message="messageToast" />
 				</div>
 
 				<div class="lg:col-span-4 xl:col-span-4">
 					<div class="sticky top-4">
 						<!-- Datos Titular -->
 						<div class="bg-white shadow overflow-hidden sm:rounded-lg">
-							<!-- <div class="px-4 py-5 sm:px-6">
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Titular</h3>
-						</div> -->
 
 							<div class="sm:flex sm:justify-between sm:items-center">
 								<div class="px-4 py-5 sm:px-6">
@@ -137,7 +141,6 @@
                                                 </option>
 								            </select>
                                         </dd>
-
 									</div>
 
 									<div class="pl-4 py-4 grid grid-cols-2 gap-4">
@@ -193,10 +196,7 @@
 						</div>
 						<!-- Fin  Datos Asignado -->
 					</div>
-
-
 				</div>
-
 			</div>
 		</div>
 
@@ -221,13 +221,18 @@ import {PencilSquareIcon } from '@heroicons/vue/24/solid'
 import { ArrowLeftCircleIcon, CubeIcon } from '@heroicons/vue/24/outline'
 import store from '@/store.js'
 
+
 const props = defineProps({
 	legajo: Object,
 	users: Object,
 	programasSociales: Object,
 	actividades: Object,
 	areas: Object,
-    localidades: Object
+    localidades: Object,
+	sedes: Object,
+	canalesAtencion: Object,
+	tiposLegajo: Object,
+    estados: Object
 });
 
 const legajo = props.legajo;

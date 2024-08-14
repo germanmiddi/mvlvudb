@@ -296,6 +296,8 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/delete-informe/{id}', [LegajosCBController::class, 'delete_informe'])->name('legajoCB.deleteInforme');
             Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
             Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
+
+            Route::put('/update-legajo', [LegajosCBController::class, 'update_legajo'])->name('legajoCB.updateLegajo');
         });
 
         // Rutas para Gabinete

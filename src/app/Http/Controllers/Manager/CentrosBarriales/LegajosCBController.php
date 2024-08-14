@@ -7,6 +7,7 @@ use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Models\Manager\ActividadCB;
 use App\Models\Manager\ArchivoLegajo;
 use App\Models\Manager\AreaLegajoCB;
+use App\Models\Manager\CanalAtencion;
 use App\Models\Manager\EstadoActividadCB;
 use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\EstadoInformeCB;
@@ -17,6 +18,7 @@ use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\LegajoProgramaSocialCB;
 use App\Models\Manager\ProgramaSocialCB;
+use App\Models\Manager\Sede;
 use App\Models\User;
 use App\Models\Manager\TipoLegajoCb;
 use Illuminate\Support\Facades\Session;
@@ -33,8 +35,7 @@ class LegajosCBController extends Controller
             'Manager/CentrosBarriales/Legajos/Index',
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
-                'estados' => EstadoCbj::all(),
-                'localidades' => Localidad::all(),
+                'estados' => EstadoCbj::all()
             ]
         );
     }
@@ -99,6 +100,12 @@ class LegajosCBController extends Controller
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all(),
                 'areas' => AreaLegajoCB::active()->get(),
+                'localidades' => Localidad::all(),
+                'sedes' => Sede::all(),
+                'canalesAtencion' => CanalAtencion::all(),
+                'tiposLegajo' => TipoLegajoCb::all(),
+                'estados' => EstadoCbj::all()
+
             ]
         );
     }
@@ -335,6 +342,28 @@ class LegajosCBController extends Controller
                 return response()->json(['message' => 'Se ha encontrado el archivo que desea eliminar. Comuniquese con el administrador.'], 203);
             }
         } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar eliminar el archivo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_legajo(Request $request)
+    {
+        try {
+            //code...
+            LegajoCB::where('id', $request->id)->update(
+                [
+                    'sede_id' => $request->sede_id,
+                    'estado_id' => $request->estado_id,
+                    'canal_atencion_id' => $request->canal_atencion_id,
+                    'fecha_inscripcion' => $request->fecha_inscripcion,
+                    'fecha_inicio' => $request->fecha_inicio,
+                    'observacion' => $request->observacion,
+                    'tipo_legajo_id' => $request->tipo_legajo_id,
+                ]
+            );
+            return response()->json(['message' => 'Se ha actualizado correctamente el legajo.'], 200);
+        } catch (\Throwable $th) {
+            dd($th);
             return response()->json(['message' => 'Se ha producido un error al momento de intentar eliminar el archivo. Comuniquese con el administrador.'], 203);
         }
     }

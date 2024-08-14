@@ -1,176 +1,15 @@
 <template>
-    <!-- <h1>soy el informacion general</h1> -->
     <div>
-        <div class="px-4 mt-10">
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <!-- <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{legajo[0].id}}</h3>
-            </div> -->
-                <div class="sm:flex sm:justify-between sm:items-center">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{ legajo[0].id }}</h3>
-                    </div>
-                    <div
-                        class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
-                        <a href="#" title="Editar"
-                            :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
-                            <PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                        </a>
-                    </div>
-                </div>
-                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-                    <dl class="sm:divide-y sm:divide-gray-200">
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semaforo:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 
-                                <div
-                                    class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:flex-shrink-0 sm:justify-start">
-                                    <Menu as="div" class="relative inline-block text-left">
-                                        <div>
-                                            <MenuButton
-                                                class=" p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                                <SunIcon
-                                                    class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                                    aria-hidden="true" />
-                                                <!-- <SunIcon v-else-if="semaforo_id === 2"
-                                                    class="mr-3 h-6 w-6 text-red-400 group-hover:text-red-500"
-                                                    aria-hidden="true" />
-                                                <SunIcon v-else-if="semaforo_id === 3"
-                                                    class="mr-3 h-6 w-6 text-yellow-400 group-hover:text-yellow-500"
-                                                    aria-hidden="true" />
-                                                <SunIcon v-else-if="semaforo_id === 4"
-                                                    class="mr-3 h-6 w-6 text-green-400 group-hover:text-green-500"
-                                                    aria-hidden="true" /> -->
-                                                    
-                                                <ChevronDownIcon class="h-5 w-5" aria-hidden="true" />
-                                            </MenuButton>
-                                        </div>
-
-                                        <transition enter-active-class="transition ease-out duration-100"
-                                            enter-from-class="transform opacity-0 scale-95"
-                                            enter-to-class="transform opacity-100 scale-100"
-                                            leave-active-class="transition ease-in duration-75"
-                                            leave-from-class="transform opacity-100 scale-100"
-                                            leave-to-class="transform opacity-0 scale-95">
-                                            <MenuItems
-                                                class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <div class="py-1 z-50">
-                                                    <MenuItem v-slot="{ active }">
-                                                    <button type="button" 
-                                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                        <span>
-                                                            <SunIcon
-                                                                class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                                                aria-hidden="true" />
-                                                        </span>
-                                                    </button>
-                                                    </MenuItem>
-                                                    <MenuItem v-slot="{ active }">
-                                                    <button type="button" 
-                                                        :class="[active ? 'bg-gray-100 text-red-900' : 'text-red-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                        <span>
-                                                            <SunIcon
-                                                                class="mr-3 h-6 w-6 text-red-400 group-hover:text-red-500"
-                                                                aria-hidden="true" />
-                                                        </span>
-                                                    </button>
-                                                    </MenuItem>
-                                                    <MenuItem v-slot="{ active }">
-                                                    <button type="button"
-                                                        :class="[active ? 'bg-yellow-100 text-red-900' : 'text-yellow-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                        <span>
-                                                            <SunIcon
-                                                                class="mr-3 h-6 w-6 text-yellow-400 group-hover:text-yellow-500"
-                                                                aria-hidden="true" />
-                                                        </span>
-                                                    </button>
-                                                    </MenuItem>
-                                                    <MenuItem v-slot="{ active }">
-                                                    <button type="button"
-                                                        :class="[active ? 'bg-gray-100 text-green-900' : 'text-green-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                        <span>
-                                                            <SunIcon
-                                                                class="mr-3 h-6 w-6 text-green-400 group-hover:text-green-500"
-                                                                aria-hidden="true" />
-                                                        </span>
-                                                    </button>
-                                                    </MenuItem>
-                                                </div>
-                                            </MenuItems>
-                                        </transition>
-                                    </Menu>
-                                </div>
-
-
-                            </dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Tipo Legajo:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
-                                legajo[0].tipo_legajo?.description ?? '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].fecha_inscripcion ?
-                                store.dateFormateada(legajo[0].fecha_inscripcion) : '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].fecha_inicio ?
-                                store.dateTimeFormateada(legajo[0].fecha_inicio) : '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].created_at ?
-                                store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Última actualización</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].updated_at ?
-                                store.fechaFormateada(legajo[0].updated_at) : '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Estado Actual</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].estadocbj?.description
-                                ?? '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
-                                legajo[0].canal_atencion?.description ?? '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Sede</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ legajo[0].sede?.description ??
-                                '-' }}</dd>
-                        </div>
-
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Observación</dt>
-                            <dd class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2">{{
-                                legajo[0].observacion ?? '-' }}</dd>
-                        </div>
-
-                    </dl>
-                </div>
-
-            </div>
-        </div>
+        <LegajoComponent :legajo="legajo" 
+            :sedes="sedes"
+            :canalesAtencion="canalesAtencion"
+            :tiposLegajo="tiposLegajo"
+            :estados="estados"
+            @message="messageToast"/>
 
         <div class="px-4 mt-10">
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <!-- <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Legajo N°: {{legajo[0].id}}</h3>
-            </div> -->
                 <div class="sm:flex sm:justify-between sm:items-center">
                     <div class="px-4 py-5 sm:px-6">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Dirección</h3>
@@ -934,17 +773,25 @@ import store from '@/store.js'
 import { Bars4Icon, PencilSquareIcon, SunIcon, ChevronDownIcon } from '@heroicons/vue/24/solid';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 
+// Card Legajo
+import LegajoComponent from './Components/Legajo.vue';
+import { defineEmits } from 'vue';
+
 const props = defineProps({
     legajo: Object,
+    sedes: Object,
+    canalesAtencion: Object,
+    tiposLegajo: Object,
+    estados: Object
 });
 
-/* const semaforo_id = ref("1"); */
-
 const legajo = props.legajo;
+const emit = defineEmits(['message']);
 
-/* function semaforo(id) {
-    semaforo_id.value = id
-} */
+function messageToast(data) {
+    console.log("MESSAGEEEEEE")
+	emit('message', data);
+}
 
 </script>
 

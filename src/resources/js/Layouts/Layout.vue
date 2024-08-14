@@ -231,13 +231,19 @@
 
               <a :href="route('report')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                  <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes</label>
+                  <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes </label>
                 </div>
               </a>
 
               <a :href="route('persons')"  v-show="store.userCan('-PROF', $page.props.userGroups)">
                 <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
                   <UserGroupIcon class="w-5 h-5 mr-3" /> <label> Personas</label>
+                </div>
+              </a>
+              
+              <a :href="route('downloads')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
+                  <ArrowDownTrayIcon class="w-5 h-5 mr-3" /> <label> Descargas</label>
                 </div>
               </a>
 
@@ -367,9 +373,9 @@
     TransitionRoot,
   } from '@headlessui/vue'
 
-  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon, DocumentChartBarIcon, NewspaperIcon } from '@heroicons/vue/24/outline'
+  import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon, DocumentChartBarIcon, NewspaperIcon, ArrowDownTrayIcon} from '@heroicons/vue/24/outline'
   import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/vue/24/solid'
-
+  
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
   import { ChevronUpIcon } from '@heroicons/vue/20/solid'
 
@@ -456,8 +462,10 @@
       PowerIcon,
       UserGroupIcon,
       CalendarDaysIcon,
-      NewspaperIcon
+      NewspaperIcon,
 
+      ArrowDownTrayIcon,
+      
     },
     setup() {
       const sidebarOpen = ref(false)

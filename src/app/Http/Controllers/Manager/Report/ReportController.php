@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager\Report;
 
 use App\Exports\EntidadesExport;
 use App\Exports\PersonsExport;
+use App\Exports\TestExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
 use App\Http\Controllers\Controller;
@@ -113,7 +114,76 @@ class ReportController extends Controller
         
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }
+    public function exportTest(Request $request){
+        $updateOrder = $request->input('updateOrder');
+        $query = Tramite::query();
+        
+        $query = $query
+        ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
+        ->join('person', 'person.id', '=', 'person_tramite.person_id');
+        $columns = [];
+        $titles = [];
+        $uniqueNeeds = [];
 
+        foreach ($updateOrder as $item) {
+            if (isset($item['needs']) && !in_array($item['needs'], $uniqueNeeds) ) {
+                $uniqueNeeds[] = $item['needs'];
+            }
+        }
+
+        if(!empty($uniqueNeeds)){
+            $query = $this->getLeftJoinNeeded($query, $uniqueNeeds);
+        }
+        foreach ($updateOrder as $item) {
+            if (isset($item['needs']) && $item['needs'] != $item['table']) {
+                $query = $query->leftJoin($item['table'], $item['table'] . '.id', '=', $item['needs'] . '.' . $item['joined_table_column']);
+            }
+            $columns[] = $item['table'] . '.' . $item['column'] . ' ' . 'as' . ' ' . $item['label'];
+            $titles[] = $item['label'];
+        }
+        
+        if (empty($columns)) {
+            return response()->json(['error' => 'No hay columnas activas para exportar.'], 400);
+        }
+        
+        $query->select($columns)->where('person_tramite.rol_tramite_id', '1');
+        
+        $data = $query->get();
+
+        return Excel::download(new TestExport($data, $titles), 'tramites.xlsx');
+    }
+
+    public function getLeftJoinNeeded($query, $needs)
+    {
+        foreach ($needs as $need) {
+            switch ($need) {
+                case 'aditional_data':
+                    $query->leftjoin('aditional_data', 'aditional_data.person_id', '=', 'person.id');
+                    break;
+                case 'education_data':
+                    $query->leftjoin('education_data','education_data.person_id','=', 'person.id');
+                    break;
+                case 'address_data':
+                    $query->leftjoin('address_data', 'address_data.person_id', '=', 'person.id');
+                    break;
+                case 'contact_data':
+                    $query->leftjoin('contact_data', 'contact_data.person_id', '=', 'person.id');
+                    break;
+                case 'social_data':
+                    $query->leftjoin('social_data', 'social_data.person_id', '=', 'person.id');
+                    break;
+                case 'salud_data':
+                    $query->leftjoin('salud_data', 'salud_data.person_id', '=', 'person.id');
+                    break;
+                case 'tramites':
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+        return $query;
+    }
     public function exportTramiteCBIExcel(){
         return Excel::download(new TramitesCBIExport(), 'tramitesCBI.xlsx');
     }

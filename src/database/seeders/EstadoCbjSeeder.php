@@ -19,7 +19,8 @@ class EstadoCbjSeeder extends Seeder
             ['id' => 2, 'description' => 'Regular'],
             ['id' => 3, 'description' => 'Baja'],
             ['id' => 4, 'description' => 'Egreso'],
-            ['id' => 5, 'description' => 'No Participa']
+            ['id' => 5, 'description' => 'No Participa'],
+            ['id' => 6, 'description' => 'Solo en Vacaciones']
         ];
 
         foreach ($data as $value) {

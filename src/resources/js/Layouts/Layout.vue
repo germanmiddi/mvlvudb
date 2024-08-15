@@ -198,29 +198,29 @@
                       </li>
                     </a>
                     <hr>
-                    <a :href="route('inscripcionCBI')">
+                    <a :href="route('inscripcionCBI')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscripción CBI
                       </li>
                     </a>
-                    <a :href="route('inscripcionCBJ')">
+                    <a :href="route('inscripcionCBJ')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscripción CBJ
                       </li>
                     </a>
                     <hr>
-                    <a :href="route('mil-dias')">
+                    <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                         <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                             Gabinete
                         </li>
                     </a>
-                    <a :href="route('mil-dias')">
+                    <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                         <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                             Mil Dias
                         </li>
                     </a>
                     <hr>
-                    <a :href="route('legajoCB')">
+                    <a :href="route('legajoCB')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscriptos
                       </li>

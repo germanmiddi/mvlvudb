@@ -294,6 +294,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LegajosCBController::class, 'index'])->name('legajoCB');
             Route::get('/detail/{id}', [LegajosCBController::class, 'legajo'])->name('legajoCB.legajo');
             Route::get('/list', [LegajosCBController::class, 'list'])->name('legajoCB.list');
+            Route::put('/update-estado/{id}', [LegajosCBController::class, 'update_esado'])->name('legajoCB.updateEstado');
 
             Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');

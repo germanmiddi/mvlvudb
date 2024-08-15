@@ -135,8 +135,13 @@
                                         {{ data.tipo_legajo?.description ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <span
-                                            class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">{{ data.estadocbj?.description
+                                        <span v-if="data.estadocbj?.id === 1"
+                                            class="inline-flex items-center rounded-md bg-green-200 px-2 py-1 text-xs font-medium text-green-800 ring-1 ring-inset ring-green-600/20">{{
+                                                data.estadocbj?.description
+                                                ?? '-' }}</span>
+                                        <span v-else
+                                            class="inline-flex items-center rounded-md bg-gray-200 px-2 py-1 text-xs font-medium text-gray-800 ring-1 ring-inset ring-gray-600/20">{{
+                                                data.estadocbj?.description
                                                 ?? '-' }}</span>
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
@@ -164,27 +169,32 @@
                                                     </div>
                                                     <div class="px-1 py-1 text-left">
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <a @click="updateEstado(data.id, 2)"
+                                                            class="cursor-pointer block px-4 py-2 text-sm">
                                                             Cambiar a Regular</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <a @click="updateEstado(data.id, 5)"
+                                                            class="cursor-pointer block px-4 py-2 text-sm">
                                                             Cambiar a No Participa</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <a @click="updateEstado(data.id, 3)"
+                                                            class="cursor-pointer block px-4 py-2 text-sm">
                                                             Cambiar a Baja</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <a @click="updateEstado(data.id, 4)"
+                                                            class="cursor-pointer block px-4 py-2 text-sm">
                                                             Cambiar a Egreso</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <a @click="updateEstado(data.id, 6)"
+                                                            class="cursor-pointer block px-4 py-2 text-sm">
                                                             Cambiar a Solo en Vacaciones</a>
                                                         </MenuItem>
                                                     </div>
@@ -345,7 +355,28 @@ export default {
                 }
             });
             return name_titular + '<br><p class="text-xs text-red-900 italic mt-1">' + name_benef + '</p>'
-        }
+        },
+        async updateEstado(id, estado_id) {
+            let data = {}
+            data.estado_id = estado_id
+            // RUTA
+            let rt = route("legajoCB.updateEstado", id);
+
+            try {
+                const response = await axios.put(rt, data);
+                if (response.status == 200) {
+                    this.labelType = "success";
+                    this.toastMessage = response.data.message;
+                    this.getLegajos()
+                } else {
+                    this.labelType = "info";
+                    this.toastMessage = response.data.message;
+                }
+            } catch (error) {
+                this.labelType = "danger";
+                this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+            }
+        },
     },
     mounted() {
         this.getLegajos();

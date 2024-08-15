@@ -39,6 +39,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Svg\Tag\Rect;
 
 class LegajosCBController extends Controller
 {
@@ -130,6 +131,21 @@ class LegajosCBController extends Controller
 
             ]
         );
+    }
+
+    public function update_esado($id, Request $request)
+    {
+        try {
+            //code...
+            LegajoCB::where('id', $id)->update(
+                [
+                    'estado_id' => $request->estado_id
+                ]
+            );
+            return response()->json(['message' => 'Se ha actualizado correctamente el estado del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar el estado del legajo. Comuniquese con el administrador.'], 203);
+        }
     }
 
     // Store Programa Social

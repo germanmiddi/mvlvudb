@@ -57,7 +57,7 @@
 								</div>
 								<div v-if="!editTitular"
 									class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
-									<a @click="editTitular = true" title="Editar"
+									<a @click="editTitular = false" title="Editar"
 										:class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
 										<PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500"
 											aria-hidden="true" />

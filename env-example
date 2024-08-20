@@ -1,0 +1,4 @@
+USER=hector
+UID=1000
+WORK_DIR=.
+WORK_DIR_SRC=./src

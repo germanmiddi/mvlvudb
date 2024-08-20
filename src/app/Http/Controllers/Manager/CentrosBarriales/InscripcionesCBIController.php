@@ -148,35 +148,35 @@ class InscripcionesCBIController extends Controller
 
                 ContactData::updateOrCreate(
                     [
-                        'person_id' => $request->responsable['id']
+                        'person_id' => $responsable['id']
                     ],
                     $request->responsable
                 );
     
                 AddressData::updateOrCreate(
                     [
-                        'person_id' => $request->responsable['id']
+                        'person_id' => $responsable['id']
                     ],
                     $request->responsable
                 );
 
                 EducationData::updateOrCreate(
                     [
-                        'person_id' => $request->responsable['id']
+                        'person_id' => $responsable['id']
                     ],
                     $request->responsable
                 );
 
                 AditionalData::updateOrCreate(
                     [
-                        'person_id' => $request->responsable['id']
+                        'person_id' => $responsable['id']
                     ],
                     $request->responsable
                 );
 
                 SocialData::updateOrCreate(
                     [
-                        'person_id' => $request->responsable['id']
+                        'person_id' => $responsable['id']
                     ],
                     $request->responsable
                 );

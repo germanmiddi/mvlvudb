@@ -14,46 +14,45 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-             LocalidadesSeeder::class,
-             BarriosSeeder::class,
-             CanalAtencionSeeder::class,
-             CoberturaMedicaSeeder::class,
-             DependenciasSeeder::class,
-             EstadoEducativoSeeder::class,
-             NivelEducativoSeeder::class,
-             PaisesSeeder::class,
-             SedesSeeder::class,
-             TipoDocumentoSeeder::class,
-             TipoOcupacionSeeder::class,
-             TipoPensionSeeder::class,
-             TipoVinculoFamiliarSeeder::class,
-             TipoViviendaSeeder::class,
-             RolTramiteSeeder::class,
-             SituacionConyugalSeeder::class,
-             TipoTramiteSeeder::class,
-             ProgramaSocialSeeder::class,
-             ParentescosSeeder::class,
-             EstadoCbiSeeder::class,
-             EstadoGabineteSeeder::class,
-             EscuelasSeeder::class,
-             EscuelasDependenciaSeeder::class,
-             EscuelasNivelesSeeder::class,
-             EscuelasTurnosSeeder::class,
-             CentrosSaludSeeder::class,
-             EstadosSaludSeeder::class,
-             ComedoresSeeder::class,
-             EstadoCbjSeeder::class,
-             ActividadesCbjSeeder::class,
-             AcompanamientosCbjSeeder::class,
-             EscuelasOrientacionesSeeder::class,
-             CargosAutoridadesSeeder::class,
-             TiposEntidadesSeeder::class,
-             TiposActividadesSeeder::class,
-             TramiteEstadosSeeder::class,
-             RoleSeeder::class,
-             CategoriesSeeder::class,
-             ModalidadAtencionSeeder::class,
-             UsersMvlSeeder::class,
+            ActividadesCbjSeeder::class
+            AcompanamientosCbjSeeder::class
+            BarriosSeeder::class
+            CargosAutoridadesSeeder::class
+            CanalAtencionSeeder::class
+            CentrosSaludSeeder::class
+            CategoriesSeeder::class
+            CoberturaMedicaSeeder::class
+            ComedoresSeeder::class
+            DependenciasSeeder::class
+            EstadoCbiSeeder::class
+            EstadoCbjSeeder::class
+            EstadoEducativoSeeder::class
+            EstadoGabineteSeeder::class
+            EstadosSaludSeeder::class
+            EscuelasSeeder::class
+            EscuelasDependenciaSeeder::class
+            EscuelasNivelesSeeder::class
+            EscuelasOrientacionesSeeder::class
+            EscuelasTurnosSeeder::class
+            ModalidadAtencionSeeder::class
+            NivelEducativoSeeder::class
+            PaisesSeeder::class
+            ParentescosSeeder::class
+            ProgramaSocialSeeder::class
+            RoleSeeder::class
+            RolTramiteSeeder::class
+            SituacionConyugalSeeder::class
+            SedesSeeder::class
+            TipoDocumentoSeeder::class
+            TipoOcupacionSeeder::class
+            TipoPensionSeeder::class
+            TipoTramiteSeeder::class
+            TipoVinculoFamiliarSeeder::class
+            TipoViviendaSeeder::class
+            TiposActividadesSeeder::class
+            TiposEntidadesSeeder::class
+            TramiteEstadosSeeder::class
+            UsersMvlSeeder::class
         ]);
 
         User::create([
@@ -61,22 +60,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'g@gmail.com',
             'password' => bcrypt('Inicio123')
         ]);
-        
-        /* User::create([
-            'name' => 'Testing',
-            'email' => 'test@test.com',
-            'password' => bcrypt('Testing123')
-        ]);
-        User::create([
-            'name' => 'Veronica',
-            'email' => 'veronica@test.com',
-            'password' => bcrypt('Vero123')
-        ]);
-        User::create([
-            'name' => 'Monica',
-            'email' => 'monica@test.com',
-            'password' => bcrypt('Moni123')
-        ]); */
         
     }
 }

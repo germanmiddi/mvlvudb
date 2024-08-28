@@ -2,6 +2,7 @@
 
 namespace App\Models\Manager;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,7 +23,8 @@ class LegajoCB extends Model
         'responsable_id',
         'tipo_legajo_id',
         'parentesco_id',
-        'phone_emergency'
+        'phone_emergency',
+        'assigned_id'
     ];
 
     protected static function booted()
@@ -109,5 +111,10 @@ class LegajoCB extends Model
     public function archivos()
     {
         return $this->hasMany(ArchivoLegajo::class, 'legajo_id');
+    }
+
+    public function assigned()
+    {
+        return $this->belongsTo(User::class, 'assigned_id');
     }
 }

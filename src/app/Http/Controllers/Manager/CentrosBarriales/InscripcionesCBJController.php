@@ -46,12 +46,16 @@ use Inertia\Inertia;
 
 class InscripcionesCBJController extends Controller
 {
-    protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
+    protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o - Hijastro/a', 'Otro Familiar'];
     protected $sedesAvailables = ['Munro','Villa Martelli', 'La Loma', 'El Ceibo'];
 
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Index');
+        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Index',
+            [
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
+            ]
+        );
     }
 
     public function create()

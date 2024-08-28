@@ -121,7 +121,8 @@ class LegajosCBController extends Controller
                         'parentesco',
                         'gabinete',
                         'gabinete.estado',
-                        'emprendedor'
+                        'emprendedor',
+                        'assigned'
                     )->get(),
                 'users' => User::all(),
                 'programasSociales' => ProgramaSocialCB::all(),
@@ -648,6 +649,24 @@ class LegajosCBController extends Controller
             return response()->json(['message' => 'Se ha actualizado correctamente los datos del titular del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del titular del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    
+    public function update_assignedResponsable(Request $request)
+    {
+        try {
+            LegajoCB::updateOrCreate(
+                [
+                    'id' => $request->id
+                ],[
+                    'assigned_id' => $request->assigned_id,
+                ]
+            );
+            
+            return response()->json(['message' => 'Se ha actualizado correctamente los datos del responsable asignado.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del responsable asignado. Comuniquese con el administrador.'], 203);
         }
     }
 }

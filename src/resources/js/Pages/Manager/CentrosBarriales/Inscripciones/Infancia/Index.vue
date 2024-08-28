@@ -1,15 +1,50 @@
 <template>
     <main class="flex-1">
         <!-- Page title & actions -->
+        <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">Dashboard | Centros Barriales
                     Infancia</h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
+            <div v-if="formImport" class="mt-4 flex sm:mt-0 sm:ml-4">
+                <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
+                <input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx"
+                    type="file" name="file" id="file" ref="inputfile" autocomplete="off"
+                    class="mr-2 block w-full h-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" />
+
+                <select v-model="sede_id" id="sede_id" name="sede_id" autocomplete="off"
+                    class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="" disabled>Seleccione una sede</option>
+                    <option v-for="item in sedes" :key="item.id" :value="item.id">{{
+                        item.description
+                        }}</option>
+
+                </select>
+
+                <a @click="importFile()" v-if="!processImport"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Importar</a>
+
+                <a v-else
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                    <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                </a>
+
+                <a @click="formImport = false"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-red-700 shadow-sm text-sm font-medium rounded-md text-red-700 hover:text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Cancelar</a>
+            </div>
+            <div v-else class="mt-4 flex sm:mt-0 sm:ml-4">
                 <a :href="route('inscripcionCBI.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Inscripción</a>
+
+                <a @click="formImport = true"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Importar</a>
             </div>
+
+            <!-- <div class="mt-4 flex sm:mt-0 sm:ml-4">
+                <a :href="route('inscripcionCBI.create')"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Inscripción</a>
+            </div> -->
         </div>
         <!-- Pinned projects -->
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -40,6 +75,7 @@
 import { ref } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
+import Toast from "@/Layouts/Components/Toast.vue"
 import store from '@/store.js'
 
 const projects = [
@@ -86,6 +122,7 @@ const pinnedProjects = projects.filter((project) => project.pinned)
 
 export default {
     props: {
+        sedes: Object
     },
     components: {
         Menu,
@@ -93,11 +130,21 @@ export default {
         MenuItems,
         MenuItem,
         EllipsisVerticalIcon,
-        ChevronRightIcon
+        ChevronRightIcon,
+        Toast
     },
     data() {
         return {
-            data: "",
+            data: '',
+            sede_id: '',
+            formImport: false,
+            processImport: false,
+            file: '',
+            /* MENSAJERIA */
+			toastMessage: "",
+            labelType: "info",
+            message: "",
+            showToast: false,
         };
     },
 
@@ -112,6 +159,9 @@ export default {
         }
     },
     methods: {
+        clearMessage() {
+            this.toastMessage = "";
+        },
         async getStatistics(link) {
 
             const get = `${route('dashboard.cbi')}`
@@ -130,6 +180,43 @@ export default {
 
             });
         },
+        async importFile() {
+            if (this.file != '') {
+                if(this.sede_id != ''){
+                    this.processImport = true
+                    this.status = ''
+                    let rt = route("import.infanciaCB");
+                    const formData = new FormData();
+                    formData.append('file', this.file);
+                    formData.append('sede_id', this.sede_id);
+                    try {
+                        const response = await axios.post(rt, formData);
+                        if (response.status == 200) {
+                            this.labelType = "success";
+                            this.toastMessage = response.data.message;
+                            this.status = response.data.status;
+                            this.getTramites();
+                        } else {
+                            this.labelType = "danger";
+                            this.toastMessage = response.data.message;
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                    this.processImport = false
+                }else{
+                    this.labelType = "info";
+                    this.toastMessage = "Debe seleccionar una sede";
+                }
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
+
     },
     mounted() {
         this.getStatistics()

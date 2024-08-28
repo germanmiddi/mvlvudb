@@ -88,6 +88,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');
 
     Route::post('/import/templateDependencia', [ImportController::class, 'templateDependencia'])->name('import.templateDependencia');
+    Route::post('/import/infanciaCB', [ImportController::class, 'infanciaCB'])->name('import.infanciaCB');
+    Route::post('/import/juventudCB', [ImportController::class, 'juventudCB'])->name('import.juventudCB');
 
     // Manejo de Archivos
     Route::get('/file/download/{id}', [FileController::class, 'downloadfile'])->name('file.download');
@@ -314,6 +316,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-legajo-gabinete', [LegajosCBController::class, 'update_legajoGabinete'])->name('legajoCB.updateLegajoGabinete');
             Route::put('/update-legajo-emprendedor', [LegajosCBController::class, 'update_legajoEmprendedor'])->name('legajoCB.updateLegajoEmprendedor');
             Route::put('/update-legajo-titular', [LegajosCBController::class, 'update_legajoTitular'])->name('legajoCB.updateLegajoTitular');
+            Route::put('/update-legajo-assigned', [LegajosCBController::class, 'update_assignedResponsable'])->name('legajoCB.assignedResponsable');
             
         });
 

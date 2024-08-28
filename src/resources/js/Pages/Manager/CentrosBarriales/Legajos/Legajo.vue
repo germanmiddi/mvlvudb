@@ -54,9 +54,10 @@
 						<!-- Datos Titular -->
 
 						<PersonComponent :localidades="localidades" :legajo="legajo" @message="messageToast"/>
+						<AssignedComponent :users="users" :legajo="legajo" @message="messageToast"/>
 						<!-- Fin  Datos Titular -->
 						<!-- Datos Asignado -->
-						<div class="bg-white shadow overflow-hidden sm:rounded-lg mt-4">
+						<!-- <div class="bg-white shadow overflow-hidden sm:rounded-lg mt-4">
 							<div class="sm:flex sm:justify-between sm:items-center">
 								<div class="px-4 py-5 sm:px-6">
 									<h3 class="text-lg leading-6 font-medium text-gray-900">Asignado</h3>
@@ -86,7 +87,7 @@
 									</div>
 								</dl>
 							</div>
-						</div>
+						</div> -->
 						<!-- Fin  Datos Asignado -->
 					</div>
 				</div>
@@ -108,6 +109,7 @@ import Archivos from './Archivos/Archivos.vue';
 import Informes from './Informes/Informes.vue';
 import Actividades from './Actividades/Actividades.vue';
 import PersonComponent from './Components/Person.vue';
+import AssignedComponent from './Components/Assigned.vue';
 import FormCreate from './FormCreate.vue';
 
 import CreateModal from './CreateModal.vue';

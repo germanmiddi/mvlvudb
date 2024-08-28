@@ -13,8 +13,10 @@ use App\Imports\FortalecimientoImport;
 use App\Imports\FortalecimientoImportTemplate;
 use App\Imports\GeneroImport;
 use App\Imports\HabitatImport;
+use App\Imports\InfanciaCBImport;
 use App\Imports\InfanciaDevImport;
 use App\Imports\InfanciaImport;
+use App\Imports\JuventudCBImport;
 use App\Imports\JuventudImport;
 use App\Imports\MayoresImport;
 use App\Imports\NinezImport;
@@ -335,6 +337,40 @@ class ImportController extends Controller
                     dd($th);
                     return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
                 }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
+        }
+
+        public function infanciaCB(Request $request)
+        {
+            if( $request->file('file')){
+                    $archivoCSV = $request->file('file');
+                    try {
+                        $import = new InfanciaCBImport();
+                        Excel::import($import, $archivoCSV);
+                        $status = $import->getStatus();
+                        return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Infancia de Centros Barriales.', 'status' => $status], 200);
+                    } catch (\Exception $e) {
+                        return response()->json(['message' => 'Error al procesar el archivo.'], 203);
+                    }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
+        }
+
+        public function juventudCB(Request $request)
+        {
+            if( $request->file('file')){
+                    $archivoCSV = $request->file('file');
+                    try {
+                        $import = new JuventudCBImport($request->sede_id);
+                        Excel::import($import, $archivoCSV);
+                        $status = $import->getStatus();
+                        return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Infancia de Centros Barriales.', 'status' => $status], 200);
+                    } catch (\Exception $e) {
+                        return response()->json(['message' => 'Error al procesar el archivo.'], 203);
+                    }
             }else{
                 return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
             }

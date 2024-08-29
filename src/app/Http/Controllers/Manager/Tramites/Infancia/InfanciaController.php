@@ -707,6 +707,8 @@ class InfanciaController extends Controller
         if(request('estado_id')){
             $estado_id = json_decode(request('estado_id'));
             $result->where('estado_id', $estado_id);
+        }else {
+            $result->whereIn('estado_id', [1, 3]);
         }
 
         /* $generalController = new GeneralController();

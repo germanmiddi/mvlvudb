@@ -62,7 +62,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apto médico</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.apto_medico ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.apto_medico ? 'SI' : (this.form.apto_medico != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.apto_medico" @click="form.apto_medico = !form.apto_medico"
                             :class="form.apto_medico ? 'bg-blue-600' : 'bg-gray-200'"
@@ -99,7 +99,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Electrocardiograma</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.electrocardiograma ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.electrocardiograma ? 'SI' : (this.form.electrocardiograma != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.electrocardiograma" @click="form.electrocardiograma = !form.electrocardiograma"
                             :class="form.electrocardiograma ? 'bg-blue-600' : 'bg-gray-200'"
@@ -124,7 +124,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Libreta vacunacion</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.libreta_vacunacion ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.libreta_vacunacion ? 'SI' : (this.form.libreta_vacunacion != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.libreta_vacunacion" @click="form.libreta_vacunacion = !form.libreta_vacunacion"
                             :class="form.libreta_vacunacion ? 'bg-blue-600' : 'bg-gray-200'"
@@ -154,7 +154,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Posee CUD</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.posee_cud ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.posee_cud ? 'SI' : (this.form.posee_cud != null ? 'NO' : '-')}}</dd>
 
                         <Switch v-else v-model="form.posee_cud" @click="form.posee_cud = !form.posee_cud"
                             :class="form.posee_cud ? 'bg-blue-600' : 'bg-gray-200'"
@@ -167,7 +167,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Presento CUD</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.presento_cud ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.presento_cud ? 'SI' : (this.form.presento_cud != null ? 'NO' : '-')}}</dd>
 
                         <Switch v-else v-model="form.presento_cud" @click="form.presento_cud = !form.presento_cud"
                             :class="form.presento_cud ? 'bg-blue-600' : 'bg-gray-200'"
@@ -250,12 +250,12 @@ export default {
 
             this.form.apto_medico = this.legajo[0].person?.salud?.apto_medico ?? null
             this.form.fecha_apto_medico = this.legajo[0].person?.salud?.fecha_apto_medico ?? null
-            this.form.fecha_apto_medico = new Date(this.form.fecha_apto_medico + "T00:00:00.000-03:00")
+            this.form.fecha_apto_medico = this.form.fecha_apto_medico ? new Date(this.form.fecha_apto_medico + "T00:00:00.000-03:00") : null
             this.form.vencimiento_apto_medico = this.legajo[0].person?.salud?.vencimiento_apto_medico ?? null
             this.form.electrocardiograma = this.legajo[0].person?.salud?.electrocardiograma ?? null
 
             this.form.fecha_electrocardiograma = this.legajo[0].person?.salud?.fecha_electrocardiograma ?? null
-            this.form.fecha_electrocardiograma = new Date(this.form.fecha_electrocardiograma + "T00:00:00.000-03:00")
+            this.form.fecha_electrocardiograma = this.form.fecha_electrocardiograma ? new Date(this.form.fecha_electrocardiograma + "T00:00:00.000-03:00") : null
 
             this.form.libreta_vacunacion = this.legajo[0].person?.salud?.libreta_vacunacion ?? null
             this.form.centro_salud = this.legajo[0].person?.salud?.centro_salud?.description ?? null

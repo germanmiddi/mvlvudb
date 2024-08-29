@@ -347,7 +347,7 @@ class ImportController extends Controller
             if( $request->file('file')){
                     $archivoCSV = $request->file('file');
                     try {
-                        $import = new InfanciaCBImport();
+                        $import = new InfanciaCBImport($request->sede_id);
                         Excel::import($import, $archivoCSV);
                         $status = $import->getStatus();
                         return response()->json(['message' => 'Se ha finalizado el proceso de importacion de Infancia de Centros Barriales.', 'status' => $status], 200);

@@ -4,14 +4,19 @@ namespace App\Imports;
 
 use App\Models\Manager\AddressData;
 use App\Models\Manager\AditionalData;
+use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\CbiData;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\Cud;
 use App\Models\Manager\EducationData;
+use App\Models\Manager\LegajoCB;
 use App\Models\Manager\Person;
 use App\Models\Manager\SaludData;
 use App\Models\Manager\SocialData;
+use App\Models\Manager\TipoDocumento;
+use App\Models\Manager\TipoLegajoCb;
 use App\Models\Manager\Tramite;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -20,11 +25,11 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class InfanciaCBImport implements ToModel,WithHeadingRow, WithBatchInserts
+class InfanciaCBImport implements ToModel, WithHeadingRow, WithBatchInserts
 {
     /**
-    * @param Collection $collection
-    */
+     * @param Collection $collection
+     */
 
     private $rows = 0;
     private $rowsSuccess = 0;
@@ -33,189 +38,144 @@ class InfanciaCBImport implements ToModel,WithHeadingRow, WithBatchInserts
     private $entidadesNoRegistradas = '';
     private $registrosDuplidados = '';
 
+    protected $sede_id;
+
+    function __construct($param)
+    {
+        $this->sede_id = $param;
+    }
+
     public function model(array $row)
     {
-        ++$this->rows;  
+        DB::beginTransaction();
+        //dd($row);
+        ++$this->rows;
         try {
-            dd($row);
-            if(strlen($row['anio_inicio']) > 4){
-                $row['anio_inicio'] = date("Y", strtotime($row['anio_inicio']));
-            }
-            
-            $row['nino_escuela_localidad_id'] = isset($row['nino_escuela_localidad_id']) ? $row['nino_escuela_localidad_id'] : null;
-            $row['person_address_localidad_id'] = isset($row['person_address_localidad_id']) ? $row['person_address_localidad_id'] : null;
-            $row['act_varias'] = isset($row['act_varias']) ? $row['act_varias'] : null;
-            $row['escuela_infante_id'] = isset($row['escuela_infante_id']) ? $row['escuela_infante_id'] : null;
-            $row['nino_localidad_id'] = isset($row['nino_localidad_id']) ? $row['nino_localidad_id'] : null;
+            $tipo_documento = TipoDocumento::where('description', 'DNI')->first();
             $person = Person::updateOrCreate(
                 [
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
+                    'num_documento' => $row['dni'],
+                    'tipo_documento_id' => $tipo_documento->id
                 ],
                 [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['person_lastname'])) !== 'NULL' && strtoupper(str_replace(' ', '', $row['person_lastname'])) !== null ? $row['person_lastname'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['person_name'])) !== 'NULL' && strtoupper(str_replace(' ', '', $row['person_name'])) !== ''  ? $row['person_name'] : null,
-                    'fecha_nac' => date("Y-m-d ", strtotime($row['person_fecha_nac'])),
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
+                    'lastname' => $row['apellido'],
+                    'name' => $row['nombre'],
+                    'fecha_nac' => $this->verificarFormatoDate($row['fecha_nacimiento']),
                 ]
             );
-
-            SocialData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' && $row['social_tipo_ocupacion_id'] !== -1 ? $row['social_tipo_ocupacion_id'] : null,
-                    'programa_social_id' => $row['programa_social_id'] !== 'NULL' && $row['programa_social_id'] !== -1 ? $row['programa_social_id'] : null,
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['person_nivel_educativo_id'] !== 'NULL' && $row['person_nivel_educativo_id'] !== -1 ? $row['person_nivel_educativo_id'] : null,
-                    'estado_educativo_id' => $row['person_estado_educativo_id'] !== 'NULL' && $row['person_estado_educativo_id'] !== -1 ? $row['person_estado_educativo_id'] : null
-                ]
-            );
-
-        
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'calle' => strtoupper(str_replace(' ', '', $row['person_address_calle'])) !== 'NULL' ? $row['person_address_calle'] : null,
-                    'pais_id' => $row['person_address_pais_id'] !== 'NULL' && $row['person_address_pais_id'] !== -1 ? $row['person_address_pais_id'] : null,
-                    'localidad_id' => $row['person_address_localidad_id'] !== 'NULL' && $row['person_address_localidad_id'] !== -1 ? $row['person_address_localidad_id'] : null,
-
-                ]
-            );
-
-            // contact_data
 
             ContactData::updateOrCreate(
                 [
                     'person_id' => $person->id
                 ],
                 [
-                    'phone' => strtoupper(str_replace(' ', '', $row['contact_phone'])) !== 'NULL' ? $row['contact_phone'] : null,
-                    'celular' => strtoupper(str_replace(' ', '', $row['contact_celular'])) !== 'NULL' ? $row['contact_celular'] : null
+                    'phone' => $row['telefono'],
+                    'email' => $row['email']
                 ]
             );
-
-
-            /* NIÑO  */
-
-            $nino = Person::updateOrCreate(
-                [
-                    'tipo_documento_id' => $row['nino_tipo_documento_id'],
-                    'num_documento' => $row['nino_num_documento']
-                ],
-                [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['nino_lastname'])) !== 'NULL' ? $row['nino_lastname'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['nino_name'])) !== 'NULL' ? $row['nino_name'] : null,
-                    'fecha_nac' => date("Y-m-d ", strtotime($row['nino_fecha_nac'])),
-                    'tipo_documento_id' => $row['nino_tipo_documento_id'],
-                    'num_documento' => $row['nino_num_documento']
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['nino_nivel_educativo_id'] !== 'NULL' && $row['nino_nivel_educativo_id'] !== -1 ? $row['nino_nivel_educativo_id'] : null,
-                    'escuela_id' => $row['nino_escuela_id'] !== 'NULL' && $row['nino_escuela_id'] !== -1 ? $row['nino_escuela_id'] : null,
-                    'escuela_infante_id' => $row['escuela_infante_id'] !== 'NULL' && $row['escuela_infante_id'] !== -1 ? $row['escuela_infante_id'] : null,
-                    'escuela_dependencia_id' => $row['nino_escuela_dependencia_id'] !== 'NULL' && $row['nino_escuela_dependencia_id'] !== -1 ? $row['nino_escuela_dependencia_id'] : null,
-                    'escuela_localidad_id' => $row['nino_escuela_localidad_id'] !== 'NULL' && $row['nino_escuela_localidad_id'] !== -1 ? $row['nino_escuela_localidad_id'] : null,
-                    'escuela_nivel_id' => $row['nino_escuela_nivel_id'] !== 'NULL' && $row['nino_escuela_nivel_id'] !== -1 ? $row['nino_escuela_nivel_id'] : null,
-                    'escuela_turno_id' => $row['nino_escuela_turno_id'] !== 'NULL' && $row['nino_escuela_turno_id'] !== -1 ? $row['nino_escuela_turno_id'] : null,
-                    'permanencia' => $row['nino_permanencia'] == 'SI' ? 1 : ($row['nino_permanencia'] == 'NO' ? 0 : null),
-                    'certificado_escolar' => $row['nino_certificado_escolar'] == 'SI' ? 1 : ($row['nino_certificado_escolar'] == 'NO' ? 0 : null),
-                ]
-            );
-
-            // address_data
 
             AddressData::updateOrCreate(
                 [
-                    'person_id' => $nino->id
+                    'person_id' => $person->id
                 ],
                 [
-                    'calle' => $row['nino_calle'] !== 'NULL' && $row['nino_calle'] !== -1 ? $row['nino_calle'] : null,
-                    'localidad_id' => $row['nino_localidad_id'] !== 'NULL' && $row['nino_localidad_id'] !== -1 ? $row['nino_localidad_id'] : null,
+                    'calle' => $row['calle'] ?? null,
+                    'number' => $row['numero'] ?? null,
+                    'piso' => $row['piso'] ?? null,
+                    'dpto' => $row['departamento'] ?? null
+
                 ]
             );
-
-            // contact_data
-
-            ContactData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    //'phone' => $request['nino_phone'],
-                   // 'celular' => $request['nino_celular'],
-                   // 'email' => $request['nino_email']
-                ]
-            );
-
-            // salud_data
 
             SaludData::updateOrCreate(
                 [
-                    'person_id' => $nino->id
+                    'person_id' => $person->id
                 ],
                 [
-                    'apto_medico' => $row['nino_apto_medico'] == 'SI' ? 1 : ($row['nino_apto_medico'] == 'NO' ? 0 : null),
-                    'libreta_vacunacion' => $row['nino_libreta_vacunacion'] == 'SI' ? 1 : ($row['nino_libreta_vacunacion'] == 'NO' ? 0 : null),
-                    'centro_salud_id' =>$row['nino_centro_salud_id'] !== 'NULL' && $row['nino_centro_salud_id'] !== -1 ? $row['nino_centro_salud_id'] : null,
-                    'estado_salud_id' => $row['nino_estado_salud_id'] !== 'NULL' && $row['nino_estado_salud_id'] !== -1 ? $row['nino_estado_salud_id'] : null,
+                    'apto_medico' => $row['apto_medico'] === 'SI' ? true : ($row['apto_medico'] === 'NO' ? false : null),
+                    'electrocardiograma' => $row['electrocardiograma'] === 'SI' ? true : ($row['electrocardiograma'] === 'NO' ? false : null),
+                    'libreta_vacunacion' => $row['libreta_vacunacion'] === 'SI' ? true : ($row['libreta_vacunacion'] === 'NO' ? false : null),
+
                 ]
             );
 
-             // tramite
-             $tramite_data = Tramite::Create(
+            Cud::updateOrCreate(
                 [
-                    'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
-                    'canal_atencion_id' => 1,
-                    'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
-                    'dependencia_id' => 12,
-                    'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                    'sede_id' => $row['sede_id'],
-                    'estado_id' => 1,
-                ]
-            );
-
-
-            CbiData::Create(
+                    'person_id' => $person->id
+                ],
                 [
-                    'anio_inicio' => $row['anio_inicio'] !== 'NULL' && $row['anio_inicio'] !== -1 ? $row['anio_inicio'] : null,
-                    'aut_firmada' => $row['aut_firmada'] == 'SI' ? 1 : ($row['aut_firmada'] == 'NO' ? 0 : null),
-                    'aut_retirarse' => $row['aut_retirarse'] == 'SI' ? 1 : ($row['aut_retirarse'] == 'NO' ? 0 : null),
-                    'aut_uso_imagen' => $row['aut_uso_imagen'] == 'SI' ? 1 : ($row['aut_uso_imagen'] == 'NO' ? 0 : null),
-                    'act_varias' => $row['act_varias'] == 'PRESENTE' ? 1 : ($row['act_varias'] == 'AUSENTE' ? 0 : null),
-                    //'act_esporadicas' => $request['act_esporadicas'],
-                    'comedor' => $row['comedor'] == 'SI' ? 1 : ($row['comedor'] == 'NO' ? 0 : null),
-                    'estado_cbi_id' => $row['estado_cbi_id'] !== 'NULL' && $row['estado_cbi_id'] !== -1 ? $row['estado_cbi_id'] : null,
-                    'estado_gabinete_id'  => $row['estado_gabinete_id'] !== 'NULL' && $row['estado_gabinete_id'] !== -1 ? $row['estado_gabinete_id'] : null,
-                    'tramite_id' => $tramite_data['id']
+                    'posee_cud' => $row['cud'] === 'SI' ? true : ($row['cud'] === 'NO' ? false : null),
+                    'presento_cud' => $row['cud_presentado'] === 'SI' ? true : ($row['cud_presentado'] === 'NO' ? false : null),
                 ]
             );
 
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                    
-            $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
+                [
+                    'permanencia' => $row['realizo_permanencia'] === 'SI' ? true : ($row['realizo_permanencia'] === 'NO' ? false : null),
+                    'certificado_escolar' => $row['presenta_certificado_escolar'] === 'SI' ? true : ($row['presenta_certificado_escolar'] === 'NO' ? false : null),
+                ]
+            );
+
+            // Carga de LegajoCB
+            if(LegajoCB::where('person_id', $person->id)->exists()){
+                ++$this->rowsError;
+                $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' posee un legajo existente.<br>';
+            }else{
+                $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
 
 
-            ++$this->rowsSuccess;
+                $legajo = LegajoCB::Create(
+                    [
+                        'person_id' => $person->id,
+                        'fecha_inscripcion' => $this->verificarFormatoDate($row['fecha_inscripcion']),
+                        'fecha_inicio' => $this->verificarFormatoDate($row['fecha_inicio_cb']),
+                        'parentesco_id' => $row['parentesco_id'] ?? null,
+                        'phone_emergency' => $row['telefono_de_emergencia'] ?? null,
+                        'tipo_legajo_id' => $tipo_legajo_cb['id'],
+                        'sede_id' => $this->sede_id
+                    ]
+                );
 
-           
+                AutorizacionCb::updateOrCreate(
+                    [
+                        'legajo_id' => $legajo->id
+                    ],
+                    [
+                        'apoyo_escolar' => $row['aut_apoyo_escolar'] === 'SI' ? true : ($row['aut_apoyo_escolar'] === 'NO' ? false : null),
+                        'autorizacion_firmada' =>  $row['aut_firmada'] === 'SI' ? true : ($row['aut_firmada'] === 'NO' ? false : null),
+                        'autorizacion_retirarse' =>  $row['aut_retirarse'] === 'SI' ? true : ($row['aut_retirarse'] === 'NO' ? false : null),
+                        'autorizacion_uso_imagen' =>  $row['aut_uso_imagen'] === 'SI' ? true : ($row['aut_uso_imagen'] === 'NO' ? false : null),
+                    ]
+                );
+                // verifica si existe responsable
+                if($row['dni_adulto'] != ''){
+                    $responsable = Person::updateOrCreate(
+                        [
+                            'tipo_documento_id' => $tipo_documento->id,
+                            'num_documento' => $row['dni_adulto']
+                        ],
+                        [
+                            'name' => $row['nombre_adulto'],
+                            'lastname' => $row['apellido_adulto'],
+                            'name' => $row['nombre_adulto'],
+                            'fecha_nac' => $this->verificarFormatoDate($row['fecha_nac_adulto']),//date("Y-m-d ", strtotime($row['fecha_nac_adulto'])),
+                        ]
+                    );
+    
+                    ContactData::updateOrCreate(
+                        [
+                            'person_id' => $responsable['id']
+                        ],
+                        [
+                            'phone' => $row['telefono_adulto'] ?? null
+                        ]
+                    );
+                }
+                ++$this->rowsSuccess;
+            }
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -241,7 +201,7 @@ class InfanciaCBImport implements ToModel,WithHeadingRow, WithBatchInserts
             $retorno .= $this->entidadesNoRegistradas;
         }
 
-        Log::info("Importador de Tramite de Juventud, ejecutado por el usuario:  ".Auth::user()->id . ": " . Auth::user()->name."<br>=> ".$retorno);
+        Log::info("Importador de Tramite de Juventud, ejecutado por el usuario:  " . Auth::user()->id . ": " . Auth::user()->name . "<br>=> " . $retorno);
 
         if ($this->registrosDuplidados != '') {
             $retorno .= '<br>Registros Duplicados<br>';
@@ -256,4 +216,31 @@ class InfanciaCBImport implements ToModel,WithHeadingRow, WithBatchInserts
     {
         return 1000;
     }
+
+    function verificarFormatoDate($date){
+        if ($this->isNumericDate($date)) {
+            // Si el dato es numérico, podríamos asumir que es un número de serie de Excel
+            return $this->convertDateExcel($date);
+        } elseif ($date === null) {
+            return null;
+        }else{
+            // De lo contrario, tratamos de parsear el dato como una fecha textual
+            return date("Y-m-d ", strtotime($date));
+        }
+    }
+
+    function convertDateExcel($excelDate)
+    {
+        $excelBaseDate = Carbon::create(1900, 1, 1);
+        $daysOffset = $excelDate - 2; // Ajusta por el error bisiesto de Excel
+        return $excelBaseDate->addDays($daysOffset);
+    }
+
+    function isNumericDate($data)
+    {
+        // Verifica si el dato es numérico y tiene 5 dígitos o más (o ajusta según tus necesidades)
+        return is_numeric($data) && strlen((string) $data) >= 5;
+    }
+
+    
 }

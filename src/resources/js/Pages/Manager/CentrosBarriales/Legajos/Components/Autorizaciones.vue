@@ -62,7 +62,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apoyo Escolar</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.apoyo_escolar ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.apoyo_escolar ? 'SI' : (this.form.apoyo_escolar != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.apoyo_escolar" @click="form.apoyo_escolar = !form.apoyo_escolar"
                             :class="form.apoyo_escolar ? 'bg-blue-600' : 'bg-gray-200'"
@@ -75,7 +75,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Actividad por Area Empleo</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.actividad_empleo ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.actividad_empleo ? 'SI' : (this.form.actividad_empleo != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.actividad_empleo"
                             @click="form.actividad_empleo = !form.actividad_empleo"
@@ -89,7 +89,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Autoriazción Firmada</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.autorizacion_firmada ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.autorizacion_firmada ? 'SI' : (this.form.autorizacion_firmada != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.autorizacion_firmada"
                             @click="form.autorizacion_firmada = !form.autorizacion_firmada"
@@ -104,7 +104,7 @@
                         <dt class="text-sm font-medium text-gray-500">Autorización para Retirarse</dt>
 
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.autorizacion_retirarse ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.autorizacion_retirarse ? 'SI' : (this.form.autorizacion_retirarse != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.actividad_empleo"
                             @click="form.autorizacion_retirarse = !form.autorizacion_retirarse"
@@ -119,7 +119,7 @@
                         <dt class="text-sm font-medium text-gray-500">Autorización Uso de Imagen</dt>
 
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.autorizacion_uso_imagen ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.autorizacion_uso_imagen ? 'SI' : (this.form.autorizacion_uso_imagen != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.autorizacion_uso_imagen"
                             @click="form.autorizacion_uso_imagen = !form.autorizacion_uso_imagen"

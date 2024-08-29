@@ -122,7 +122,7 @@
                         <dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.fecha_inscripcion ?
-                            store.dateTimeFormateada(this.form.fecha_inscripcion) : '-' }}</dd>
+                            store.dateFormateada(this.form.fecha_inscripcion) : '-' }}</dd>
                         <Datepicker v-else
                             class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                             v-model="this.form.fecha_inscripcion" :disabled="input_disable"

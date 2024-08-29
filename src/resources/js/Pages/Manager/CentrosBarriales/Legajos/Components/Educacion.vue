@@ -182,7 +182,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Certificado escolar</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.certificado_escolar ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.certificado_escolar ? 'SI' : (this.form.certificado_escolar != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.certificado_escolar" @click="form.certificado_escolar = !form.certificado_escolar"
                             :class="form.certificado_escolar ? 'bg-blue-600' : 'bg-gray-200'"
@@ -195,7 +195,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Realizo permanencia</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.permanencia ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.permanencia ? 'SI' : (this.form.permanencia != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.permanencia" @click="form.permanencia = !form.permanencia"
                             :class="form.permanencia ? 'bg-blue-600' : 'bg-gray-200'"

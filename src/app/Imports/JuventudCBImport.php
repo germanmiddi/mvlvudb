@@ -40,31 +40,30 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
         $this->sede_id = $param;
     }
 
-
     public function model(array $row)
     {
         ++$this->rows;  
+        DB::beginTransaction();
         try {
-
-            $tipo_dni = TipoDocumento::where('description','DNI')->first();
+            $tipo_documento = TipoDocumento::where('description', 'DNI')->first();
+                
             $person = Person::updateOrCreate(
                 [
-                    'tipo_documento_id' => $row['tipo_documento_id'],
-                    'num_documento' => $tipo_dni->id
+                    'num_documento' => $row['dni'],
+                    'tipo_documento_id' => $tipo_documento->id
                 ],
                 [
                     'lastname' => $row['apellido'],
                     'name' => $row['nombre'],
-                    'fecha_nac' => $row['fecha_nacimiento'],
-                    'tipo_documento_id' => $tipo_dni->id,
-                    'num_documento' => $row['dni']
+                    'fecha_nac' => date("Y-m-d ", strtotime($row['fecha_nacimiento'])),
                 ]
             );
 
-            ContactData::updateOrCreate(
+            /* ContactData::updateOrCreate(
                 [
                     'person_id' => $person->id
-                ],[
+                ],
+                [
                     'phone' => $row['telefono'],
                     'email' => $row['email']
                 ]
@@ -75,10 +74,10 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'person_id' => $person->id
                 ],
                 [
-                    'calle' => $row['calle_direccion'],
-                    'number' => $row['numero_direccion'],
-                    'piso' => $row['piso_direccion'],
-                    'dpto' => $row['departamento_direccion']
+                    'calle' => $row['calle'] ?? null,
+                    'number' => $row['numero'] ?? null,
+                    'piso' => $row['piso'] ?? null,
+                    'dpto' => $row['departamento'] ?? null
 
                 ]
             );
@@ -88,9 +87,9 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'person_id' => $person->id
                 ],
                 [
-                    'apto_medico' => $row['apto_medico_salud_sino'],
-                    'electrocardiograma' => $row['electrocardiograma_salud_sino'],
-                    'libreta_vacunacion' => $row['libreta_vacunacion_salud_sino']
+                    'apto_medico' => $row['apto_medico'] ?? null,
+                    'electrocardiograma' => $row['electrocardiograma'] ?? null,
+                    'libreta_vacunacion' => $row['libreta_vacunacion_salud'] ?? null
 
                 ]
             );
@@ -100,8 +99,8 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'person_id' => $person->id
                 ],
                 [
-                    'posee_cud' => $row['cud_salud_sino'],
-                    'presento_cud' => $row['cud_presentado_salud_sino']
+                    'posee_cud' => $row['cud'] ?? null,
+                    'presento_cud' => $row['cud_presentado'] ?? null
                 ]
             );
 
@@ -110,187 +109,17 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
                     'person_id' => $person->id
                 ],
                 [
-                    'permanencia' => $row['realizo_permanencia_educacion_sino'],
-                    'certificado_escolar' => $row['presenta_certificado_escolar_educacion_sino']
+                    'permanencia' => $row['realizo_permanencia'],
+                    'certificado_escolar' => $row['presenta_certificado_escolar']
                 ]
-            );
-
-            
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $person = Person::updateOrCreate(
-                [
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
-                ],
-                [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['person_lastname'])) !== 'NULL' && strtoupper(str_replace(' ', '', $row['person_lastname'])) !== null ? $row['person_lastname'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['person_name'])) !== 'NULL' && strtoupper(str_replace(' ', '', $row['person_name'])) !== ''  ? $row['person_name'] : null,
-                    'fecha_nac' => date("Y-m-d ", strtotime($row['person_fecha_nac'])),
-                    'tipo_documento_id' => $row['person_tipo_documento_id'],
-                    'num_documento' => $row['person_num_documento']
-                ]
-            );
-
-            SocialData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'tipo_ocupacion_id' => $row['social_tipo_ocupacion_id'] !== 'NULL' && $row['social_tipo_ocupacion_id'] !== -1 ? $row['social_tipo_ocupacion_id'] : null,
-                    'programa_social_id' => $row['programa_social_id'] !== 'NULL' && $row['programa_social_id'] !== -1 ? $row['programa_social_id'] : null,
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['person_nivel_educativo_id'] !== 'NULL' && $row['person_nivel_educativo_id'] !== -1 ? $row['person_nivel_educativo_id'] : null,
-                    'estado_educativo_id' => $row['person_estado_educativo_id'] !== 'NULL' && $row['person_estado_educativo_id'] !== -1 ? $row['person_estado_educativo_id'] : null
-                ]
-            );
-
-        
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'calle' => strtoupper(str_replace(' ', '', $row['person_address_calle'])) !== 'NULL' ? $row['person_address_calle'] : null,
-                    'pais_id' => $row['person_address_pais_id'] !== 'NULL' && $row['person_address_pais_id'] !== -1 ? $row['person_address_pais_id'] : null,
-                    'localidad_id' => $row['person_address_localidad_id'] !== 'NULL' && $row['person_address_localidad_id'] !== -1 ? $row['person_address_localidad_id'] : null,
-
-                ]
-            );
-
-            // contact_data
-
-            ContactData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'phone' => strtoupper(str_replace(' ', '', $row['contact_phone'])) !== 'NULL' ? $row['contact_phone'] : null,
-                    'celular' => strtoupper(str_replace(' ', '', $row['contact_celular'])) !== 'NULL' ? $row['contact_celular'] : null
-                ]
-            );
-
-
-            /* NIÑO  */
-
-            $nino = Person::updateOrCreate(
-                [
-                    'tipo_documento_id' => $row['nino_tipo_documento_id'],
-                    'num_documento' => $row['nino_num_documento']
-                ],
-                [
-                    'lastname' => strtoupper(str_replace(' ', '', $row['nino_lastname'])) !== 'NULL' ? $row['nino_lastname'] : null,
-                    'name' => strtoupper(str_replace(' ', '', $row['nino_name'])) !== 'NULL' ? $row['nino_name'] : null,
-                    'fecha_nac' => date("Y-m-d ", strtotime($row['nino_fecha_nac'])),
-                    'tipo_documento_id' => $row['nino_tipo_documento_id'],
-                    'num_documento' => $row['nino_num_documento']
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['nino_nivel_educativo_id'] !== 'NULL' && $row['nino_nivel_educativo_id'] !== -1 ? $row['nino_nivel_educativo_id'] : null,
-                    'escuela_id' => $row['nino_escuela_id'] !== 'NULL' && $row['nino_escuela_id'] !== -1 ? $row['nino_escuela_id'] : null,
-                    'escuela_infante_id' => $row['escuela_infante_id'] !== 'NULL' && $row['escuela_infante_id'] !== -1 ? $row['escuela_infante_id'] : null,
-                    'escuela_dependencia_id' => $row['nino_escuela_dependencia_id'] !== 'NULL' && $row['nino_escuela_dependencia_id'] !== -1 ? $row['nino_escuela_dependencia_id'] : null,
-                    'escuela_localidad_id' => $row['nino_escuela_localidad_id'] !== 'NULL' && $row['nino_escuela_localidad_id'] !== -1 ? $row['nino_escuela_localidad_id'] : null,
-                    'escuela_nivel_id' => $row['nino_escuela_nivel_id'] !== 'NULL' && $row['nino_escuela_nivel_id'] !== -1 ? $row['nino_escuela_nivel_id'] : null,
-                    'escuela_turno_id' => $row['nino_escuela_turno_id'] !== 'NULL' && $row['nino_escuela_turno_id'] !== -1 ? $row['nino_escuela_turno_id'] : null,
-                    'permanencia' => $row['nino_permanencia'] == 'SI' ? 1 : ($row['nino_permanencia'] == 'NO' ? 0 : null),
-                    'certificado_escolar' => $row['nino_certificado_escolar'] == 'SI' ? 1 : ($row['nino_certificado_escolar'] == 'NO' ? 0 : null),
-                ]
-            );
-
-            // address_data
-
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    'calle' => $row['nino_calle'] !== 'NULL' && $row['nino_calle'] !== -1 ? $row['nino_calle'] : null,
-                    'localidad_id' => $row['nino_localidad_id'] !== 'NULL' && $row['nino_localidad_id'] !== -1 ? $row['nino_localidad_id'] : null,
-                ]
-            );
-
-            // contact_data
-
-            ContactData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    //'phone' => $request['nino_phone'],
-                   // 'celular' => $request['nino_celular'],
-                   // 'email' => $request['nino_email']
-                ]
-            );
-
-            // salud_data
-
-            SaludData::updateOrCreate(
-                [
-                    'person_id' => $nino->id
-                ],
-                [
-                    'apto_medico' => $row['nino_apto_medico'] == 'SI' ? 1 : ($row['nino_apto_medico'] == 'NO' ? 0 : null),
-                    'libreta_vacunacion' => $row['nino_libreta_vacunacion'] == 'SI' ? 1 : ($row['nino_libreta_vacunacion'] == 'NO' ? 0 : null),
-                    'centro_salud_id' =>$row['nino_centro_salud_id'] !== 'NULL' && $row['nino_centro_salud_id'] !== -1 ? $row['nino_centro_salud_id'] : null,
-                    'estado_salud_id' => $row['nino_estado_salud_id'] !== 'NULL' && $row['nino_estado_salud_id'] !== -1 ? $row['nino_estado_salud_id'] : null,
-                ]
-            );
-
-             // tramite
-             $tramite_data = Tramite::Create(
-                [
-                    'fecha' => date("Y-m-d ", strtotime($row['tramite_fecha'])),
-                    'canal_atencion_id' => 1,
-                    'tipo_tramite_id' => $row['tramite_tipo_tramite_id'],
-                    'dependencia_id' => 12,
-                    'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                    'sede_id' => $row['sede_id'],
-                    'estado_id' => 1,
-                ]
-            );
-
-
-            CbiData::Create(
-                [
-                    'anio_inicio' => $row['anio_inicio'] !== 'NULL' && $row['anio_inicio'] !== -1 ? $row['anio_inicio'] : null,
-                    'aut_firmada' => $row['aut_firmada'] == 'SI' ? 1 : ($row['aut_firmada'] == 'NO' ? 0 : null),
-                    'aut_retirarse' => $row['aut_retirarse'] == 'SI' ? 1 : ($row['aut_retirarse'] == 'NO' ? 0 : null),
-                    'aut_uso_imagen' => $row['aut_uso_imagen'] == 'SI' ? 1 : ($row['aut_uso_imagen'] == 'NO' ? 0 : null),
-                    'act_varias' => $row['act_varias'] == 'PRESENTE' ? 1 : ($row['act_varias'] == 'AUSENTE' ? 0 : null),
-                    //'act_esporadicas' => $request['act_esporadicas'],
-                    'comedor' => $row['comedor'] == 'SI' ? 1 : ($row['comedor'] == 'NO' ? 0 : null),
-                    'estado_cbi_id' => $row['estado_cbi_id'] !== 'NULL' && $row['estado_cbi_id'] !== -1 ? $row['estado_cbi_id'] : null,
-                    'estado_gabinete_id'  => $row['estado_gabinete_id'] !== 'NULL' && $row['estado_gabinete_id'] !== -1 ? $row['estado_gabinete_id'] : null,
-                    'tramite_id' => $tramite_data['id']
-                ]
-            );
-
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                    
-            $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-
-
+            ); */
             ++$this->rowsSuccess;
-
-           
             DB::commit();
+        
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
-            $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha sido almacenar. Error: ' . $th->getMessage() . '<br>';
+            $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' del archivo no se ha podido almacenar. Error: ' . $th->getMessage() . '<br>';
             Log::error("Se ha generado un error al momento de almacenar el tramite de la linea N° " . strval($this->rows + 1), ["Modulo" => "JuventudImport:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
         }
         return;

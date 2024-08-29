@@ -62,7 +62,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Participa</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ this.form.participa ? 'SI' : 'NO' }}</dd>
+                            {{ this.form.participa ? 'SI' : (this.form.participa != null ? 'NO' : '-') }}</dd>
 
                         <Switch v-else v-model="form.participa" @click="form.participa = !form.participa"
                             :class="form.participa ? 'bg-blue-600' : 'bg-gray-200'"

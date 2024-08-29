@@ -37,7 +37,7 @@
                 <a :href="route('inscripcionCBI.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Inscripción</a>
 
-                <a @click="formImport = true"
+                <a @click="formImport = true" v-show="store.userCan('ALL-ADM', $page.props.userGroups)"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Importar</a>
             </div>
 
@@ -45,6 +45,15 @@
                 <a :href="route('inscripcionCBI.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Inscripción</a>
             </div> -->
+        </div>
+        <div v-if="status" class="px-4 mt-6 sm:px-6 lg:px-8">
+            <button type="button" @click="this.status = ''"
+                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white">
+                Cerrar resultado
+            </button>
+            <div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+                role="alert" v-html="status">
+            </div>
         </div>
         <!-- Pinned projects -->
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -62,7 +71,7 @@
                                 {{ project.title }}
                             </a>
                             <p class="text-gray-400">{{ project.totalInscripciones }} Inscripciones</p>
-                            <a href="#" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
+                            <a :href="route('legajoCB')" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
                         </div>
                     </div>
                 </li>
@@ -145,6 +154,7 @@ export default {
             labelType: "info",
             message: "",
             showToast: false,
+            status: ''
         };
     },
 
@@ -183,6 +193,7 @@ export default {
         async importFile() {
             if (this.file != '') {
                 if(this.sede_id != ''){
+                    this.status = ''
                     this.processImport = true
                     this.status = ''
                     let rt = route("import.infanciaCB");
@@ -195,7 +206,7 @@ export default {
                             this.labelType = "success";
                             this.toastMessage = response.data.message;
                             this.status = response.data.status;
-                            this.getTramites();
+                            this.getStatistics()
                         } else {
                             this.labelType = "danger";
                             this.toastMessage = response.data.message;

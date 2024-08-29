@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Calle:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Calle</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.calle ?? '-' }}</dd>
 
@@ -50,7 +50,16 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Piso:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Numero</dt>
+                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+                            this.form.number ?? '-' }}</dd>
+
+                        <input v-else v-model="form.number" type="text" name="number" id="number" autocomplete="name-level2"
+                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Piso</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form?.piso ?? '-' }}</dd>
 
@@ -59,7 +68,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Departamento:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Departamento</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.dpto ?? '-' }}</dd>
 
@@ -120,6 +129,7 @@ export default {
             this.form.calle = this.legajo[0].person.address[0]?.calle ?? null
             this.form.piso = this.legajo[0].person.address[0]?.piso ?? null
             this.form.dpto = this.legajo[0].person.address[0]?.dpto ?? null
+            this.form.number = this.legajo[0].person.address[0]?.number ?? null
             this.form.observacion = this.legajo[0].person.address[0]?.observacion ?? null
 
             // Registro datos temporales PreEdicion

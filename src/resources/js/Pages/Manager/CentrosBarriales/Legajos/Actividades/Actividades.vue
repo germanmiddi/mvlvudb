@@ -1,10 +1,56 @@
 <template>
-    <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10 px-4">
+        <div aria-labelledby="message-heading"
+        class="min-w-0 flex-1 h-full flex flex-col overflow-hidden xl:order-last mt-10 px-4">
+        <div class="min-h-0 flex-1 overflow-y-auto">
+            <div class="bg-white pt-5 pb-6 shadow mt-2 rounded-lg">
+                <div class="px-4 sm:flex sm:justify-between sm:items-center sm:px-6 lg:px-8">
+                    <div class="sm:w-0 sm:flex-1">
+                        <nav class="flex mt-1" aria-label="Breadcrumb">
+                            <ol role="list" class="flex items-center space-x-2 text-xs">
+                                <li>
+                                    <div>
+                                        <a href="#" class="text-gray-400 hover:text-gray-500">
+                                            <HomeIcon class="flex-shrink-0 h-5 w-5" aria-hidden="true" />
+                                            <span class="sr-only">Home</span>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li v-for="page in pages" :key="page.name">
+                                    <div class="flex items-center">
+                                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+                                            aria-hidden="true">
+                                            <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
+                                        </svg>
+                                        <div class="ml-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                                            :aria-current="page.current ? 'page' : undefined">
+                                            {{ page.name }}</div>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                    <div
+                        class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                        <button type="submit" v-if="!this.showEditor" @click="showEditor = true"
+                            class="inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Nueva
+                            Actividad</button>
+                        <button type="submit" v-else @click="showEditor = false"
+                            class="inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+    <ul v-if="!showDetail" role="list" class="grid gap-6 grid-cols-2 mt-10">
         <li v-for="actividad in legajo[0].actividades" :key="actividad.key"
             class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
             <ActividadesGrid :actividad="actividad" />
         </li>
     </ul>
+</div>
+</div>
+
 </template>
 
 <script>
@@ -92,7 +138,7 @@ const intervenciones = [
 
 const pages = [
     { name: 'Legajo', href: '#', current: false },
-    { name: 'Programas', href: '#', current: true },
+    { name: 'Actividades', href: '#', current: true },
 ]
 export default {
     props: {

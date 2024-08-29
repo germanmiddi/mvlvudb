@@ -25,7 +25,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class InfanciaCBImport implements ToModel, WithHeadingRow, WithBatchInserts
+class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
 {
     /**
      * @param Collection $collection
@@ -48,9 +48,13 @@ class InfanciaCBImport implements ToModel, WithHeadingRow, WithBatchInserts
     public function model(array $row)
     {
         DB::beginTransaction();
-        //dd($row);
         ++$this->rows;
         try {
+            if (!is_int($row['dni'])) {
+                ++$this->rowsError;
+                $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' no es posible reconocer el formato del DNI.<br>';
+                return;
+            }
             $tipo_documento = TipoDocumento::where('description', 'DNI')->first();
             $person = Person::updateOrCreate(
                 [
@@ -240,7 +244,5 @@ class InfanciaCBImport implements ToModel, WithHeadingRow, WithBatchInserts
     {
         // Verifica si el dato es numérico y tiene 5 dígitos o más (o ajusta según tus necesidades)
         return is_numeric($data) && strlen((string) $data) >= 5;
-    }
-
-    
+    } 
 }

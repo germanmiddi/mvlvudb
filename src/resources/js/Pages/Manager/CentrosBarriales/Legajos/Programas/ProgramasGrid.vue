@@ -69,14 +69,10 @@ export default {
     },
     methods: {
         fnIntervencion(data){
-            this.showDetail = true
-            this.showEditor = true
-            this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
+            this.$emit('fnEditor', {'action':'new_intervencion', 'data': data})
         },
         fnDetails(data){
-            this.showDetail = true
-            this.showEditor = false
-            this.$emit('fnEditor', {'showDetail' : this.showDetail, 'showEditor' : this.showEditor, 'programa' : data})
+            this.$emit('fnEditor', {'action':'detail', 'data': data})
         }
     },
 }

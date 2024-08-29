@@ -58,11 +58,11 @@
                     </div>
                     <div class="flex-1 flex items-center justify-between border-t border-r border-b border-gray-200 bg-white rounded-r-md truncate">
                         <div class="flex flex-col px-4 py-2 text-sm truncate">
-                            <a href="#" class="text-gray-900 font-medium hover:text-gray-600">
+                            <a class="text-gray-900 font-medium hover:text-gray-600">
                                 {{ project.title }}
                             </a>
                             <p class="text-gray-400">{{project.totalInscripciones}} Inscripciones</p>
-                            <a href="#" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
+                            <a :href="route('legajoCB')" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
                         </div>
                     </div>
                 </li>

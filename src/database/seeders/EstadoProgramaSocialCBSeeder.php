@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Manager\EstadoCbj;
-use App\Models\Manager\EstadoProgramaSocialCb;
+use App\Models\Manager\EstadoProgramaSocialCB;
 use Illuminate\Database\Seeder;
 
 class EstadoProgramaSocialCBSeeder extends Seeder
@@ -24,7 +24,7 @@ class EstadoProgramaSocialCBSeeder extends Seeder
         ];
 
         foreach ($data as $value) {
-            EstadoProgramaSocialCb::updateOrCreate(['id' => $value['id']],$value);
+            EstadoProgramaSocialCB::updateOrCreate(['id' => $value['id']],$value);
         }
     }
 }

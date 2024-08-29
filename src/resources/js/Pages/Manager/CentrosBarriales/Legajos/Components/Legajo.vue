@@ -100,14 +100,14 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Tipo Legajo:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Tipo Legajo</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             legajo[0].tipo_legajo?.description ?? '-' }}</dd>
 
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Fecha de Ingreso</dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ legajo[0].created_at ?
                             store.fechaFormateada(legajo[0].created_at) : '-' }}</dd>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Fecha de Inscripcion:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Fecha de Inscripción</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.fecha_inscripcion ?
                             store.dateFormateada(this.form.fecha_inscripcion) : '-' }}</dd>
@@ -132,7 +132,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Fecha de Inicio:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Fecha de Inicio</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.fecha_inicio ?
                             store.dateTimeFormateada(this.form.fecha_inicio) : '-' }}</dd>
@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="text-sm font-medium text-gray-500">Canal de Atención:</dt>
+                        <dt class="text-sm font-medium text-gray-500">Canal de Atención</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.canal_atencion ?? '-' }}</dd>
 

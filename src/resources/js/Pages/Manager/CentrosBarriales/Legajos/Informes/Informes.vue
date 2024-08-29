@@ -17,8 +17,9 @@
                                 </li>
                                 <li v-for="page in pages" :key="page.name">
                                     <div class="flex items-center">
-                                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <svg class="flex-shrink-0 h-5 w-5 text-gray-300"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+                                            aria-hidden="true">
                                             <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                                         </svg>
                                         <div class="ml-1 text-sm font-medium text-gray-500 hover:text-gray-700"
@@ -30,7 +31,8 @@
                         </nav>
                     </div>
 
-                    <div class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                    <div
+                        class="mt-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                         <button type="submit" v-if="!this.showEditor" @click="showEditor = true"
                             class="inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Nuevo
                             Informe</button>
@@ -51,7 +53,8 @@
                 <div class="bg-white pt-5 pb-6 mt-2  px-4">
                     <div>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Detalle del Informe</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur
+                            adipisicing
                             elit. Ipsum, odit magnam.</p>
                     </div>
 
@@ -248,4 +251,5 @@ export default {
 .ql-container {
     border-radius: 0px 0px 15px 15px;
     height: 300px;
-}</style>
+}
+</style>

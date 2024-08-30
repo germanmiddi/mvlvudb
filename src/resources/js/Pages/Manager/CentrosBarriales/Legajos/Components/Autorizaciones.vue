@@ -8,6 +8,13 @@
                 </div>
                 <div v-if="!editData"
                     class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
+                    <a @click="editData = true" title="Editar"
+                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-2 py-2 text-sm']">
+                        <PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                    </a>
+                </div>
+                <!-- <div v-if="!editData"
+                    class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <Menu as="div" class="ml-3 relative inline-block text-left">
                         <div>
                             <MenuButton
@@ -31,7 +38,7 @@
                                         <span>Editar</span>
                                     </button>
                                     </MenuItem>
-                                    <!-- <MenuItem v-slot="{ active }" :disabled="true">
+                                    <MenuItem v-slot="{ active }" :disabled="true">
                                     <button type="button"
                                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                         <span>Nuevo Informe</span>
@@ -42,12 +49,12 @@
                                         :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex justify-between px-4 py-2 text-sm']">
                                         <span>Adjuntar Archivo</span>
                                     </a>
-                                    </MenuItem> -->
+                                    </MenuItem>
                                 </div>
                             </MenuItems>
                         </transition>
                     </Menu>
-                </div>
+                </div> -->
                 <div v-else
                     class="mt-4 mr-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <button type="submit" @click="editData = false, updateLegajo()"

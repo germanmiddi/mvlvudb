@@ -31,7 +31,7 @@
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Pedagogía</h3>
                         <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalles Pedagogía</p>
                     </div>
-                    <div
+                   <!--  <div
                         class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                         <Menu as="div" class="ml-3 relative inline-block text-left">
                             <div>
@@ -73,7 +73,7 @@
                                 </MenuItems>
                             </transition>
                         </Menu>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="border-t border-gray-200 px-4 py-5 sm:p-0">

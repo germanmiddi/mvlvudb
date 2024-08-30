@@ -14,12 +14,7 @@
 						Detalle del Legajo
 					</h1>
 				</div>
-				<div class="flex">
-					<button type="button"
-						class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Editar</button>
-					<button type="button" @click="showForm = true"
-						class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Crear</button>
-				</div>
+				
 			</div>
 		</div>
 
@@ -46,7 +41,7 @@
 						:nivelesEducativo="nivelesEducativo" :centrosSalud="centrosSalud" 
 						:escuelas="escuelas" :turnosEducativo="turnosEducativo" 
 						:escuelasDependencia="escuelasDependencia" :escuelasNivel="escuelasNivel" 
-						:estadosGabinete="estadosGabinete" :programasSociales="programasSociales"
+						:estadosGabinete="estadosGabinete" :actividades="actividades" :programasSociales="programasSociales"
 						@message="messageToast" />
 				</div>
 
@@ -60,10 +55,6 @@
 				</div>
 			</div>
 		</div>
-
-		<CreateModal v-if="showForm" :open="showForm" :programasSociales="programasSociales" :actividades="actividades"
-			:users="users" :areas="areas" @closeForm="showForm = false" @submitStore="submitStore" />
-
 	</main>
 </template>
 
@@ -96,16 +87,13 @@ const props = defineProps({
 	canalesAtencion: Object,
 	tiposLegajo: Object,
 	estados: Object,
-
 	paises: Object, 
 	parentescos: Object,
 	situacionesConyugal: Object,
 	tiposOcupacion: Object,
 	estadosEducativo: Object,
 	nivelesEducativo: Object,
-
 	centrosSalud: Object,
-
 	escuelas: Object,
 	turnosEducativo: Object,
 	escuelasDependencia: Object,
@@ -153,42 +141,6 @@ function messageToast(data) {
 function viewForm() {
 	showForm.value = true;
 }
-
-/* async function submitStore(data) {
-	// RUTA
-	data.legajo_id = legajo[0].id
-	console.log(data);
-	let rt = ''
-	if (data.selectedOption === 'programa_social') {
-		rt = route("legajoCB.storeProgramaSocial");
-	} else if (data.selectedOption === 'actividades') {
-		rt = route("legajoCB.storeActividad");
-	} else {
-		labelType.value = "info";
-		toastMessage.value = 'No se ha seleccionado un tipo de inscripcion';
-	}
-
-	try {
-		const response = await axios.post(rt, data);
-		if (response.status == 200) {
-			labelType.value = "success";
-			toastMessage.value = response.data.message;
-			showForm.value = false
-			if (data.selectedOption === 'programa_social') {
-				legajo[0].programas_sociales = response.data.programas[0].programas_sociales
-			} else {
-				legajo[0].actividades = response.data.actividades[0].actividades
-			}
-			// TODO: Actualizar los datos de los programas sociales
-		} else {
-			labelType.value = "info";
-			toastMessage.value = response.data.message;
-		}
-	} catch (error) {
-		labelType.value = "danger";
-		toastMessage.value = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
-	}
-} */
 
 </script>
 

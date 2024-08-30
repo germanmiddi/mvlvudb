@@ -124,7 +124,7 @@ class LegajosCBController extends Controller
                         'emprendedor',
                         'assigned'
                     )->get(),
-                'users' => User::all(),
+                'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all(),
                 'areas' => AreaLegajoCB::active()->get(),

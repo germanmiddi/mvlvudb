@@ -176,6 +176,15 @@ class JuventudCBImport implements ToModel,WithHeadingRow, WithBatchInserts
                             'phone' => $row['telefono_adulto'] ?? null
                         ]
                     );
+
+                    LegajoCB::updateOrCreate(
+                        [
+                            'id' => $legajo->id
+                        ],
+                        [
+                            'responsable_id' => $responsable->id
+                        ]
+                    );
                 }
                 ++$this->rowsSuccess;
             }

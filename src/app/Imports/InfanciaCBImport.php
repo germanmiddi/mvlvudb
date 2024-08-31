@@ -25,7 +25,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
-class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
+class InfanciaCBImport implements ToModel, WithHeadingRow //, WithBatchInserts
 {
     /**
      * @param Collection $collection
@@ -124,11 +124,11 @@ class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
             );
 
             // Carga de LegajoCB
-            if(LegajoCB::where('person_id', $person->id)->exists()){
+            if (LegajoCB::where('person_id', $person->id)->exists()) {
                 ++$this->rowsError;
                 $this->entidadesNoRegistradas .= ' - Tramite de la Linea N° ' . strval($this->rows + 1) . ' posee un legajo existente.<br>';
-            }else{
-                $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
+            } else {
+                $tipo_legajo_cb = TipoLegajoCb::where('description', 'Centro Barrial Infancia')->first();
 
 
                 $legajo = LegajoCB::Create(
@@ -155,7 +155,7 @@ class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
                     ]
                 );
                 // verifica si existe responsable
-                if($row['dni_adulto'] != ''){
+                if ($row['dni_adulto'] != '') {
                     $responsable = Person::updateOrCreate(
                         [
                             'tipo_documento_id' => $tipo_documento->id,
@@ -165,16 +165,25 @@ class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
                             'name' => $row['nombre_adulto'],
                             'lastname' => $row['apellido_adulto'],
                             'name' => $row['nombre_adulto'],
-                            'fecha_nac' => $this->verificarFormatoDate($row['fecha_nac_adulto']),//date("Y-m-d ", strtotime($row['fecha_nac_adulto'])),
+                            'fecha_nac' => $this->verificarFormatoDate($row['fecha_nac_adulto']), //date("Y-m-d ", strtotime($row['fecha_nac_adulto'])),
                         ]
                     );
-    
+
                     ContactData::updateOrCreate(
                         [
                             'person_id' => $responsable['id']
                         ],
                         [
                             'phone' => $row['telefono_adulto'] ?? null
+                        ]
+                    );
+
+                    LegajoCB::updateOrCreate(
+                        [
+                            'id' => $legajo->id
+                        ],
+                        [
+                            'responsable_id' => $responsable->id
                         ]
                     );
                 }
@@ -221,13 +230,14 @@ class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
         return 1000;
     }
 
-    function verificarFormatoDate($date){
+    function verificarFormatoDate($date)
+    {
         if ($this->isNumericDate($date)) {
             // Si el dato es numérico, podríamos asumir que es un número de serie de Excel
             return $this->convertDateExcel($date);
         } elseif ($date === null) {
             return null;
-        }else{
+        } else {
             // De lo contrario, tratamos de parsear el dato como una fecha textual
             return date("Y-m-d ", strtotime($date));
         }
@@ -244,5 +254,5 @@ class InfanciaCBImport implements ToModel, WithHeadingRow//, WithBatchInserts
     {
         // Verifica si el dato es numérico y tiene 5 dígitos o más (o ajusta según tus necesidades)
         return is_numeric($data) && strlen((string) $data) >= 5;
-    } 
+    }
 }

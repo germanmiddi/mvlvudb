@@ -18,8 +18,13 @@ class ActividadCBLegajo extends Pivot
         'estado_id'
     ];
 
-    public function estado_programa()
+    public function estado()
     {
-        return $this->belongsTo(EstadoActividadCb::class, 'estado_id');
+        return $this->belongsTo(EstadoActividadCB::class, 'estado_id');
+    }
+
+    public function actividad()
+    {
+        return $this->BelongsTo(ActividadCB::class, 'actividad_id');
     }
 }

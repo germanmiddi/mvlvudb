@@ -296,16 +296,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [LegajosCBController::class, 'index'])->name('legajoCB');
             Route::get('/detail/{id}', [LegajosCBController::class, 'legajo'])->name('legajoCB.legajo');
             Route::get('/list', [LegajosCBController::class, 'list'])->name('legajoCB.list');
-            Route::put('/update-estado/{id}', [LegajosCBController::class, 'update_esado'])->name('legajoCB.updateEstado');
+            Route::put('/update-estado/{id}', [LegajosCBController::class, 'update_estado'])->name('legajoCB.updateEstado');
+            Route::put('/update-estado-programa/{id}', [LegajosCBController::class, 'update_estado_programa'])->name('legajoCB.updateEstadoPrograma');
+            Route::put('/update-estado-actividad/{id}', [LegajosCBController::class, 'update_estado_actividad'])->name('legajoCB.updateEstadoActividad');
 
             Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
             Route::post('/store-intervencion', [LegajosCBController::class, 'store_intervencion'])->name('legajoCB.storeIntervencion');
             Route::post('/store-informe', [LegajosCBController::class, 'store_informe'])->name('legajoCB.storeInforme');
             Route::put('/update-informe', [LegajosCBController::class, 'update_informe'])->name('legajoCB.updateInforme');
+            Route::put('/update-programa-intervencion', [LegajosCBController::class, 'update_programa_intervencion'])->name('legajoCB.updateProgramaIntervencion');
+
+            
             Route::delete('/delete-informe/{id}', [LegajosCBController::class, 'delete_informe'])->name('legajoCB.deleteInforme');
             Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
             Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
+            Route::delete('/delete-programa-intervencion/{id}', [LegajosCBController::class, 'delete_programa_intervencion'])->name('legajoCB.deleteProgramaIntervencion');
 
             Route::put('/update-legajo', [LegajosCBController::class, 'update_legajo'])->name('legajoCB.updateLegajo');
             Route::put('/update-legajo-direccion', [LegajosCBController::class, 'update_legajoDireccion'])->name('legajoCB.updateLegajoDireccion');

@@ -198,12 +198,12 @@
                       </li>
                     </a>
                     <hr>
-                    <a :href="route('inscripcionCBI')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                    <a :href="route('inscripcionCBI')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscripción CBI
                       </li>
                     </a>
-                    <a :href="route('inscripcionCBJ')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                    <a :href="route('inscripcionCBJ')" v-show="store.userCan('CBJ', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscripción CBJ
                       </li>
@@ -220,7 +220,7 @@
                         </li>
                     </a>
                     <hr>
-                    <a :href="route('legajoCB')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                    <a :href="route('legajoCB')" v-show="store.userCan('CBJ', $page.props.userGroups) || store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Inscriptos
                       </li>

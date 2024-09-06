@@ -24,7 +24,8 @@ class LegajoCB extends Model
         'tipo_legajo_id',
         'parentesco_id',
         'phone_emergency',
-        'assigned_id'
+        'assigned_id',
+        'semaforo_id'
     ];
 
     protected static function booted()
@@ -98,9 +99,13 @@ class LegajoCB extends Model
         return $this->hasMany(LegajoProgramaSocialCB::class, 'legajo_id');
     }
 
-    public function actividades(){
+    /* public function actividades(){
         return $this->belongsToMany(ActividadCB::class, 'actividad_cb_legajo', 'legajo_id', 'actividad_id')
         ->using(ActividadCBLegajo::class)->withPivot('fecha_inscripcion', 'estado_id');
+    } */
+    public function actividades()
+    {
+        return $this->hasMany(ActividadCBLegajo::class, 'legajo_id');
     }
 
     public function informes()

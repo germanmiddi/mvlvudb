@@ -34,56 +34,61 @@
                                     <div>
                                         <MenuButton
                                             class=" p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                            <SunIcon class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                                            <XCircleIcon  v-if="this.form.semaforo_id === 1" class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
                                                 aria-hidden="true" />
-
-                                            <ChevronDownIcon class="h-5 w-5" aria-hidden="true" />
+                                            <XCircleIcon v-else-if="this.form.semaforo_id === 2" class="mr-3 h-6 w-6 text-red-400 group-hover:text-red-500"
+                                                aria-hidden="true" />
+                                            <XCircleIcon v-else-if="this.form.semaforo_id === 3" class="mr-3 h-6 w-6 text-yellow-400 group-hover:text-yellow-500"
+                                                aria-hidden="true" />
+                                            <XCircleIcon v-else-if="this.form.semaforo_id === 4" class="mr-3 h-6 w-6 text-green-400 group-hover:text-green-500"
+                                                aria-hidden="true" />
+                                            <ChevronDownIcon v-if="editData" class="h-5 w-5" aria-hidden="true" />
                                         </MenuButton>
                                     </div>
 
-                                    <transition enter-active-class="transition ease-out duration-100"
+                                    <transition v-if="editData" enter-active-class="transition ease-out duration-100"
                                         enter-from-class="transform opacity-0 scale-95"
                                         enter-to-class="transform opacity-100 scale-100"
                                         leave-active-class="transition ease-in duration-75"
                                         leave-from-class="transform opacity-100 scale-100"
                                         leave-to-class="transform opacity-0 scale-95">
                                         <MenuItems
-                                            class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                            class="z-50 origin-top-right absolute right-0 mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div class="py-1 z-50">
                                                 <MenuItem v-slot="{ active }">
-                                                <button type="button"
+                                                <button type="button" @click="this.form.semaforo_id = 1"
                                                     :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                     <span>
-                                                        <SunIcon
+                                                        <XCircleIcon
                                                             class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
                                                             aria-hidden="true" />
                                                     </span>
                                                 </button>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                <button type="button"
-                                                    :class="[active ? 'bg-gray-100 text-red-900' : 'text-red-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                <button type="button" @click="this.form.semaforo_id = 2"
+                                                    :class="[active ? 'bg-red-100 text-red-900' : 'text-red-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                     <span>
-                                                        <SunIcon class="mr-3 h-6 w-6 text-red-400 group-hover:text-red-500"
+                                                        <XCircleIcon class="mr-3 h-6 w-6 text-red-400 group-hover:text-red-500"
                                                             aria-hidden="true" />
                                                     </span>
                                                 </button>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                <button type="button"
+                                                <button type="button" @click="this.form.semaforo_id = 3"
                                                     :class="[active ? 'bg-yellow-100 text-red-900' : 'text-yellow-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                     <span>
-                                                        <SunIcon
+                                                        <XCircleIcon
                                                             class="mr-3 h-6 w-6 text-yellow-400 group-hover:text-yellow-500"
                                                             aria-hidden="true" />
                                                     </span>
                                                 </button>
                                                 </MenuItem>
                                                 <MenuItem v-slot="{ active }">
-                                                <button type="button"
-                                                    :class="[active ? 'bg-gray-100 text-green-900' : 'text-green-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                <button type="button" @click="this.form.semaforo_id = 4"
+                                                    :class="[active ? 'bg-green-100 text-green-900' : 'text-green-700', 'w-full flex justify-between px-4 py-2 text-sm']">
                                                     <span>
-                                                        <SunIcon
+                                                        <XCircleIcon
                                                             class="mr-3 h-6 w-6 text-green-400 group-hover:text-green-500"
                                                             aria-hidden="true" />
                                                     </span>
@@ -213,7 +218,7 @@
 </template>
 
 <script>
-import { PencilSquareIcon, SunIcon, ChevronDownIcon} from '@heroicons/vue/24/solid'
+import { PencilSquareIcon, SunIcon, ChevronDownIcon,XCircleIcon} from '@heroicons/vue/24/solid'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -228,7 +233,7 @@ export default {
         estados: Object
     },
     components: {
-        PencilSquareIcon, SunIcon, ChevronDownIcon, Menu, MenuButton, MenuItems, MenuItem, Datepicker
+        PencilSquareIcon, SunIcon,XCircleIcon, ChevronDownIcon, Menu, MenuButton, MenuItems, MenuItem, Datepicker
     },
 
     setup() {
@@ -256,6 +261,7 @@ export default {
         initForm() {
             this.form = {}
             this.form.id = this.legajo[0].id
+            this.form.semaforo_id = this.legajo[0].semaforo_id
 
             this.form.canal_atencion = this.legajo[0].canal_atencion?.description ?? null
             this.form.canal_atencion_id = this.legajo[0].canal_atencion?.id ?? null

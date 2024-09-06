@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager\CentrosBarriales;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Models\Manager\ActividadCB;
+use App\Models\Manager\ActividadCBLegajo;
 use App\Models\Manager\ArchivoLegajo;
 use App\Models\Manager\AreaLegajoCB;
 use App\Models\Manager\CanalAtencion;
@@ -112,6 +113,8 @@ class LegajosCBController extends Controller
                         'programas_sociales.intervenciones',
                         'programas_sociales.intervenciones.profesional',
                         'actividades',
+                        'actividades.actividad',
+                        'actividades.estado',
                         'informes',
                         'informes.profesional',
                         'informes.estado',
@@ -154,10 +157,9 @@ class LegajosCBController extends Controller
         );
     }
 
-    public function update_esado($id, Request $request)
+    public function update_estado($id, Request $request)
     {
         try {
-            //code...
             LegajoCB::where('id', $id)->update(
                 [
                     'estado_id' => $request->estado_id
@@ -166,6 +168,45 @@ class LegajosCBController extends Controller
             return response()->json(['message' => 'Se ha actualizado correctamente el estado del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar el estado del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_estado_programa($id, Request $request)
+    {
+        try {
+            LegajoProgramaSocialCB::where('id', $id)->update(
+                [
+                    'estado_id' => $request->estado_id
+                ]
+            );
+            $programas = LegajoProgramaSocialCB::where('id', $id)->with(
+                'profesional',
+                'programa_social',
+                'estado',
+                'intervenciones',
+                'intervenciones.profesional'
+            )->get();
+            return response()->json(['message' => 'Se ha actualizado correctamente el estado del programa.', 'programas' => $programas], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar el estado del programa. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_estado_actividad($id, Request $request)
+    {
+        try {
+            ActividadCBLegajo::where('id', $id)->update(
+                [
+                    'estado_id' => $request->estado_id
+                ]
+            );
+            $legajo_id = ActividadCBLegajo::where('id', $id)->value('legajo_id');
+            $actividades = $legajo = LegajoCB::where('id', $legajo_id)->with('actividades', 'actividades.actividad', 'actividades.estado')->get();
+            return response()->json(['message' => 'Se actualizado correctamente el estado de la Actividad.', 'actividades' => $actividades], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar el estado de la actividad. Comuniquese con el administrador.'], 203);
         }
     }
 
@@ -213,7 +254,7 @@ class LegajosCBController extends Controller
             $intervencion = IntervencionProgramaSocialCB::Create(
                 [
                     'description' => $request->description,
-                    'fecha' => $request->fecha_intervencion,
+                    'fecha' => $request->fecha,
                     'profesional_id' => $request->profesional_id,
                     'legajo_programa_social_cb_id' => $request->programa_social_id,
                 ]
@@ -228,7 +269,6 @@ class LegajosCBController extends Controller
             )->get();
             return response()->json(['message' => 'Se registrado correctamente la intervencion.', 'programas' => $programas], 200);
         } catch (\Throwable $th) {
-            dd($th);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion. Verifique los datos ingresados.'], 500);
         }
     }
@@ -240,17 +280,24 @@ class LegajosCBController extends Controller
             $estado = EstadoActividadCB::where('description', 'Activo')->first();
             $legajo = LegajoCB::where('id', $request->legajo_id)->first();
 
-            if (!$legajo->actividades()->where('actividad_id', $request->actividad_id)->exists()) {
-                $legajo->actividades()->attach($request->actividad_id, [
-                    'fecha_inscripcion' => $request->fecha_inscripcion,
-                    'estado_id' => $estado->id
-                ]);
+            // Control de la existencia del programa social asociado al legajo.
+            if (!ActividadCBLegajo::where('actividad_id', $request->actividad_id)->where('legajo_id', $request->legajo_id)->where('estado_id', $estado->id)->exists()) {
+                ActividadCBLegajo::Create(
+                    [
+                        'legajo_id' => $request->legajo_id,
+                        'actividad_id' => $request->actividad_id,
+                        'fecha_inscripcion' => $request->fecha_inscripcion,
+                        'estado_id' => $estado->id
+                    ]
+                );
             } else {
                 return response()->json(['message' => 'La Actividad ya ha sido agrego previamente. Verifique los datos ingresados.'], 203);
             }
-            $actividades = $legajo = LegajoCB::where('id', $request->legajo_id)->with('actividades')->get();
+
+            $actividades = $legajo = LegajoCB::where('id', $request->legajo_id)->with('actividades', 'actividades.actividad', 'actividades.estado')->get();
             return response()->json(['message' => 'Se registrado correctamente la Actividad.', 'actividades' => $actividades], 200);
         } catch (\Throwable $th) {
+            dd($th);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
         }
     }
@@ -405,6 +452,54 @@ class LegajosCBController extends Controller
         }
     }
 
+    public function delete_programa_intervencion($id){
+
+        try {
+           // Buscar el recurso por ID y eliminarlo
+            $intervencion = IntervencionProgramaSocialCB::findOrFail($id);
+            $intervencion->activo = false;
+            $intervencion->save();
+
+            $programas = LegajoProgramaSocialCB::where('id', $intervencion->legajo_programa_social_cb_id)->with(
+                'profesional',
+                'programa_social',
+                'estado',
+                'intervenciones',
+                'intervenciones.profesional'
+            )->get();
+            return response()->json(['message' => 'Se ha eliminado correctamente la intervenciones.', 'programas' => $programas], 200);
+            // Redireccionar o devolver una respuesta JSON
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar eliminar la intervencion. Comuniquese con el administrador.'], 203);
+        }
+    }
+
+    public function update_programa_intervencion(Request $request){
+
+        try {
+           // Buscar el recurso por ID y eliminarlo
+            $intervencion = IntervencionProgramaSocialCB::findOrFail($request->id);
+            $intervencion->fecha = $request->fecha;
+            $intervencion->description = $request->description;
+            $intervencion->profesional_id = $request->profesional_id;
+            $intervencion->save();
+
+            $programas = LegajoProgramaSocialCB::where('id', $intervencion->legajo_programa_social_cb_id)->with(
+                'profesional',
+                'programa_social',
+                'estado',
+                'intervenciones',
+                'intervenciones.profesional'
+            )->get();
+            return response()->json(['message' => 'Se ha actualizado correctamente la intervenciones.', 'programas' => $programas], 200);
+            // Redireccionar o devolver una respuesta JSON
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar la intervencion. Comuniquese con el administrador.'], 203);
+        }
+    }
+
     public function update_legajo(Request $request)
     {
         try {
@@ -416,6 +511,7 @@ class LegajosCBController extends Controller
                     'canal_atencion_id' => $request->canal_atencion_id,
                     'fecha_inscripcion' => $request->fecha_inscripcion,
                     'fecha_inicio' => $request->fecha_inicio,
+                    'semaforo_id' => $request->semaforo_id,
                     'observacion' => $request->observacion
                 ]
             );

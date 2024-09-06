@@ -4,9 +4,10 @@
               <div class="flex-1 truncate">
                   <div class="flex items-center space-x-3">
                       <h3 class="text-gray-900 text-base font-medium truncate">{{ programa.programa_social?.description ?? '-' }}</h3>
-                      <span
-                          class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
+                      <span v-if="programa.estado.id === 1" class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">
                           {{programa.estado.description}}</span>
+                        <span v-else class="flex-shrink-0 inline-block px-2 py-0.5 text-red-800 text-xs font-medium bg-red-100 rounded-full">
+                            {{programa.estado.description}}</span>
                   </div>
                   <p class="mt-1 text-gray-500 text-xs truncate">{{ programa.programa_social?.description ?? '-' }}</p>
                   <div class="mt-3">

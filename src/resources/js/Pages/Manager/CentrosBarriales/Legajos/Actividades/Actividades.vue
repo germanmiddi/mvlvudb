@@ -93,7 +93,7 @@
             <ul v-if="showList" role="list" class="grid gap-6 grid-cols-2 mt-10">
                 <li v-for="actividad in legajo[0].actividades" :key="actividad.key"
                     class="col-span-1 bg-white rounded-lg shadow divide-y divide-gray-200">
-                    <ActividadesGrid :actividad="actividad" />
+                    <ActividadesGrid :actividad="actividad" @updateEstadoActividad="updateEstadoActividad" />
                 </li>
             </ul>
         </div>
@@ -208,7 +208,27 @@ export default {
                 default:
                     break;
             }
-        }
+        },
+        async updateEstadoActividad(data) {
+            let msg = {}
+            let rt = route("legajoCB.updateEstadoActividad", data.id);
+
+            try {
+                const response = await axios.put(rt, {'estado_id':data.estado_id});
+                if (response.status == 200) {
+                    msg.message = response.data.message
+                    msg.labelType = 'success'
+                    this.legajo[0].actividades = response.data.actividades[0].actividades
+                } else {
+                    msg.message = response.data.message
+                    msg.labelType = 'info'
+                }
+            } catch (error) {
+                msg.labelType = "danger";
+                msg.message = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+            }
+            this.$emit('message', msg)
+        },
     },
 }
 </script>

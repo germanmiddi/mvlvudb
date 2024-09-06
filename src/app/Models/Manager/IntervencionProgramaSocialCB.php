@@ -20,6 +20,11 @@ class IntervencionProgramaSocialCB extends Model
         'profesional_id'
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('activo', true);
+    }
+
     public function legajo_programa_social()
     {
         return $this->BelongsTo(LegajoProgramaSocialCB::class, 'legajo_programa_social_cb_id');

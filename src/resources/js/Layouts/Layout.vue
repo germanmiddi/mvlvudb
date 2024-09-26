@@ -247,6 +247,27 @@
                 </div>
               </a>
 
+
+              <Disclosure as="div">
+                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                  <button class="flex items-center" ><CubeIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Cajas</button>
+                </DisclosureButton>
+                  <DisclosurePanel as="ul" class="pl-4">
+                    <a :href="route('person.boxes')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Padrón
+                      </li>
+                    </a>
+                    <a :href="route('person.boxes.delivery')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
+                        Entregas
+                      </li>
+                    </a>
+                  </DisclosurePanel>
+
+              </Disclosure>
+
               <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                 <!-- Don't render any element (only children) for the `DisclosureButton` component -->
                 <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
@@ -374,7 +395,7 @@
   } from '@headlessui/vue'
 
   import { ClockIcon, HomeIcon, Bars3CenterLeftIcon, Bars3Icon, XMarkIcon, InboxIcon, Cog6ToothIcon, PowerIcon, DocumentChartBarIcon, NewspaperIcon, ArrowDownTrayIcon} from '@heroicons/vue/24/outline'
-  import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon, UserGroupIcon, CalendarDaysIcon } from '@heroicons/vue/24/solid'
+  import { ChevronRightIcon, EllipsisVerticalIcon, MagnifyingGlassIcon, ChevronUpDownIcon, UserGroupIcon, CalendarDaysIcon, CubeIcon } from '@heroicons/vue/24/solid'
   
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
   import { ChevronUpIcon } from '@heroicons/vue/20/solid'
@@ -463,7 +484,7 @@
       UserGroupIcon,
       CalendarDaysIcon,
       NewspaperIcon,
-
+      CubeIcon,
       ArrowDownTrayIcon,
       
     },

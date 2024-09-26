@@ -523,7 +523,7 @@ class DiscapacidadController extends Controller
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
-
+        dd(request('estado_id'));
         if(request('estado_id')){
             $estado_id = json_decode(request('estado_id'));
             $result->where('estado_id', $estado_id);

@@ -33,8 +33,8 @@ use App\Http\Controllers\Manager\Uploads\FileController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Manager\Users\UserController;
 use App\Http\Controllers\Manager\DashboardController;
-
-
+use App\Http\Controllers\Manager\Boxes\PersonBoxesController;
+use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
 
 if (App::environment('production')) {
     URL::forceScheme('https');
@@ -273,6 +273,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads'); 
 
     Route::get('/downloads/getfieldsItems/{dependencia}', [DownloadController::class, 'getfieldsItems'])->name('downloads.fieldsItems'); 
+
+    // Entrega de Cajas a Personas
+    Route::get('/person-boxes', [PersonBoxesController::class, 'index'])->name('person.boxes');
+    Route::get('/person-boxes-delivery', [PersonBoxesDeliveryController::class, 'index'])->name('person.boxes.delivery');
 
     // Routes Mil Dias
 

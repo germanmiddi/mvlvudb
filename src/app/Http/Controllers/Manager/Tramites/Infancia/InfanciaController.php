@@ -704,16 +704,8 @@ class InfanciaController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        switch (request('estado_id')) {
-            case null:
-                $result->whereIn('estado_id', [1, 3]);
-                break;
-            case '99':
-                $result->whereIn('estado_id', [1, 2, 3]);
-                break;
-            default:
-                $result->where('estado_id', request('estado_id'));
-                break;
+        if(request('estado_id')){
+            $result->where('estado_id', request('estado_id'));
         }
 
         /* $generalController = new GeneralController();

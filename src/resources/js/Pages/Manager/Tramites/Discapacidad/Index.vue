@@ -61,17 +61,20 @@
                             <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
                                     :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
+                        
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
                             <select v-model="filter.estado_id" id="estado_id" name="estado_id"
                                 autocomplete="off"
                                 class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="">TODOS</option>
+                                <option :value=99>TODOS</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
                                 }}</option>
                             </select>
                         </div>
+
+
                         <div class="col-span-12 sm:col-span-2">
                             <label for="tipo_tramite_id" class="block text-sm font-medium text-gray-700">Tipo de
                                 Tramite</label>

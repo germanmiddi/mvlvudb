@@ -69,7 +69,7 @@
                             <select v-model="filter.estado_id" id="estado_id" name="estado_id"
                                 autocomplete="off"
                                 class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="">TODOS</option>
+                                <option :value=99>TODOS</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
                                 }}</option>

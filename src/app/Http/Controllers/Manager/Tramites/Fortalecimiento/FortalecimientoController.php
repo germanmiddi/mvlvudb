@@ -480,11 +480,16 @@ class FortalecimientoController extends Controller
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        if(request('estado_id')){
-            $estado_id = json_decode(request('estado_id'));
-            $result->where('estado_id', $estado_id);
-        } else {
-            $result->whereIn('estado_id', [1, 3]);
+        switch (request('estado_id')) {
+            case null:
+                $result->whereIn('estado_id', [1, 3]);
+                break;
+            case '99':
+                $result->whereIn('estado_id', [1, 2, 3]);
+                break;
+            default:
+                $result->where('estado_id', request('estado_id'));
+                break;
         }
 
         /* $generalController = new GeneralController();

@@ -74,6 +74,14 @@
                                 }}</option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
+                            <select v-model="filter.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+                                class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Seleccione una sede</option>
+                                <option v-for="item in sedes" :key="item.id" :value="item.id">{{ item.description }}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -252,7 +260,10 @@ import store from '@/store.js'
 export default {
     props: {
         estados: Object,
-        tiposLegajo: Object
+        tiposLegajo: Object,
+        sedes: Object,
+        selectedSede: String,
+        selectedLegajo: String,
     },
     components: {
         Menu,
@@ -279,7 +290,9 @@ export default {
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            processReport: false
+            processReport: false,
+            sede_id: this.selectedSede || '',
+            tipo_legajo_id: this.selectedLegajo || '',
         };
     },
     setup() {
@@ -318,6 +331,10 @@ export default {
 
             if (this.filter.tipo_legajo_id) {
                 filter += `&tipo_legajo_id=${JSON.stringify(this.filter.tipo_legajo_id)}`
+            }
+
+            if (this.filter.sede_id) {
+                filter += `&sede_id=${JSON.stringify(this.filter.sede_id)}`
             }
 
             const get = `${route('legajoCB.list')}?${filter}`
@@ -379,8 +396,12 @@ export default {
         },
     },
     mounted() {
+            this.filter = {
+                sede_id: this.selectedSede,
+                tipo_legajo_id: this.selectedLegajo
+            } 
         this.getLegajos();
-    }
+    },
 };
 </script>
 

@@ -55,14 +55,20 @@ use Svg\Tag\Rect;
 class LegajosCBController extends Controller
 {
     protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
-
-    public function index()
+    
+    public function index(Request $request)
     {
+        $sede_id = $request->query('sede');
+        $legajo = $request->query('legajo');
+        
         return Inertia::render(
             'Manager/CentrosBarriales/Legajos/Index',
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
-                'estados' => EstadoCbj::all()
+                'estados' => EstadoCbj::all(),
+                'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
+                'selectedSede' => $sede_id, 
+                'selectedLegajo' => $legajo,
             ]
         );
     }
@@ -401,6 +407,11 @@ class LegajosCBController extends Controller
         if (request('tipo_legajo_id')) {
             $tipo_legajo_id = json_decode(request('tipo_legajo_id'));
             $result->where('tipo_legajo_id', $tipo_legajo_id);
+        }
+
+        if (request('sede_id')) {
+            $sede_id = json_decode(request('sede_id'));
+            $result->where('sede_id', $sede_id);
         }
 
         return  $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')

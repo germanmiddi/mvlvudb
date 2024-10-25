@@ -71,7 +71,7 @@
                                 {{ project.title }}
                             </a>
                             <p class="text-gray-400">{{ project.totalInscripciones }} Inscripciones</p>
-                            <a :href="route('legajoCB')" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
+                            <a :href="`${route('legajoCB')}?sede=${project.id}&legajo=${1}`" class="text-gray-500 hover:underline hover:text-gray-700">Ver Inscripciones</a>
                         </div>
                     </div>
                 </li>

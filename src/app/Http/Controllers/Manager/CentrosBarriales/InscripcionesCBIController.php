@@ -260,7 +260,7 @@ class InscripcionesCBIController extends Controller
         
         $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
 
-        $legajos = LegajoCB::where('tipo_legajo_id', $tipo_legajo_cb['id'])->where('id',5296)->get();
+        $legajos = LegajoCB::where('tipo_legajo_id', $tipo_legajo_cb['id'])->get();
         $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
 
         $resultados = [];

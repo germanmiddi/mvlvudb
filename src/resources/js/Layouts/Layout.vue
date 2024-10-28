@@ -187,7 +187,7 @@
                 <!-- Render a `ul` for the `DisclosurePanel` component -->
                   <DisclosurePanel as="ul" class="pl-4">
 
-                    <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
+                    <!-- <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Infancia
                       </li>
@@ -196,7 +196,7 @@
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
                         Centros Barriales Juventud
                       </li>
-                    </a>
+                    </a> -->
                     <hr>
                     <a :href="route('inscripcionCBI')" v-show="store.userCan('CBI', $page.props.userGroups)">
                       <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >

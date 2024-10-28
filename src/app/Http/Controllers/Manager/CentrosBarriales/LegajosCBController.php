@@ -59,7 +59,7 @@ class LegajosCBController extends Controller
     public function index(Request $request)
     {
         $sede_id = $request->query('sede');
-        $legajo = $request->query('legajo');
+        $legajo = $request->query('tipo_legajo');
         
         return Inertia::render(
             'Manager/CentrosBarriales/Legajos/Index',

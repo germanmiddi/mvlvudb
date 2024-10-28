@@ -7,6 +7,7 @@ use App\Exports\PersonsExport;
 use App\Exports\TestExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
+use App\Exports\InscriptosCBExport;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\TipoTramite;
@@ -186,6 +187,67 @@ class ReportController extends Controller
     }
     public function exportTramiteCBIExcel(){
         return Excel::download(new TramitesCBIExport(), 'tramitesCBI.xlsx');
+    }
+
+    public function exportInscriptosCBExcel(Request $request){
+
+        $data = [];
+
+        if($request->estado_id){
+            $data['estado_id'] = json_decode($request->estado_id);
+        }
+        
+        if($request->tipo_legajo_id){
+            $data['tipo_legajo_id'] = json_decode($request->tipo_legajo_id);
+        }
+
+        if($request->sede_id){
+            $data['sede_id'] = json_decode($request->sede_id);
+        }
+        if($request->date){
+
+            $data['from'] = date('Y-m-d', strtotime($request->date[0]));
+            $data['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
+                   
+        }
+
+        //Ver como hacer con el tema de tipo de trámite
+        //Ya que estan 144,145,146 (barrial, juventud, infancia)
+        if($request->tipo_tramite_id){
+            $data['tipo_tramite_id'] = json_decode($request->tipo_tramite_id);
+        }else {
+            
+        }
+
+        if($request->name){
+            $data['name'] = json_decode($request->name);
+        }
+
+        if($request->num_documento){
+            $data['num_documento'] = json_decode($request->num_documento);
+        }
+
+        if(isset($request->ingreso_nuevo)){
+            $data['ingreso_nuevo'] = json_decode($request->ingreso_nuevo);
+        }
+
+        if(isset($request->boton_antipanico)){
+            $data['boton_antipanico'] = json_decode($request->boton_antipanico);
+        } 
+
+        if(isset($request->modalidad_atencion_id)){
+            $data['modalidad_atencion_id'] = json_decode($request->modalidad_atencion_id);
+        } 
+
+        if(isset($request->categoria_id)){
+            $data['categoria_id'] = json_decode($request->categoria_id);
+        } 
+
+        if($request->user_id){
+            $data['user_id'] = json_decode($request->user_id);
+        }
+        
+        return Excel::download(new InscriptosCBExport($data), 'InscriptosCB.xlsx');
     }
 
     public function exportPersonsExcel(Request $request){

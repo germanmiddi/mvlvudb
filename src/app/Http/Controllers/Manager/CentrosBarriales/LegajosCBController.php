@@ -59,13 +59,14 @@ class LegajosCBController extends Controller
     public function index(Request $request)
     {
         $sede_id = $request->query('sede');
-        $legajo = $request->query('legajo');
+        $legajo = $request->query('tipo_legajo');
         
         return Inertia::render(
             'Manager/CentrosBarriales/Legajos/Index',
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
                 'estados' => EstadoCbj::all(),
+                'escuelas' => Escuela::all(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
                 'selectedSede' => $sede_id, 
                 'selectedLegajo' => $legajo,
@@ -366,7 +367,6 @@ class LegajosCBController extends Controller
     public function list()
     {
         $length = request('length');
-
         $result = LegajoCB::query();
 
         if (request('name')) {
@@ -380,16 +380,43 @@ class LegajosCBController extends Controller
             });
         }
 
-        if (request('num_documento')) {
-            $num_documento = json_decode(request('num_documento'));
-            $result->whereIn('id', function ($sub) use ($num_documento) {
+        if (request('num_documento_nino')) {
+            $num_documento_nino = json_decode(request('num_documento_nino'));
+            $result->whereIn('id', function ($sub) use ($num_documento_nino) {
                 $sub->selectRaw('legajos_cb.id')
                     ->from('legajos_cb')
                     ->join('person', 'person.id', '=', 'legajos_cb.person_id')
-                    ->where('person.num_documento', 'LIKE', '%' . $num_documento . '%');
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_nino . '%');
+            });
+        }
+        
+        if (request('num_documento_adulto')) {
+            $num_documento_adulto = json_decode(request('num_documento_adulto'));
+            $result->whereIn('id', function ($sub) use ($num_documento_adulto) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.responsable_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_adulto . '%');
             });
         }
 
+        if (request('escuela_id')) {
+            $escuela_id = json_decode(request('escuela_id'));
+            $result->whereIn('id', function ($sub) use ($escuela_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person','person.id','=', 'legajos_cb.person_id')
+                    ->join('education_data','education_data.person_id','=', 'person.id')
+                    ->where(function ($query) use ($escuela_id){
+                        $query->where('education_data.escuela_primaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_secundaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_nocturna_id', $escuela_id)
+                            ->orWhere('education_data.escuela_infante_id', $escuela_id)
+                            ->orWhere('education_data.escuela_id', $escuela_id);
+                    });
+            });
+        }
+        
         if (request('date')) {
             $date = json_decode(request('date'));
 

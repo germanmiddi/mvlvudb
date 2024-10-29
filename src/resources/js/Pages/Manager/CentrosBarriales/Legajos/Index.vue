@@ -51,13 +51,32 @@
                         </div>
 
                         <div class="col-span-12 sm:col-span-2">
-                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-                                Documento</label>
-                            <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
+                            <label for="num_documento_nino" class="block text-sm font-medium text-gray-700">Nro de
+                                Documento del Niño</label>
+                            <input v-model="filter.num_documento_nino" type="text" name="num_documento_nino" id="num_documento_nino"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="num_documento_adulto" class="block text-sm font-medium text-gray-700">Nro de
+                                Documento del Adulto</label>
+                            <input v-model="filter.num_documento_adulto" type="text" name="num_documento_adulto" id="num_documento_adulto"
+                                autocomplete="address-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="escuela_id" class="block text-sm font-medium text-gray-700">Escuela</label>
+                            <select v-model="filter.escuela_id" id="escuela_id" name="escuela_id" autocomplete="off"
+                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Seleccione una Escuela</option>
+                                <option v-for="escuela in escuelas" :key="escuela.id" :value="escuela.id">{{
+                                    escuela.description
+                                }}</option>
+                            </select>
+                        </div>
 
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
@@ -69,6 +88,7 @@
                                 }}</option>
                             </select>
                         </div>
+
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Tipo Legajo</label>
                             <select v-model="filter.tipo_legajo_id" id="tipo_legajo_id" name="tipo_legajo_id"
@@ -268,6 +288,7 @@ export default {
         estados: Object,
         tiposLegajo: Object,
         sedes: Object,
+        escuelas: Object,
         selectedSede: String,
         selectedLegajo: String,
     },
@@ -323,8 +344,16 @@ export default {
                 filter += `&name=${JSON.stringify(this.filter.name)}`
             }
 
-            if (this.filter.num_documento) {
-                filter += `&num_documento=${JSON.stringify(this.filter.num_documento)}`
+            if (this.filter.num_documento_nino) {
+                filter += `&num_documento_nino=${JSON.stringify(this.filter.num_documento_nino)}`
+            }
+
+            if (this.filter.num_documento_adulto) {
+                filter += `&num_documento_adulto=${JSON.stringify(this.filter.num_documento_adulto)}`
+            }
+
+            if (this.filter.escuela_id) {
+                filter += `&escuela_id=${JSON.stringify(this.filter.escuela_id)}`
             }
 
             if (this.filter.date) {
@@ -372,9 +401,9 @@ export default {
             let name_benef = ''
             data.forEach(element => {
                 if (element.pivot.rol_tramite_id == 1) {
-                    name_titular = element.num_documento
+                    name_titular = element.num_documento_nino
                 } else {
-                    name_benef = element.num_documento
+                    name_benef = element.num_documento_nino
                 }
             });
             return name_titular + '<br><p class="text-xs text-red-900 italic mt-1">' + name_benef + '</p>'

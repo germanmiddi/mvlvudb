@@ -30,18 +30,21 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
     * @return \Illuminate\Support\Collection
     */
 
+    protected $values;
     protected $data;
 
-    function __construct() {
-        
+    function __construct($values) {
+        $this->values = $values;
     }
 
     public function array(): array
     {
-        
+        $values = $this->values;
         $result = Tramite::query();
         $pos = 0; 
-        $tramites = Tramite::where('dependencia_id',12)->get()->toArray();
+        $tramites = Tramite::where('dependencia_id',$values['dependencia_id'])
+            ->with(['canalAtencion', 'sede', 'tipoTramite', 'dependencia', 'parentesco', 'estado', 'assigned', 'category', 'modalidadAtencion', 'rol_tramite'])
+            ->get();
 
         foreach ($tramites as $tramite) {
             // Ejecutar una consulta directa
@@ -52,22 +55,22 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
                 // Recorro las personas asociadas, y se cargan los datos del tramite. 
                 $data_temp = [];
                 $data_temp['id'] = $tramite['id'] + 12000000;
-                $data_temp['fecha'] = $tramite['fecha'];
+                $data_temp['fecha'] = $tramite->getFecha();
                 $data_temp['observacion'] = $tramite['observacion'];
-                $data_temp['sede_id'] = $tramite['sede_id'];
-                $data_temp['canal_atencion_id'] = $tramite['canal_atencion_id'];
-                $data_temp['tipo_tramite_id'] = $tramite['tipo_tramite_id'];
-                $data_temp['tipo_institucion_id'] = $tramite['tipo_institucion_id'];
-                $data_temp['dependencia_id'] = $tramite['dependencia_id'];
-                $data_temp['num_tramite_legacy'] = $tramite['num_tramite_legacy'];
-                $data_temp['parentesco_id'] = $tramite['parentesco_id'];
-                $data_temp['estado_id'] = $tramite['estado_id'];
-                $data_temp['assigned'] = $tramite['assigned'];
+                $data_temp['sede_id'] = $tramite->sede->description ?? null;
+                $data_temp['canal_atencion_id'] = $tramite->canalAtencion->description;
+                $data_temp['tipo_tramite_id'] = $tramite->tipoTramite->description;
+                // $data_temp['tipo_institucion_id'] = $tramite['tipo_institucion_id'];
+                $data_temp['dependencia_id'] = $tramite->dependencia->description;
+                $data_temp['num_tramite_legacy'] = $tramite['num_tramite_legacy'] ??  null;
+                $data_temp['parentesco_id'] = $tramite->parentesco->description ?? null;
+                $data_temp['estado_id'] = $tramite->estado->description;
+                $data_temp['assigned'] = $tramite->assigned->name ?? null;
                 $data_temp['users_email'] = User::where('users.id', $tramite['assigned'])->first()->email ?? '';
-                $data_temp['category_id'] = $tramite['category_id'];
-                $data_temp['modalidad_atencion_id'] = $tramite['modalidad_atencion_id'];
+                $data_temp['category_id'] = $tramite->category->nombre ?? null;
+                $data_temp['modalidad_atencion_id'] = $tramite->modalidadAtencion->description ?? null;
                 //Person_tramite
-                $data_temp['person_rol_tramite_id'] = $pt->rol_tramite_id;
+                $data_temp['person_rol_tramite_id'] = $tramite->rol_tramite->pluck('description')->join(', ') ?? null;
                 //Person
                 $person = Person::where('id', $pt->person_id)->first();
 
@@ -78,16 +81,16 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
                 $data_temp['person_fecha_nacimiento'] = $person->fecha_nac;
 
                 //Data_address
-                $data_temp['address_data_localidad_id'] = $person->address[0]->localidad_id;
-                $data_temp['address_data_pais_id'] = $person->address[0]->pais_id;
-                $data_temp['address_data_barrio_id'] = $person->address[0]->barrio_id;
-                $data_temp['address_data_calle'] = $person->address[0]->calle;
-                $data_temp['address_data_number'] = $person->address[0]->number;
-                $data_temp['address_data_piso'] = $person->address[0]->piso;
-                $data_temp['address_data_dpto'] = $person->address[0]->dpto;
-                $data_temp['address_data_latitude'] = $person->address[0]->latitude;
-                $data_temp['address_data_longitude'] = $person->address[0]->longitude;
-                $data_temp['address_data_google_address'] = $person->address[0]->google_address;
+                $data_temp['address_data_localidad_id'] = $person->address[0]->localidad_id ?? null;
+                $data_temp['address_data_pais_id'] = $person->address[0]->pais_id ?? null;
+                $data_temp['address_data_barrio_id'] = $person->address[0]->barrio_id ?? null;
+                $data_temp['address_data_calle'] = $person->address[0]->calle ?? null;
+                $data_temp['address_data_number'] = $person->address[0]->number ?? null;
+                $data_temp['address_data_piso'] = $person->address[0]->piso ?? null;
+                $data_temp['address_data_dpto'] = $person->address[0]->dpto ?? null;
+                $data_temp['address_data_latitude'] = $person->address[0]->latitude ?? null;
+                $data_temp['address_data_longitude'] = $person->address[0]->longitude ?? null;
+                $data_temp['address_data_google_address'] = $person->address[0]->google_address ?? null;
 
                 //Data_aditional
                 $data_temp['aditional_data_cant_hijos'] = $person->aditional[0]->cant_hijos ?? null;
@@ -149,21 +152,36 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
                 
                 //CBI DATA
                 $cbi_data = CbiData::where('tramite_id', $tramite['id'])->first();
-                $data_temp['cbi_data_anio_inicio'] = $cbi_data->anio_inicio;
-                $data_temp['cbi_data_aut_firmada'] = $cbi_data->aut_firmada == 1 ? '1' : ($cbi_data->aut_firmada === null ? null : '0');
-                $data_temp['cbi_data_aut_retirarse'] = $cbi_data->aut_retirarse == 1 ? '1' : ($cbi_data->aut_retirarse === null ? null : '0');
-                $data_temp['cbi_data_aut_uso_imagen'] = $cbi_data->aut_uso_imagen == 1 ? '1' : ($cbi_data->aut_uso_imagen === null ? null : '0');
-                $data_temp['cbi_data_act_varias'] = $cbi_data->act_varias == 1 ? '1' : ($cbi_data->act_varias === null ? null : '0');
-                $data_temp['cbi_data_act_esporadicas'] = $cbi_data->act_esporadicas == 1 ? '1' : ($cbi_data->act_esporadicas === null ? null : '0');
-                $data_temp['cbi_data_comedor'] = $cbi_data->comedor == 1 ? '1' : ($cbi_data->comedor === null ? null : '0');
-                $data_temp['cbi_data_estado_cbi_id'] = $cbi_data->estado_cbi_id;
-                $data_temp['cbi_data_estado_gabinete_id'] = $cbi_data->estado_gabinete_id;
+                $data_temp['cbi_data_anio_inicio'] = $cbi_data->anio_inicio ?? null;
+
+                
+                $data_temp['cbi_data_aut_firmada'] = $this->getCbiDataValue($cbi_data, 'aut_firmada');
+                $data_temp['cbi_data_aut_retirarse'] = $this->getCbiDataValue($cbi_data, 'aut_retirarse');
+                $data_temp['cbi_data_aut_uso_imagen'] = $this->getCbiDataValue($cbi_data, 'aut_uso_imagen');
+                $data_temp['cbi_data_act_varias'] = $this->getCbiDataValue($cbi_data, 'act_varias');
+                $data_temp['cbi_data_act_esporadicas'] = $this->getCbiDataValue($cbi_data, 'act_esporadicas');
+                $data_temp['cbi_data_comedor'] = $this->getCbiDataValue($cbi_data, 'comedor');
+
+
+                $data_temp['cbi_data_estado_cbi_id'] = $values['estado_id'] ?? $cbi_data->estado_cbi_id ?? null;
+                $data_temp['cbi_data_estado_gabinete_id'] = $cbi_data->estado_gabinete_id ?? null;
 
                 $this->data[$pos] = $data_temp;
                 $pos++;
             }
         }
-        return $this->data;
+        return collect($this->data)->toArray();
+        // return $this->data;
+    }
+
+    private function getCbiDataValue($cbi_data, $property) {
+        // Verifica si $cbi_data es null o si la propiedad no está definida.
+        if (is_null($cbi_data) || !property_exists($cbi_data, property: $property)) {
+            return null;
+        }
+    
+        // Retorna '1' si el valor es 1, '0' si es 0, o null si es null.
+        return $cbi_data->$property == 1 ? '1' : ($cbi_data->$property === null ? null : '0');
     }
 
     // Define el inicio del archivo.
@@ -205,7 +223,8 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
         return [
                 //tramite
                 'tramite_id','tramite_fecha','tramite_observacion','tramite_sede_id','tramite_canal_atencion','tramite_tipo_tramite_id',
-                'tramite_tipo_institucion_id', 'tramite_dependencia_id', 'tramite_num_tramite_legacy','tramite_parentesco_id', 
+                // 'tramite_tipo_institucion_id', 
+                'tramite_dependencia_id', 'tramite_num_tramite_legacy','tramite_parentesco_id', 
                 'tramite_estado_id','tramite_assigned','users_email','tramite_category_id', 'tramite_modalidad_atencion_id',
                 //Person_tramite
                 'person_tramite_rol_tramite_id',

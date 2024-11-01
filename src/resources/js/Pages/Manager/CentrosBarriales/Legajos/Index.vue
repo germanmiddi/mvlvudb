@@ -47,16 +47,16 @@
                         <div class="col-span-12 sm:col-span-2">
                             <label for="num_documento_nino" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento del Niño</label>
-                            <input v-model="filter.num_documento_nino" type="text" name="num_documento_nino" id="num_documento_nino"
-                                autocomplete="address-level2"
+                            <input v-model="filter.num_documento_nino" type="text" name="num_documento_nino"
+                                id="num_documento_nino" autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
                         <div class="col-span-12 sm:col-span-2">
                             <label for="num_documento_adulto" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento del Adulto</label>
-                            <input v-model="filter.num_documento_adulto" type="text" name="num_documento_adulto" id="num_documento_adulto"
-                                autocomplete="address-level2"
+                            <input v-model="filter.num_documento_adulto" type="text" name="num_documento_adulto"
+                                id="num_documento_adulto" autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
@@ -68,7 +68,7 @@
                                 <option value="" disabled>Seleccione una Escuela</option>
                                 <option v-for="escuela in escuelas" :key="escuela.id" :value="escuela.id">{{
                                     escuela.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
 
@@ -79,7 +79,7 @@
                                 <option value="" disabled>Seleccione un Estado</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
 
@@ -91,7 +91,7 @@
                                 <option value="" disabled>Seleccione un Tipo Legajo</option>
                                 <option v-for="tl in tiposLegajo" :key="tl.id" :value="tl.id">{{
                                     tl.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
                         <div class="col-span-12 sm:col-span-2">
@@ -99,9 +99,32 @@
                             <select v-model="filter.sede_id" id="sede_id" name="sede_id" autocomplete="off"
                                 class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" disabled>Seleccione una sede</option>
-                                <option v-for="item in sedes" :key="item.id" :value="item.id">{{ item.description }}</option>
+                                <option v-for="item in sedes" :key="item.id" :value="item.id">{{ item.description }}
+                                </option>
                             </select>
                         </div>
+                        <div>
+                            <label for="min-range" class="block mb-2 text-sm text-zinc-300 dark:text-white">Edad
+                                mínima:</label>
+                            <div class="flex items-center gap-x-2">
+                                <input id="min-range" type="range" v-model="min_years" :max="maxYears" @change="validateAges"  
+                                    class="slider-thumb h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 w-10/12" />
+                                <span class="font-light w-2/12t">{{ min_years }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="max-range" class="block mb-2 text-sm text-zinc-300 dark:text-white">Edad
+                                máxima:</label>
+                            <div class="flex items-center gap-x-2">
+                                <input id="max-range" type="range" v-model="max_years" :max="maxYears" @change="validateAges"  
+                                    class="slider-thumb h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 w-10/12" />
+                                <span class="font-light w-2/12t">{{ max_years }}</span>
+                            </div>
+                        </div>
+                        <p v-if="error" class="text-red-500 text-sm mt-1 w-full">{{ error }}</p>
+
+                    
                     </div>
                 </div>
             </div>
@@ -165,12 +188,12 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         <span v-if="data.estadocbj?.id === 1"
                                             class="inline-flex items-center rounded-md bg-green-200 px-2 py-1 text-xs font-medium text-green-800 ring-1 ring-inset ring-green-600/20">{{
-                                                data.estadocbj?.description
-                                                ?? '-' }}</span>
+                                            data.estadocbj?.description
+                                            ?? '-' }}</span>
                                         <span v-else
                                             class="inline-flex items-center rounded-md bg-gray-200 px-2 py-1 text-xs font-medium text-gray-800 ring-1 ring-inset ring-gray-600/20">{{
-                                                data.estadocbj?.description
-                                                ?? '-' }}</span>
+                                            data.estadocbj?.description
+                                            ?? '-' }}</span>
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium flex justify-center">
                                         <Menu as="div" class="inline-node">
@@ -314,6 +337,10 @@ export default {
             processReport: false,
             sede_id: this.selectedSede || '',
             tipo_legajo_id: this.selectedLegajo || '',
+            min_years: 0, 
+            max_years: 0, 
+            maxYears: 30, 
+            error: '',
         };
     },
     setup() {
@@ -323,7 +350,9 @@ export default {
     },
     methods: {
         clearFilter() {
-            this.filter = {}
+            this.filter = {},
+            this.min_years = 0, 
+            this.max_years = 0, 
             this.getLegajos()
         },
         clearMessage() {
@@ -366,8 +395,16 @@ export default {
                 filter += `&sede_id=${JSON.stringify(this.filter.sede_id)}`
             }
 
-            const get = `${route('legajoCB.list')}?${filter}`
+            if (this.filter.min_years) {
+                filter += `&min_years=${JSON.stringify(this.filter.min_years)}`
+            }
 
+            if (this.filter.max_years) {
+                filter += `&max_years=${JSON.stringify(this.filter.max_years)}`
+            }
+
+            const get = `${route('legajoCB.list')}?${filter}`
+            
             const response = await fetch(get, { method: "GET" });
             this.legajos = await response.json();
         },
@@ -423,15 +460,54 @@ export default {
                 this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
             }
         },
+        validateAges() {
+            const minYearsNum = Number(this.filter.min_years);
+            const maxYearsNum = Number(this.filter.max_years);
+
+           if (minYearsNum >= maxYearsNum && maxYearsNum > 0) {
+                this.error = 'La edad máxima debe ser mayor a la mínima.';
+                return false;
+            } else {
+                this.error = '';
+                return true;
+            }
+        }
     },
     mounted() {
             this.filter = {
                 sede_id: this.selectedSede,
                 tipo_legajo_id: this.selectedLegajo
             } 
-        this.getLegajos();
-    },
+            this.getLegajos();
+        },
+
+    watch: {
+        min_years(val) {
+            this.filter.min_years = this.min_years
+        },
+        max_years(val) {
+            this.filter.max_years = this.max_years
+        },
+    }
 };
 </script>
 
-<style></style>
+<style scoped>
+.slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background-color: #82dc85;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider-thumb::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background-color: #82dc85;
+  border-radius: 50%;
+  cursor: pointer;
+}
+</style>

@@ -440,11 +440,36 @@ class LegajosCBController extends Controller
             $sede_id = json_decode(request('sede_id'));
             $result->where('sede_id', $sede_id);
         }
+        
+        if (request('min_years') && request('max_years')) {
+            $min_years = (int) trim(request('min_years'), '"');
+            $max_years = (int) trim(request('max_years'), '"');
+            
+            if($max_years > 0 && $max_years > $min_years){
+                $dates = $this->getDatesByYearsOld($min_years, $max_years);
+                $result->whereIn('id', function ($sub) use ($dates) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->whereBetween('person.fecha_nac', $dates);
+                });
+            }
+        }
 
         return  $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
             ->orderBy("legajos_cb.id", 'DESC')
             ->paginate($length)
             ->withQueryString();
+    }
+
+    public function getDatesByYearsOld($min_years, $max_years)
+    {
+        $today = now();
+
+        $max_birthdate = $today->copy()->subYears($min_years)->endOfYear(); 
+        $min_birthdate = $today->copy()->subYears($max_years)->startOfYear(); 
+
+        return [$min_birthdate, $max_birthdate];
     }
 
     public function store_archivo(Request $request)

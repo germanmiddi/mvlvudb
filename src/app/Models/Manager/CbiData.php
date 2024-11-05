@@ -33,6 +33,10 @@ class CbiData extends Model
     {
         return $this->belongsTo(EstadoGabinete::class, 'estado_gabinete_id');
     }
+    public function estadoGabineteCb()
+    {
+        return $this->belongsTo(EstadoGabineteCB::class, 'estado_gabinete_id');
+    }
 
     public function tramite()
     {

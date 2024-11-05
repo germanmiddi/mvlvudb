@@ -3,8 +3,12 @@
 namespace App\Exports;
 
 use App\Models\Manager\CbiData;
+use App\Models\Manager\CbjData;
 use App\Models\Manager\Person;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\LegajoCB;
+use App\Models\Manager\Cud;
+use App\Models\Manager\GabineteCB;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -12,17 +16,25 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 //use Maatwebsite\Excel\Concerns\WithCache;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\FromQuery;
+
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Borders;
 
 use Maatwebsite\Excel\Concerns\WithTitle;
 
-class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldAutoSize, WithColumnFormatting, WithTitle, WithCustomStartCell
+class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
 {
 
     use Exportable;
@@ -32,156 +44,220 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
 
     protected $values;
     protected $data;
+    protected $headings;
+    protected $titles;
+    protected $persons;
+    protected $cbs;
+    protected $cuds;
+    protected $cbsJI;
+    protected $gabinetes;
+    protected $personIds;
 
-    function __construct($values) {
+    function __construct($values, $titles, $persons, $cbs, $cuds, $cbsJI, $gabinetes, $personIds) {
         $this->values = $values;
+        $this->titles = $titles;
+        $this->persons = $persons;
+        $this->cbs = $cbs;
+        $this->cuds = $cuds;
+        $this->cbsJI = $cbsJI;
+        $this->gabinetes = $gabinetes;
+        $this->personIds = $personIds;
     }
 
-    public function array(): array
+    public function view(): view
     {
         $values = $this->values;
+        $titles = $this->titles;
+        $persons = $this->persons;
+        $cbs = $this->cbs;
+        $cuds = $this->cuds;
+        $cbsJI = $this->cbsJI;
+        $gabinetes = $this->gabinetes;
+        $personIds = $this->personIds;
         $result = Tramite::query();
-        $pos = 0; 
-        $tramites = Tramite::where('dependencia_id',$values['dependencia_id'])
-            ->with(['canalAtencion', 'sede', 'tipoTramite', 'dependencia', 'parentesco', 'estado', 'assigned', 'category', 'modalidadAtencion', 'rol_tramite'])
-            ->get();
+        $pos = 0;
+
+        
+        $tramitesQuery = Tramite::whereIn('dependencia_id', $values['dependencia_id'])
+        ->with(['canalAtencion', 'sede', 'tipoTramite', 'dependencia', 'parentesco', 'estado', 'assigned', 'category', 'modalidadAtencion', 'rol_tramite']);
+  
+        // Filtra por person_id si no está vacio
+        if (!empty($personIds)) {
+            $tramitesQuery->whereHas('persons', function ($query) use ($personIds) {
+                $query->whereIn('person_id', $personIds)
+                    ->where('rol_tramite_id', '!=', 2);
+            });
+        }
+        $tramites = $tramitesQuery->get();
 
         foreach ($tramites as $tramite) {
-            // Ejecutar una consulta directa
-            $query = "SELECT * FROM person_tramite WHERE tramite_id =".$tramite['id'];
-            $person_tramite = DB::select($query);
             
+            $query = DB::table('person_tramite')->where('tramite_id', $tramite->id)->where('rol_tramite_id', '!=', 2);
+            $person_tramite = $query->get();
+
             foreach ($person_tramite as $pt) {
                 // Recorro las personas asociadas, y se cargan los datos del tramite. 
                 $data_temp = [];
-                $data_temp['id'] = $tramite['id'] + 12000000;
-                $data_temp['fecha'] = $tramite->getFecha();
-                $data_temp['observacion'] = $tramite['observacion'];
-                $data_temp['sede_id'] = $tramite->sede->description ?? null;
-                $data_temp['canal_atencion_id'] = $tramite->canalAtencion->description;
-                $data_temp['tipo_tramite_id'] = $tramite->tipoTramite->description;
-                // $data_temp['tipo_institucion_id'] = $tramite['tipo_institucion_id'];
-                $data_temp['dependencia_id'] = $tramite->dependencia->description;
-                $data_temp['num_tramite_legacy'] = $tramite['num_tramite_legacy'] ??  null;
-                $data_temp['parentesco_id'] = $tramite->parentesco->description ?? null;
-                $data_temp['estado_id'] = $tramite->estado->description;
-                $data_temp['assigned'] = $tramite->assigned->name ?? null;
-                $data_temp['users_email'] = User::where('users.id', $tramite['assigned'])->first()->email ?? '';
-                $data_temp['category_id'] = $tramite->category->nombre ?? null;
-                $data_temp['modalidad_atencion_id'] = $tramite->modalidadAtencion->description ?? null;
-                //Person_tramite
-                $data_temp['person_rol_tramite_id'] = $tramite->rol_tramite->pluck('description')->join(', ') ?? null;
+                $data_temp['Id'] = $tramite['id'] + 12000000;
+                $data_temp['Fecha'] = $tramite->getFecha();
+                $data_temp['Observacion'] = $tramite['observacion'];
+                $data_temp['Tipo de Trámite'] = $tramite->tipoTramite->description;
+                $data_temp['Dependencia'] = $tramite->dependencia->description;
+                $data_temp['Estado Tramite'] = $tramite->estado->description;
+                $data_temp['Asignado'] = $tramite->assigned->name ?? null;
+                $data_temp['Email del Asignado'] = User::where('users.id', $tramite['assigned'])->first()->email ?? '';
+                
                 //Person
-                $person = Person::where('id', $pt->person_id)->first();
-
-                $data_temp['person_name'] = $person->name;
-                $data_temp['person_lastname'] = $person->lastname;
-                $data_temp['person_num_documento'] = $person->num_documento;
-                $data_temp['person_tipo_documento_id'] = $person->tipo_documento_id;
-                $data_temp['person_fecha_nacimiento'] = $person->fecha_nac;
+                $person = $persons->where('id', $pt->person_id)->first();
+                
+                $data_temp['Nombre'] = $person->name;
+                $data_temp['Apellido'] = $person->lastname;
+                $data_temp['Edad'] = $person->getAgeAttribute();
+                $data_temp['Tipo Documento'] = $person->tipoDoc->description;
+                $data_temp['Documento'] = $person->num_documento;
+                $data_temp['Fecha de Nacimiento'] = $person->fecha_nac;
+                $data_temp['Telefono'] = $person->contact[0]->phone ?? null;
+                $data_temp['Celular'] = $person->contact[0]->celular ?? null;
+                $data_temp['Email'] = $person->contact[0]->email ?? null;
+                //LegajoCBData
+                $cb = $cbs->where('person_id', $pt->person_id)->first();
+                
+                if(isset($cb)){
+                    $data_temp['Nro Legajo'] = $cb->id;
+                    $data_temp['Sede'] = $cb->sede->description ?? null;
+                    $data_temp['Estado Legajo'] = $cb->estadocbj->description?? null;
+                    $data_temp['Canal de Atencion'] = $cb->canal_atencion->description?? null;
+                    $data_temp['Tipo Legajo'] = $cb->tipo_legajo->description?? null;
+                    $data_temp['Apoyo Escolar'] = !empty($cb->autorizacion->apoyo_escolar) && $cb->autorizacion->apoyo_escolar == 1 ? 'Si' : 'No';
+                    $data_temp['Actividad Por Area Empleo'] = !empty($cb->autorizacion->actividad_empleo) && $cb->autorizacion->actividad_empleo == 1 ? 'Si' : 'No';
+                    $data_temp['Autorizacion Firmada'] = !empty($cb->autorizacion->autorizacion_firmada) && $cb->autorizacion->autorizacion_firmada == 1 ? 'Si' : 'No';
+                    $data_temp['Autorizacion Retirarse'] = !empty($cb->autorizacion->autorizacion_retirarse) && $cb->autorizacion->autorizacion_retirarse == 1 ? 'Si' : 'No';
+                    $data_temp['Autorizacion Uso de Imagen'] = !empty($cb->autorizacion->autorizacion_uso_imagen) && $cb->autorizacion->autorizacion_uso_imagen == 1 ? 'Si' : 'No';
+                }else {
+                    $data_temp['Nro Legajo'] = null;
+                    $data_temp['Sede'] = null;
+                    $data_temp['Estado Legajo'] = null;
+                    $data_temp['Canal de Atencion'] = null;
+                    $data_temp['Tipo Legajo'] = null;
+                    $data_temp['Apoyo Escolar'] = null;
+                    $data_temp['Actividad Por Area Empleo'] = null;
+                    $data_temp['Autorizacion Firmada'] = null;
+                    $data_temp['Autorizacion Retirarse'] = null;
+                    $data_temp['Autorizacion Uso de Imagen'] = null;
+                }
+            
+                //Adulto Responsable
+                if(isset($cb->responsable_id)){
+                    $data_temp['Adulto Nombre'] = $cb->responsable->lastname ?? null;
+                    $data_temp['Adulto Apellido'] = $cb->responsable->name ?? null;
+                    $data_temp['Adulto Documento'] = $cb->responsable->num_documento ?? null;
+                    $data_temp['Adulto Parentesco'] = $cb->parentesco->description ?? null;
+                }else{
+                    $data_temp['Adulto Nombre'] = null;
+                    $data_temp['Adulto Apellido'] = null;
+                    $data_temp['Adulto Documento'] = null;
+                    $data_temp['Adulto Parentesco'] = null;
+                }
 
                 //Data_address
-                $data_temp['address_data_localidad_id'] = $person->address[0]->localidad_id ?? null;
-                $data_temp['address_data_pais_id'] = $person->address[0]->pais_id ?? null;
-                $data_temp['address_data_barrio_id'] = $person->address[0]->barrio_id ?? null;
-                $data_temp['address_data_calle'] = $person->address[0]->calle ?? null;
-                $data_temp['address_data_number'] = $person->address[0]->number ?? null;
-                $data_temp['address_data_piso'] = $person->address[0]->piso ?? null;
-                $data_temp['address_data_dpto'] = $person->address[0]->dpto ?? null;
-                $data_temp['address_data_latitude'] = $person->address[0]->latitude ?? null;
-                $data_temp['address_data_longitude'] = $person->address[0]->longitude ?? null;
-                $data_temp['address_data_google_address'] = $person->address[0]->google_address ?? null;
+                $data_temp['Localidad'] = !empty($person->address[0]->localidad_id) ? $person->address[0]->localidad->description : null;
+                $data_temp['Calle'] = !empty($person->address[0]->calle) ? $person->address[0]->calle : null;
+                $data_temp['Numero'] = !empty($person->address[0]->number) ? $person->address[0]->number : null;
+                $data_temp['Piso'] = !empty($person->address[0]->piso) ? $person->address[0]->piso : null;
+                $data_temp['Dpto'] = !empty($person->address[0]->dpto) ? $person->address[0]->dpto : null;
+                $data_temp['Observacion'] = !empty($person->address[0]->observacion) ? $person->address[0]->observacion : null;
 
-                //Data_aditional
-                $data_temp['aditional_data_cant_hijos'] = $person->aditional[0]->cant_hijos ?? null;
-                $data_temp['aditional_data_tipo_vivienda_id'] = $person->aditional[0]->tipo_vivienda_id ?? null;
-                $data_temp['aditional_data_tipo_vinculo_familiar_id'] = $person->aditional[0]->tipo_vinculo_familiar_id ?? null;
-                $data_temp['aditional_data_situacion_conyugal_id'] = $person->aditional[0]->situacion_conyugal_id ?? null;
-
-                //Data_contact
-                $data_temp['contact_data_phone'] = $person->contact[0]->phone;
-                $data_temp['contact_data_celular'] = $person->contact[0]->celular;
-                $data_temp['contact_data_email'] = $person->contact[0]->email;
 
                 // Data_salud
                 if($person->salud){
-                    $data_temp['salud_data_apto_medico'] = $person->salud->apto_medico == 1 ? '1' : ($person->salud->apto_medico === null ? null : '0');
-                    $data_temp['salud_data_libreta_vacunacion'] = $person->salud->libreta_vacunacion == 1 ? '1' : ($person->salud->libreta_vacunacion === null ? null : '0');
-                    $data_temp['salud_data_fecha_apto_medico'] = $person->salud->fecha_apto_medico ?? null;
-                    $data_temp['salud_data_electrocardiograma'] = $person->salud->electrocardiograma == 1 ? '1' : ($person->salud->electrocardiograma === null ? null : '0');
-                    $data_temp['salud_data_fecha_electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
-                    $data_temp['salud_data_medicacion'] = $person->salud->medicacion == 1 ? '1' : ($person->salud->medicacion === null ? null : '0');
-                    $data_temp['salud_data_name_medicacion'] = $person->salud->name_medicacion ?? null;
-                    $data_temp['salud_data_dosis'] = $person->salud->dosis ?? null;
-                    $data_temp['salud_data_observacion'] = $person->salud->observacion ?? null;
-                    $data_temp['salud_data_centro_salud_id'] = $person->salud->centro_salud_id ?? null;
-                    $data_temp['salud_data_estado_salud_id'] = $person->salud->estado_salud_id ?? null;
-                }else{
-                    $data_temp['salud_data_apto_medico'] = null;
-                    $data_temp['salud_data_libreta_vacunacion'] = null;
-                    $data_temp['salud_data_fecha_apto_medico'] = null;
-                    $data_temp['salud_data_electrocardiograma'] = null;
-                    $data_temp['salud_data_fecha_electrocardiograma'] = null;
-                    $data_temp['salud_data_medicacion'] = null;
-                    $data_temp['salud_data_name_medicacion'] = null;
-                    $data_temp['salud_data_dosis'] = null;
-                    $data_temp['salud_data_observacion'] = null;
-                    $data_temp['salud_data_centro_salud_id'] = null;
-                    $data_temp['salud_data_estado_salud_id'] = null;
+                    $data_temp['Apto medico'] = $person->salud->apto_medico == 1 ? 'Si' : ($person->salud->apto_medico === null ? 'No' : 'No');
+                    $data_temp['Fecha de Apto Medico'] = $person->salud->fecha_apto_medico ?? null;
+                    $data_temp['Fecha de Venc Apto Medico'] = $person->salud->fecha_apto_medico ?? null;
+                    $data_temp['Electrocardiograma'] = $person->salud->electrocardiograma == 1 ? 'Si' : ($person->salud->electrocardiograma === null ? 'No' : 'No');
+                    $data_temp['Fecha Electrocardiograma'] = $person->salud->fecha_electrocardiograma ?? null;
+                    $data_temp['Libreta Vacunacion'] = $person->salud->libreta_vacunacion == 1 ? 'Si' : ($person->salud->libreta_vacunacion === null ? 'No' : 'No');
+                    $data_temp['Centro de Salud'] = !empty($person->salud->centro_salud_id) ? $person->salud->centroSalud->description : null;
+                    $data_temp['Observacion'] = $person->salud->observacion ?? null;
+                    
+                }else {
+                    $data_temp['Apto medico'] = null; 
+                    $data_temp['Fecha de Apto Medico'] = null; 
+                    $data_temp['Fecha de Venc Apto Medico'] = null; 
+                    $data_temp['Electrocardiograma'] = null; 
+                    $data_temp['Fecha Electrocardiograma'] = null; 
+                    $data_temp['Libreta Vacunacion'] = null;
+                    $data_temp['Centro de Salud'] = null; 
+                    $data_temp['Observacion'] = null; 
                 }
 
-                
-                // Data_social
-                $data_temp['social_data_tipo_ocupacion_id'] = $person->social[0]->tipo_ocupacion_id ?? null;
-                $data_temp['social_data_cobertura_medica_id'] = $person->social[0]->cobertura_medica_id ?? null;
-                $data_temp['social_data_tipo_pension_id'] = $person->social[0]->tipo_pension_id ?? null;
-                $data_temp['social_data_programa_social_id'] = $person->social[0]->programa_social_id ?? null;
-
+                //CUD
+                $cud = $cuds->where('person_id', $person->id)->first();
+                if(isset($cud)){
+                    $data_temp['Posee Cud'] = $cud->posee_cud == 1 ? 'Si' : ($person->salud->medicacion === null ? 'No' : 'No');
+                    $data_temp['Presento Cud'] = $cud->presento_cud == 1 ? 'Si' : ($person->salud->medicacion === null ? 'No' : 'No');
+                    $data_temp['Cud Vencimiento'] = $cud->getFecha() ?? null;
+                }else {
+                    $data_temp['Posee Cud'] = 'No';
+                    $data_temp['Presento Cud'] = 'No';
+                    $data_temp['Cud Vencimiento'] = null;
+                }
                 // Data_education
-                $data_temp['education_data_nivel_educativo_id'] = $person->education[0]->nivel_educativo_id ?? null;
-                $data_temp['education_data_estado_educativo_id'] = $person->education[0]->estado_educativo_id ?? null;
-                $data_temp['education_data_escuela_id'] = $person->education[0]->escuela_id ?? null;
-                $data_temp['education_data_escuela_infante_id'] = $person->education[0]->escuela_infante_id ?? null;
-                $data_temp['education_data_escuela_dependencia_id'] = $person->education[0]->escuela_dependencia_id ?? null;
-                $data_temp['education_data_escuela_localidad_id'] = $person->education[0]->escuela_localidad_id ?? null;
-                $data_temp['education_data_escuela_nivel_id'] = $person->education[0]->escuela_nivel_id ?? null;
-                $data_temp['education_data_escuela_turno_id'] = $person->education[0]->escuela_turno_id ?? null;
-                $data_temp['education_data_permanencia'] = $person->education[0]->permanencia == 1 ? '1' : ($person->education[0]->permanencia === null ? null : '0');
-                $data_temp['education_data_certificado_escolar'] = $person->education[0]->certificado_escolar == 1 ? '1' : ($person->education[0]->certificado_escolar === null ? null : '0');
-                $data_temp['education_data_observacion'] = $person->education[0]->observacion ?? null;
+                switch ($person) {
+                    case !empty($person->education[0]->escuela_id):
+                        $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
+                        break;
+                    case !empty($person->education[0]->escuela_infante_id):
+                        $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
+                        break;
+                    case !empty($person->education[0]->escuela_primaria_id):
+                        $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
+                        break;
+                    case !empty($person->education[0]->escuela_secundaria_id):
+                        $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
+                        break;
+                    case !empty($person->education[0]->escuela_nocturna_id):
+                        $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
+                        break;
+                    
+                    default:
+                        $data_temp['Escuela'] = null;
+                        break;
+                }
+                $data_temp['Nivel Educativo'] = !empty($person->education[0]->nivel_educativo_id) ? $person->education[0]->nivelEducativo->description : null;
+                $data_temp['Grado/Año'] = !empty($person->education[0]->escuela_nivel_id) ? $person->education[0]->escuelaNivel->description : null;
+                $data_temp['Estado Educativo'] = !empty($person->education[0]->estado_educativo_id) ? $person->education[0]->estadoEducativo->description : null;
+                $data_temp['Turno'] = !empty($person->education[0]->escuela_turno_id) ? $person->education[0]->escuelaTurno->description : null;
+                $data_temp['Dependencia'] = !empty($person->education[0]->escuela_dependencia_id) ? $person->education[0]->escuelaDependencia->description : null;
+                $data_temp['Localidad'] = !empty($person->education[0]->escuela_localidad_id) ? $person->education[0]->escuelaLocalidad->description : null;
+                $data_temp['Realiza Permanencia'] = !empty($person->education[0]->permanencia) && $person->education[0]->permanencia == 1  ? 'Si' : 'No';
+                $data_temp['Observacion'] = $person->education[0]->observacion ?? null;
                 
-                //CBI DATA
-                $cbi_data = CbiData::where('tramite_id', $tramite['id'])->first();
-                $data_temp['cbi_data_anio_inicio'] = $cbi_data->anio_inicio ?? null;
-
+                //CB DATA
+                $cbJI = $cbsJI->where('tramite_id', $tramite->id)->first();
+                $data_temp['Año Inicio'] = $cbJI->anio_inicio ?? null;
                 
-                $data_temp['cbi_data_aut_firmada'] = $this->getCbiDataValue($cbi_data, 'aut_firmada');
-                $data_temp['cbi_data_aut_retirarse'] = $this->getCbiDataValue($cbi_data, 'aut_retirarse');
-                $data_temp['cbi_data_aut_uso_imagen'] = $this->getCbiDataValue($cbi_data, 'aut_uso_imagen');
-                $data_temp['cbi_data_act_varias'] = $this->getCbiDataValue($cbi_data, 'act_varias');
-                $data_temp['cbi_data_act_esporadicas'] = $this->getCbiDataValue($cbi_data, 'act_esporadicas');
-                $data_temp['cbi_data_comedor'] = $this->getCbiDataValue($cbi_data, 'comedor');
 
+                $data_temp['Estado CB'] =
+                isset($cbJI->estado_cbi_id) ?
+                ($cbJI->estadoCbi ? $cbJI->estadoCbi->description : null) : (isset($cbJI->estado_cbj_id) ?
+                ($cbJI->estadoCbj ? $cbJI->estadoCbj->description : null) : null);                
+                
+                
+                $gabinete = isset($cb) ? $gabinetes->where('legajo_id', $cb->id)->first() : null;
+                $data_temp['Estado Gabinete'] = isset($gabinete->estado_id) ? $gabinete->estado->description : null;
+                $data_temp['Acompañamiento'] = !empty($cbJI->acompanamiento_cbj_id) ? $cbJI->acompanamiento->description : null;
 
-                $data_temp['cbi_data_estado_cbi_id'] = $values['estado_id'] ?? $cbi_data->estado_cbi_id ?? null;
-                $data_temp['cbi_data_estado_gabinete_id'] = $cbi_data->estado_gabinete_id ?? null;
 
                 $this->data[$pos] = $data_temp;
                 $pos++;
             }
         }
-        return collect($this->data)->toArray();
-        // return $this->data;
-    }
+        $data = collect($this->data)->toArray();
 
-    private function getCbiDataValue($cbi_data, $property) {
-        // Verifica si $cbi_data es null o si la propiedad no está definida.
-        if (is_null($cbi_data) || !property_exists($cbi_data, property: $property)) {
-            return null;
-        }
-    
-        // Retorna '1' si el valor es 1, '0' si es 0, o null si es null.
-        return $cbi_data->$property == 1 ? '1' : ($cbi_data->$property === null ? null : '0');
+        return view('exports.inscriptos', [
+            'data' => $data,
+            'titles' => $titles,
+        ]);
     }
 
     // Define el inicio del archivo.
@@ -198,69 +274,46 @@ class InscriptosCBExport implements FromArray, WithHeadings, WithStyles, ShouldA
 
     public function styles(Worksheet $sheet)
     {
-        // Aplica un estilo a las celdas de la cabecera
-        $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')
-        ->applyFromArray([
+        $lastColumn = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex(count($this->titles));
+        $headerRange = "A1:{$lastColumn}1";
+
+        $sheet->getStyle($headerRange)->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 14,
             ],
             'fill' => [
-                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'rgb' => 'CCCCCC', // Corregido el color de fondo GRIS
+                    'rgb' => '4CAF50'
                 ]
             ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'justify' => Alignment::HORIZONTAL_JUSTIFY,
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000'],
+                ],
+            ]
         ]);
 
-        $sheet->getRowDimension(1)->setRowHeight(30);
+        $sheet->getStyle("A1:{$lastColumn}" . $sheet->getHighestRow())->applyFromArray([
+            'alignment' => [
+                'wrapText' => true,
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+        ]);
+
+
+        return [];
     }
-
-    // encabezados
-    public function headings(): array
-    {
-
-        return [
-                //tramite
-                'tramite_id','tramite_fecha','tramite_observacion','tramite_sede_id','tramite_canal_atencion','tramite_tipo_tramite_id',
-                // 'tramite_tipo_institucion_id', 
-                'tramite_dependencia_id', 'tramite_num_tramite_legacy','tramite_parentesco_id', 
-                'tramite_estado_id','tramite_assigned','users_email','tramite_category_id', 'tramite_modalidad_atencion_id',
-                //Person_tramite
-                'person_tramite_rol_tramite_id',
-                //Person
-                'person_name','person_lastname','person_num_documento','person_tipo_documento_id','person_fecha_nacimiento',
-                //Data_address
-                'address_data_localidad_id', 'address_data_pais_id','address_data_barrio_id',
-                'address_data_calle','address_data_number','address_data_piso','address_data_dpto','address_data_latitude',
-                'address_data_longitude','address_data_google_address',  
-                //Data_aditional
-                'aditional_data_cant_hijos','aditional_data_tipo_vivienda_id','aditional_data_tipo_vinculo_familiar_id','aditional_data_situacion_conyugal_id',
-                //Data_contact
-                'contact_data_phone','contact_data_celular','contact_data_email',
-                // Data_salud
-                'salud_data_apto_medico','salud_data_libreta_vacunacion','salud_data_fecha_apto_medico','salud_data_electrocardiograma','salud_data_fecha_electrocardiograma',
-                'salud_data_medicacion','salud_data_name_medicacion','salud_data_dosis','salud_data_observacion','salud_data_centro_salud_id','salud_data_estado_salud_id',
-                // Data_social
-                'social_data_tipo_ocupacion_id','social_data_cobertura_medica_id','social_data_tipo_pension_id','social_data_programa_social_id',
-                // Data_education
-                'education_data_nivel_educativo_id','education_data_estado_educativo_id','education_data_escuela_id',
-                'education_data_escuela_infante_id','education_data_escuela_dependencia_id','education_data_escuela_localidad_id',
-                'education_data_escuela_nivel_id','education_data_escuela_turno_id','education_data_permanencia',
-                'education_data_certificado_escolar','education_data_observacion',
-                //CBI DATA
-                'cbi_data_anio_inicio','cbi_data_aut_firmada','cbi_data_aut_retirarse','cbi_data_aut_uso_imagen','cbi_data_act_varias','cbi_data_act_esporadicas','cbi_data_comedor', 
-                'cbi_data_estado_cbi_id','cbi_data_estado_gabinete_id'
-        ];
-    } 
 
     //Define el ancho de las columnas, si esta vacio se autoajustan
-    public function columnFormats(): array
-    {
-        return [   
-                
-        ];
-    }
 
     public function cacheFor()
     {

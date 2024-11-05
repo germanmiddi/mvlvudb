@@ -12,7 +12,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\LegajoCB;
+use App\Models\Manager\Person;
+use App\Models\Manager\Cud;
+use App\Models\Manager\GabineteCB;
+use App\Models\Manager\CbiData;
+use App\Models\Manager\CbjData;
 use App\Models\Manager\TramiteEstado;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -191,47 +198,171 @@ class ReportController extends Controller
 
     public function exportInscriptosCBExcel(Request $request){
 
-        $values = [];
+        $cuds = Cud::with('person')->get();
 
-        if($request->estado_id){
-            $values['estado_id'] = json_decode($request->estado_id);
+        $cbsJI = CbiData::with('estadoCbi', 'estadoGabineteCb')->get()
+            ->merge(
+                CbjData::with('estadoCbj', 'acompanamiento')->get()
+            );
+        $gabinetes = GabineteCB::with('legajo', 'estado')->get();
+        
+        $values = [];
+        //Filtros
+        //Escuela, Estado, Tipo Legajo, Sede, Edades
+        // if($request->escuela){
+        //     $values['escuela'] = json_decode($request->escuela);
+        // }
+
+        $cbsQuery = LegajoCB::with('responsable', 'autorizacion', 'sede', 'canal_atencion', 'estadocbj', 'autorizacion', 'tipo_legajo', 'parentesco', 'gabinete');
+
+        // Filtros
+        if ($request->estado_id) {
+            $cbsQuery->where('estado_id', $request['estado_id']);
         }
         
-        if($request->tipo_legajo_id){
+        if ($request->tipo_legajo_id) {
+            $cbsQuery->where('tipo_legajo_id', $request['tipo_legajo_id']);
             $values['tipo_legajo_id'] = json_decode($request->tipo_legajo_id);
+        } else {
+            $values['tipo_legajo_id'] = [1, 2]; // Valor por defecto
+        }
+        
+        if ($request->sede_id) {
+            $cbsQuery->where('sede_id', $request['sede_id']);
         }
 
-        if($request->sede_id){
-            $values['sede_id'] = json_decode($request->sede_id);
+        $cbs = $cbsQuery->get();
+        
+        $personIds = ($request->sede_id || $request->tipo_legajo_id || $request->estado_id) ? $cbs->pluck('person_id')->toArray() : [];
+        
+        $personsQuery = Person::with('address', 'education', 'tipoDoc');
+
+        // Aplicar los filtros de edad
+        if (isset($request['min_years']) && isset($request['max_years'])) {
+            $today = Carbon::today();
+            $minYears = (int)$request['min_years'];
+            $maxYears = (int)$request['max_years'];
+
+            //Se busca personas que nacieron despues de $min_birthdate
+            $min_birthdate = $today->copy()->subYears($maxYears + 1)->startOfDay(); // Cumpleaños +1 para incluir el año
+            $personsQuery->where('fecha_nac', '>=', $min_birthdate);
+
+            //Se busca personas que nacieron despues de $max_birthdate
+            $max_birthdate = $today->copy()->subYears($minYears)->endOfDay(); // Fin del día del cumpleaños
+            $personsQuery->where('fecha_nac', '<=', $max_birthdate);
+
+            //Se filtra a las personas reescribiendo la variable de id de personas
+            $finalPersons = $personsQuery->whereIn('id', $personIds)->get();
+            $personIds = $finalPersons->pluck('id')->toArray();
         }
+        
+        $persons = Person::with('address', 'education', 'tipoDoc')->get();
         
         //Ver como hacer con el tema de tipo de trámite
         //Ya que estan 144,145,146 (barrial, juventud, infancia)
         switch ($request->tipo_legajo_id) {
             case '1':
-                $values['tipo_tramite_id'] = 146;
-                $values['dependencia_id'] = 12;
+                $values['tipo_tramite_id'] = [146];
+                $values['dependencia_id'] = [12];
                 break;
             case '2':
-                $values['tipo_tramite_id'] = 145;
-                $values['dependencia_id'] = 13;
+                $values['tipo_tramite_id'] = [145];
+                $values['dependencia_id'] = [13];
                 break;
             default:
                 $values['tipo_tramite_id'] = [144, 145, 146];
                 $values['dependencia_id'] = [1, 12, 13];
                 break;
         }
-
-        // if($request->date){
-
-        //     $values['from'] = date('Y-m-d', strtotime($request->date[0]));
-        //     $values['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
-                   
-        // }
+        $titles = [
+                    //Trámite
+                    'Id',
+                    'Fecha',
+                    'Observacion',
+                    'Tipo de Trámite',
+                    'Dependencia',
+                    'Estado Tramite',
+                    'Asignado',
+                    'Email del Asignado',
         
-        return Excel::download(new InscriptosCBExport($values), 'InscriptosCB.xlsx');
-    }
+                    //Person
+                    'Nombre',
+                    'Apellido',
+                    'Edad',
+                    'Tipo Documento',
+                    'Documento',
+                    'Fecha de Nacimiento',
+                    'Telefono',
+                    'Celular',
+                    'Email',
+        
+                    //LegajoCB
+                    'Nro Legajo',
+                    'Sede',
+                    'Estado Legajo',
+                    'Canal de Atencion',
+                    'Tipo Legajo',
+                    'Apoyo Escolar',
+                    'Actividad Por Area Empleo',
+                    'Autorizacion Firmada',
+                    'Autorizacion Retirarse',
+                    'Autorizacion Uso de Imagen',
+                    
+                    //Adulto Responsable
+                    'Adulto Nombre',
+                    'Adulto Apellido',
+                    'Adulto Documento',
+                    'Adulto Parentesco',
+        
+                    //Direccion
+                    'Localidad',
+                    'Calle',
+                    'Numero',
+                    'Piso',
+                    'Dpto',
+                    'Observacion',
+        
+                    //Salud
+                    'Apto medico',
+                    'Fecha de Apto Medico',
+                    'Fecha de Venc Apto Medico',
+                    'Electrocardiograma',
+                    'Fecha Electrocardiograma',
+                    'Libreta Vacunacion',
+                    'Centro de Salud',
+                    'Observacion',
+                    //Cud
+                    'Posee Cud',
+                    'Presento Cud',
+                    'Cud Vencimiento',
+        
+                    //Educación
+                    'Escuela',
+                    'Nivel Educativo',
+                    'Grado/Año',
+                    'Estado Educativo',
+                    'Turno',
+                    'Dependencia',
+                    'Localidad',
+                    'Realiza Permanencia',
+                    'Observacion',
+        
+                    //CBData
+                    'Año Inicio',
+                    'Estado CB',
+                    'Estado Gabinete',
+                    'Acompañamiento',
+                ];
 
+        return Excel::download(new InscriptosCBExport($values, $titles, $persons, $cbs, $cuds, $cbsJI, $gabinetes, $personIds), 'InscriptosCB.xlsx');
+    }
+    
+    // if($request->date){
+
+    //     $values['from'] = date('Y-m-d', strtotime($request->date[0]));
+    //     $values['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
+               
+    // }
     public function exportPersonsExcel(Request $request){
         $data = [];
 

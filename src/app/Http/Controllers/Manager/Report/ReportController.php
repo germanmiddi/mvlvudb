@@ -207,15 +207,19 @@ class ReportController extends Controller
         $gabinetes = GabineteCB::with('legajo', 'estado')->get();
         
         $values = [];
-        //Filtros
-        //Escuela, Estado, Tipo Legajo, Sede, Edades
-        // if($request->escuela){
-        //     $values['escuela'] = json_decode($request->escuela);
-        // }
-
+        
         $cbsQuery = LegajoCB::with('responsable', 'autorizacion', 'sede', 'canal_atencion', 'estadocbj', 'autorizacion', 'tipo_legajo', 'parentesco', 'gabinete');
 
         // Filtros
+        if ($request->date) {
+            $date = $request->date;
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+            $cbsQuery->where('fecha_inscripcion', '>=',$from)
+                    ->where('fecha_inscripcion','<',$to);
+        }
+
         if ($request->estado_id) {
             $cbsQuery->where('estado_id', $request['estado_id']);
         }
@@ -224,38 +228,78 @@ class ReportController extends Controller
             $cbsQuery->where('tipo_legajo_id', $request['tipo_legajo_id']);
             $values['tipo_legajo_id'] = json_decode($request->tipo_legajo_id);
         } else {
-            $values['tipo_legajo_id'] = [1, 2]; // Valor por defecto
+            $values['tipo_legajo_id'] = [1, 2]; 
         }
         
         if ($request->sede_id) {
             $cbsQuery->where('sede_id', $request['sede_id']);
         }
 
-        $cbs = $cbsQuery->get();
-        
-        $personIds = ($request->sede_id || $request->tipo_legajo_id || $request->estado_id) ? $cbs->pluck('person_id')->toArray() : [];
-        
-        $personsQuery = Person::with('address', 'education', 'tipoDoc');
-
-        // Aplicar los filtros de edad
-        if (isset($request['min_years']) && isset($request['max_years'])) {
-            $today = Carbon::today();
-            $minYears = (int)$request['min_years'];
-            $maxYears = (int)$request['max_years'];
-
-            //Se busca personas que nacieron despues de $min_birthdate
-            $min_birthdate = $today->copy()->subYears($maxYears + 1)->startOfDay(); // Cumpleaños +1 para incluir el año
-            $personsQuery->where('fecha_nac', '>=', $min_birthdate);
-
-            //Se busca personas que nacieron despues de $max_birthdate
-            $max_birthdate = $today->copy()->subYears($minYears)->endOfDay(); // Fin del día del cumpleaños
-            $personsQuery->where('fecha_nac', '<=', $max_birthdate);
-
-            //Se filtra a las personas reescribiendo la variable de id de personas
-            $finalPersons = $personsQuery->whereIn('id', $personIds)->get();
-            $personIds = $finalPersons->pluck('id')->toArray();
+        if ($request->name) {
+            $name = $request->name;
+            $cbsQuery->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('legajos_cb.id')
+                ->from('legajos_cb')
+                ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                ->where('person.name', 'LIKE', '%' . $name . '%')
+                ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
+        }
+        if ($request->num_documento_nino) {
+            $num_documento_nino = $request->num_documento_nino;
+            $cbsQuery->whereIn('id', function ($sub) use ($num_documento_nino) {
+                $sub->selectRaw('legajos_cb.id')
+                ->from('legajos_cb')
+                ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                ->where('person.num_documento', 'LIKE', '%' . $num_documento_nino . '%');
+            });
+        }
+        if ($request->num_documento_adulto) {
+            $num_documento_adulto = $request->num_documento_adulto;
+            $cbsQuery->whereIn('id', function ($sub) use ($num_documento_adulto) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.responsable_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_adulto . '%');
+            });
         }
         
+        // Aplicar los filtros de edad
+        if ($request->min_years && $request->max_years) {
+            $minYears = (int)$request['min_years'];
+            $maxYears = (int)$request['max_years'];
+            
+            if($maxYears > 0 && $maxYears > $minYears){
+                $dates = $this->getDatesByYearsOld($minYears, $maxYears);
+                $cbsQuery->whereIn('id', function ($sub) use ($dates) {
+                    $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->whereBetween('person.fecha_nac', $dates);
+                });
+            }
+        }
+        if ($request->escuela_id) {
+            $escuela_id = $request->escuela_id;
+            
+            $cbsQuery->whereIn('id', function ($sub) use ($escuela_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person','person.id','=', 'legajos_cb.person_id')
+                    ->join('education_data','education_data.person_id','=', 'person.id')
+                    ->where(function ($query) use ($escuela_id){
+                        $query->where('education_data.escuela_primaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_secundaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_nocturna_id', $escuela_id)
+                            ->orWhere('education_data.escuela_infante_id', $escuela_id)
+                            ->orWhere('education_data.escuela_id', $escuela_id);
+                    });
+            });
+        }
+        
+        $cbs = $cbsQuery->get();
+
+        $personIds = ($request->sede_id || $request->tipo_legajo_id || $request->estado_id || $request->num_documento_adulto || $request->num_documento_nino || $request->escuela_id  || $request->name || $request->min_years || $request->max_years || $request->date) ? $cbs->pluck('person_id')->toArray() : [];
         $persons = Person::with('address', 'education', 'tipoDoc')->get();
         
         //Ver como hacer con el tema de tipo de trámite

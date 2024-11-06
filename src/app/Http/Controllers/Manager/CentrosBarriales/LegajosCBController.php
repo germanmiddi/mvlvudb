@@ -67,7 +67,7 @@ class LegajosCBController extends Controller
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
                 'estados' => EstadoCbj::all(),
-                'escuelas' => Escuela::all(),
+                'escuelas' => Escuela::whereNull('dependencia_id')->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
                 'selectedSede' => $sede_id, 
                 'selectedLegajo' => $legajo,

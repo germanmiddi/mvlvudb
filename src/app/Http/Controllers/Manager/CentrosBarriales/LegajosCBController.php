@@ -34,6 +34,7 @@ use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\EstadoPedagogia;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\Parentesco;
 use App\Models\Manager\Person;
@@ -133,7 +134,8 @@ class LegajosCBController extends Controller
                         'gabinete',
                         'gabinete.estado',
                         'emprendedor',
-                        'assigned'
+                        'assigned',
+                        'pedagogia',
                     )->get(),
                 'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
@@ -160,6 +162,8 @@ class LegajosCBController extends Controller
                 'escuelasNivel' => EscuelaNivel::get(),
 
                 'estadosGabinete' => EstadoGabineteCB::all(),
+
+                'estadosPedagogia' => EstadoPedagogia::all(),
 
             ]
         );

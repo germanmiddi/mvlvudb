@@ -122,4 +122,9 @@ class LegajoCB extends Model
     {
         return $this->belongsTo(User::class, 'assigned_id');
     }
+
+    public function pedagogia()
+    {
+        return $this->hasMany(LegajoPedagogia::class,'legajo_id', 'id');
+    }
 }

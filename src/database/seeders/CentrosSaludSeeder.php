@@ -18,7 +18,7 @@ class CentrosSaludSeeder extends Seeder
         $data = [
             ['id' => 1, 'description' => 'CAPS Ravazzoli', 'activo' => true],
             ['id' => 2, 'description' => 'CAPS Blanca Acosta', 'activo' => true],
-            ['id' => 3, 'description' => 'CAPS Illia', 'activo' => true],
+            ['id' => 3, 'description' => 'CAPS Illia', 'activo' => false],
             ['id' => 4, 'description' => 'CAPS El Ceibo', 'activo' => true],
             ['id' => 5, 'description' => 'CAPS Burman', 'activo' => true],
             ['id' => 6, 'description' => 'CAPS Rotger', 'activo' => true],
@@ -33,6 +33,7 @@ class CentrosSaludSeeder extends Seeder
             ['id' => 15, 'description' => 'Instituto Marini', 'activo' => true],
             ['id' => 16, 'description' => 'Maternidad Santa Rosa', 'activo' => true],
             ['id' => 17, 'description' => 'Otros', 'activo' => true],
+            ['id' => 18, 'description' => 'CAPS Arcuri', 'activo' => true],
         ];
 
         DB::table('centros_salud')->insert($data);

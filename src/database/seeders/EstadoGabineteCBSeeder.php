@@ -22,7 +22,8 @@ class EstadoGabineteCBSeeder extends Seeder
             ['id' => 3, 'description' => 'Derivado'],
             ['id' => 4, 'description' => 'Psicologia'],
             ['id' => 5, 'description' => 'Psicopedagogia'],
-            ['id' => 6, 'description' => 'Ambos']
+            ['id' => 6, 'description' => 'Ambos'],
+            ['id' => 7, 'description' => 'Baja'],
         ];
 
         foreach ($data as $d) {

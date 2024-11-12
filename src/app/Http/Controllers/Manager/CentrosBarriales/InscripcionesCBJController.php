@@ -70,7 +70,7 @@ class InscripcionesCBJController extends Controller
                 'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
-                'escuelas' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
+                'escuelas' => Escuela::where('secundaria', true)->orWhere('nocturna', true)->whereNull('dependencia_id')->get(),
                 'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'localidades' => Localidad::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -78,7 +78,7 @@ class InscripcionesCBJController extends Controller
                 'tiposDocumento' => TipoDocumento::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
-                'escuelasNivel' => EscuelaNivel::where('cbj', true)->get(),
+                'escuelasNivel' => EscuelaNivel::all(),
 
                 'paises' => Pais::all(),
                 'estadosPedagogia' => EstadoPedagogia::all(),

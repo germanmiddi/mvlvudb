@@ -22,8 +22,10 @@ use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\EstadoPedagogia;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\LegajoPedagogia;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Pais;
@@ -77,8 +79,9 @@ class InscripcionesCBIController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
                 'escuelasNivel' => EscuelaNivel::where('cbi', true)->get(),
-
+                
                 'paises' => Pais::all(),
+                'estadosPedagogia' => EstadoPedagogia::all(),
                 'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
@@ -218,6 +221,15 @@ class InscripcionesCBIController extends Controller
                         'legajo_id' => $legajo['id']
                     ],
                     $request->gabinete
+                );
+            }
+
+            if($request->pedagogia){
+                LegajoPedagogia::updateOrCreate(
+                    [
+                        'legajo_id' =>$legajo['id']
+                    ],
+                    $request->pedagogia
                 );
             }
 

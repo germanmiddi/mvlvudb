@@ -62,8 +62,9 @@
                             store.dateTimeFormateada(this.form.fecha_prueba) : '-' }}</dd>
                         <Datepicker v-else
                             class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            v-model="this.form.fecha_prueba" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-                            :enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+                            v-model="this.form.fecha_prueba" :disabled="input_disable"
+                            :class="input_disable ? bg_disable : ''" :enableTimePicker="false" :monthChangeOnScroll="false"
+                            autoApply :format="format">
                         </Datepicker>
                     </div>
 
@@ -74,8 +75,8 @@
                     
                         <input v-else v-model="this.form.profesional" id="profesional" name="profesional" 
                             :disabled="input_disable"
-                            class="mt-1 text-sm text-justify text-gray-900 sm:mt-0 sm:col-span-2 rounded-md
-                                shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300"
+                            placeholder="Escribe el nombre del profesional..."
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             :class="input_disable ? bg_disable : ''" />
                     </div>
 
@@ -137,12 +138,19 @@ export default {
     methods: {
         initForm() {
             this.form = {}
+
             this.form.id = this.legajo[0].id
+            this.form.pedagogia_id = this.legajo[0].pedagogia[0]. id ?? null;
 
-            this.form.estado = this.legajo[0].pedagogia?.estado?.description ?? null
-            this.form.estado_id = this.legajo[0].pedagogia?.estado?.id ?? null
+            this.form.realizo_prueba = this.legajo[0].pedagogia[0].realizo_prueba ?? null
+            this.form.fecha_prueba = this.legajo[0].pedagogia[0].fecha_prueba ?? null
+            // this.form.fecha_prueba = this.form.fecha_prueba ? new Date(this.form.fecha_prueba + "T00:00:00.000-03:00") : null
 
-            this.form.observacion = this.legajo[0].person?.pedagogia?.observacion ?? null
+            this.form.estado_id = this.legajo[0].pedagogia[0]?.estado?.id ?? null
+            this.form.estado = this.legajo[0].pedagogia[0]?.estado?.description ?? null
+
+            this.form.detalles = this.legajo[0].pedagogia[0]?.detalles ?? null
+            this.form.profesional = this.legajo[0].pedagogia[0]?.profesional ?? null
 
             // Registro datos temporales PreEdicion
             this.form_temp = JSON.parse(JSON.stringify(this.form));
@@ -150,12 +158,21 @@ export default {
         resetForm() {
             this.form = JSON.parse(JSON.stringify(this.form_temp));
         },
+        resetFields() {
+            if (!this.form.realizo_prueba) {
+                this.form.fecha_prueba = null;
+                this.form.estado_id = null;
+                this.form.estado = null;
+                this.form.detalles = null;
+                this.form.profesional = null;
+            }
+        },
         async updateLegajo() {
             let data = {}
             // RUTA
-            let rt = route("legajoCB.updateLegajoGabinete");
+            let rt = route("legajoCB.updateLegajoPedagogia");
             // Actualiza el Form
-            this.form.estado = this.estadosGabinete.find(item => item.id === this.form.estado_id)?.description || null;
+            this.form.estado = this.estadosPedagogia.find(item => item.id === this.form.estado_id)?.description || null;
 
             try {
                 const response = await axios.put(rt, this.form);
@@ -175,6 +192,13 @@ export default {
                 this.form = this.form_temp
             }
             this.$emit('message', data)
+        }
+    },
+    watch: {
+        'form.realizo_prueba'(newValue) {
+            if (newValue === false) {
+                this.resetFields(); // Resetea campos a null cuando "NO" es seleccionado
+            }
         }
     },
     created() {

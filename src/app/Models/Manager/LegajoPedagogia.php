@@ -24,4 +24,9 @@ class LegajoPedagogia extends Model
     {
         return $this->BelongsTo(LegajoCB::class, 'legajo_id');
     }
+    
+    public function estado()
+    {
+        return $this->BelongsTo(EstadoPedagogia::class, 'estado_id');
+    }
 }

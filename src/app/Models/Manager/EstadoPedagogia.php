@@ -14,4 +14,9 @@ class EstadoPedagogia extends Model
     protected $fillable = [
         'description',
     ];
+
+    public function pedagogia()
+    {
+        return $this->hasMany(LegajoPedagogia::class);
+    }
 }

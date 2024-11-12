@@ -22,6 +22,7 @@ use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\LegajoPedagogia;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\LegajoProgramaSocialCB;
 use App\Models\Manager\NivelEducativo;
@@ -136,6 +137,7 @@ class LegajosCBController extends Controller
                         'emprendedor',
                         'assigned',
                         'pedagogia',
+                        'pedagogia.estado',
                     )->get(),
                 'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
@@ -765,6 +767,29 @@ class LegajosCBController extends Controller
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de gabinete del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de gabinete del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+    public function update_legajoPedagogia(Request $request)
+    {
+        try {
+            
+              LegajoPedagogia::updateOrCreate(
+                [
+                    'id' => $request->pedagogia_id
+                ],
+                [
+                    'legajo_id' => $request->id,
+                    'realizo_prueba' => $request->realizo_prueba ?? null,
+                    'fecha_prueba' => $request->fecha_prueba ?? null,
+                    'estado_id' => $request->estado_id ?? null,
+                    'detalles' => $request->detalles ?? null,
+                    'profesional' => $request->profesional ?? null,
+                ]
+            );
+            
+            return response()->json(['message' => 'Se ha actualizado correctamente los datos de pedagogía del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de pedagogía del legajo. Comuniquese con el administrador.'], 203);
         }
     }
 

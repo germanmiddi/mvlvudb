@@ -174,7 +174,32 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody v-if="tableLoading" class="bg-white divide-y divide-gray-200">
+                                <tr v-for="i in 4" :key="i">
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="w-full h-4 bg-gray-300 rounded-sm animate-pulse"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else class="bg-white divide-y divide-gray-200">
                                 <tr v-for="data in legajos.data" :key="data.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.person?.lastname ?? '-' }}, {{ data.person?.name ?? '-' }}
@@ -347,6 +372,7 @@ export default {
             max_years: 0, 
             maxYears: 30, 
             error: '',
+            tableLoading: false,
         };
     },
     setup() {
@@ -365,6 +391,7 @@ export default {
             this.toastMessage = "";
         },
         async getLegajos() {
+            this.tableLoading = true;
 
             this.tramites = ''
             let filter = `&length=${this.length}`
@@ -411,9 +438,15 @@ export default {
 
             const get = `${route('legajoCB.list')}?${filter}`
             
-            const response = await fetch(get, { method: "GET" });
-            this.legajos = await response.json();
-        },
+            try {
+                const response = await fetch(get, { method: "GET" });
+                this.legajos = await response.json();
+                    } catch (error) {
+                        
+                    } finally {
+                        this.tableLoading = false; 
+                    }
+            },
         async getLegajosPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager\Masterdata;
 
 use App\Exports\MasterDataExport;
+use App\Models\Manager\CentroSalud;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
@@ -446,4 +447,52 @@ class MasterdataController extends Controller
             return response()->json(['message' => 'Datos eliminados correctamente'], 200);
     }
 
+    public function get_centroSalud(){
+        $escuelas = CentroSalud::get();
+        return response()->json($escuelas);
+    }
+    public function store_centroSalud(Request $request){
+        $description = $request->input('description');
+
+        $item = CentroSalud::create([
+            'description' => $description,
+            'activo' => 1,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+    }
+    public function update_centroSalud(Request $request){
+        $itemId   = $request->input('id'); // Obtener el id del item desde la solicitud
+        $itemDescription = $request->input('description'); // Obtener los datos del item desde la solicitud
+        $activo = $request->input('activo'); // Obtener los datos del item desde la solicitud
+
+        // Buscar el registro TipoTramite por su id
+        $centro = CentroSalud::find($itemId);
+    
+        if (!$centro) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+    
+        // Actualizar los campos del registro con los nuevos datos
+        $centro->update([
+            'description' => $itemDescription,
+            'activo'     => $activo,
+            'updated_at' => Carbon::now()
+        ]);
+    
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+    public function hide_centroSalud(Request $request){
+        $centro = CentroSalud::find($request->id);
+
+        if (!$centro) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        
+        $centro->activo = $centro->activo == 1 ? 0 : 1;
+        $centro->save();
+        
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
 }

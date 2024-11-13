@@ -299,6 +299,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [InscripcionesCBIController::class, 'index'])->name('inscripcionCBI');
             Route::get('/inscripcion', [InscripcionesCBIController::class, 'create'])->name('inscripcionCBI.create');
             Route::post('/inscripcion', [InscripcionesCBIController::class, 'store'])->name('inscripcionCBI.store');
+
+            Route::get('/cocinero/{id}', [InscripcionesCBIController::class, 'cocinero'])->name('inscripcionCBI.cocinero');
         });
 
         // Rutas para Legajos Centros Barriales

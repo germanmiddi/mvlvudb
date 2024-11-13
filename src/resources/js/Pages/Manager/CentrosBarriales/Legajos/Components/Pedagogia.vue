@@ -140,10 +140,10 @@ export default {
             this.form = {}
 
             this.form.id = this.legajo[0].id
-            this.form.pedagogia_id = this.legajo[0].pedagogia[0]. id ?? null;
+            this.form.pedagogia_id = this.legajo[0]?.pedagogia[0]?.id ?? null;
 
-            this.form.realizo_prueba = this.legajo[0].pedagogia[0].realizo_prueba ?? null
-            this.form.fecha_prueba = this.legajo[0].pedagogia[0].fecha_prueba ?? null
+            this.form.realizo_prueba = this.legajo[0]?.pedagogia[0]?.realizo_prueba ?? null
+            this.form.fecha_prueba = this.legajo[0]?.pedagogia[0]?.fecha_prueba ?? null
             // this.form.fecha_prueba = this.form.fecha_prueba ? new Date(this.form.fecha_prueba + "T00:00:00.000-03:00") : null
 
             this.form.estado_id = this.legajo[0].pedagogia[0]?.estado?.id ?? null

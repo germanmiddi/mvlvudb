@@ -236,20 +236,100 @@ class InscripcionesCBIController extends Controller
                 ]
             );
 
-            if(isset($responsable)){
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                $responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-            }else{
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-            }
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            //if(isset($responsable)){
+                //$responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            //}else{
+            //    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            //}
 
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBI.'], 200);
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar la inscripcion CBI", ["Modulo" => "IncripcionCBI:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBI. Verifique los datos ingresados.'], 203);
+        }
+    }
+
+    public function cocinero($id)
+    {
+        // Tramites relacionados con una Inscripcion de CB Infancia.
+
+        // Obtiene ID de Tipo de Legajo.
+        
+        $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
+
+        $legajos = LegajoCB::where('tipo_legajo_id', $tipo_legajo_cb['id'])->get();
+        $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
+
+        $resultados = [];
+        // Recorre listado de legajos dados de alta.
+        DB::beginTransaction();
+        try {
+            foreach ($legajos as $legajo) {
+                $tramites = Tramite::where('tipo_tramite_id', $tipo_tramite['id'])
+                    ->whereIn('id', function ($query) use ($legajo) {
+                        $query->select('tramite_id')
+                            ->from('person_tramite')
+                            ->where('person_id', $legajo->person_id);
+                    })
+                    ->get();
+    
+                if ($tramites->isNotEmpty()) {
+                    $resultados[] = ['estado' => 'POSEE TRAMITE',
+                                    'legajo_id' => $legajo->id, 
+                                    'person_id' => $legajo->person_id, 
+                                    'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
+                                    'num_documento' => $legajo->person->num_documento];
+                } else {
+                    // Verificar si se va crear el tramite.
+                    if($id === '1'){
+                        // Crea tramite
+                        $tramite_data = Tramite::Create(
+                            [
+                                'fecha' => $legajo->fecha_inscripcion,
+                                'observacion' => $legajo->observacion,
+                                'sede_id' => $legajo->sede_id,
+                                'canal_atencion_id' => $legajo->canal_atencion_id ?? 1,
+                                'tipo_tramite_id' => $tipo_tramite['id'],
+                                'dependencia_id' => $tipo_tramite['dependencia_id'],
+            
+                                'estado_id' => 1 // Estado Abierto
+                            ]
+                        );
+                        // Busco datos del titular
+                        // Verifica si posee responsable relacionado
+                        $person = Person::where('id',$legajo->person_id)->first();
+                        $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+
+                        /* if($legajo->responsable_id){
+                            $responsable = Person::where('id',$legajo->responsable_id)->get();
+                            $responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+                        }else{
+
+                        } */
+                        $resultados[] = ['estado' => 'SE HA CREADO EL TRAMITE ID: '.$tramite_data['id'],
+                                        'legajo_id' => $legajo->id, 
+                                        'person_id' => $legajo->person_id, 
+                                        'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
+                                        'num_documento' => $legajo->person->num_documento];
+                    }else{
+                        $resultados[] = ['estado' => 'NO POSEE TRAMITE',
+                                        'legajo_id' => $legajo->id, 
+                                        'person_id' => $legajo->person_id, 
+                                        'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
+                                        'num_documento' => $legajo->person->num_documento];
+                    }
+                }
+            }
+            
+            DB::commit();
+            // Devolver como respuesta JSON
+            return response()->json(['data' => $resultados]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['data' => $th->getMessage()]);
         }
     }
 }

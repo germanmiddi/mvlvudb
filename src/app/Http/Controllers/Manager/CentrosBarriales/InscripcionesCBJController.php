@@ -215,12 +215,12 @@ class InscripcionesCBJController extends Controller
                 ]
             );
 
-            if(isset($responsable)){
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-                $responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
-            }else{
-                $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-            }
+            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            //if(isset($responsable)){
+            //    $responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            //}else{
+            //    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            //}
 
             if($request->pedagogia){
                 LegajoPedagogia::updateOrCreate(
@@ -234,7 +234,7 @@ class InscripcionesCBJController extends Controller
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);
         } catch (\Throwable $th) {
-            dd($th);
+            //dd($th);
             DB::rollBack();
             Log::error("Se ha generado un error al momento de almacenar la inscripcion CBJ", ["Modulo" => "IncripcionCBJ:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);

@@ -146,7 +146,7 @@ export default {
             this.form.estado = this.legajo[0].gabinete?.estado?.description ?? null
             this.form.estado_id = this.legajo[0].gabinete?.estado?.id ?? null
 
-            this.form.observacion = this.legajo[0].person?.gabinete?.observacion ?? null
+            this.form.observacion = this.legajo[0].gabinete?.observacion ?? null
 
             // Registro datos temporales PreEdicion
             this.form_temp = JSON.parse(JSON.stringify(this.form));

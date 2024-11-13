@@ -605,6 +605,7 @@ class LegajosCBController extends Controller
                     'calle' => $request->calle,
                     'piso' => $request->piso,
                     'dpto' => $request->dpto,
+                    'number' => $request->number,
                     'localidad_id' => $request->localidad_id,
                     'observacion' => $request->observacion
                 ]

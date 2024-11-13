@@ -312,6 +312,7 @@
 				<TabSalud 	v-if="this.tabs === 3"
 									:form="form.salud"
 									:input_disable="input_disable"
+									:centrosSalud="centrosSalud"
 									@submit="handleSalud">
 				</TabSalud>
 

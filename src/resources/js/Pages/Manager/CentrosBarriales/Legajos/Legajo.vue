@@ -42,7 +42,7 @@
 						:escuelas="escuelas" :turnosEducativo="turnosEducativo" 
 						:escuelasDependencia="escuelasDependencia" :escuelasNivel="escuelasNivel" 
 						:estadosGabinete="estadosGabinete" :actividades="actividades" :programasSociales="programasSociales"
-						:estadosPedagogia="estadosPedagogia"
+						:estadosPedagogia="estadosPedagogia" :tipoDocumento="tipoDocumento"
 						@message="messageToast" />
 				</div>
 
@@ -101,6 +101,7 @@ const props = defineProps({
 	escuelasNivel: Object,
 	estadosGabinete: Object,
 	estadosPedagogia: Object,
+	tipoDocumento: Object,
 });
 
 const legajo = props.legajo;

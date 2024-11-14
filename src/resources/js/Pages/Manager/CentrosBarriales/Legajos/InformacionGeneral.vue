@@ -6,9 +6,9 @@
 
         <DireccionComponent :legajo="legajo" :localidades="localidades" @message="messageToast" />
 
-        <ResponsableComponent v-if="legajo[0].responsable" :legajo="legajo" :paises="paises" :parentescos="parentescos"
+        <ResponsableComponent :legajo="legajo" :paises="paises" :parentescos="parentescos"
             :situacionesConyugal="situacionesConyugal" :tiposOcupacion="tiposOcupacion"
-            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" @message="messageToast" />
+            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" :tipoDocumento="tipoDocumento" @message="messageToast" />
 
         <AutorizacionesComponent :legajo="legajo" @message="messageToast" />
 
@@ -94,6 +94,7 @@ const props = defineProps({
 	escuelasNivel: Object,
     estadosGabinete: Object,
     estadosPedagogia: Object,
+    tipoDocumento: Object,
     
 });
 

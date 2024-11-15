@@ -36,9 +36,14 @@ use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
 
+use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
+
 if (App::environment('production')) {
     URL::forceScheme('https');
 }
+
+//import collections routes
+require_once 'Collection/web.php';
 
 Route::middleware(['auth'])->group(function () {
 
@@ -251,6 +256,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/centros-barriales/update-areas-legajo-cb/', [MasterdataController::class, 'update_areas_legajo_cb'])->name('masterdata.centros_barriales.update_areas_legajo_cb');
         Route::post('/centros-barriales/hide-areas-legajo-cb/', [MasterdataController::class, 'hideAreaLegajoCB'])->name('masterdata.centros_barriales.hide_areas_legajo_cb');
         Route::post('/centros-barriales/destroy-areas-legajo-cbe/', [MasterdataController::class, 'destroyAreaLegajoCB'])->name('masterdata.centros_barriales.destroy_areas_legajo_cb');
+    
+        Route::get( '/fortalecimiento/get-puntos-entrega', [MasterdataFortalecimientoController::class, 'get_puntos_entrega'])->name('masterdata.fortalecimiento.get_puntos_entrega');
+        Route::post('/fortalecimiento/store-puntos-entrega/', [MasterdataFortalecimientoController::class, 'store_puntos_entrega'])->name('masterdata.fortalecimiento.store_puntos_entrega');
+        Route::post('/fortalecimiento/update-puntos-entrega/', [MasterdataFortalecimientoController::class, 'update_puntos_entrega'])->name('masterdata.fortalecimiento.update_puntos_entrega');
+        Route::post('/fortalecimiento/hide-puntos-entrega/', [MasterdataFortalecimientoController::class, 'hide_puntos_entrega'])->name('masterdata.fortalecimiento.hide_puntos_entrega');
+        Route::post('/fortalecimiento/destroy-puntos-entrega/', [MasterdataFortalecimientoController::class, 'destroy_puntos_entrega'])->name('masterdata.fortalecimiento.destroy_puntos_entrega');
     });
 
     // Users

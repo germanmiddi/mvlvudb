@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Manager\Role;
+use App\Models\Manager\PuntoEntrega;
 
 class User extends Authenticatable
 {
@@ -61,9 +62,13 @@ class User extends Authenticatable
 
     ];
 
-
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function puntosEntrega()
+    {
+        return $this->belongsToMany(PuntoEntrega::class, 'punto_entrega_usuario');
     }
 }

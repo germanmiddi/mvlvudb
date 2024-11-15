@@ -1,0 +1,135 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<template>
+    <div class="px-4 mt-6 sm:px-6 lg:px-8">
+        
+      <div class="text-sm font-medium text-gray-500 mb-4 hover:cursor-pointer hover:text-green-600 hover:underline" @click="clearPerson">Nueva busqueda</div>  
+      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+          <!-- <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Resultado</h3>
+          </div> -->
+          <div class="">
+            <dl>
+              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+                <dd class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">{{ person.name }} {{ person.lastname }}</dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Documento</dt>
+                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2">{{ person.num_documento }}</dd>
+              </div>
+              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Dirección</dt>
+                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2 capitalize" >
+                  {{ person.address[0].calle }} {{ person.address[0].number }} - {{ person.address[0].localidad.description }}
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+          <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Realizar entrega</h3>
+          </div>
+          <div class="">
+            <dl>
+              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Punto de entrega</dt>
+                
+                <dd v-if="puntosEntrega.length == 0" class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">
+                  No hay puntos de entrega disponibles</dd>
+                <dd v-else class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">
+                  <select v-model="form.puntoEntrega" class="w-full border-gray-300 rounded-md">
+                    <option v-for="punto in puntosEntrega" :key="punto.id" :value="punto.id">{{ punto.description }}</option>
+                  </select>
+                </dd>
+              </div>
+              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Entregado por</dt>
+                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2">{{ user.name }}</dd>
+              </div>
+              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Producto</dt>
+                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2 capitalize" >
+                  <select v-model="form.product" class="w-full border-gray-300 rounded-md"> 
+                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                  </select>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+
+        <div class="mt-6">
+            <button @click="submitCollection" class="bg-green-600 text-white px-4 rounded-md py-4 flex items-center w-full justify-center">
+                <CheckCircleIcon class="h-5 w-5 text-white mr-3" aria-hidden="true" />
+                Entregar
+            </button>
+        </div>
+    </div>
+  </template>
+  
+  <script>
+  import { CheckCircleIcon } from '@heroicons/vue/24/solid'
+  
+  export default {
+    props: {
+        person: {
+            type: Object,
+            required: true
+        },
+        puntosEntrega: {
+            type: Array,
+            required: true
+        },
+        products: {
+            type: Array,
+            required: true
+        },
+        user: {
+            type: Object,
+            required: true
+        }
+    },
+    components: {
+        CheckCircleIcon,
+    },
+    data() {
+        return {
+            form: {
+                puntoEntrega: this.puntosEntrega[0].id,
+                product: this.products[0].id
+            }
+        }
+    },
+    methods: {
+        async submitCollection() {
+
+          //format the address, if any value is null, it will not be included
+          let address = this.person.address[0].calle ? `calle:${this.person.address[0].calle} ` : ''
+          address += this.person.address[0].number ? `num:${this.person.address[0].number} ` : ''
+          address += this.person.address[0].piso ? `piso:${this.person.address[0].piso} ` : ''
+          address += this.person.address[0].dpto ? `dpto:${this.person.address[0].dpto} ` : ''
+          address += this.person.address[0].localidad_id ? `localidad:${this.person.address[0].localidad_id} ` : ''
+          address += this.person.address[0].barrio_id ? `barrio:${this.person.address[0].barrio_id} ` : ''
+                  
+          address = address.replace(/ /g, '');
+        
+          const response = await axios.post(route('collections.storeCollection'), {
+                person_id: this.person.id,
+                punto_entrega_id: this.form.puntoEntrega,
+                product_id: this.form.product,
+                address: address
+            })
+                        
+            if(response.status == 200) {
+              alert('Entrega realizada correctamente')  
+              this.$emit('clearPerson')
+            }
+        },
+        clearPerson() {
+            this.$emit('clearPerson')
+        }
+    }
+  }
+  </script>

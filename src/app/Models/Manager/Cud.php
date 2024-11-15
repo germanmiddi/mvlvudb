@@ -4,6 +4,7 @@ namespace App\Models\Manager;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Cud extends Model
 {
@@ -19,6 +20,11 @@ class Cud extends Model
         'presento_cud',
         'vencimiento_cud'
     ];
+
+    public function getFecha()
+    {
+        return Carbon::parse($this->vencimiento_cud)->format('d/m/Y');
+    }
 
     public function person()
     {

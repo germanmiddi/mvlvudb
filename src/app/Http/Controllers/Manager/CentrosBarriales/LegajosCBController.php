@@ -50,6 +50,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Carbon\Carbon;
 use Svg\Tag\Rect;
 
 class LegajosCBController extends Controller
@@ -66,7 +67,7 @@ class LegajosCBController extends Controller
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
                 'estados' => EstadoCbj::all(),
-                'escuelas' => Escuela::all(),
+                'escuelas' => Escuela::whereNull('dependencia_id')->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
                 'selectedSede' => $sede_id, 
                 'selectedLegajo' => $legajo,
@@ -464,10 +465,13 @@ class LegajosCBController extends Controller
 
     public function getDatesByYearsOld($min_years, $max_years)
     {
-        $today = now();
+        $today = Carbon::today();
 
-        $max_birthdate = $today->copy()->subYears($min_years)->endOfYear(); 
-        $min_birthdate = $today->copy()->subYears($max_years)->startOfYear(); 
+            //Se busca personas que nacieron despues de $min_birthdate
+            $min_birthdate = $today->copy()->subYears($max_years + 1)->startOfDay(); 
+
+            //Se busca personas que nacieron despues de $max_birthdate
+            $max_birthdate = $today->copy()->subYears($min_years)->endOfDay();
 
         return [$min_birthdate, $max_birthdate];
     }

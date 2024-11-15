@@ -7,11 +7,19 @@ use App\Exports\PersonsExport;
 use App\Exports\TestExport;
 use App\Exports\TramitesCBIExport;
 use App\Exports\TramitesExport;
+use App\Exports\InscriptosCBExport;
 use App\Http\Controllers\Controller;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\LegajoCB;
+use App\Models\Manager\Person;
+use App\Models\Manager\Cud;
+use App\Models\Manager\GabineteCB;
+use App\Models\Manager\CbiData;
+use App\Models\Manager\CbjData;
 use App\Models\Manager\TramiteEstado;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -188,6 +196,217 @@ class ReportController extends Controller
         return Excel::download(new TramitesCBIExport(), 'tramitesCBI.xlsx');
     }
 
+    public function exportInscriptosCBExcel(Request $request){
+
+        $cuds = Cud::with('person')->get();
+
+        $cbsJI = CbiData::with('estadoCbi', 'estadoGabineteCb')->get()
+            ->merge(
+                CbjData::with('estadoCbj', 'acompanamiento')->get()
+            );
+        $gabinetes = GabineteCB::with('legajo', 'estado')->get();
+        
+        $values = [];
+        
+        $cbsQuery = LegajoCB::with('responsable', 'autorizacion', 'sede', 'canal_atencion', 'estadocbj', 'autorizacion', 'tipo_legajo', 'parentesco', 'gabinete');
+
+        // Filtros
+        if ($request->date) {
+            $date = $request->date;
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+            $cbsQuery->where('fecha_inscripcion', '>=',$from)
+                    ->where('fecha_inscripcion','<',$to);
+        }
+
+        if ($request->estado_id) {
+            $cbsQuery->where('estado_id', $request['estado_id']);
+        }
+        
+        if ($request->tipo_legajo_id) {
+            $cbsQuery->where('tipo_legajo_id', $request['tipo_legajo_id']);
+            $values['tipo_legajo_id'] = json_decode($request->tipo_legajo_id);
+        } else {
+            $values['tipo_legajo_id'] = [1, 2]; 
+        }
+        
+        if ($request->sede_id) {
+            $cbsQuery->where('sede_id', $request['sede_id']);
+        }
+
+        if ($request->name) {
+            $name = $request->name;
+            $cbsQuery->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('legajos_cb.id')
+                ->from('legajos_cb')
+                ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                ->where('person.name', 'LIKE', '%' . $name . '%')
+                ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
+        }
+        if ($request->num_documento_nino) {
+            $num_documento_nino = $request->num_documento_nino;
+            $cbsQuery->whereIn('id', function ($sub) use ($num_documento_nino) {
+                $sub->selectRaw('legajos_cb.id')
+                ->from('legajos_cb')
+                ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                ->where('person.num_documento', 'LIKE', '%' . $num_documento_nino . '%');
+            });
+        }
+        if ($request->num_documento_adulto) {
+            $num_documento_adulto = $request->num_documento_adulto;
+            $cbsQuery->whereIn('id', function ($sub) use ($num_documento_adulto) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.responsable_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_adulto . '%');
+            });
+        }
+        
+        // Aplicar los filtros de edad
+        if ($request->min_years && $request->max_years) {
+            $minYears = (int)$request['min_years'];
+            $maxYears = (int)$request['max_years'];
+            
+            if($maxYears > 0 && $maxYears > $minYears){
+                $dates = $this->getDatesByYearsOld($minYears, $maxYears);
+                $cbsQuery->whereIn('id', function ($sub) use ($dates) {
+                    $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->whereBetween('person.fecha_nac', $dates);
+                });
+            }
+        }
+        if ($request->escuela_id) {
+            $escuela_id = $request->escuela_id;
+            
+            $cbsQuery->whereIn('id', function ($sub) use ($escuela_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person','person.id','=', 'legajos_cb.person_id')
+                    ->join('education_data','education_data.person_id','=', 'person.id')
+                    ->where(function ($query) use ($escuela_id){
+                        $query->where('education_data.escuela_primaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_secundaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_nocturna_id', $escuela_id)
+                            ->orWhere('education_data.escuela_infante_id', $escuela_id)
+                            ->orWhere('education_data.escuela_id', $escuela_id);
+                    });
+            });
+        }
+        
+        $cbs = $cbsQuery->get();
+
+        $personIds = ($request->sede_id || $request->tipo_legajo_id || $request->estado_id || $request->num_documento_adulto || $request->num_documento_nino || $request->escuela_id  || $request->name || $request->min_years || $request->max_years || $request->date) ? $cbs->pluck('person_id')->toArray() : [];
+        $persons = Person::with('address', 'education', 'tipoDoc')->get();
+        
+        //Ver como hacer con el tema de tipo de trámite
+        //Ya que estan 144,145,146 (barrial, juventud, infancia)
+        switch ($request->tipo_legajo_id) {
+            case '1':
+                $values['tipo_tramite_id'] = [146];
+                $values['dependencia_id'] = [12];
+                break;
+            case '2':
+                $values['tipo_tramite_id'] = [145];
+                $values['dependencia_id'] = [13];
+                break;
+            default:
+                $values['tipo_tramite_id'] = [144, 145, 146];
+                $values['dependencia_id'] = [1, 12, 13];
+                break;
+        }
+        $titles = [
+                    //Trámite
+                    'Id',
+                    'Fecha',
+                    'Observacion',
+                    'Tipo de Trámite',
+                    'Dependencia',
+                    'Estado Tramite',
+                    'Asignado',
+                    'Email del Asignado',
+        
+                    //Person
+                    'Nombre',
+                    'Apellido',
+                    'Edad',
+                    'Tipo Documento',
+                    'Documento',
+                    'Fecha de Nacimiento',
+                    'Telefono',
+                    'Celular',
+                    'Email',
+        
+                    //LegajoCB
+                    'Nro Legajo',
+                    'Sede',
+                    'Estado Legajo',
+                    'Canal de Atencion',
+                    'Tipo Legajo',
+                    'Apoyo Escolar',
+                    'Actividad Por Area Empleo',
+                    'Autorizacion Firmada',
+                    'Autorizacion Retirarse',
+                    'Autorizacion Uso de Imagen',
+                    
+                    //Adulto Responsable
+                    'Adulto Nombre',
+                    'Adulto Apellido',
+                    'Adulto Documento',
+                    'Adulto Parentesco',
+        
+                    //Direccion
+                    'Localidad',
+                    'Calle',
+                    'Numero',
+                    'Piso',
+                    'Dpto',
+                    'Observacion',
+        
+                    //Salud
+                    'Apto medico',
+                    'Fecha de Apto Medico',
+                    'Fecha de Venc Apto Medico',
+                    'Electrocardiograma',
+                    'Fecha Electrocardiograma',
+                    'Libreta Vacunacion',
+                    'Centro de Salud',
+                    'Observacion',
+                    //Cud
+                    'Posee Cud',
+                    'Presento Cud',
+                    'Cud Vencimiento',
+        
+                    //Educación
+                    'Escuela',
+                    'Nivel Educativo',
+                    'Grado/Año',
+                    'Estado Educativo',
+                    'Turno',
+                    'Dependencia',
+                    'Localidad',
+                    'Realiza Permanencia',
+                    'Observacion',
+        
+                    //CBData
+                    'Año Inicio',
+                    'Estado CB',
+                    'Estado Gabinete',
+                    'Acompañamiento',
+                ];
+
+        return Excel::download(new InscriptosCBExport($values, $titles, $persons, $cbs, $cuds, $cbsJI, $gabinetes, $personIds), 'InscriptosCB.xlsx');
+    }
+    
+    // if($request->date){
+
+    //     $values['from'] = date('Y-m-d', strtotime($request->date[0]));
+    //     $values['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
+               
+    // }
     public function exportPersonsExcel(Request $request){
         $data = [];
 

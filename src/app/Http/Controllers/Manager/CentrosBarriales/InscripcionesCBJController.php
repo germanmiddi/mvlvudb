@@ -21,8 +21,10 @@ use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\EstadoPedagogia;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
+use App\Models\Manager\LegajoPedagogia;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\Pais;
@@ -68,7 +70,7 @@ class InscripcionesCBJController extends Controller
                 'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
-                'escuelas' => Escuela::where('primaria', true)->whereNull('dependencia_id')->get(),
+                'escuelas' => Escuela::where('secundaria', true)->orWhere('nocturna', true)->whereNull('dependencia_id')->get(),
                 'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'localidades' => Localidad::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -76,9 +78,10 @@ class InscripcionesCBJController extends Controller
                 'tiposDocumento' => TipoDocumento::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
-                'escuelasNivel' => EscuelaNivel::where('cbj', true)->get(),
+                'escuelasNivel' => EscuelaNivel::all(),
 
                 'paises' => Pais::all(),
+                'estadosPedagogia' => EstadoPedagogia::all(),
                 'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
@@ -218,6 +221,15 @@ class InscripcionesCBJController extends Controller
             //}else{
             //    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
             //}
+
+            if($request->pedagogia){
+                LegajoPedagogia::updateOrCreate(
+                    [
+                        'legajo_id' =>$legajo['id']
+                    ],
+                    $request->pedagogia
+                );
+            }
 
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBJ.'], 200);

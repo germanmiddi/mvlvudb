@@ -11,8 +11,8 @@
                     
                 </div>
             </div>
-            <div class="grid grid-cols-12 gap-6">
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+            <!-- <div class="grid grid-cols-12 gap-6">s -->
+                <!-- <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Apoyo Escolar</label>
                         <Switch v-model="localData.apoyo_escolar" :disabled="input_disable"
                                 @click="localData.apoyo_escolar = !localData.apoyo_escolar"
@@ -21,9 +21,9 @@
                                 <span :class="localData.apoyo_escolar ? 'translate-x-6' : 'translate-x-1'"
                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                         </Switch>   
-                </div>
+                </div> -->
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
+                <!-- <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Act. por Area Empleo</label>
                         <Switch v-model="localData.actividad_empleo" :disabled="input_disable"
                                 @click="localData.actividad_empleo = !localData.actividad_empleo"
@@ -32,9 +32,8 @@
                                 <span :class="localData.actividad_empleo ? 'translate-x-6' : 'translate-x-1'"
                                     class="inline-block h-4 w-4 transform rounded-full bg-white transition"/>
                         </Switch>   
-                </div>
-              </div>
-              <hr>
+                </div> -->
+              <!-- </div> -->
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
                     <label for="programa_social_id" class="block text-sm font-medium text-gray-700">Aut. Firmada</label>

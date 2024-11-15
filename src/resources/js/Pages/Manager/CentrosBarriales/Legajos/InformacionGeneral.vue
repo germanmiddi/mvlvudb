@@ -6,9 +6,9 @@
 
         <DireccionComponent :legajo="legajo" :localidades="localidades" @message="messageToast" />
 
-        <ResponsableComponent v-if="legajo[0].responsable" :legajo="legajo" :paises="paises" :parentescos="parentescos"
+        <ResponsableComponent :legajo="legajo" :paises="paises" :parentescos="parentescos"
             :situacionesConyugal="situacionesConyugal" :tiposOcupacion="tiposOcupacion"
-            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" @message="messageToast" />
+            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" :tipoDocumento="tipoDocumento" @message="messageToast" />
 
         <AutorizacionesComponent :legajo="legajo" @message="messageToast" />
 
@@ -20,11 +20,12 @@
             :escuelasNivel="escuelasNivel" :legajo="legajo" @message="messageToast" />
 
         <GabineteComponent :estadosGabinete="estadosGabinete" :legajo="legajo" @message="messageToast" />
-
+        
         <EmprendedorComponent v-if="legajo[0].tipo_legajo?.id === 2" :legajo="legajo" @message="messageToast" />
-
+        
+        <PedagogiaComponent :estadosPedagogia="estadosPedagogia" :legajo="legajo" @message="messageToast" />
         <!-- Datos PEdagogia -->
-        <div class="px-4 mt-6">
+        <!-- <div class="px-4 mt-6">
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="sm:flex sm:justify-between sm:items-center">
                     <div class="px-4 py-5 sm:px-6">
@@ -50,7 +51,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <!-- Fin  Pedagogia -->
     </div>
 </template>
@@ -69,6 +70,7 @@ import SaludComponent from './Components/Salud.vue';
 import EducacionComponent from './Components/Educacion.vue';
 import GabineteComponent from './Components/Gabinete.vue';
 import EmprendedorComponent from './Components/Emprendedor.vue';
+import PedagogiaComponent from './Components/Pedagogia.vue';
 
 import { defineEmits } from 'vue';
 
@@ -90,7 +92,9 @@ const props = defineProps({
     turnosEducativo: Object,
     escuelasDependencia: Object,
 	escuelasNivel: Object,
-    estadosGabinete: Object
+    estadosGabinete: Object,
+    estadosPedagogia: Object,
+    tipoDocumento: Object,
     
 });
 

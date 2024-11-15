@@ -11,12 +11,23 @@
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
-				<button
+				<!-- <button
 					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
 					:class="btnGuardar || input_disable ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
 					@click="submit" :disabled="btnGuardar || input_disable">
 					Guardar
-				</button>
+				</button> -->
+
+				<button
+          class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+          :class="formLoading ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+          @click="submit"
+          :disabled="formLoading"
+        >
+          <span v-if="formLoading">Guardando...</span>
+          <span v-else>Guardar</span>
+		  <svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+        </button>
 			</div>
 		</div>
 
@@ -93,8 +104,7 @@
 					</p>
 				</div>
 			</div>
-
-			<form action="#" method="POST" enctype="multipart/form-data">
+			<form action="#" method="POST" enctype="multipart/form-data" class="relative">
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6" v-show="this.tabs === 1">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -340,7 +350,7 @@
 
 				<!-- PEDAGOGIA -->
 				<TabPedagogia v-if="this.tabs === 8" :form="form.pedagogia" :input_disable="input_disable"
-					@submit="handlePedagogia">
+				:estadosPedagogia="estadosPedagogia" @submit="handlePedagogia">
 				</TabPedagogia>
 
 				<!-- ADULTO RESPONSABLE -->
@@ -350,6 +360,12 @@
 					:estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" @submit="handleResponsable">
 				</TabResponsable>
 
+				<div v-if="formLoading" class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center py-28 bg-black-transparent rounded-md border-2 border-gray-400">
+				<div>
+					<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="50" height="50"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+				</div>
+				<div class="text-2xl">Cargando...</div>
+			</div>
 			</form>
 		</div>
 	</main>
@@ -407,6 +423,7 @@ export default {
 		parentescos: Object,
 		situacionesConyugal: Object,
 		tiposOcupacion: Object,
+		estadosPedagogia: Object,
 
 	},
 	components: {
@@ -443,7 +460,8 @@ export default {
 				direccion: {},
 				salud: {},
 				educacion: {},
-				responsable: {}
+				responsable: {},
+				pedagogia: {}
 			},
 
 			/* MENSAJERIA */
@@ -467,6 +485,8 @@ export default {
 				color: 'red',
 				border: '1px solid red',
 			},
+
+			formLoading: false,
 		};
 	},
 	validations() {
@@ -529,13 +549,16 @@ export default {
 				person: {},
 				responsable: {},
 				salud: {},
+				pedagogia: {},
 
 			}
 		},
 		async submit() {
+			this.formLoading = true;
 			// VALIDACION CAMPOS OBLIGATORIOS
 			const result = await this.v$.$validate()
 			if (!result) {
+				this.formLoading = false; 
 				return
 			}
 
@@ -554,20 +577,17 @@ export default {
 			
 			try {
 				const response = await axios.post(rt, this.form);
-				if (response.status == 200) {
-					this.labelType = "success";
+				this.labelType = "success";
 					this.toastMessage = response.data.message;
-					this.btnGuardar = false
-					setTimeout(() => {
-						window.location.href = "/centros-barriales/infancia";
-					}, 3100);
-				} else {
+					window.location.href = "/centros-barriales/infancia";
+				} catch (error) {
 					this.labelType = "danger";
 					this.toastMessage = response.data.message;
-				}
-			} catch (error) {
-				this.labelType = "danger";
-				this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+					this.labelType = "danger";
+					this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+				} finally {
+					this.btnGuardar = false
+					this.formLoading = false; 
 			}
 		},
 		async getPerson() {
@@ -701,3 +721,9 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+.bg-black-transparent {
+	background-color: rgba(0, 0, 0, 0.099);
+}
+</style>

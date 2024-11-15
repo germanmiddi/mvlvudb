@@ -22,6 +22,7 @@ use App\Models\Manager\AutorizacionCb;
 use App\Models\Manager\ContactData;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\LegajoPedagogia;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\LegajoProgramaSocialCB;
 use App\Models\Manager\NivelEducativo;
@@ -34,6 +35,7 @@ use App\Models\Manager\EscuelaDependencia;
 use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\EstadoPedagogia;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\Parentesco;
 use App\Models\Manager\Person;
@@ -42,6 +44,7 @@ use App\Models\Manager\SaludData;
 use App\Models\Manager\Sede;
 use App\Models\Manager\SituacionConyugal;
 use App\Models\Manager\SocialData;
+use App\Models\Manager\TipoDocumento;
 use App\Models\User;
 use App\Models\Manager\TipoLegajoCb;
 use App\Models\Manager\TipoOcupacion;
@@ -94,6 +97,7 @@ class LegajosCBController extends Controller
                         'responsable.education.nivelEducativo',
                         'responsable.education.estadoEducativo',
                         'responsable.address',
+                        'responsable.tipoDoc',
                         'responsable.address.pais',
                         'person',
                         'person.contact',
@@ -133,7 +137,9 @@ class LegajosCBController extends Controller
                         'gabinete',
                         'gabinete.estado',
                         'emprendedor',
-                        'assigned'
+                        'assigned',
+                        'pedagogia',
+                        'pedagogia.estado',
                     )->get(),
                 'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
@@ -160,6 +166,9 @@ class LegajosCBController extends Controller
                 'escuelasNivel' => EscuelaNivel::get(),
 
                 'estadosGabinete' => EstadoGabineteCB::all(),
+
+                'estadosPedagogia' => EstadoPedagogia::all(),
+                'tipoDocumento' => TipoDocumento::all(),
 
             ]
         );
@@ -599,6 +608,7 @@ class LegajosCBController extends Controller
                     'calle' => $request->calle,
                     'piso' => $request->piso,
                     'dpto' => $request->dpto,
+                    'number' => $request->number,
                     'localidad_id' => $request->localidad_id,
                     'observacion' => $request->observacion
                 ]
@@ -613,51 +623,68 @@ class LegajosCBController extends Controller
     {
         try {
             $person_id = LegajoCB::where('id', $request->id)->value('responsable_id');
-
-            LegajoCB::where('id', $request->id)->update(
-                [
-                    'parentesco_id' => $request->parentesco_id,
-                    'phone_emergency' => $request->phone_emergency
-                ]
-            );
-
-            Person::where('id',$person_id)->update(
-                [
+            
+            if ($person_id) {
+                Person::where('id', $person_id)->update([
                     'lastname' => $request->lastname ?? null,
                     'name' => $request->name ?? null,
                     'fecha_nac' => $request->fecha_nac ?? null,
-                ]
-            );
-
-            ContactData::where('person_id',$person_id)->update(
+                ]);
+            } else {
+                $newPerson = Person::create([
+                    'lastname' => $request->lastname ?? null,
+                    'name' => $request->name ?? null,
+                    'fecha_nac' => $request->fecha_nac ?? null,
+                    'num_documento' => $request->num_documento ?? null,
+                    'tipo_documento_id' => $request->tipo_documento_id ?? null
+                ]);
+                $person_id = $newPerson->id;
+            }
+            
+            ContactData::updateOrCreate(
+                ['person_id' => $person_id],
                 [
                     'phone' => $request->phone ?? null,
                     'celular' => $request->celular ?? null
                 ]
             );
 
-            AddressData::where('person_id',$person_id)->update(
+            AddressData::updateOrCreate(
+                ['person_id' => $person_id],
                 [
                     'pais_id' => $request->pais_id ?? null
                 ]
             );
 
-            EducationData::where('person_id',$person_id)->update(
+            EducationData::updateOrCreate(
+                ['person_id' => $person_id],
                 [
                     'nivel_educativo_id' => $request->nivel_educativo_id ?? null,
                     'estado_educativo_id' => $request->estado_educativo_id ?? null
                 ]
             );
 
-            AditionalData::where('person_id',$person_id)->update(
+            AditionalData::updateOrCreate(
+                ['person_id' => $person_id],
                 [
                     'situacion_conyugal_id' => $request->situacion_conyugal_id ?? null
                 ]
             );
 
-            SocialData::where('person_id',$person_id)->update(
+            SocialData::updateOrCreate(
+                ['person_id' => $person_id],
                 [
                     'tipo_ocupacion_id' => $request->tipo_ocupacion_id ?? null
+                ]
+            );
+            LegajoCB::updateOrCreate(
+                [
+                    'id' => $request->id,
+                ],
+                [
+                    'responsable_id' => $person_id,
+                    'parentesco_id' => $request->parentesco_id,
+                    'phone_emergency' => $request->phone_emergency,
                 ]
             );
             return response()->json(['message' => 'Se ha actualizado correctamente los datos del adulto responsable del legajo.'], 200);
@@ -761,6 +788,29 @@ class LegajosCBController extends Controller
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de gabinete del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de gabinete del legajo. Comuniquese con el administrador.'], 203);
+        }
+    }
+    public function update_legajoPedagogia(Request $request)
+    {
+        try {
+            
+              LegajoPedagogia::updateOrCreate(
+                [
+                    'id' => $request->pedagogia_id
+                ],
+                [
+                    'legajo_id' => $request->id,
+                    'realizo_prueba' => $request->realizo_prueba ?? null,
+                    'fecha_prueba' => $request->fecha_prueba ?? null,
+                    'estado_id' => $request->estado_id ?? null,
+                    'detalles' => $request->detalles ?? null,
+                    'profesional' => $request->profesional ?? null,
+                ]
+            );
+            
+            return response()->json(['message' => 'Se ha actualizado correctamente los datos de pedagogía del legajo.'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de pedagogía del legajo. Comuniquese con el administrador.'], 203);
         }
     }
 

@@ -232,6 +232,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
         Route::post('/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
         Route::post('/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
+        
+        Route::get('/get_centro_salud', [MasterdataController::class, 'get_centroSalud'])->name('masterdata.get_centro_salud');
+        Route::post('/store_centro_salud/', [MasterdataController::class, 'store_centroSalud'])->name('masterdata.store_centro_salud');
+        Route::post('/update_centro_salud/', [MasterdataController::class, 'update_centroSalud'])->name('masterdata.update_centro_salud');
+        Route::post('/hide_centro_salud/', [MasterdataController::class, 'hide_centroSalud'])->name('masterdata.hide_centro_salud');
 
         Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
 
@@ -327,6 +332,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-legajo-salud', [LegajosCBController::class, 'update_legajoSalud'])->name('legajoCB.updateLegajoSalud');
             Route::put('/update-legajo-educacion', [LegajosCBController::class, 'update_legajoEducacion'])->name('legajoCB.updateLegajoEducacion');
             Route::put('/update-legajo-gabinete', [LegajosCBController::class, 'update_legajoGabinete'])->name('legajoCB.updateLegajoGabinete');
+            Route::put('/update-legajo-pedagogia', [LegajosCBController::class, 'update_legajoPedagogia'])->name('legajoCB.updateLegajoPedagogia');
             Route::put('/update-legajo-emprendedor', [LegajosCBController::class, 'update_legajoEmprendedor'])->name('legajoCB.updateLegajoEmprendedor');
             Route::put('/update-legajo-titular', [LegajosCBController::class, 'update_legajoTitular'])->name('legajoCB.updateLegajoTitular');
             Route::put('/update-legajo-assigned', [LegajosCBController::class, 'update_assignedResponsable'])->name('legajoCB.assignedResponsable');

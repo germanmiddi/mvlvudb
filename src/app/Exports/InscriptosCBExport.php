@@ -193,8 +193,8 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 //CUD
                 $cud = $cuds->where('person_id', $person->id)->first();
                 if(isset($cud)){
-                    $data_temp['Posee Cud'] = $cud->posee_cud == 1 ? 'Si' : ($person->salud->medicacion === null ? 'No' : 'No');
-                    $data_temp['Presento Cud'] = $cud->presento_cud == 1 ? 'Si' : ($person->salud->medicacion === null ? 'No' : 'No');
+                    $data_temp['Posee Cud'] = $cud->posee_cud === null ? 'No' : ($cud->posee_cud == 1 ? 'Si' : 'No');
+                    $data_temp['Presento Cud'] = $cud->presento_cud === null ? 'No' : ($cud->presento_cud == 1 ? 'Si' : 'No');
                     $data_temp['Cud Vencimiento'] = $cud->getFecha() ?? null;
                 }else {
                     $data_temp['Posee Cud'] = 'No';

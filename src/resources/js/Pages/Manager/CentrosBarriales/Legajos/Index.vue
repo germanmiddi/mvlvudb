@@ -518,7 +518,6 @@ export default {
             let rt = route("report.exportInscriptosCBExcel");
 
             try {
-                console.log(this.filter);
                 const response = await axios.post(rt, this.filter, {
                     responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
                 });

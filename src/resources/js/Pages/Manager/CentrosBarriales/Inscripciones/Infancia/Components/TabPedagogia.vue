@@ -120,7 +120,6 @@ export default {
   },
   methods: {
     updateParent() {
-      console.log(this.localData);
       this.$emit('data_pedagogia', this.localData);
     }
   }

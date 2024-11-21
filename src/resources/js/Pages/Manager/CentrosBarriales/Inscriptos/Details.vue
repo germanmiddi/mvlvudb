@@ -59,7 +59,7 @@
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Telefono</dt>
+							<dt class="text-sm font-medium text-gray-500">Teléfono</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{legajo[0].person?.contact[0]?.phone ?? '-'}}</dd>
 						</div>
 

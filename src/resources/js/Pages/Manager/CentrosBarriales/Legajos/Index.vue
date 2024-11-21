@@ -51,16 +51,14 @@
                         </div>
 
                         <div class="col-span-12 sm:col-span-2">
-                            <label for="num_documento_nino" class="block text-sm font-medium text-gray-700">Nro de
-                                Documento del Niño</label>
+                            <label for="num_documento_nino" class="block text-sm font-medium text-gray-700">Documento Niño</label>
                             <input v-model="filter.num_documento_nino" type="text" name="num_documento_nino"
                                 id="num_documento_nino" autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
                         <div class="col-span-12 sm:col-span-2">
-                            <label for="num_documento_adulto" class="block text-sm font-medium text-gray-700">Nro de
-                                Documento del Adulto</label>
+                            <label for="num_documento_adulto" class="block text-sm font-medium text-gray-700">Documento Adulto</label>
                             <input v-model="filter.num_documento_adulto" type="text" name="num_documento_adulto"
                                 id="num_documento_adulto" autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -109,7 +107,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div>
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="min-range" class="block mb-2 text-sm text-zinc-300 dark:text-white">Edad
                                 mínima:</label>
                             <div class="flex items-center gap-x-2">
@@ -119,7 +117,7 @@
                             </div>
                         </div>
 
-                        <div>
+                        <div class="col-span-12 sm:col-span-2">
                             <label for="max-range" class="block mb-2 text-sm text-zinc-300 dark:text-white">Edad
                                 máxima:</label>
                             <div class="flex items-center gap-x-2">
@@ -130,7 +128,7 @@
                         </div>
                         <p v-if="error" class="text-red-500 text-sm mt-1 w-full">{{ error }}</p>
 
-                    
+                        <!-- <VueAgeSlider v-model="ageRange" :min="1" :max="30" /> -->
                     </div>
                 </div>
             </div>
@@ -318,6 +316,7 @@ import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+// import VueAgeSlider from './VueAgeSlider.vue';
 
 import {
     ChevronRightIcon,
@@ -353,7 +352,8 @@ export default {
         ArrowPathIcon,
         PaperClipIcon,
         Toast,
-        Datepicker
+        Datepicker,
+        // VueAgeSlider
     },
     data() {
         return {

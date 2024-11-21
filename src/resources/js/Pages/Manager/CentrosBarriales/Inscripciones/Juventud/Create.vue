@@ -237,13 +237,11 @@
 									:formatinscripcionCBJ="format" :style="v$.form.inscripcion.fecha.$error ? datepickerStyle : ''"
 									:disabled="input_disable">
 								</Datepicker>
-								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo
-									obligatorio</span>
+								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
-									Atención</label>
+								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
 								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion_id" name="canal_atencion_id"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -383,6 +381,14 @@
 			</div>
 			</form>
 		</div>
+
+		<DialogModal 
+			:show="showConfirmed"  
+			:title="modalTitle" 
+			:message="modalMessage" 
+			:type="modalType" 
+			@confirmModal="confirmModal" 
+			@closeModal="closeModal" />
 	</main>
 </template>
 
@@ -397,7 +403,7 @@ import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { Switch } from "@headlessui/vue";
 import store from '@/store.js'
-
+import DialogModal from './Components/DialogModal.vue';
 // Tabs
 import TabAutorizaciones from './Components/TabAutorizaciones.vue';
 import TabDireccion from './Components/TabDireccion.vue';
@@ -464,7 +470,7 @@ export default {
         required,
         store,
         useVuelidate,
-
+        DialogModal
 	},
 	data() {
 		return {
@@ -506,6 +512,11 @@ export default {
 				border: '1px solid red',
 			},
 			formLoading: false,
+			showConfirmed: false,
+			modalType: '',
+			modalTitle: '',
+			modalMessage: '',
+			tempData: {},
 		};
 	},
 	validations() {
@@ -611,8 +622,10 @@ export default {
 					this.formLoading = false; 
 			}
 		},
+
 		async getPerson() {
 			let num_documento = this.form.person.num_documento;
+						
 			const get = `${route('persons.getPersonDni', this.form.person.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
@@ -621,10 +634,19 @@ export default {
 				data = data.data[0].person
 
 				if(data.legajo_cb){
-					this.labelType = "danger";
-					this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
-
-					this.input_disable = true;
+					//si es CBI se consulta si se desea registrar en Juventud
+					if(data.legajo_cb.tipo_legajo_id == 1){
+						this.tempData = data;
+						this.modalTitle = 'El DNI ya se encuentra inscripto en Centros Barriales Infancia';
+						this.modalMessage = '¿Está seguro que desea crear un nuevo legajo en CBJ?';
+						this.modalType = 'confirm';
+						this.showConfirmed = true;
+					}else{
+						// Si es Juventud, es un dato duplicado
+						this.labelType = "danger";
+						this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
+						this.input_disable = true;
+					}
 				}else{
 					this.form.person.num_documento = num_documento;
 					/// Recuperar datos.
@@ -683,6 +705,14 @@ export default {
 				this.input_disable = false;
 			}
 		},
+		confirmModal(){
+			this.asignarData(this.tempData);
+			
+		},
+		closeModal(){
+			this.showConfirmed = false;
+		},
+
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
@@ -727,6 +757,88 @@ export default {
 			} else {
 				this.form.age = null;
 			}
+		},
+		asignarData(data){
+			this.form.person.num_documento = data.num_documento
+			/// Recuperar datos.
+			this.form.person.tipo_documento_id = data.tipo_documento_id
+			this.form.person.fecha_nac = data.fecha_nac
+			this.form.person.fecha_nac = new Date(this.form.person.fecha_nac + "T00:00:00.000-03:00")
+			this.form.person.name = data.name
+			this.form.person.lastname = data.lastname
+			this.form.person.genero = data.genero
+
+			this.form.inscripcion.sede_id = data.legajo_cb.sede_id
+			this.form.inscripcion.canal_atencion_id = data.legajo_cb.canal_atencion_id
+			this.form.inscripcion.fecha_inicio = data.legajo_cb.fecha_inicio
+			this.form.inscripcion.observacion = data.legajo_cb.observacion
+
+
+			if (data.contact != '') {
+				this.form.contact.email = data.contact[0].email
+				this.form.contact.phone = data.contact[0].phone
+			}
+
+			if (data.address != '') {
+				this.form.direccion.localidad_id = data.address[0].localidad_id
+				this.form.direccion.calle = data.address[0].calle
+				this.form.direccion.number = data.address[0].number
+				this.form.direccion.piso = data.address[0].piso
+				this.form.direccion.dpto = data.address[0].dpto
+			}
+
+			if (data.salud != null) {
+				this.form.salud.apto_medico = data.salud.apto_medico
+				this.form.salud.fecha_apto_medico = data.salud.fecha_apto_medico
+				this.form.salud.fecha_apto_medico = new Date(this.form.salud.fecha_apto_medico + "T00:00:00.000-03:00")
+				this.form.salud.vencimiento_apto_medico = data.salud.vencimiento_apto_medico
+				this.form.salud.vencimiento_apto_medico = new Date(this.form.salud.vencimiento_apto_medico + "T00:00:00.000-03:00")
+				this.form.salud.electrocardiograma = data.salud.electrocardiograma
+				this.form.salud.fecha_electrocardiograma = data.salud.fecha_electrocardiograma
+				this.form.salud.fecha_electrocardiograma = new Date(this.form.salud.fecha_electrocardiograma + "T00:00:00.000-03:00")
+				this.form.salud.libreta_vacunacion = data.salud.libreta_vacunacion
+				this.form.salud.centro_salud_id = data.salud.centro_salud_id
+				this.form.salud.observacion = data.salud.observacion
+
+				if(data.cud){
+					this.form.salud.posee_cud = data.cud.posee_cud
+					this.form.salud.presento_cud = data.cud.presento_cud
+					this.form.salud.fecha_vencimiento_cud = data.cud.fecha_vencimiento_cud
+					this.form.salud.fecha_vencimiento_cud = new Date(this.form.salud.fecha_vencimiento_cud + "T00:00:00.000-03:00")
+				}
+
+
+
+			}
+
+			if (data.education[0]) {
+				this.form.educacion.nivel_educativo_id = data.education[0].nivel_educativo_id
+				this.form.educacion.estado_educativo_id = data.education[0].estado_educativo_id
+				this.form.educacion.escuela_turno_id = data.education[0].escuela_turno_id
+				this.form.educacion.escuela_localidad_id = data.education[0].escuela_localidad_id
+				this.form.educacion.observacion = data.education[0].observacion
+				this.form.educacion.certificado_escolar = data.education[0].certificado_escolar
+				this.form.educacion.permanencia = data.education[0].permanencia
+				this.form.educacion.escuela_nivel_id = data.education[0].escuela_nivel_id
+			}
+
+			if(data.legajo_cb.autorizacion){
+				this.form.autorizaciones.autorizacion_firmada = data.legajo_cb.autorizacion.autorizacion_firmada
+				this.form.autorizaciones.autorizacion_retirarse = data.legajo_cb.autorizacion.autorizacion_retirarse
+				this.form.autorizaciones.autorizacion_uso_imagen = data.legajo_cb.autorizacion.autorizacion_uso_imagen
+			}
+
+			if(data.legajo_cb.responsable){
+				this.form.responsable.num_documento = data.legajo_cb.responsable.num_documento
+				this.form.responsable.tipo_documento_id = data.legajo_cb.responsable.tipo_documento_id
+				this.form.responsable.name = data.legajo_cb.responsable.name
+				this.form.responsable.lastname = data.legajo_cb.responsable.lastname
+				this.form.responsable.fecha_nac = data.legajo_cb.responsable.fecha_nac
+			}
+			this.form = this.removeNullValues(this.form);
+			this.input_disable = false;
+
+			this.showConfirmed = false;
 		}
 	},
 	computed: {

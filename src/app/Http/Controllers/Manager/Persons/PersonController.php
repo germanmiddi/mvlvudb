@@ -369,12 +369,14 @@ class PersonController extends Controller
         //getPersonDni
         public function getPersonDni($dni)
         {
-            return  Person::where('num_documento', $dni)->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud', 'legajo_cb')->orderBy("created_at", 'DESC')
-            ->paginate(999)
-            ->withQueryString()
-            ->through(fn ($person) => [
-                'person'   => $person
-            ]);
+            return  Person::where('num_documento', $dni)
+                            ->with('contact', 'address', 'aditional', 'education', 'cud', 'social', 'salud', 'legajo_cb', 'legajo_cb.responsable', 'legajo_cb.autorizacion')
+                            ->orderBy("created_at", 'DESC')
+                            ->paginate(999)
+                            ->withQueryString()
+                            ->through(fn ($person) => [
+                                'person'   => $person
+                            ]);
         }
 
         public function destroyFamiliar(Request $request){

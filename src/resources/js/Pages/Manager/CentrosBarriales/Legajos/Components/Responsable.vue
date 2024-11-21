@@ -352,7 +352,6 @@ export default {
 					this.form.lastname = data.lastname
 					this.form.genero = data.genero
 					if (data.contact != '') {
-                        console.log(data.contact);
 						this.form.celular = data.contact[0].celular
 						this.form.phone = data.contact[0].phone
 					}

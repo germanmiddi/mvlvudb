@@ -203,19 +203,19 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 }
                 // Data_education
                 switch ($person) {
-                    case !empty($person->education[0]->escuela_id):
+                    case ($person->education[0]->escuela_id) !== null:
                         $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
                         break;
-                    case !empty($person->education[0]->escuela_infante_id):
+                    case ($person->education[0]->escuela_infante_id) !== null:
                         $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
                         break;
-                    case !empty($person->education[0]->escuela_primaria_id):
+                    case ($person->education[0]->escuela_primaria_id) !== null:
                         $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
                         break;
-                    case !empty($person->education[0]->escuela_secundaria_id):
+                    case ($person->education[0]->escuela_secundaria_id) !== null:
                         $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
                         break;
-                    case !empty($person->education[0]->escuela_nocturna_id):
+                    case ($person->education[0]->escuela_nocturna_id) !== null:
                         $data_temp['Escuela'] = $person->education[0]->escuelaPrimaria->description;
                         break;
                     
@@ -223,13 +223,13 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                         $data_temp['Escuela'] = null;
                         break;
                 }
-                $data_temp['Nivel Educativo'] = !empty($person->education[0]->nivel_educativo_id) ? $person->education[0]->nivelEducativo->description : null;
-                $data_temp['Grado/Año'] = !empty($person->education[0]->escuela_nivel_id) ? $person->education[0]->escuelaNivel->description : null;
-                $data_temp['Estado Educativo'] = !empty($person->education[0]->estado_educativo_id) ? $person->education[0]->estadoEducativo->description : null;
-                $data_temp['Turno'] = !empty($person->education[0]->escuela_turno_id) ? $person->education[0]->escuelaTurno->description : null;
-                $data_temp['Dependencia'] = !empty($person->education[0]->escuela_dependencia_id) ? $person->education[0]->escuelaDependencia->description : null;
-                $data_temp['Localidad'] = !empty($person->education[0]->escuela_localidad_id) ? $person->education[0]->escuelaLocalidad->description : null;
-                $data_temp['Realiza Permanencia'] = !empty($person->education[0]->permanencia) && $person->education[0]->permanencia == 1  ? 'Si' : 'No';
+                $data_temp['Nivel Educativo'] = isset($person->education[0]->nivel_educativo_id) ? $person->education[0]->nivelEducativo->description : null;
+                $data_temp['Grado/Año'] = isset($person->education[0]->escuela_nivel_id) ? $person->education[0]->escuelaNivel->description : null;
+                $data_temp['Estado Educativo'] = isset($person->education[0]->estado_educativo_id) ? $person->education[0]->estadoEducativo->description : null;
+                $data_temp['Turno'] = isset($person->education[0]->escuela_turno_id) ? $person->education[0]->escuelaTurno->description : null;
+                $data_temp['Dependencia'] = isset($person->education[0]->escuela_dependencia_id) ? $person->education[0]->escuelaDependencia->description : null;
+                $data_temp['Localidad'] = isset($person->education[0]->escuela_localidad_id) ? $person->education[0]->escuelaLocalidad->description : null;
+                $data_temp['Realiza Permanencia'] = isset($person->education[0]->permanencia) && $person->education[0]->permanencia == 1  ? 'Si' : 'No';
                 $data_temp['Observacion'] = $person->education[0]->observacion ?? null;
                 
                 //CB DATA
@@ -245,7 +245,7 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 
                 $gabinete = isset($cb) ? $gabinetes->where('legajo_id', $cb->id)->first() : null;
                 $data_temp['Estado Gabinete'] = isset($gabinete->estado_id) ? $gabinete->estado->description : null;
-                $data_temp['Acompañamiento'] = !empty($cbJI->acompanamiento_cbj_id) ? $cbJI->acompanamiento->description : null;
+                $data_temp['Acompañamiento'] = isset($cbJI->acompanamiento_cbj_id) ? $cbJI->acompanamiento->description : null;
 
 
                 $this->data[$pos] = $data_temp;

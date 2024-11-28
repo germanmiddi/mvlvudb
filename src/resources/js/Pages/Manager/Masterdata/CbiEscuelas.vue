@@ -57,18 +57,20 @@
 
 <script>
 import axios from 'axios'
+import ListItem from './ListItem.vue'
 import ListEscuela from './ListEscuela.vue'
 
 export default {
 
     props: {
-        dependencia_id: {
-            type: Number,
-            required: true
-        }
+        // dependencia_id: {
+        //     type: Number,
+        //     required: true
+        // }
     },
     components: {
-        ListEscuela
+        ListEscuela,
+        ListItem,
     },
     setup() {
 
@@ -88,13 +90,13 @@ export default {
     },
     methods: {
         async getData() {
-            let response = await fetch(route('masterdata.get_escuela', this.dependencia_id), { method: 'GET' })
+            let response = await fetch(route('masterdata.get_escuela'), { method: 'GET' })
             this.escuelas = await response.json()
         },
 
         async newItem() {
             let formData = new FormData();
-            formData.append('dependencia_id', this.dependencia_id);
+            // formData.append('dependencia_id', this.dependencia_id);
             formData.append('description', this.newDescription);
             formData.append('infante', this.turnos.infante ?? false);
             formData.append('primaria', this.turnos.primaria ?? false);

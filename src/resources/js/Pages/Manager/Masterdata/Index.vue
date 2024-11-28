@@ -24,12 +24,24 @@
                             :class="[selectedIndex === index ? 'bg-gray-50 text-indigo-600 hover:bg-white' : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50', 'group rounded-md px-3 py-2 flex items-center text-sm font-medium cursor-pointer']">
                             <span class="truncate">{{ item.name }}</span>
                         </a>
+                       <div class="w-full h-0.3 bg-gray-300">
+                        
+                       </div>
+                        <a @click.prevent="selectItem(99)"
+                            :class="[selectedIndex === 99 ? 'bg-gray-50 text-indigo-600 hover:bg-white' : 'text-gray-900 hover:text-gray-900 hover:bg-gray-50', 'group rounded-md px-3 py-2 flex items-center text-sm font-medium cursor-pointer']">
+                            <span class="truncate">Escuelas</span>
+                        </a>
                     </nav>
                 </aside>
         
                 
                 <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-                    <component :is="selectedItem.componentName" 
+                    <component v-if="selectedIndex === 99" :is="'CbiEscuelas'"
+                               :name="Escuelas"
+                               @toast-message="setMessage"/>
+                        
+                    
+                    <component v-else :is="selectedItem.componentName" 
                                :data="selectedItem.componentData" 
                                :name="selectedItem.name"
                                :dependencia_id="selectedItem.dependencia_id"
@@ -55,6 +67,7 @@
     import Mayores from './Mayores.vue';
     import Vivienda from './Vivienda.vue';
     import CentrosBarriales from './CentrosBarriales.vue';
+    import CbiEscuelas from './CbiEscuelas.vue'
     
     const subNavigation = [
         { dependencia_id:12 , name: 'Centros Barriales Infancia', componentName: 'Cbi'},
@@ -89,7 +102,8 @@
             Ninez,
             Mayores,
             Vivienda,
-            CentrosBarriales
+            CentrosBarriales,
+            CbiEscuelas,
         },
     
         setup() {

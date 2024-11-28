@@ -133,9 +133,9 @@ class MasterdataController extends Controller
      * ESCUELAS
      */
     
-    public function get_escuela($dependencia_id){
+    public function get_escuela(){
 
-        $escuelas = Escuela::where('dependencia_id', $dependencia_id)->get();
+        $escuelas = Escuela::whereNull('dependencia_id')->get();
         return response()->json($escuelas);
         
     }

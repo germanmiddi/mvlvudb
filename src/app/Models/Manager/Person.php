@@ -92,4 +92,9 @@ class Person extends Model
         return $this->hasOne(LegajoCB::class);
     }
 
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
+
 }

@@ -1,9 +1,9 @@
-<template>
+<template lang="">
     <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
                 <div class="flex justify-between">
-                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">{{this.name}} - Tipo de Trámite</h2>
+                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Puntos de Entrega</h2>
                     <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" 
                             @click="showNew = !showNew">Crear</button>
                 </div>
@@ -22,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                            <ListItem v-for="t in this.tipoTramite" :key="t.id" :item=t 
+                            <ListItem v-for="t in this.puntosEntrega" :key="t.id" :item=t 
                                       @edit-item="editItem" 
                                       @hide-item="hideItem" 
                                       @destroy-item="destroyItem" />
@@ -31,14 +31,15 @@
                 </table> 
             </div>
         </div>
+
     </div>
-    <PuntosEntrega />
+
 </template>
 
 <script>
+
 import axios from 'axios'
-import ListItem from './ListItem.vue'
-import PuntosEntrega from './Fortalecimiento/PuntosEntrega.vue'
+import ListItem from '../ListItem.vue'
 
 export default {
 
@@ -53,8 +54,7 @@ export default {
         }
     },
     components:{
-        ListItem,
-        PuntosEntrega
+        ListItem
     },
     setup(){
 
@@ -63,7 +63,7 @@ export default {
     data(){
 
         return{
-            tipoTramite: "",
+            puntosEntrega: "",
             showNew: false,
             newDescription: "",    
         }
@@ -73,17 +73,17 @@ export default {
     },
     methods:{
 		async getData() {
-            let response = await fetch(route('masterdata.get_tipo_tramite',this.dependencia_id ), { method: 'GET' })
-            this.tipoTramite = await response.json()
+            let response = await axios.get(route('masterdata.fortalecimiento.get_puntos_entrega'))
+            let list = await response.data
+            this.puntosEntrega = list
 		},
 
         async newItem(){
             let formData = new FormData();
-            formData.append('dependencia_id', this.dependencia_id);
             formData.append('description', this.newDescription);
 
 			try {
-				const response = await axios.post(route('masterdata.store_tipo_tramite') , formData  ); 
+				const response = await axios.post(route('masterdata.fortalecimiento.store_puntos_entrega') , formData  ); 
                 
 				if (response.status == 200) {
                     this.$emit('toast-message', 
@@ -104,6 +104,7 @@ export default {
 			}
 
         },
+
         async editItem(item){
             let formData = new FormData();
             formData.append('id', item.id);
@@ -112,7 +113,7 @@ export default {
 
 
 			try {
-				const response = await axios.post(route('masterdata.update_tipo_tramite') , formData  ); 
+				const response = await axios.post(route('masterdata.fortalecimiento.update_puntos_entrega') , formData  ); 
                 
 				if (response.status == 200) {
                     this.$emit('toast-message', 
@@ -131,7 +132,7 @@ export default {
 
         async hideItem(id){
 
-            const response = await axios.post(route('masterdata.hide_tipo_tramite' ), {id : id} ); 
+            const response = await axios.post(route('masterdata.fortalecimiento.hide_puntos_entrega' ), {id : id} ); 
                 
             if (response.status == 200) {
                 this.$emit('toast-message', 
@@ -145,15 +146,16 @@ export default {
             }
 
         },
+
         async destroyItem(id){
-            const response = await axios.post(route('masterdata.destroy_tipo_tramite' ), {id : id} ); 
+            const response = await axios.post(route('masterdata.fortalecimiento.destroy_puntos_entrega' ), {id : id} ); 
                 
             if (response.status == 200) {
                 this.$emit('toast-message', 
                                 {'message' : response.data.message, 
                                  'type' : 'success'} )
 
-                this.tipoTramite = this.tipoTramite.filter( item => item.id != id)
+                this.puntosEntrega = this.puntosEntrega.filter( item => item.id != id)
 
             } else {
                 this.$emit('toast-message', 

@@ -268,6 +268,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/fortalecimiento/update-puntos-entrega/', [MasterdataFortalecimientoController::class, 'update_puntos_entrega'])->name('masterdata.fortalecimiento.update_puntos_entrega');
         Route::post('/fortalecimiento/hide-puntos-entrega/', [MasterdataFortalecimientoController::class, 'hide_puntos_entrega'])->name('masterdata.fortalecimiento.hide_puntos_entrega');
         Route::post('/fortalecimiento/destroy-puntos-entrega/', [MasterdataFortalecimientoController::class, 'destroy_puntos_entrega'])->name('masterdata.fortalecimiento.destroy_puntos_entrega');
+
+        Route::get( '/fortalecimiento/get-productos', [MasterdataFortalecimientoController::class, 'get_productos'])->name('masterdata.fortalecimiento.get_productos');
+        Route::post('/fortalecimiento/store-productos/', [MasterdataFortalecimientoController::class, 'store_productos'])->name('masterdata.fortalecimiento.store_productos');
+        Route::post('/fortalecimiento/update-productos/', [MasterdataFortalecimientoController::class, 'update_productos'])->name('masterdata.fortalecimiento.update_productos');
+        Route::post('/fortalecimiento/hide-productos/', [MasterdataFortalecimientoController::class, 'hide_productos'])->name('masterdata.fortalecimiento.hide_productos');
+        Route::post('/fortalecimiento/destroy-productos/', [MasterdataFortalecimientoController::class, 'destroy_productos'])->name('masterdata.fortalecimiento.destroy_productos');
+
+
     });
 
     // Users

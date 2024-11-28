@@ -17,19 +17,69 @@
                                         {{ item.cantidad }} Entregas realizadas
                                     </p>
                                 </div>
-                                <!-- cambiar de ver bandeja a ojito
-                          gris fondo - iconos 
-                          cambiar letras por una tarjeta de color, verde apra entregadas y amarillo/naranja para las pendientes
-                          Quiza el ver mas ver un modal con detalles, que detalles?
-                          -->
-
-                                <!-- Cuando tenga la bd, hacer un forreach por cada punto de entrega con sus respectivas enmtregas pendientes y realizadas, ytodo esto traido desde el back -->
                             </div>
                         </div>
                     </a>
                 </li>
             </ul>
         </div>
+
+        <div class="px-4 mt-6 sm:px-6 lg:px-8">
+
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+                    <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                        <div class="">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+                        </div>
+                        <div class="flex-shrink-0 flex item-center">
+                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                    @click="clearFilter">Limpiar Filtro</button>
+                            <button type="button"
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getTramites()">Aplicar Filtro</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-6">
+                        <div class="col-span-12 sm:col-span-3 ">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-3 ">
+                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Documento</label>
+                            <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
+                                autocomplete="address-level2"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
+                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
+                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                        </div>
+                        
+                        <div class="col-span-12 sm:col-span-3"></div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="product_id" class="block text-sm font-medium text-gray-700">Producto</label>
+                            <select v-model="filter.product_id" name="product_id" id="product_id" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <option value="" selected>Selecciones un producto</option>
+                                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                            </select> 
+                        </div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="punto_entrega_id" class="block text-sm font-medium text-gray-700">Punto de entrega</label>
+                            <select v-model="filter.punto_entrega_id" name="punto_entrega_id" id="punto_entrega_id" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <option value="" selected>Selecciones un punto de entrega</option>
+                                    <option v-for="punto in puntosEntrega" :key="punto.id" :value="punto.id">{{ punto.punto_entrega.description }}</option>
+                            </select> 
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -64,14 +114,19 @@
 <script>
 import { ref } from 'vue'
 import { CheckCircleIcon } from '@heroicons/vue/24/solid'
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+
 export default {
     components: {
-        CheckCircleIcon
+        CheckCircleIcon,
+        Datepicker
     },
     data() {
         return {
             puntosEntrega: [],
-            collections: []
+            collections: [],
+            filter: {}
         }
     },
     mounted() {

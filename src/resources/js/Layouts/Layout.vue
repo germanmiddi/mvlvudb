@@ -30,242 +30,240 @@
               <nav class="px-2">
                 <div class="space-y-1">
                   <div class="space-y-1">
-            <a :href="route('general')" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
-              <div
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
-                <InboxIcon class="w-5 h-5 mr-3" /> <label> Bandeja General</label>
-              </div>
-            </a>
-            <!-- Render a `div` for the root `Disclosure` component -->
-            <Disclosure as="div">
-              <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-              <DisclosureButton as="template"
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                <button class="flex items-center">
-                  <Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6" />Dependencias
-                </button>
-              </DisclosureButton>
+                    <a :href="route('general')" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
+                      <div
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
+                        <InboxIcon class="w-5 h-5 mr-3" /> <label> Bandeja General</label>
+                      </div>
+                    </a>
+                    <!-- Render a `div` for the root `Disclosure` component -->
+                    <Disclosure as="div">
+                      <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                      <DisclosureButton as="template"
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                        <button class="flex items-center">
+                          <Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6" />Dependencias
+                        </button>
+                      </DisclosureButton>
 
-              <!-- Render a `ul` for the `DisclosurePanel` component -->
-              <DisclosurePanel as="ul" class="pl-4">
-                <a :href="route('discapacidad')" v-show="store.userCan('DIS', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Discapacidad
-                  </li>
-                </a>
-                <a :href="route('entidad')" v-show="store.userCan('ENT', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Entidades
-                  </li>
-                </a>
-                <a :href="route('fortalecimiento')" v-show="store.userCan('FOR', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Fortalecimiento Comunitario
-                  </li>
-                </a>
-                <a :href="route('genero')" v-show="store.userCan('GEN', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Género y Diversidad
-                  </li>
-                </a>
-                <a :href="route('habitat')" v-show="store.userCan('HAB', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Hábitat
-                  </li>
-                </a>
-                <a :href="route('ninez')" v-show="store.userCan('NIN', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Niñez y Adolescencia
-                  </li>
-                </a>
-                <a :href="route('promocion')" v-show="store.userCan('PPD', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Promoción y Protección de derechos
-                  </li>
-                </a>
-                <a :href="route('mayores')" v-show="store.userCan('PM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Personas Mayores
-                  </li>
-                </a>
-                <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md"
-                  v-show="store.userCan('ALL', $page.props.userGroups)">Operativos</li>
-                <a :href="route('vivienda')" v-show="store.userCan('VIV', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Vivienda social
-                  </li>
-                </a>
-              </DisclosurePanel>
+                      <!-- Render a `ul` for the `DisclosurePanel` component -->
+                      <DisclosurePanel as="ul" class="pl-4">
+                        <a :href="route('discapacidad')" v-show="store.userCan('DIS', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Discapacidad
+                          </li>
+                        </a>
+                        <a :href="route('entidad')" v-show="store.userCan('ENT', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Entidades
+                          </li>
+                        </a>
+                        <a :href="route('fortalecimiento')" v-show="store.userCan('FOR', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Fortalecimiento Comunitario
+                          </li>
+                        </a>
+                        <a :href="route('genero')" v-show="store.userCan('GEN', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Género y Diversidad
+                          </li>
+                        </a>
+                        <a :href="route('habitat')" v-show="store.userCan('HAB', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Hábitat
+                          </li>
+                        </a>
+                        <a :href="route('ninez')" v-show="store.userCan('NIN', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Niñez y Adolescencia
+                          </li>
+                        </a>
+                        <a :href="route('promocion')" v-show="store.userCan('PPD', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Promoción y Protección de derechos
+                          </li>
+                        </a>
+                        <a :href="route('mayores')" v-show="store.userCan('PM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Personas Mayores
+                          </li>
+                        </a>
+                        <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md"
+                          v-show="store.userCan('ALL', $page.props.userGroups)">Operativos</li>
+                        <a :href="route('vivienda')" v-show="store.userCan('VIV', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Vivienda social
+                          </li>
+                        </a>
+                      </DisclosurePanel>
 
-            </Disclosure>
+                    </Disclosure>
 
-            <Disclosure as="div">
-              <DisclosureButton as="template"
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                <button class="flex items-center">
-                  <NewspaperIcon class="mr-3 flex-shrink-0 h-6 w-6" />Centros Barriales
-                </button>
-              </DisclosureButton>
+                    <Disclosure as="div">
+                      <DisclosureButton as="template"
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                        <button class="flex items-center">
+                          <NewspaperIcon class="mr-3 flex-shrink-0 h-6 w-6" />Centros Barriales
+                        </button>
+                      </DisclosureButton>
 
-              <DisclosurePanel as="ul" class="pl-4">
+                      <DisclosurePanel as="ul" class="pl-4">
 
-                <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Centros Barriales Infancia
-                  </li>
-                </a>
-                <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Centros Barriales Juventud
-                  </li>
-                </a>
-                <hr>
-                <a :href="route('inscripcionCBI')" v-show="store.userCan('CBI', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Inscripción CBI
-                  </li>
-                </a>
-                <a :href="route('inscripcionCBJ')" v-show="store.userCan('CBJ', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Inscripción CBJ
-                  </li>
-                </a>
-                <hr>
-                <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Gabinete
-                  </li>
-                </a>
-                <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Mil Dias
-                  </li>
-                </a>
-                <hr>
-                <a :href="route('legajoCB')"
-                  v-show="store.userCan('CBJ', $page.props.userGroups) || store.userCan('CBI', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Inscriptos
-                  </li>
-                </a>
-              </DisclosurePanel>
+                        <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Centros Barriales Infancia
+                          </li>
+                        </a>
+                        <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Centros Barriales Juventud
+                          </li>
+                        </a>
+                        <hr>
+                        <a :href="route('inscripcionCBI')" v-show="store.userCan('CBI', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Inscripción CBI
+                          </li>
+                        </a>
+                        <a :href="route('inscripcionCBJ')" v-show="store.userCan('CBJ', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Inscripción CBJ
+                          </li>
+                        </a>
+                        <hr>
+                        <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Gabinete
+                          </li>
+                        </a>
+                        <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Mil Dias
+                          </li>
+                        </a>
+                        <hr>
+                        <a :href="route('legajoCB')"
+                          v-show="store.userCan('CBJ', $page.props.userGroups) || store.userCan('CBI', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Inscriptos
+                          </li>
+                        </a>
+                      </DisclosurePanel>
 
-            </Disclosure>
+                    </Disclosure>
 
-            <a :href="route('report')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-              <div
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes </label>
-              </div>
-            </a>
+                    <a :href="route('report')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                      <div
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
+                        <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes </label>
+                      </div>
+                    </a>
 
-            <a :href="route('persons')" v-show="store.userCan('-PROF', $page.props.userGroups)">
-              <div
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                <UserGroupIcon class="w-5 h-5 mr-3" /> <label> Personas</label>
-              </div>
-            </a>
+                    <a :href="route('persons')" v-show="store.userCan('-PROF', $page.props.userGroups)">
+                      <div
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
+                        <UserGroupIcon class="w-5 h-5 mr-3" /> <label> Personas</label>
+                      </div>
+                    </a>
 
-            <a :href="route('downloads')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-              <div
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                <ArrowDownTrayIcon class="w-5 h-5 mr-3" /> <label> Descargas</label>
-              </div>
-            </a>
+                    <a :href="route('downloads')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                      <div
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
+                        <ArrowDownTrayIcon class="w-5 h-5 mr-3" /> <label> Descargas</label>
+                      </div>
+                    </a>
 
-            <Disclosure as="div">
-              <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-              <DisclosureButton as="template"
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                <button class="flex items-center">
-                  <CubeIcon class="mr-3 flex-shrink-0 h-6 w-6" />Cajas
-                </button>
-              </DisclosureButton>
-              <DisclosurePanel as="ul" class="pl-4">
-                <a :href="route('collections.padron')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Padrón
-                  </li>
-                </a>
-                <a :href="route('collections.entregas')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Entregas
-                  </li>
-                </a>
-                <a :href="route('collections.puntosEntrega')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Puntos de Entrega
-                  </li>
-                </a>
-                <a :href="route('collections.personal')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Personal
-                  </li>
-                </a>
-              </DisclosurePanel>
+                    <Disclosure as="div">
+                      <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                      <DisclosureButton as="template"
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                        <button class="flex items-center">
+                          <CubeIcon class="mr-3 flex-shrink-0 h-6 w-6" />Cajas
+                        </button>
+                      </DisclosureButton>
+                      <DisclosurePanel as="ul" class="pl-4">
+                        <!-- <a :href="route('collections.padron')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Padrón
+                          </li>
+                        </a> -->
+                        <a :href="route('collections.entregas')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Entregas
+                          </li>
+                        </a>
+                        <a :href="route('collections.puntosEntrega')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Puntos de Entrega
+                          </li>
+                        </a>
+                        <a :href="route('collections.personal')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Personal
+                          </li>
+                        </a>
+                        <a :href="route('collections.productos')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Productos
+                          </li>
+                        </a>
+                      </DisclosurePanel>
 
-            </Disclosure>
+                    </Disclosure>
 
-            <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-              <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-              <DisclosureButton as="template"
-                class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                <button class="flex items-center">
-                  <Cog6ToothIcon class="mr-3 flex-shrink-0 h-6 w-6" />Configuraciones
-                </button>
-              </DisclosureButton>
+                    <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                      <!-- Don't render any element (only children) for the `DisclosureButton` component -->
+                      <DisclosureButton as="template"
+                        class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                        <button class="flex items-center">
+                          <Cog6ToothIcon class="mr-3 flex-shrink-0 h-6 w-6" />Configuraciones
+                        </button>
+                      </DisclosureButton>
 
-              <!-- Render a `ul` for the `DisclosurePanel` component -->
-              <DisclosurePanel as="ul" class="pl-4">
+                      <!-- Render a `ul` for the `DisclosurePanel` component -->
+                      <DisclosurePanel as="ul" class="pl-4">
 
-                <a :href="route('users')">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Usuarios y Permisos
-                  </li>
-                </a>
+                        <a :href="route('users')">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Usuarios y Permisos
+                          </li>
+                        </a>
 
-                <a :href="route('masterdata')">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Datos Maestros
-                  </li>
-                </a>
-                <a :href="route('logs')">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Registro de Logs
-                  </li>
-                </a>
-                <a :href="route('import')">
-                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
-                    Importador de Registro
-                  </li>
-                </a>
-              </DisclosurePanel>
+                        <a :href="route('masterdata')">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Datos Maestros
+                          </li>
+                        </a>
+                        <a :href="route('logs')">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Registro de Logs
+                          </li>
+                        </a>
+                        <a :href="route('import')">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Importador de Registro
+                          </li>
+                        </a>
+                      </DisclosurePanel>
 
-            </Disclosure>
+                    </Disclosure>
 
-            <div
-              class="flex items-center px-2 py-2 hover:text-red-600 hover:bg-gray cursor-pointer text-gray-500 hover:bg-gray-200 rounded-md">
-              <PowerIcon class="mr-3 flex-shrink-0 h-5 w-5" />
-              <span @click="logout" class="text-sm font-medium ">Cerrar Sesión</span>
+                    <div
+                      class="flex items-center px-2 py-2 hover:text-red-600 hover:bg-gray cursor-pointer text-gray-500 hover:bg-gray-200 rounded-md">
+                      <PowerIcon class="mr-3 flex-shrink-0 h-5 w-5" />
+                      <span @click="logout" class="text-sm font-medium ">Cerrar Sesión</span>
 
-            </div>
-          </div>                  
-                  <!-- <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50', 'group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md']" :aria-current="item.current ? 'page' : undefined">
-                      <component :is="item.icon" :class="[item.current ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500', 'mr-3 flex-shrink-0 h-6 w-6']" aria-hidden="true" />
-                      {{ item.name }}
-                    </a> -->
+                    </div>
+                  </div>
                 </div>
                 <div class="mt-8">
                   <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"
                     id="mobile-teams-headline"></h3>
-                  <!-- <div class="mt-1 space-y-1" role="group" aria-labelledby="mobile-teams-headline">
-                      <a v-for="team in teams" :key="team.name" :href="team.href" class="group flex items-center px-3 py-2 text-base leading-5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                        <span :class="[team.bgColorClass, 'w-2.5 h-2.5 mr-4 rounded-full']" aria-hidden="true" />
-                        <span class="truncate">
-                          {{ team.name }}
-                        </span>
-                      </a>
-                    </div> -->
                 </div>
               </nav>
             </div>
@@ -285,269 +283,8 @@
       </div>
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="mt-6 h-0 flex-1 flex flex-col overflow-y-auto">
-        <!-- User account dropdown -->
-        <!-- <Menu as="div" class="px-3 relative inline-block text-left">
-
-          <transition enter-active-class="transition ease-out duration-100"
-            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95">
-            <MenuItems
-              class="z-10 mx-3 origin-top absolute right-0 left-0 mt-1 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">View
-                  profile</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Settings</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Notifications</a>
-                </MenuItem>
-              </div>
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Get
-                  desktop app</a>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Support</a>
-                </MenuItem>
-              </div>
-              <div class="py-1">
-                <MenuItem v-slot="{ active }">
-                <a href="#"
-                  :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Logout</a>
-                </MenuItem>
-              </div>
-            </MenuItems>
-          </transition>
-
-        </Menu> -->
-
-        <!-- Sidebar Search -->
-        <!-- <div class="px-3 mt-5">
-            <label for="search" class="sr-only">Search</label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
-                <MagnifyingGlassIcon class="mr-3 h-4 w-4 text-gray-400" aria-hidden="true" />
-              </div>
-              <input type="text" name="search" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md" placeholder="Search" />
-            </div>
-          </div> -->
-          <!-- Navigation -->
-          <nav class="px-3 mt-6">
-            <!-- {{ user.grupos }} -->
-
-            <div class="space-y-1">
-              <a :href="route('general')" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
-                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex">
-                  <InboxIcon class="w-5 h-5 mr-3" /> <label> Bandeja General</label>
-                </div>
-              </a>
-              <!-- Render a `div` for the root `Disclosure` component -->
-              <Disclosure as="div">
-                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><Bars3Icon class="mr-3 flex-shrink-0 h-6 w-6"/>Dependencias</button>
-                </DisclosureButton>
-
-                <!-- Render a `ul` for the `DisclosurePanel` component -->
-                  <DisclosurePanel as="ul" class="pl-4">
-
-                    <!-- <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Centros Barriales Infancia
-                      </li>
-                    </a>
-                    <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Centros Barriales Juventud
-                      </li>
-                    </a> -->
-                    <a :href="route('discapacidad')" v-show="store.userCan('DIS', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Discapacidad
-                      </li>
-                    </a>
-                    <a :href="route('entidad')" v-show="store.userCan('ENT', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Entidades
-                      </li>
-                    </a>
-                    <a :href="route('fortalecimiento')" v-show="store.userCan('FOR', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Fortalecimiento Comunitario
-                      </li>
-                    </a>
-                    <a :href="route('genero')" v-show="store.userCan('GEN', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Género y Diversidad
-                      </li>
-                    </a>
-                    <a :href="route('habitat')" v-show="store.userCan('HAB', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Hábitat
-                      </li>
-                    </a>
-                    <a :href="route('ninez')" v-show="store.userCan('NIN', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Niñez y Adolescencia
-                      </li>
-                    </a>
-                    <a :href="route('promocion')" v-show="store.userCan('PPD', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Promoción y Protección de derechos
-                      </li>
-                    </a>
-                    <a :href="route('mayores')" v-show="store.userCan('PM', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Personas Mayores
-                      </li>
-                    </a>
-                    <li class="bg-gray-300 px-2 py-2 my-2 text-sm font-medium rounded-md" v-show="store.userCan('ALL', $page.props.userGroups)" >Operativos</li>
-                    <a :href="route('vivienda')" v-show="store.userCan('VIV', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Vivienda social
-                      </li>
-                    </a>
-                  </DisclosurePanel>
-
-              </Disclosure>
-
-              <Disclosure as="div">
-                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><NewspaperIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Centros Barriales</button>
-                </DisclosureButton>
-
-                <!-- Render a `ul` for the `DisclosurePanel` component -->
-                  <DisclosurePanel as="ul" class="pl-4">
-
-                    <!-- <a :href="route('infancia')" v-show="store.userCan('CBI', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Centros Barriales Infancia
-                      </li>
-                    </a>
-                    <a :href="route('juventud')" v-show="store.userCan('CBJ', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Centros Barriales Juventud
-                      </li>
-                    </a> -->
-                    <hr>
-                    <a :href="route('inscripcionCBI')" v-show="store.userCan('CBI', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Inscripción CBI
-                      </li>
-                    </a>
-                    <a :href="route('inscripcionCBJ')" v-show="store.userCan('CBJ', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Inscripción CBJ
-                      </li>
-                    </a>
-                    <hr>
-                    <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                            Gabinete
-                        </li>
-                    </a>
-                    <a :href="route('mil-dias')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                            Mil Dias
-                        </li>
-                    </a>
-                    <hr>
-                    <a :href="route('legajoCB')" v-show="store.userCan('CBJ', $page.props.userGroups) || store.userCan('CBI', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Inscriptos
-                      </li>
-                    </a>
-                  </DisclosurePanel>
-
-              </Disclosure>
-
-              <a :href="route('report')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                  <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes </label>
-                </div>
-              </a>
-
-              <a :href="route('persons')"  v-show="store.userCan('-PROF', $page.props.userGroups)">
-                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                  <UserGroupIcon class="w-5 h-5 mr-3" /> <label> Personas</label>
-                </div>
-              </a>
-              
-              <a :href="route('downloads')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                <div class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
-                  <ArrowDownTrayIcon class="w-5 h-5 mr-3" /> <label> Descargas</label>
-                </div>
-              </a>
-
-
-              <Disclosure as="div">
-                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><CubeIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Cajas</button>
-                </DisclosureButton>
-                  <DisclosurePanel as="ul" class="pl-4">
-                    <a :href="route('person.boxes')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Padrón
-                      </li>
-                    </a>
-                    <a :href="route('person.boxes.delivery')"  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Entregas
-                      </li>
-                    </a>
-                  </DisclosurePanel>
-
-              </Disclosure>
-
-              <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
-                <!-- Don't render any element (only children) for the `DisclosureButton` component -->
-                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
-                  <button class="flex items-center" ><Cog6ToothIcon class="mr-3 flex-shrink-0 h-6 w-6"/>Configuraciones</button>
-                </DisclosureButton>
-
-                <!-- Render a `ul` for the `DisclosurePanel` component -->
-                  <DisclosurePanel as="ul" class="pl-4">
-
-                    <a :href="route('users')" >
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Usuarios y Permisos
-                      </li>
-                    </a>
-
-                    <a :href="route('masterdata')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Datos Maestros
-                      </li>
-                    </a>
-                    <a :href="route('logs')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Registro de Logs
-                      </li>
-                    </a>
-                    <a :href="route('import')">
-                      <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md" >
-                        Importador de Registro
-                      </li>
-                    </a>
-                  </DisclosurePanel>
-
-              </Disclosure>
-
-              <div class="flex items-center px-2 py-2 hover:text-red-600 hover:bg-gray cursor-pointer text-gray-500 hover:bg-gray-200 rounded-md">
-                <PowerIcon class="mr-3 flex-shrink-0 h-5 w-5" />
-                <span @click="logout" class="text-sm font-medium ">Cerrar Sesión</span>
+        <!-- Navigation -->
+        <nav class="px-3 mt-6">
 
           <div class="space-y-1">
             <a :href="route('general')" v-show="store.userCan('VUDS-VU', $page.props.userGroups)">
@@ -702,11 +439,11 @@
                 </button>
               </DisclosureButton>
               <DisclosurePanel as="ul" class="pl-4">
-                <a :href="route('collections.padron')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <!-- <a :href="route('collections.padron')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Padrón
                   </li>
-                </a>
+                </a> -->
                 <a :href="route('collections.entregas')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Entregas
@@ -721,7 +458,13 @@
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Personal
                   </li>
-                </a>                
+                </a>
+                <a :href="route('collections.productos')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                    Productos
+                  </li>
+                </a>
               </DisclosurePanel>
 
             </Disclosure>
@@ -790,7 +533,8 @@
           </div>
           <div class="flex items-center">
             <div class="text-sm">Hola {{ $page.props.user.name }}<br>
-            <span class="text-xs text-gray-400">Sede: Palacio Municipal</span></div>
+              <span class="text-xs text-gray-400">Sede: Palacio Municipal</span>
+            </div>
             <!-- Profile dropdown -->
             <!-- <Menu as="div" class="ml-3 relative">
                 <div>

@@ -27,7 +27,7 @@ class CollectionController extends Controller
         $collections = Collection::select('punto_entrega_id', DB::raw('count(id) as cantidad'))
             ->with('puntoEntrega')
             ->groupBy('punto_entrega_id')
-            ->whereMonth('date', now()->month)
+            // ->whereMonth('date', now()->month)
             ->get();
         return $collections;
     }
@@ -159,5 +159,8 @@ class CollectionController extends Controller
         return response()->json(['message' => 'Collection stored successfully']);
     }
 
-
+    public function productos()
+    {
+        return Inertia::render('Manager/Collections/Productos/Index');
+    }
 }

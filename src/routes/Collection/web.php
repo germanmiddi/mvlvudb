@@ -12,6 +12,7 @@ Route::middleware(['auth'])
         Route::get('/puntos-entrega', [CollectionController::class, 'puntosEntrega'])->name('collections.puntosEntrega');
         Route::get('/puntos-entrega/statistics', [CollectionController::class, 'puntosEntregaStatistics'])->name('collections.puntosEntregaStatistics');
         
+        Route::get('/productos', [CollectionController::class, 'productos'])->name('collections.productos');
         
         Route::get('/personal', [CollectionController::class, 'personal'])->name('collections.personal');
         Route::get('/list_personal_data', [CollectionController::class, 'listPersonalData'])->name('collections.list_personal_data');

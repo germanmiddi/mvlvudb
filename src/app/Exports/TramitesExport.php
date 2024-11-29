@@ -81,8 +81,53 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                 'cobertura_medica.description AS cobertura_medica_description',);
                 break;
                 
+            case '8':
+                $result->select(
+                    'person.name', 
+                'person.lastname', 
+                'person.num_documento',
+                    DB::raw("(
+                        SELECT GROUP_CONCAT(pn.name SEPARATOR '\n') 
+                        FROM person_tramite pt 
+                        JOIN person pn ON pn.id = pt.person_id 
+                        WHERE pt.tramite_id = tramites.id AND pt.rol_tramite_id = 2
+                    ) AS children_names"),
+                    DB::raw("(
+                        SELECT GROUP_CONCAT(pn.lastname SEPARATOR '\n') 
+                        FROM person_tramite pt 
+                        JOIN person pn ON pn.id = pt.person_id 
+                        WHERE pt.tramite_id = tramites.id AND pt.rol_tramite_id = 2
+                    ) AS children_lastnames"),
+                    DB::raw("(
+                        SELECT GROUP_CONCAT(pn.num_documento SEPARATOR '\n') 
+                        FROM person_tramite pt 
+                        JOIN person pn ON pn.id = pt.person_id 
+                        WHERE pt.tramite_id = tramites.id AND pt.rol_tramite_id = 2
+                    ) AS children_documents"),
+                        // DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
+                        'contact_data.phone',
+                        'contact_data.celular',
+                        'contact_data.email',
+                        'localidades.description', 
+                        'barrios.description as barrio_description',
+                        'address_data.calle',
+                        'address_data.number',
+                        'address_data.piso',
+                        'address_data.dpto',
+                        // 'address_data.google_address',
+                        'escuelas.description AS escuela_description', 
+                        'estado_educativo.description AS estado_educativo',
+                        'tipo_ocupacion.description AS tipo_ocupacion_description',
+                        DB::raw("DATE_FORMAT(tramites.fecha, '%d-%m-%Y')"),
+                        'tipo_tramite.description AS tipo_tramite_description',
+                        'dependencias.description AS dependencia_description',
+                        'users.name AS users_name',
+                        'tramites.observacion');
+                        
+                break;
             default:
-                $result->select('person.name', 
+                $result->select(
+                    'person.name', 
                         'person.lastname', 
                         'person.num_documento',
                         DB::raw("DATE_FORMAT(person.fecha_nac, '%d-%m-%Y')"), 
@@ -130,7 +175,12 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
             ->leftjoin('barrios', 'barrios.id', '=', 'address_data.barrio_id')
             ->leftjoin('cobertura_medica', 'cobertura_medica.id', '=', 'social_data.cobertura_medica_id')
             ->leftjoin('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-            ->where('person_tramite.rol_tramite_id', '1');
+            ->when($this->data['dependencia_id'] == 8, function ($query) {
+                return $query->whereIn('person_tramite.rol_tramite_id', [1, 2]);
+            }, function ($query) {
+                return $query->where('person_tramite.rol_tramite_id', 1);
+            })
+            ->groupBy('tramites.id');
 
         if(isset($this->data['dependencia_id'])){
             $result->where('tramites.dependencia_id', $this->data['dependencia_id']);
@@ -228,22 +278,44 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
 
     public function styles(Worksheet $sheet)
     {
-        // Aplica un estilo a las celdas de la cabecera
-        $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')
-        ->applyFromArray([
-            'font' => [
-                'bold' => true,
-                'size' => 14,
-            ],
-            'fill' => [
-                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                'startColor' => [
-                    'rgb' => 'CCCCCC', // Corregido el color de fondo GRIS
-                ]
-            ],
-        ]);
+        // Aplica estilos a la cabecera
+        $headerRange = 'A1:' . $sheet->getHighestColumn() . '1';
+        $sheet->getStyle($headerRange)
+            ->applyFromArray([
+                'font' => [
+                    'bold' => true,
+                    'size' => 14,
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => [
+                        'rgb' => 'CCCCCC', // Color de fondo gris
+                    ],
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+            ]);
 
+        // Ajusta la altura de la fila de la cabecera
         $sheet->getRowDimension(1)->setRowHeight(30);
+
+        // Obtén el rango completo de datos (todas las celdas no vacías)
+        $highestColumn = $sheet->getHighestColumn();
+        $highestRow = $sheet->getHighestRow();
+        $dataRange = 'A2:' . $highestColumn . $highestRow; // Desde A2 hasta la última celda
+
+        // Aplica centrado a todo el rango de datos
+        $sheet->getStyle($dataRange)
+            ->getAlignment()
+            ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+            ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
+        // Ajusta el ancho de todas las columnas automáticamente
+        foreach (range('A', $highestColumn) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
     }
 
     // encabezados
@@ -275,6 +347,36 @@ class TramitesExport implements FromCollection, WithHeadings, WithStyles, Should
                     'Fecha Tramite',
                     'Tipo Tramite',
                     'Dependencia',
+                    //'Nomenclatura', //No se utiliza
+                    'Observacion'
+                ];
+            case '8':
+                $title = [
+                    'Nombre Denunciante',
+                    'Apellido Denunciante',
+                    'Num. Documento Denunciante',
+                    'Nombre del Niño/s',
+                    'Apellido del Niño/s',
+                    'Num. Documento del Niño/s',
+                    'Telefono Denunciante',
+                    'Celular Denunciante',
+                    'Email Denunciante',
+                    'Localidad',
+                    'Barrio',
+                    'Calle',
+                    'Número',
+                    'Piso',
+                    'Dpto',
+                    // 'Cobertura Social',
+                    'Escuela',
+                    // 'Fecha',
+                    'Estado Educativo',
+                    // 'Direccion Google',
+                    'Ocupación',
+                    'Fecha Tramite',
+                    'Tipo Tramite',
+                    'Dependencia',
+                    'Profesional',
                     //'Nomenclatura', //No se utiliza
                     'Observacion'
                 ];

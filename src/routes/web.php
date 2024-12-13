@@ -35,6 +35,7 @@ use App\Http\Controllers\Manager\Users\UserController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
+use Illuminate\Support\Facades\Storage;
 
 use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
 
@@ -275,6 +276,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/fortalecimiento/hide-productos/', [MasterdataFortalecimientoController::class, 'hide_productos'])->name('masterdata.fortalecimiento.hide_productos');
         Route::post('/fortalecimiento/destroy-productos/', [MasterdataFortalecimientoController::class, 'destroy_productos'])->name('masterdata.fortalecimiento.destroy_productos');
 
+        Route::get('/download-template-fortalecimiento', function () {
+            $filePath = 'public/templates/Plantilla_Fortalecimiento.xlsx';
+            return Storage::download($filePath, 'Plantilla_Fortalecimiento.xlsx');
+        })->name('download.template.fortalecimiento');
 
     });
 

@@ -32,13 +32,13 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
     public function model(array $row)
     {
         ++$this->rows;
-        if (empty(array_filter(array: $row))) {
+        if (empty($row['fecha'])) { 
             return null;
         }
         try {
             $person = Person::updateOrCreate(
                 [
-                    'tipo_documento_id' => $row['tipo_de_documento'],
+                    'tipo_documento_id' => $this->extractID($row['tipo_de_documento']),
                     'num_documento' => $row['nro_documento']
                 ],
                 array_filter([
@@ -92,8 +92,8 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
                     'person_id' => $person->id
                 ],
                 [
-                    'localidad_id' => $row['localidad'] !== 'NULL' && $row['localidad'] !== -1 ? $row['localidad'] : null,
-                    'barrio_id' => $row['barrio'] !== 'NULL' ? $row['barrio'] : null,
+                    'localidad_id' => $row['localidad'] !== 'NULL' && $row['localidad'] !== -1 ? $this->extractIDLocalidades($row['localidad']) : null,
+                    'barrio_id' => $row['barrio'] !== 'NULL' ? $this->extractID($row['barrio']) : null,
                     'calle' => strtoupper(str_replace(' ', '', $row['calle'])) !== 'NULL' ? $row['calle'] : null,
                     'number' => strtoupper(str_replace(' ', '', $row['numero'])) !== 'NULL' ? $row['numero'] : null,
                     'piso' => strtoupper(str_replace(' ', '', $row['piso'])) !== 'NULL' ? $row['piso'] : null,
@@ -141,11 +141,11 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
             $tramite_data = Tramite::Create(
                 [
                     'fecha' => $this->formatDate($row['fecha']),
-                    'canal_atencion_id' => $row['canal_de_atencion'],
+                    'canal_atencion_id' => $this->extractID($row['canal_de_atencion']),
                     'tipo_tramite_id' => $row['tipo_tramite'],
                     'dependencia_id' => $row['tramite_dependencia_id'] ?? 5,
                     // 'parentesco_id' => $row['tramite_parentesco_id'] !== 'NULL' && $row['tramite_parentesco_id'] !== -1 ? $row['tramite_parentesco_id'] : null,
-                    'estado_id' => $row['estado'],
+                    'estado_id' => $this->extractID($row['estado']),
                     // 'num_tramite_legacy' => $row['tramite_num_tramite_legacy']
                 ]
             );
@@ -164,21 +164,48 @@ class FortalecimientoImport implements ToModel, WithHeadingRow, WithBatchInserts
         return;
     }
 
-    private function formatDate($date)
-{
-    if (empty($date)) {
-        return null; 
+    private function extractID($rowID)
+    {
+        if (empty($rowID)) {
+            return null;
+        }
+
+        if (preg_match('/^\d+/', $rowID, $matches)) {
+            return (int)$matches[0];
+        } else{
+            return null;
+        }
     }
 
-    try {
-        if (is_numeric($date)) {
-            return \Carbon\Carbon::createFromFormat('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d'));
+    private function extractIDLocalidades($value)
+    {
+        if (empty($value)) {
+            return null;
         }
-        return \Carbon\Carbon::parse($date)->format('Y-m-d');
-    } catch (\Exception $e) {
-        return null;
+
+        if (preg_match('/_(\d+)$/', $value, $matches)) {
+            return (int)$matches[1];
+        } else {
+            return null;
+        }
+
     }
-}
+
+    private function formatDate($date)
+    {
+        if (empty($date)) {
+            return null;
+        }
+
+        try {
+            if (is_numeric($date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($date)->format('Y-m-d'));
+            }
+            return \Carbon\Carbon::parse($date)->format('Y-m-d');
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
     public function getStatus()
     {

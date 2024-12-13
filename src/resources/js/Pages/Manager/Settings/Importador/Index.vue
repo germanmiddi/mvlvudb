@@ -9,7 +9,8 @@
         </div>
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
-        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 px-4 mt-6 sm:px-6 lg:px-8">
+        <div
+            class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 px-4 mt-6 sm:px-6 lg:px-8">
             <!-- Importador de Tramites -->
             <div class="group relative bg-gray-50 rounded-md">
                 <div class="p-4 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -25,8 +26,7 @@
                                 </svg>
                                 <span v-if="!fileDependencia" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
-                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileDependenciaName
-                                }}</span>
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileDependenciaName}}</span>
                                 <input @change="handleFileDependenciaChange" type="file" name="file" id="file"
                                     ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
@@ -42,18 +42,26 @@
                     </div>
 
                     <div>
-                        <label for="dependencia_id" class="block text-sm font-medium text-gray-700 mt-2">Dependencia</label>
-                        <select id="dependencia_id" name="dependencia_id" autocomplete="off" v-model="dependencia_id"
-                            class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="" disabled selected>
-                                Seleccione una dependencia
-                            </option>
-                            <option v-for="dependencia in dependencias" :key="dependencia.id" :value="dependencia.id">
-                                {{ dependencia.description }}
-                            </option>
-                        </select>
+                        <label for="dependencia_id"
+                            class="block text-sm font-medium text-gray-700 mt-2">Dependencia</label>
+                        <div class="flex items-center justify-around gap-x-2">
+                            <select id="dependencia_id" name="dependencia_id" autocomplete="off"
+                                v-model="dependencia_id"
+                                class="mt-1 block py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                :class="dependencia_id == 5 ? 'w-10/12' : 'w-full'">
+                                <option value="" disabled selected>
+                                    Seleccione una dependencia
+                                </option>
+                                <option v-for="dependencia in dependencias" :key="dependencia.id"
+                                    :value="dependencia.id">
+                                    {{ dependencia.description }}
+                                </option>
+                            </select>
+                            <div v-if="dependencia_id == 5" class="p-2 rounded-md hover:opacity-70 duration-200 text-green-700 bg-green-100 cursor-pointer" @click="downloadTemplate" >
+                                <svg v-if="!processExport" width="23px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Descargar Plantilla</title><path fill="currentColor" d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z" /></svg>
+                            </div>
+                        </div>
                     </div>
-
                     <div>
                         <button type="button" @click="importarDependencia()" v-if="!loadingDependencia"
                             class="mt-4 w-full justify-center  relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
@@ -80,10 +88,11 @@
                                     <path
                                         d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                 </svg>
-                                <span v-if="!fileEntidad" class="mt-2 text-base leading-normal">Seleccione Archivo</span>
+                                <span v-if="!fileEntidad" class="mt-2 text-base leading-normal">Seleccione
+                                    Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileName }}</span>
-                                <input @change="handleFileEntidadChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                <input @change="handleFileEntidadChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
@@ -125,9 +134,9 @@
                                 <span v-if="!filePersona" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ filePersonaName
-                                }}</span>
-                                <input @change="handleFilePersonaChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                    }}</span>
+                                <input @change="handleFilePersonaChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
@@ -169,9 +178,9 @@
                                 <span v-if="!fileEstado" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileEstadoName
-                                }}</span>
-                                <input @change="handleFileEstadoChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                    }}</span>
+                                <input @change="handleFileEstadoChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
@@ -232,7 +241,7 @@
                                 <span v-if="!fileCud" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileCudName
-                                }}</span>
+                                    }}</span>
                                 <input @change="handleFileCudChange" type="file" name="file" id="file" ref="inputfile"
                                     autocomplete="off" class="hidden" />
                             </label>
@@ -275,18 +284,19 @@
                                 </svg>
                                 <span v-if="!fileUpdateResponsable" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
-                                <span v-else class="mt-2 text-base leading-normal text-center">{{ fileUpdateResponsableName
-                                }}</span>
-                                <input @change="handleFileUpdateResponsableChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                <span v-else class="mt-2 text-base leading-normal text-center">{{
+                                    fileUpdateResponsableName
+                                    }}</span>
+                                <input @change="handleFileUpdateResponsableChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
                                 class="w-full flex flex-col items-center px-2 py-6 bg-green-50 text-blue rounded-lg shadow-lg tracking-wide uppercase cursor-pointer hover:border-green-150 hover:bg-green-100 hover:text-green-500">
                                 <ArrowPathIcon class="h-8 w-8 text-red-500 animate-spin mr-2" />
                                 <span class="mt-2 text-base text-center leading-normal">Procesando Archivo...</span>
-                                <input disabled @change="handleFileUpdateResponsableChange" type="file" name="file" id="file"
-                                    ref="inputfile" autocomplete="off" class="hidden" />
+                                <input disabled @change="handleFileUpdateResponsableChange" type="file" name="file"
+                                    id="file" ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
                         </div>
                     </div>
@@ -320,9 +330,9 @@
                                 <span v-if="!fileCbiDev" class="mt-2 text-base leading-normal">Seleccione
                                     Archivo</span>
                                 <span v-else class="mt-2 text-base leading-normal text-center">{{ fileCbiDevName
-                                }}</span>
-                                <input @change="handleFileCbiDevChange" type="file" name="file" id="file" ref="inputfile"
-                                    autocomplete="off" class="hidden" />
+                                    }}</span>
+                                <input @change="handleFileCbiDevChange" type="file" name="file" id="file"
+                                    ref="inputfile" autocomplete="off" class="hidden" />
                             </label>
 
                             <label v-else
@@ -349,7 +359,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div v-if="status" class="px-4 mt-6 sm:px-6 lg:px-8">
             <button type="button" @click="this.status = ''"
                 class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-red-200 text-red-900 hover:bg-red-600 hover:text-white">
@@ -429,7 +439,8 @@ export default {
             loadingArchivo: false,
             loadingCbiDev: false,
             status: '',
-            dependencia_id: ''
+            dependencia_id: '',
+            processExport: false,
         };
     },
     setup() {
@@ -696,6 +707,39 @@ export default {
                 this.labelType = "info";
                 this.toastMessage = "Debe seleccionar un archivo";
             }
+        },
+
+        async downloadTemplate() {
+            this.processExport = true
+            let rt = route("download.template.fortalecimiento");
+
+            try {
+                const response = await axios.get(rt, {
+                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                });
+
+                // Crear un objeto Blob con la respuesta
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+                // Crear una URL de objeto para el Blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Crear un enlace <a> para iniciar la descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Plantilla Fortalecimiento.xlsx'; // Nombre del archivo
+                a.style.display = 'none';
+
+                // Agregar el enlace al cuerpo del documento y hacer clic en él
+                document.body.appendChild(a);
+                a.click();
+
+                // Liberar la URL del objeto después de la descarga
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error(error);
+            }
+            this.processExport = false
         },
     },
     mounted() {

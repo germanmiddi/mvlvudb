@@ -182,12 +182,18 @@
                         </button>
                       </DisclosureButton>
                       <DisclosurePanel as="ul" class="pl-4">
-                        <!-- <a :href="route('collections.padron')"
+                        <a :href="route('collections.entrevistas.index')"
+                          v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                          <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                            Entrevistas
+                          </li>
+                        </a>
+                        <a :href="route('collections.padron')"
                           v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                           <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                             Padrón
                           </li>
-                        </a> -->
+                        </a>
                         <a :href="route('collections.entregas')"
                           v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                           <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
@@ -439,16 +445,25 @@
                 </button>
               </DisclosureButton>
               <DisclosurePanel as="ul" class="pl-4">
-                <!-- <a :href="route('collections.padron')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <a :href="route('collections.entrevistas.index')"
+                  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                  <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                    Entrevistas
+                  </li>
+                </a>
+                <a :href="route('collections.padron')"
+                  v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Padrón
                   </li>
-                </a> -->
+                </a>
+                <hr>
                 <a :href="route('collections.entregas')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Entregas
                   </li>
                 </a>
+                <hr>
                 <a :href="route('collections.puntosEntrega')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Puntos de Entrega
@@ -517,6 +532,7 @@
         </nav>
       </div>
     </div>
+
     <!-- Main column -->
     <div class="lg:pl-64 flex flex-col">
       <!-- Search header -->
@@ -535,55 +551,19 @@
             <div class="text-sm">Hola {{ $page.props.user.name }}<br>
               <span class="text-xs text-gray-400">Sede: Palacio Municipal</span>
             </div>
-            <!-- Profile dropdown -->
-            <!-- <Menu as="div" class="ml-3 relative">
-                <div>
-                  <MenuButton class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                    <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
-                  </MenuButton>
-                </div>
-                <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                  <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none">
-                    <div class="py-1">
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">View profile</a>
-                      </MenuItem>
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Settings</a>
-                      </MenuItem>
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Notifications</a>
-                      </MenuItem>
-                    </div>
-                    <div class="py-1">
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Get desktop app</a>
-                      </MenuItem>
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Support</a>
-                      </MenuItem>
-                    </div>
-                    <div class="py-1">
-                      <MenuItem v-slot="{ active }">
-                        <a href="#" :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']">Logout</a>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </transition>
-              </Menu> -->
           </div>
         </div>
       </div>
       <slot> </slot>
 
     </div>
+
   </div>
 </template>
 
 <script>
 
-import { Inertia } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
 import { ref } from 'vue'
 import {
   Dialog,
@@ -617,46 +597,6 @@ const teams = [
   { name: 'Customer Success', href: '#', bgColorClass: 'bg-yellow-500' },
 ]
 
-// const projects = [
-//   {
-//     id: 1,
-//     title: 'GraphQL API',
-//     initials: 'GA',
-//     team: 'Engineering',
-//     members: [
-//       {
-//         name: 'Dries Vincent',
-//         handle: 'driesvincent',
-//         imageUrl:
-//           'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//       },
-//       {
-//         name: 'Lindsay Walton',
-//         handle: 'lindsaywalton',
-//         imageUrl:
-//           'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//       },
-//       {
-//         name: 'Courtney Henry',
-//         handle: 'courtneyhenry',
-//         imageUrl:
-//           'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//       },
-//       {
-//         name: 'Tom Cook',
-//         handle: 'tomcook',
-//         imageUrl:
-//           'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//       },
-//     ],
-//     totalMembers: 12,
-//     lastUpdated: 'March 17, 2020',
-//     pinned: true,
-//     bgColorClass: 'bg-pink-600',
-//   },
-//   // More projects...
-// ]
-// const pinnedProjects = projects.filter((project) => project.pinned)
 
 export default {
   components: {

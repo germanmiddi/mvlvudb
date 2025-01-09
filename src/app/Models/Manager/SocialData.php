@@ -21,6 +21,11 @@ class SocialData extends Model
         'tipo_pension_id',
     ];
 
+    protected $with = ['tipoOcupacion',
+                        'coberturaMedica',
+                        'tipoPension',
+                        'programaSocial'];
+
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id');

@@ -44,6 +44,14 @@ class EducationData extends Model
 
     ];
 
+    protected $with = ['nivelEducativo',
+                        'estadoEducativo',
+                        'escuelaDependencia',
+                        'escuelaLocalidad',
+                        'escuelaNivel',
+                        'escuelaTurno',
+                        'escuelaPrimaria'];
+
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id');

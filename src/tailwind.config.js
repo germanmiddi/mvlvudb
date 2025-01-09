@@ -1,4 +1,8 @@
 module.exports = {
+  mode: 'jit',
+  content: [
+    './src/**/*.{vue,js,ts,jsx,tsx}',
+  ],
   purge: [
     './resources/**/*.blade.php',
     './resources/**/*.js',

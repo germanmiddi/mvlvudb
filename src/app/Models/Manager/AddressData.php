@@ -26,7 +26,7 @@ class AddressData extends Model
         'barrio_id',
         'observacion'
     ];
-
+    protected $with = ['localidad', 'pais', 'barrio'];
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id');

@@ -18,7 +18,10 @@ class AditionalData extends Model
         'tipo_vivienda_id',
         'tipo_vinculo_familiar_id',
         'situacion_conyugal_id',
+        'nacionalidad'
     ];
+
+    protected $with = ['tipoVivienda','tipoVinculoFamiliar','situacionConyugal','pais'];
 
     public function person()
     {
@@ -38,5 +41,10 @@ class AditionalData extends Model
     public function situacionConyugal()
     {
         return $this->belongsTo(SituacionConyugal::class);
+    }
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'nacionalidad');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Manager\Collections\CollectionController;
-
+use App\Http\Controllers\Manager\Collections\EntrevistasController;
 
 Route::middleware(['auth'])
     ->prefix('collections')
@@ -25,4 +25,16 @@ Route::middleware(['auth'])
         Route::post('/storeCollection', [CollectionController::class, 'storeCollection'])->name('collections.storeCollection');
 
         Route::get('/getCollectionList', [CollectionController::class, 'getCollectionList'])->name('collections.getCollectionList');
+
+        Route::group(['prefix' => 'entrevistas'], function () {
+            Route::get('/', [EntrevistasController::class, 'index'])->name('collections.entrevistas.index');
+            Route::get('/create', [EntrevistasController::class, 'create'])->name('collections.entrevistas.create');
+            Route::get('/list', [EntrevistasController::class, 'list'])->name('collections.entrevistas.list');
+            Route::get('/edit/{id}', [EntrevistasController::class, 'edit'])->name('collections.entrevistas.edit');
+            Route::get('/view/{id}', [EntrevistasController::class, 'view'])->name('collections.entrevistas.view');
+            Route::post('/store', [EntrevistasController::class, 'store'])->name('collections.entrevistas.store');
+            Route::post('/update/{id}', [EntrevistasController::class, 'update'])->name('collections.entrevistas.update');
+            Route::delete('/delete/{id}', [EntrevistasController::class, 'delete'])->name('collections.entrevistas.delete');
+        });
     });
+

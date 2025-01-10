@@ -4,13 +4,8 @@
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                     Entrevistas Entrega de Cajas
+                     Padrón Inscriptos a Entrega de Cajas
                 </h1>
-            </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!showImportar">
-                <a :href="route('collections.entrevistas.create')"
-                    class="btn-green">Crear</a>
-                
             </div>
         </div>
 
@@ -28,7 +23,7 @@
                             <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
                                     @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getEntrevistas()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getList()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
@@ -94,10 +89,7 @@
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrevistador
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Estado
-                                    </th>
+
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
                                         <span>Acciones</span>
@@ -105,25 +97,25 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <ListItem v-for="item in entrevistas.data" :key="item.id" :item="item"></ListItem>
+                                <ListItem v-for="item in list.data" :key="item.id" :item="item"></ListItem>
                             </tbody>
                         </table>
                         <hr>
                         <div class="flex justify-between mx-5 my-3 px-2 items-center">
                             <div>
-                                Mostrando: {{ this.entrevistas.from }} a {{ this.entrevistas.to }} - Entradas encontradas:
-                                {{ this.entrevistas.total }}
+                                Mostrando: {{ this.list.from }} a {{ this.list.to }} - Entradas encontradas:
+                                {{ this.list.total }}
                             </div>
 
                             <div class="flex flex-wrap -mb-1">
-                                <template v-for="link in entrevistas.links">
+                                <template v-for="link in list.links">
                                     <div v-if="link.url === null"
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
                                         v-html="link.label"> </div>
                                     <div v-else
                                         class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
                                         :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
-                                        @click="getEntrevistasPaginate(link.url)" v-html="link.label"> </div>
+                                        @click="getListPaginate(link.url)" v-html="link.label"> </div>
                                 </template>
                             </div>
                         </div>
@@ -152,18 +144,10 @@ import {
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
-
-const estadoClass = {
-    'APROBADA' :  'badgeStatus bg-green-600 text-green-100',
-    'PENDIENTE' : 'badgeStatus bg-gray-200 text-gray-800',
-    'RECHAZADA' : 'badgeStatus bg-red-600 text-red-100'
-}
     
 export default {
     props: {
         toast: Object,
-        tiposTramite: Object,
-        estados: Object,
         users: Object
     },
     components: {
@@ -183,18 +167,15 @@ export default {
     },
     data() {
         return {
-            tramites: "",
             toastMessage: "",
             labelType: "info",
             message: "",
             showToast: false,
+
             filter: {},
             length: 10,
             customFormat: 'd-M-Y',
-            processReport: false,
-            showImportar: false,
-            entrevistas: [],
-            estadoClass: estadoClass
+            list: [],
         };
     },
     setup() {
@@ -204,24 +185,24 @@ export default {
     },
     methods: {
 
-        async getEntrevistas(){
-            const get = `${route('collections.entrevistas.list')}`
+        async getList(){
+            const get = `${route('collections.padron.list')}`
             const response = await fetch(get, { method: "GET" });
-            this.entrevistas = await response.json();
+            this.list = await response.json();
         },
 
         clearFilter(){
             this.filter = {}
-            this.getEntrevistas()
+            this.getList()
         },
         clearMessage() {
             this.toastMessage = "";
         },
 
-        async getEntrevistasPaginate(link) {
+        async getListPaginate(link) {
             var get = `${link}`;
             const response = await fetch(get, { method: 'GET' })
-            this.entrevistas = await response.json()
+            this.list = await response.json()
         },
 
 
@@ -270,7 +251,7 @@ export default {
                 this.toastMessage = this.toast["message"];
             }
         }
-        this.getEntrevistas();
+        this.getList();
     }
 };
 </script>

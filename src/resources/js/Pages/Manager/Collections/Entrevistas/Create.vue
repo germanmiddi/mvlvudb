@@ -662,7 +662,7 @@ export default {
 			try {
 				const response = await axios.post(rt, formData); 
 				console.log(response)
-				return
+
 				if (response.status == 200) {
 					this.labelType = "success";
                 	this.toastMessage = response.data.message; 
@@ -672,9 +672,9 @@ export default {
 					// 		window.open(route('pdf.acusepdf',element), '_blank');
 					// 	});
 					// }, 1000)
-					// setTimeout(()=> { 
-					// 	window.location.href = '/collections/entrevistas';
-					// }, 3100)
+					setTimeout(()=> { 
+						window.location.href = '/collections/entrevistas';
+					}, 2500)
 				} else {
 					this.labelType = "danger";
                 	this.toastMessage = response.data.message;
@@ -705,49 +705,62 @@ export default {
                 this.toastMessage = "El DNI indicado se encuentra registrado";
 
 				data = data.data[0].person
-				/// Recuperar datos.
-				this.form.tipo_documento_id = data.tipo_documento_id
-				this.form.num_cuit = data.num_cuit
-				this.form.fecha_nac = data.fecha_nac
-				this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
-				this.form.name = data.name
-				this.form.lastname = data.lastname
-				this.form.email = data.contact[0].email
-				this.form.phone = data.contact[0].phone
-				this.form.celular = data.contact[0].celular
 
-				this.form.cant_hijos = data.aditional[0].cant_hijos
-				this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
-				this.form.pais_id = data.aditional[0].nacionalidad
-				
-				
-				this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
-				this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
-				this.form.programa_social_id = data.social[0].programa_social_id
-				this.form.tipo_pension_id = data.social[0].tipo_pension_id
-				this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
-				this.form.estado_educativo_id = data.education[0].estado_educativo_id
-				this.form.calle = data.address[0].calle
-				this.form.number = data.address[0].number
-				this.form.piso = data.address[0].piso
-				this.form.dpto = data.address[0].dpto
-				if(data.address[0].latitude && data.address[0].longitude){
-					this.form.latitude = data.address[0].latitude
-					this.form.longitude = data.address[0].longitude
 
-					// Carga de datos para visualizar el mapa.
-					this.form_temp = {}
-					this.form_temp.latitude = parseFloat(data.address[0].latitude)
-					this.form_temp.longitude = parseFloat(data.address[0].longitude)
-					this.form_temp.route = data.address[0].google_address
-					this.form_google = this.form_temp
-           			this.showMap = true
+				if (data.entrevista) {
+					this.labelType = "danger";
+					this.toastMessage = "El DNI ya posee una entrevista registrada";
+
+					this.input_disable = true;
+					return
+				} else {
+
+					/// Recuperar datos.
+					this.form.tipo_documento_id = data.tipo_documento_id
+					this.form.num_cuit = data.num_cuit
+					this.form.fecha_nac = data.fecha_nac
+					this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
+					this.form.name = data.name
+					this.form.lastname = data.lastname
+					this.form.email = data.contact[0].email
+					this.form.phone = data.contact[0].phone
+					this.form.celular = data.contact[0].celular
+
+					this.form.cant_hijos = data.aditional[0].cant_hijos
+					this.form.situacion_conyugal_id = data.aditional[0].situacion_conyugal_id
+					this.form.pais_id = data.aditional[0].nacionalidad
+					
+					
+					this.form.tipo_ocupacion_id = data.social[0].tipo_ocupacion_id
+					this.form.cobertura_medica_id = data.social[0].cobertura_medica_id
+					this.form.programa_social_id = data.social[0].programa_social_id
+					this.form.tipo_pension_id = data.social[0].tipo_pension_id
+					this.form.nivel_educativo_id = data.education[0].nivel_educativo_id
+					this.form.estado_educativo_id = data.education[0].estado_educativo_id
+					this.form.calle = data.address[0].calle
+					this.form.number = data.address[0].number
+					this.form.piso = data.address[0].piso
+					this.form.dpto = data.address[0].dpto
+					if(data.address[0].latitude && data.address[0].longitude){
+						this.form.latitude = data.address[0].latitude
+						this.form.longitude = data.address[0].longitude
+
+						// Carga de datos para visualizar el mapa.
+						this.form_temp = {}
+						this.form_temp.latitude = parseFloat(data.address[0].latitude)
+						this.form_temp.longitude = parseFloat(data.address[0].longitude)
+						this.form_temp.route = data.address[0].google_address
+						this.form_google = this.form_temp
+						this.showMap = true
+					}
+
+					this.form.google_address = data.address[0].google_address
+					this.form.localidad_id = data.address[0].localidad_id
+					this.form.barrio_id = data.address[0].barrio_id		
+					this.form = this.removeNullValues(this.form);	
+
 				}
 
-				this.form.google_address = data.address[0].google_address
-				this.form.localidad_id = data.address[0].localidad_id
-				this.form.barrio_id = data.address[0].barrio_id		
-				this.form = this.removeNullValues(this.form);	
 			}else{
 				this.labelType = "info";
                 this.toastMessage = "El DNI indicado no se encuentra registrado";

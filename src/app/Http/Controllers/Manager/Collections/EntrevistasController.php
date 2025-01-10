@@ -26,6 +26,9 @@ use App\Models\Manager\SituacionConyugal;
 use App\Models\Manager\RolTramite;
 use App\Models\Manager\TipoTramite;
 use App\Models\Manager\ProgramaSocial;
+use App\Models\Manager\Dependencia;
+use App\Models\Manager\Tramite;
+
 
 use App\Models\Manager\AditionalData;
 use App\Models\Manager\AddressData;
@@ -69,6 +72,9 @@ class EntrevistasController extends Controller
             ]
         );
     }
+
+
+
 
     public function store(Request $request)
     {
@@ -206,6 +212,7 @@ class EntrevistasController extends Controller
                 'entrevistador' => $entrevista->entrevistador,
                 'puntosEntrega' => $entrevista->puntosEntrega,
                 'status' => $entrevista->status,
+                'status_id' => $entrevista->status_id
             ]);
 
     }
@@ -239,11 +246,20 @@ class EntrevistasController extends Controller
     {
         DB::beginTransaction();
         try{
+
+            $status_aprobada = CajasEntrevistasStatus::where('nombre', 'APROBADA')->first()->id;
+            // dd($status_aprobada, $request['status_id']);
+
             $entrevista = CajasEntrevista::where('id', $request['id'])->first();
             $entrevista->status_id = $request['status_id'];
             $entrevista->status_updated_by = Auth::user()->id;
             $entrevista->status_updated_at = date('Y-m-d H:i:s');
             $entrevista->save();
+
+            if(intval($request['status_id']) == intval($status_aprobada)){
+                $this->_createTramite($entrevista);
+            }
+
             DB::commit();
             Log::info('Estado de la entrevista actualizado correctamente',
                 [
@@ -260,6 +276,42 @@ class EntrevistasController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
        
+    }
+
+    public function _createTramite($entrevista){
+
+        DB::beginTransaction();
+        try{
+
+            $canal_atencion_id = CanalAtencion::where('description', 'SEC. DESARROLLO SOCIAL - SEDE YRIGOYEN')->first()->id;
+            $dependencia_id = Dependencia::where('description', 'FORTALECIMIENTO COMUNITARIO')->first()->id;
+            $tipo_tramite_id = TipoTramite::where('description', 'EMPADRONAMIENTO CAJAS')->first()->id;
+
+            $tramite_data = Tramite::Create(
+                [
+                    'fecha' => date("Y-m-d ", strtotime($entrevista->fecha)),
+                    'canal_atencion_id' => $canal_atencion_id,
+                    'tipo_tramite_id' => $tipo_tramite_id,
+                    'dependencia_id' => $dependencia_id,
+                    'estado_id' => 1, // Estado Abierto
+                ]
+            );
+
+            $entrevista->person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
+            
+            DB::commit();
+            Log::info("Se ha creado un nuevo tramite", ["Modulo" => "Entrevistas:createTramite","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+
+            return true;
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            Log::error('Error al crear el tramite', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        
+
+
     }
 
 }

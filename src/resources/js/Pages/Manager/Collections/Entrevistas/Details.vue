@@ -36,7 +36,7 @@
 				<div class="px-4 py-5 sm:px-6 flex justify-between">
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Información General</h3>
 				
-					<div class="flex justify-end items-center gap-4" > 
+					<div v-if="entrevista.status_id == 1" class="flex justify-end items-center gap-4" > 
 						<button class="px-4 py-2 border border-transparent 
 									shadow-sm text-sm font-medium rounded-md 
 									text-white bg-red-600 hover:bg-red-700 
@@ -64,8 +64,9 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Estado</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-								<span class="px-3 py-2 rounded-md" :class="estadoClass[entrevista.status.nombre]"> 
-									{{ entrevista.status.nombre }}</span>
+								<span class="px-3 py-2 rounded-md" 
+									  :class="estadoClass[status_name]"> 
+									{{ status_name }}</span>
 							</dd>
 						</div>
 						
@@ -296,7 +297,7 @@
 				</div>	
 			</div>
 		</div>	
-		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+		<div v-if="entrevista.status_id == 1" class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="flex justify-end gap-4 px-4" > 
 				<button class="px-4 py-2 border border-transparent 
 							   shadow-sm text-sm font-medium rounded-md 
@@ -332,12 +333,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import Comment from '@/Layouts/Components/Tramites/Comment.vue';
 
 import store from '@/store.js'
-
-const estadoClass = {
-    'APROBADA' :  'badgeStatus bg-green-600 text-green-100',
-    'PENDIENTE' : 'badgeStatus bg-gray-200 text-gray-800',
-    'RECHAZADA' : 'badgeStatus bg-red-600 text-red-100'
-}
 
 export default {
 
@@ -386,7 +381,12 @@ export default {
 			newDepObservacion: "",
 			// assignment: this.tramite[0].assigned,
 			fileInvalid: false,
-			estadoClass: estadoClass
+            estadoClass: {
+                'APROBADA': 'badgeStatus bg-green-600 text-green-100',
+                'PENDIENTE': 'badgeStatus bg-gray-200 text-gray-800',
+                'RECHAZADA': 'badgeStatus bg-red-600 text-red-100'
+            }
+		
 		}
 	},
 	setup() {
@@ -409,10 +409,12 @@ export default {
 		goBack(){
 			window.history.back();
 		},
+		
 		handleMessage(data){
             this.labelType = data.labelType;
             this.toastMessage = data.toastMessage;
         },
+
 		async changeStatus(newEstado){
 
 			let rt = route('collections.entrevistas.update', {id: this.entrevista.id});
@@ -426,7 +428,7 @@ export default {
 				if (response.status == 200) {
 					this.labelType = "success";
 					this.toastMessage = response.data.message;
-					this.entrevista.estado_id = newEstado
+					this.entrevista.status_id = newEstado
 
 				} else {
 					this.labelType = "danger";
@@ -480,9 +482,19 @@ export default {
 		tipoPension: function() {
 			return this.entrevista?.person.social[0]?.tipo_pension?.description ?? '';
 	  	},
+
+		status_name: function() {
+            switch (this.entrevista.status_id) {
+                case 1: return 'PENDIENTE';
+                case 2: return 'APROBADA';
+                case 3: return 'RECHAZADA';
+                default: return '';
+            }
+        }
 	},
 }
 </script>
+
 
 
 

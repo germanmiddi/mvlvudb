@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Manager\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+
+
 use App\Models\User;
 use App\Models\Manager\PuntoEntrega;
 use App\Models\Manager\Person;
 use App\Models\Manager\Product;
+use App\Models\Manager\CajasEntrevista;
 class CollectionController extends Controller
 {
 
@@ -35,7 +38,27 @@ class CollectionController extends Controller
 
     public function padron()
     {
-        return Inertia::render('Manager/Collections/Padron/Index');
+        return Inertia::render('Manager/Collections/Padron/List');
+    }
+
+    public function padronList()
+    {
+        $length = 30;
+        
+        return CajasEntrevista::query()
+            ->where('status_id', 2)
+            ->orderBy('fecha', 'DESC')
+            ->paginate($length)
+            ->withQueryString()
+            ->through(fn($entrevista) => [
+                'id' => $entrevista->id,
+                'fecha' => $entrevista->fecha,
+                'person' => $entrevista->person->lastname . ', ' . $entrevista->person->name,
+                'num_documento' => $entrevista->person->num_documento,
+                'entrevistador' => $entrevista->entrevistador,
+                'puntosEntrega' => $entrevista->puntosEntrega,
+
+            ]);
     }
 
     public function puntosEntrega()

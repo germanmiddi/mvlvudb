@@ -97,4 +97,9 @@ class Person extends Model
         return $this->hasMany(Collection::class);
     }
 
+    public function entrevista()
+    {
+        return $this->hasOne(CajasEntrevista::class);
+    }
+
 }

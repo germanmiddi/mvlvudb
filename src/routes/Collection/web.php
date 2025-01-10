@@ -26,6 +26,10 @@ Route::middleware(['auth'])
 
         Route::get('/getCollectionList', [CollectionController::class, 'getCollectionList'])->name('collections.getCollectionList');
 
+        Route::group(['prefix' => 'padron'], function () {
+            Route::get('/list', [CollectionController::class, 'padronList'])->name('collections.padron.list');
+        });
+
         Route::group(['prefix' => 'entrevistas'], function () {
             Route::get('/', [EntrevistasController::class, 'index'])->name('collections.entrevistas.index');
             Route::get('/create', [EntrevistasController::class, 'create'])->name('collections.entrevistas.create');

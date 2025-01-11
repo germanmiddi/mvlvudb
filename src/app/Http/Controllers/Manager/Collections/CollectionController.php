@@ -35,7 +35,6 @@ class CollectionController extends Controller
         return $collections;
     }
 
-
     public function padron()
     {
         return Inertia::render('Manager/Collections/Padron/List');
@@ -68,7 +67,12 @@ class CollectionController extends Controller
 
     public function entregas()
     {
-        return Inertia::render('Manager/Collections/Entregas/Index');
+        return Inertia::render('Manager/Collections/Entregas/Index', 
+        [
+            'puntosEntrega' => PuntoEntrega::all(),
+            'products' => Product::all(),
+            'users' =>  User::whereHas('puntosEntrega')->get()
+        ]);
     }
 
     public function personal()
@@ -105,15 +109,69 @@ class CollectionController extends Controller
     public function getCollectionList()
     {
         
-        $length = 30;
-        
-        
-        $collections = Collection::with('puntoEntrega')
-                                ->with('product')
-                                ->with('person')
-                                ->get();
-        return $collections;
+        $length = request('length');
+
+        $collections = Collection::query();
+
+        if(request('name')){
+
+            $name = request('name');
+            //buscar por nombre o apellido
+            $collections->whereHas('person', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%'.$name.'%')
+                      ->orWhere('lastname', 'LIKE', '%'.$name.'%');
+            });
+
+        }
+        // dd(request('num_documento'));
+        if(request('num_documento')){
+            $num_documento = request('num_documento');
+            // dd($num_documento);
+            $collections->whereHas('person', function ($query) use ($num_documento) {
+                $query->where('num_documento', $num_documento);
+            });
+        }
+
+        if(request('date')){
+            $date = json_decode(request('date'));
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
+                   
+            $collections->where('date','>=', $from)
+                        ->where('date', '<', $to);
+        }
+
+        if(request('product_id')){
+            $product_id = request('product_id');
+            $collections->where('product_id', $product_id);
+        }
+
+        if(request('punto_entrega_id')){
+            $punto_entrega_id = request('punto_entrega_id');
+            $collections->where('punto_entrega_id', $punto_entrega_id);
+        }
+
+        if(request('entregado_por')){
+            $user_id = request('entregado_por');
+            $collections->where('user_id', $user_id);
+        }
+
+        return $collections
+            ->orderBy('date', 'DESC')
+            ->paginate($length)
+            ->withQueryString()
+            ->through(fn($collection) => [
+                'id' => $collection->id,
+                'date' => $collection->date,
+                'person' => $collection->person->lastname . ', ' . $collection->person->name,
+                'num_documento' => $collection->person->num_documento,
+                'entregado_por' => $collection->user->name,
+                'punto_entrega' => $collection->puntoEntrega->description,
+                'producto' => $collection->product->name
+            ]);
     }
+
     public function getPerson($documento)
     {
         if ($documento) {

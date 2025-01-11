@@ -556,9 +556,6 @@ export default {
 		minLength,
 		store
 	},
-
-
-
 	data() {
 		return {
 			tenencias: [

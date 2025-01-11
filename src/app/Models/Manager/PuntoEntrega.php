@@ -15,4 +15,9 @@ class PuntoEntrega extends Model
     {
         return $this->belongsToMany(User::class, 'punto_entrega_usuario');
     }
+
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
 }

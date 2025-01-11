@@ -55,7 +55,10 @@
 
         <History v-if="showPersona" :history="history" />
 
-        <Dashboard v-if="!showPersona && !showForm" />
+        <Dashboard v-if="!showPersona && !showForm"  
+                   :products="products" 
+                   :puntosEntrega="puntosEntrega" 
+                   :users="users"/>
 
     </main>
 </template>
@@ -76,7 +79,9 @@ import Persona from './Persona.vue'
 import Dashboard from './Dashboard.vue'
 export default {
     props: {
-
+        puntosEntrega: Array,
+        products: Array,
+        users: Array
     },
     components: {
         Menu,

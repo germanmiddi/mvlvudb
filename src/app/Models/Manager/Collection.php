@@ -11,6 +11,7 @@ class Collection extends Model
     protected $table = 'collections';
     protected $fillable = ['person_id', 'address', 'date', 'punto_entrega_id', 'product_id', 'user_id'];
 
+    protected $with = ['person', 'puntoEntrega', 'product', 'user'];
     public function person()
     {
         return $this->belongsTo(Person::class);

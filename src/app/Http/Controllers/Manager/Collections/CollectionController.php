@@ -104,7 +104,10 @@ class CollectionController extends Controller
 
     public function getCollectionList()
     {
-        //get the collections list
+        
+        $length = 30;
+        
+        
         $collections = Collection::with('puntoEntrega')
                                 ->with('product')
                                 ->with('person')

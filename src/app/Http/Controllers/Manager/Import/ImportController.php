@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\CudImport;
 use App\Imports\DiscapacidadImport;
 use App\Imports\EntidadImport;
+use App\Imports\Entrevistas;
 use App\Imports\EstadosImport;
 use App\Imports\EstadosUpdateResponsableImport;
 use App\Imports\EstadosUpdateResponsaleImport;
@@ -371,6 +372,26 @@ class ImportController extends Controller
                     } catch (\Exception $e) {
                         return response()->json(['message' => 'Error al procesar el archivo.'], 203);
                     }
+            }else{
+                return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
+            }
+        }
+
+        public function importEntrevistas(Request $request){
+            if( $request->file('file')){
+                try {
+                    $archivoCSV = $request->file('file');
+                                Log::info('Se ha iniciado el proceso de Importación de Tramite FORTALECIMIENTO mediante template. <br>');
+                                $import = new Entrevistas();
+                        Excel::import($import, $archivoCSV);
+                        // $status = $import->getStatus();
+    
+                        return response()->json(['message' => 'Se ha finalizado el proceso de importacion de tramite.'], 200);
+                    
+                } catch (\Throwable $th) {
+                    dd($th);
+                    return response()->json(['message' => 'Error al procesar el archivo CSV.'], 203);
+                }
             }else{
                 return response()->json(['message' => 'Error al procesar el importador. Contacte al Administrador'], 203);
             }

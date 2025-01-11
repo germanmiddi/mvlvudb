@@ -6,15 +6,46 @@
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                     Entrevistas Entrega de Cajas
+                    Entrevistas Entrega de Cajas
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!showImportar">
-                <a :href="route('collections.entrevistas.create')"
-                    class="btn-green">Crear</a>
-                
+                <div v-if="formImport" class="mt-4 flex sm:mt-0 sm:ml-4">
+                    <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
+                    <input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx"
+                        type="file" name="file" id="file" ref="inputfile" autocomplete="off"
+                        class="bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2" />
+                    <a @click="importFile()" v-if="!processImport"
+                    class="order-0 inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white sm:order-1 sm:ml-3">Importar</a>
+
+                    <a v-else
+                        class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                        <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                    </a>
+
+                    <a :href="route('export.templateDependencia', 5)" target="_blank"
+                    class="order-0 inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white sm:order-1 sm:ml-3">Template</a>
+
+                    <a @click="formImport = false"
+                        class="order-0 inline-flex items-center px-4 py-2 border border-red-700 shadow-sm text-sm font-medium rounded-md text-red-700 hover:text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Cancelar</a>
+                </div>
+                <div v-else class="mt-4 flex sm:mt-0 sm:ml-4">
+                    <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!formImport">
+                        <a :href="route('collections.entrevistas.create')" class="btn-green">Crear</a>
+
+                    </div>
+
+                    <a @click="generateReport()" v-if="!processReport"
+                        class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
+
+                    <a v-else
+                        class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                        <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                    </a>
+
+                    <a @click="formImport = true"
+                        class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Importar</a>
+                </div>
             </div>
-        </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
@@ -27,10 +58,12 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
                         </div>
                         <div class="flex-shrink-0">
-                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
-                                    @click="clearFilter">Limpiar Filtro</button>
+                            <button v-if="Object.keys(this.filter).length"
+                                class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getEntrevistas()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                                @click="getEntrevistas()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
@@ -40,7 +73,7 @@
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">NumDoc</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
@@ -49,18 +82,19 @@
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
-                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                            <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
+                                :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
                         <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
-                            <select v-model="filter.estado_id" id="estado_id" name="estado_id"
-                                autocomplete="off"
+                            <select v-model="filter.estado_id" id="estado_id" name="estado_id" autocomplete="off"
                                 class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="">TODOS</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
                     </div>
@@ -94,7 +128,8 @@
                                         DNI
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrevistador
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Entrevistador
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -121,7 +156,7 @@
                                         <div> {{ item.num_documento }} </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex flex-col"> 
+                                        <div class="flex flex-col">
                                             <div> {{ item.entrevistador.name }} </div>
                                             <div> {{ item.puntosEntrega.description }} </div>
                                         </div>
@@ -154,21 +189,18 @@
                                                     </div>
                                                     <div class="px-1 py-1 text-left">
                                                         <MenuItem v-slot="{ active }" class="hover:bg-gray-100">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Aprobar</a>
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }" class="hover:bg-gray-100">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Rechazar</a>
                                                         </MenuItem>
                                                     </div>
                                                     <div class="px-1 py-1 text-left ">
                                                         <MenuItem v-slot="{ active }" class="hover:bg-gray-100">
-                                                        <a href="#"
-                                                            class="block px-4 py-2 text-sm">
+                                                        <a href="#" class="block px-4 py-2 text-sm">
                                                             Imprimir</a>
                                                         </MenuItem>
                                                     </div>
@@ -182,7 +214,8 @@
                         <hr>
                         <div class="flex justify-between mx-5 my-3 px-2 items-center">
                             <div>
-                                Mostrando: {{ this.entrevistas.from }} a {{ this.entrevistas.to }} - Entradas encontradas:
+                                Mostrando: {{ this.entrevistas.from }} a {{ this.entrevistas.to }} - Entradas
+                                encontradas:
                                 {{ this.entrevistas.total }}
                             </div>
 
@@ -261,9 +294,11 @@ export default {
             length: 10,
             customFormat: 'd-M-Y',
             processReport: false,
-            showImportar: false,
+            processImport: false,
             entrevistas: [],
-            estadoClass: estadoClass
+            estadoClass: estadoClass,
+            formImport: false,
+            file: '',
         };
     },
     setup() {
@@ -294,40 +329,63 @@ export default {
         },
 
 
-        // async generateReport() {
-
-        //     this.filter.dependencia_id = 12
-        //     this.processReport = true
-        //     let rt = route("report.exportTramiteExcel");
-
-        //     try {
-        //         const response = await axios.post(rt, this.filter, {
-        //             responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
-        //         });
-
-        //         // Crear un objeto Blob con la respuesta
-        //         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-        //         // Crear una URL de objeto para el Blob
-        //         const url = window.URL.createObjectURL(blob);
-
-        //         // Crear un enlace <a> para iniciar la descarga
-        //         const a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
-        //         a.style.display = 'none';
-
-        //         // Agregar el enlace al cuerpo del documento y hacer clic en él
-        //         document.body.appendChild(a);
-        //         a.click();
-
-        //         // Liberar la URL del objeto después de la descarga
-        //         window.URL.revokeObjectURL(url);
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        //     this.processReport = false
-        // }
+        async downloadTemplate() {
+            this.processExport = true
+            let rt = route("download.template.entrevista");
+            try {
+                const response = await axios.get(rt, {
+                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                });
+                // Crear un objeto Blob con la respuesta
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                // Crear una URL de objeto para el Blob
+                const url = window.URL.createObjectURL(blob);
+                // Crear un enlace <a> para iniciar la descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Plantilla Fortalecimiento.xlsx'; // Nombre del archivo
+                a.style.display = 'none';
+                // Agregar el enlace al cuerpo del documento y hacer clic en él
+                document.body.appendChild(a);
+                a.click();
+                // Liberar la URL del objeto después de la descarga
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error(error);
+            }
+            this.processExport = false
+        },
+        async importFile() {
+            if (this.file != '') {
+                this.processImport = true
+                this.status = ''
+                let rt = route("import.entrevista");
+                const formData = new FormData();
+                formData.append('file', this.file);
+                formData.append('dependencia_id', 5);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.status = response.data.status;
+                        this.getTramites();
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+                this.processImport = false
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
     },
     mounted() {
         if (this.toast) {

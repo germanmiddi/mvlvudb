@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Manager\Collections\CollectionController;
 use App\Http\Controllers\Manager\Collections\EntrevistasController;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Manager\Import\ImportController;
 
 Route::middleware(['auth'])
     ->prefix('collections')
@@ -35,6 +37,12 @@ Route::middleware(['auth'])
             Route::post('/store', [EntrevistasController::class, 'store'])->name('collections.entrevistas.store');
             Route::post('/update/{id}', [EntrevistasController::class, 'update'])->name('collections.entrevistas.update');
             Route::delete('/delete/{id}', [EntrevistasController::class, 'delete'])->name('collections.entrevistas.delete');
+            Route::get('/download-template-entrevistas', function () {
+                $filePath = 'public/templates/Plantilla_Entrevista.xlsx';
+                return Storage::download($filePath, 'Plantilla_Entrevista.xlsx');
+            })->name('download.template.entrevista');
+            Route::post('/import/template-entrevista', [ImportController::class, 'importEntrevistas'])->name('import.entrevistas');
+        
         });
     });
 

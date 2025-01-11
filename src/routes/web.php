@@ -35,8 +35,10 @@ use App\Http\Controllers\Manager\Users\UserController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
+use App\Http\Controllers\Manager\Collections\EntrevistasController;
 
 use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
+use Illuminate\Support\Facades\Storage;
 
 if (App::environment('production')) {
     URL::forceScheme('https');
@@ -275,6 +277,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/fortalecimiento/hide-productos/', [MasterdataFortalecimientoController::class, 'hide_productos'])->name('masterdata.fortalecimiento.hide_productos');
         Route::post('/fortalecimiento/destroy-productos/', [MasterdataFortalecimientoController::class, 'destroy_productos'])->name('masterdata.fortalecimiento.destroy_productos');
 
+        Route::get( '/fortalecimiento/entrevistas', [EntrevistasController::class, 'index'])->name('masterdata.fortalecimiento.entrevistas_list');
 
     });
 

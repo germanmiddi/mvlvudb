@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Manager\Collections\CollectionController;
 use App\Http\Controllers\Manager\Collections\EntrevistasController;
+use App\Http\Controllers\Manager\Collections\ImportController as EntrevistasImportController;
 
 Route::middleware(['auth'])
     ->prefix('collections')
@@ -39,6 +40,8 @@ Route::middleware(['auth'])
             Route::post('/store', [EntrevistasController::class, 'store'])->name('collections.entrevistas.store');
             Route::post('/update/{id}', [EntrevistasController::class, 'update'])->name('collections.entrevistas.update');
             Route::delete('/delete/{id}', [EntrevistasController::class, 'delete'])->name('collections.entrevistas.delete');
+            Route::post('/import', [EntrevistasImportController::class, 'importEntrevistas'])->name('collections.entrevistas.import');
         });
     });
+
 

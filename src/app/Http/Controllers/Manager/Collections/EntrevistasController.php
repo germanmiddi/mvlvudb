@@ -44,7 +44,11 @@ class EntrevistasController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Manager/Collections/Entrevistas/List');
+        return Inertia::render('Manager/Collections/Entrevistas/List', [
+            'estados' => CajasEntrevistasStatus::all(),
+            'sedes' => PuntoEntrega::all(),
+            'entrevistadores' => User::whereHas('puntosEntrega')->get()
+        ]);
     }
 
     public function create()
@@ -72,6 +76,7 @@ class EntrevistasController extends Controller
             ]
         );
     }
+
 
     public function store(Request $request)
     {
@@ -194,10 +199,53 @@ class EntrevistasController extends Controller
 
     public function list()
     {
-
         $length = 10;
 
-        return CajasEntrevista::query()
+        $entrevistas = CajasEntrevista::query();
+
+        if(request('name')){
+            $name = request('name');
+            $entrevistas->whereHas('person', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%'.$name.'%')
+                      ->orWhere('lastname', 'LIKE', '%'.$name.'%');
+            });
+        }
+
+        if(request('num_documento')){
+            $num_documento = request('num_documento');
+            // dd($num_documento);
+            $entrevistas->whereHas('person', function ($query) use ($num_documento) {
+                $query->where('num_documento', $num_documento);
+            });
+        }
+
+        if(request('date')){
+            $date = json_decode(request('date'));
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
+                   
+            $entrevistas->where('fecha','>=', $from)
+                        ->where('fecha', '<', $to);
+        }
+
+        if(request('estado')){
+            $estado = request('estado');
+            $entrevistas->where('status_id', $estado);
+        }
+
+        if(request('punto_entrega_id')){
+            $punto_entrega_id = request('punto_entrega_id');
+            $entrevistas->where('punto_entrega_id', $punto_entrega_id);
+        }
+
+        if(request('entrevistador_id')){
+            $entrevistador_id = request('entrevistador_id');
+            $entrevistas->where('entrevistador_id', $entrevistador_id);
+        }
+
+
+        return $entrevistas
             ->orderBy('fecha', 'DESC')
             ->paginate($length)
             ->withQueryString()

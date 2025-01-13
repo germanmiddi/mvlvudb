@@ -17,7 +17,7 @@
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
-          <div class="grid grid-cols-12 gap-6">
+          <div class="flex ">
             
             <h3 class="col-span-12 text-lg leading-6 font-medium text-gray-900">Nueva Entrega</h3>
 

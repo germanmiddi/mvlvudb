@@ -15,6 +15,8 @@ class CajasEntrevista extends Model
         'entrevistador_id',
         'puntos_entrega_id',
         'status_id',
+        'status_updated_by',
+        'status_updated_at',
         'created_by',
         'estudios',
         'vive_solo',
@@ -30,7 +32,8 @@ class CajasEntrevista extends Model
         'obra_social',
         'tratamiento_medico',
         'medicacion',
-        'discapacidad'
+        'discapacidad',
+        'ingresos_planes'
     ];
 
     protected $with = [

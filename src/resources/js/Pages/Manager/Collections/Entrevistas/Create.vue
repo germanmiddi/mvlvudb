@@ -439,6 +439,17 @@
 								</select>
 							</div>  
 							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ingresos </label>
+								<input v-model="form.ingresos_trabajo" id="ingresos_trabajo" name="ingresos_trabajo"  type="number"
+								       :disabled="input_disable" :class="input_disable ? bg_disable : ''" 
+									   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+							</div>  
+							 
+						</div>
+						<div class="grid grid-cols-12 gap-6">
+							
+							 
+							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe Jubilación / Pensión</label>
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id" autocomplete="tipo_pension_id-name"
 								:disabled="input_disable" :class="input_disable ? bg_disable : ''"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -450,6 +461,12 @@
 									}}</option>
 								</select>
 							</div>  
+							<div class="col-span-12 sm:col-span-3">
+								<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ingresos </label>
+								<input v-model="form.ingresos_planes" id="ingresos_planes" name="ingresos_planes"  type="number"
+								       :disabled="input_disable" :class="input_disable ? bg_disable : ''" 
+									   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+							</div> 
 						</div>
 					</div>
 				</div>

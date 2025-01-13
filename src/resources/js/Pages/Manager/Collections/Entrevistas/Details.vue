@@ -164,7 +164,7 @@
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Situación Conyugal</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.aditional[0].situacion_conyugal.description }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.aditional[0].situacion_conyugal?.description ?? '' }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -267,11 +267,19 @@
 							<dt class="text-sm font-medium text-gray-500">Ocupación</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ ocupacion }}</dd>
 						</div>	
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Ingresos Trabajo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >$ {{ entrevista.ingresos_trabajo }}</dd>
+						</div>	
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Percibe Jubilación / Pensión</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ tipoPension }}</dd>
 						</div>	
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Ingresos Planes</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >$ {{ entrevista.ingresos_planes }}</dd>
+						</div>							
 					</dl>
 				</div>	
 			</div>

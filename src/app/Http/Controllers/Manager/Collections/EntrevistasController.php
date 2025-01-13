@@ -140,7 +140,10 @@ class EntrevistasController extends Controller
                 ]
             );
 
-            SocialData::where('person_id', $request['person_id'])->update(
+            SocialData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
@@ -149,7 +152,10 @@ class EntrevistasController extends Controller
                 ]
             );
 
-            EducationData::where('person_id', $request['person_id'])->update(
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
                 [
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
@@ -166,18 +172,14 @@ class EntrevistasController extends Controller
                 'puntos_entrega_id' => $request['sede_id'],
                 'status_id' => $status_pendiente,
                 'created_by' => Auth::user()->id,
-                // 'estudios' => $request['estudios'],
+
                 'vive_solo' => $request['vive_solo'],
                 'cant_convivientes' => $request['cant_convivientes'],
                 'tenencia' => $request['tenencia'],
                 'pago_inquilino' => $request['pago_inquilino'],
                 'ambientes' => $request['ambientes'],
-                // 'trabajo' => $request['trabajo'],
-                // 'ingresos_trabajo' => $request['ingresos_trabajo'],
-                // 'otra_actividad' => $request['otra_actividad'],
-                // 'tiene_pami' => $request['tiene_pami'],
-                // 'tiene_obra_social' => $request['tiene_obra_social'],
-                // 'obra_social' => $request['obra_social'],
+                'ingresos_trabajo' => $request['ingresos_trabajo'],
+                'ingresos_planes' => $request['ingresos_planes'],
                 // 'tratamiento_medico' => $request['tratamiento_medico'],
                 // 'medicacion' => $request['medicacion'],
                 // 'discapacidad' => $request['discapacidad']

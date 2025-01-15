@@ -28,6 +28,7 @@ use App\Models\Manager\TipoTramite;
 use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\Dependencia;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\PersonProgramaSocial;
 
 
 use App\Models\Manager\AditionalData;
@@ -53,6 +54,17 @@ class EntrevistasController extends Controller
 
     public function create()
     {
+        // $puntoEntrega1 = PuntoEntrega::create([
+        //     'description' => 'Los Colos',
+        //     'activo' => 1
+        // ]);
+
+        // DB::table('punto_entrega_usuario')->insert([
+        //     'user_id' => Auth::id(), // Obtiene el ID del usuario autenticado
+        //     'punto_entrega_id' => $puntoEntrega1->id, // ID del punto de entrega recién creado
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
         return Inertia::render(
             'Manager/Collections/Entrevistas/Create',
             [
@@ -72,7 +84,7 @@ class EntrevistasController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
                 'programasSocial' => ProgramaSocial::all(),
                 'puntosEntrega' => PuntoEntrega::all(),
-                'entrevistadores' => User::whereHas('puntosEntrega')->get()
+                'entrevistadores' => User::whereHas('puntosEntrega')->get(),
             ]
         );
     }
@@ -99,10 +111,9 @@ class EntrevistasController extends Controller
                     'num_documento' => $request['num_documento']
                 ]
             );
-
             $aditionalData = AditionalData::updateOrCreate(
                 [
-                    'person_id' => $person->id
+                    'person_id' => $person['id']
                 ],
                 [
                     'cant_hijos' => $request['cant_hijos'],
@@ -113,7 +124,7 @@ class EntrevistasController extends Controller
 
             AddressData::updateOrCreate(
                 [
-                    'person_id' => $person->id
+                    'person_id' => $person['id']
                 ],
                 [
                     'calle' => $request['calle'],
@@ -131,7 +142,7 @@ class EntrevistasController extends Controller
 
             ContactData::updateOrCreate(
                 [
-                    'person_id' => $person->id
+                    'person_id' => $person['id']
                 ],
                 [
                     'phone' => $request['phone'],
@@ -142,19 +153,33 @@ class EntrevistasController extends Controller
 
             SocialData::updateOrCreate(
                 [
-                    'person_id' => $person->id
+                    'person_id' => $person['id']
                 ],
                 [
                     'tipo_ocupacion_id' => $request['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $request['cobertura_medica_id'],
                     'tipo_pension_id' => $request['tipo_pension_id'],
-                    'programa_social_id' => $request['programa_social_id']
+                    // 'programa_social_id' => $request['programa_social_id']
                 ]
             );
 
+
+            if ($request['selected_programs'] != null) {
+                $arrayProgramas = explode(',', $request['selected_programs']);
+                foreach ($arrayProgramas as $programSocial) {
+                    PersonProgramaSocial::updateOrCreate(
+                        [
+                            'person_id' => $person['id'],
+                            'programa_social_id' => $programSocial,
+                        ],
+                        []
+                    );
+                }
+            }
+
             EducationData::updateOrCreate(
                 [
-                    'person_id' => $person->id
+                    'person_id' => $person['id']
                 ],
                 [
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
@@ -165,25 +190,26 @@ class EntrevistasController extends Controller
             $status_pendiente = CajasEntrevistasStatus::where('nombre', 'PENDIENTE')->first()->id;
 
             $entrevista = CajasEntrevista::updateOrCreate(
-                [ 'person_id' => $person->id], 
+                ['person_id' => $person['id']],
                 [
-                'fecha' => $request['fecha_entrevista'],
-                'entrevistador_id' => $request['entrevistador_id'],
-                'puntos_entrega_id' => $request['sede_id'],
-                'status_id' => $status_pendiente,
-                'created_by' => Auth::user()->id,
+                    'fecha' => $request['fecha_entrevista'],
+                    'entrevistador_id' => $request['entrevistador_id'],
+                    'puntos_entrega_id' => $request['sede_id'],
+                    'status_id' => $status_pendiente,
+                    'created_by' => Auth::user()->id,
 
-                'vive_solo' => $request['vive_solo'],
-                'cant_convivientes' => $request['cant_convivientes'],
-                'tenencia' => $request['tenencia'],
-                'pago_inquilino' => $request['pago_inquilino'],
-                'ambientes' => $request['ambientes'],
-                'ingresos_trabajo' => $request['ingresos_trabajo'],
-                'ingresos_planes' => $request['ingresos_planes'],
-                // 'tratamiento_medico' => $request['tratamiento_medico'],
-                // 'medicacion' => $request['medicacion'],
-                // 'discapacidad' => $request['discapacidad']
-            ]);
+                    'vive_solo' => $request['vive_solo'],
+                    'cant_convivientes' => $request['cant_convivientes'],
+                    'tenencia' => $request['tenencia'],
+                    'pago_inquilino' => $request['pago_inquilino'],
+                    'ambientes' => $request['ambientes'],
+                    'ingresos_trabajo' => $request['ingresos_trabajo'],
+                    'ingresos_planes' => $request['ingresos_planes'],
+                    // 'tratamiento_medico' => $request['tratamiento_medico'],
+                    // 'medicacion' => $request['medicacion'],
+                    // 'discapacidad' => $request['discapacidad']
+                ]
+            );
 
             $entrevista->save();
 
@@ -193,7 +219,11 @@ class EntrevistasController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al crear la entrevista', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $e->getMessage()]);
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'line' => $e->getline(),
+                'file' => $e->getFile(),
+            ], 500);
         }
 
         // return Inertia::render('Manager/Collections/Entrevistas/List');
@@ -205,15 +235,15 @@ class EntrevistasController extends Controller
 
         $entrevistas = CajasEntrevista::query();
 
-        if(request('name')){
+        if (request('name')) {
             $name = request('name');
             $entrevistas->whereHas('person', function ($query) use ($name) {
-                $query->where('name', 'LIKE', '%'.$name.'%')
-                      ->orWhere('lastname', 'LIKE', '%'.$name.'%');
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('lastname', 'LIKE', '%' . $name . '%');
             });
         }
 
-        if(request('num_documento')){
+        if (request('num_documento')) {
             $num_documento = request('num_documento');
             // dd($num_documento);
             $entrevistas->whereHas('person', function ($query) use ($num_documento) {
@@ -221,27 +251,27 @@ class EntrevistasController extends Controller
             });
         }
 
-        if(request('date')){
+        if (request('date')) {
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
-            $entrevistas->where('fecha','>=', $from)
-                        ->where('fecha', '<', $to);
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $entrevistas->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
         }
 
-        if(request('estado')){
+        if (request('estado')) {
             $estado = request('estado');
             $entrevistas->where('status_id', $estado);
         }
 
-        if(request('punto_entrega_id')){
+        if (request('punto_entrega_id')) {
             $punto_entrega_id = request('punto_entrega_id');
             $entrevistas->where('punto_entrega_id', $punto_entrega_id);
         }
 
-        if(request('entrevistador_id')){
+        if (request('entrevistador_id')) {
             $entrevistador_id = request('entrevistador_id');
             $entrevistas->where('entrevistador_id', $entrevistador_id);
         }
@@ -292,7 +322,7 @@ class EntrevistasController extends Controller
     public function update(Request $request)
     {
         DB::beginTransaction();
-        try{
+        try {
 
             $status_aprobada = CajasEntrevistasStatus::where('nombre', 'APROBADA')->first()->id;
             // dd($status_aprobada, $request['status_id']);
@@ -303,12 +333,13 @@ class EntrevistasController extends Controller
             $entrevista->status_updated_at = date('Y-m-d H:i:s');
             $entrevista->save();
 
-            if(intval($request['status_id']) == intval($status_aprobada)){
+            if (intval($request['status_id']) == intval($status_aprobada)) {
                 $this->_createTramite($entrevista);
             }
 
             DB::commit();
-            Log::info('Estado de la entrevista actualizado correctamente',
+            Log::info(
+                'Estado de la entrevista actualizado correctamente',
                 [
                     "Usuario" => Auth::user()->id . ": " . Auth::user()->name,
                     "Estado" => $entrevista->status->nombre,
@@ -316,19 +347,19 @@ class EntrevistasController extends Controller
                 ]
             );
             return response()->json(['message' => 'Estado actualizado correctamente'], 200);
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al actualizar el estado de la entrevista', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $e->getMessage()]);
             return response()->json(['message' => $e->getMessage()], 500);
         }
-       
+
     }
 
-    public function _createTramite($entrevista){
+    public function _createTramite($entrevista)
+    {
 
         DB::beginTransaction();
-        try{
+        try {
 
             $canal_atencion_id = CanalAtencion::where('description', 'SEC. DESARROLLO SOCIAL - SEDE YRIGOYEN')->first()->id;
             $dependencia_id = Dependencia::where('description', 'FORTALECIMIENTO COMUNITARIO')->first()->id;
@@ -345,18 +376,17 @@ class EntrevistasController extends Controller
             );
 
             $entrevista->person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-            
+
             DB::commit();
-            Log::info("Se ha creado un nuevo tramite", ["Modulo" => "Entrevistas:createTramite","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+            Log::info("Se ha creado un nuevo tramite", ["Modulo" => "Entrevistas:createTramite", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $tramite_data['id']]);
 
             return true;
-        }
-        catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al crear el tramite', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $e->getMessage()]);
             return response()->json(['message' => $e->getMessage()], 500);
         }
-        
+
 
 
     }

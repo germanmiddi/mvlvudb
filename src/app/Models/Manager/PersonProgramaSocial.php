@@ -5,8 +5,6 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-namespace App;
-
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class PersonProgramaSocial extends Pivot

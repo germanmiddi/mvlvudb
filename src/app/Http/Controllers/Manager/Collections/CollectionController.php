@@ -195,8 +195,7 @@ class CollectionController extends Controller
                 $address .= $person->address[0]->localidad_id ? "localidad:" . $person->address[0]->localidad_id : '';
                 $address .= $person->address[0]->barrio_id ? "barrio:" . $person->address[0]->barrio_id : '';
                 $address = str_replace(' ', '', $address);
-                
-                // dd($address);
+
                 $history = Collection::where('address', $address)
                                     ->where('person_id', '!=', $person->id)
                                     ->with('puntoEntrega')
@@ -212,7 +211,6 @@ class CollectionController extends Controller
             usort($fullHistory, function($a, $b) {
                 return strtotime($b['date']) - strtotime($a['date']);
             });
-
             return response()->json(['person' => $person, 'history' => $fullHistory]);
         } else {
             return response()->json(['message' => 'No se encontró ninguna persona con el documento proporcionado']);

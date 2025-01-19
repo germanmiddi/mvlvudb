@@ -6,7 +6,8 @@
             </h1>
             <div class="mt-4 flex sm:mt-0">
                 <!-- <a @click="newEntrega()" -->
-                <a class="order-0 inline-flex items-center px-4 py-2 
+                <a
+                    class="order-0 inline-flex items-center px-4 py-2 
                           border border-transparent shadow-sm text-sm font-medium rounded-md 
                           text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
                     Exportar</a>
@@ -14,58 +15,73 @@
                     class="order-0 inline-flex items-center px-4 py-2 
                            border border-transparent shadow-sm text-sm font-medium rounded-md 
                            text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
-                    Nueva Entrega</a>
+                    Buscar Entrega </a>
             </div>
             <!-- <button class="bg-green-600 text-white px-4 rounded-md">Nueva Entrega</button> -->
         </div>
-        <!-- <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast> -->
+        
+        <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
-        <div v-if="showForm" class="px-4 mt-6 sm:px-6 lg:px-8">
+
+        <div v-if="showForm" class="px-4 mt-6 sm:px-6 lg:px-8 w-full">
+            <div class="flex items-center bg-white rounded-md w-full" :class="loadingPerson ? 'opacity-50' : ''">
+                <!-- Campo de entrada -->
+                <input v-model="filter.documento" type="text" id="num_documento" placeholder="Ingrese un documento para buscar sus entregas"
+                    class="flex-grow px-4 py-2 sm:text-sm border border-gray-300 focus:border-green-600 focus:ring-0 rounded-l-md outline-none placeholder-italic"
+                    :disabled="loadingPerson" />
+                <!-- Botón de búsqueda -->
+                <button @click="searchPerson" :disabled="loadingPerson"
+                    class="w-[150px] py-2 rounded-r-md flex items-center justify-center  bg-green-200 text-green-900 hover:bg-green-600 hover:text-white border border-green-200 hover:border-green-600 duration-200">
+                    <div v-if="loadingPerson">
+                        <svg width="20px" height="20px" class="animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>loading</title><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+                    </div>
+                    <div v-else class="flex items-center gap-x-2">
+                        <span class="ml-2 text-sm">Buscar</span>
+                        <svg width="20px" height="20px" hxmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>magnify</title><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- <div v-if="showForm" class="px-4 mt-6 sm:px-6 lg:px-8">
 
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
                     <div class="grid grid-cols-12 gap-6">
 
-                        <h3 class="col-span-12 text-lg leading-6 font-medium text-gray-900">Nueva Entrega</h3>
+                        <h3 class="col-span-12 text-lg leading-6 font-medium text-gray-900">Nueva Entrega</h3> -->
 
-                        <!-- <div class="col-span-12 sm:col-span-4 ">
+        <!-- <div class="col-span-12 sm:col-span-4 ">
                             <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div> -->
 
-                        <div class="col-span-12 sm:col-span-4 ">
+        <!-- <div class="col-span-12 sm:col-span-4 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
                             <input v-model="filter.documento" type="text" name="num_documento" id="num_documento"
-                                autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                        </div>
+                        </div> -->
 
-                        <!-- <button @click="showForm = !showForm; showPersona = !showPersona" -->
-                        <button @click="searchPerson"
+        <!-- <button @click="showForm = !showForm; showPersona = !showPersona" -->
+        <!-- <button @click="searchPerson"
                             class="col-span-12 sm:col-span-4 bg-green-600 text-white px-4 rounded-md py-2">
                             Buscar
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <Persona v-if="showPersona" 
-                :person="person" 
-                :puntosEntrega="puntosEntrega"
-                :products="products"
-                :user="user"
-                @clearPerson="clearPerson" />
+        <Persona v-if="showPersona" :person="person" :puntosEntrega="puntosEntrega" :products="products" :users="users"
+            @clearPerson="clearPerson" />
 
         <History v-if="showPersona" :history="history" />
 
-        <Dashboard v-if="!showPersona && !showForm"  
-                   :products="products" 
-                   :puntosEntrega="puntosEntrega" 
-                   :users="users"/>
+        <Dashboard v-if="!showPersona" :products="products" :puntosEntrega="puntosEntrega" :users="users" />
 
     </main>
 </template>
@@ -81,6 +97,7 @@ import {
 
 import { ChevronRightIcon, EllipsisVerticalIcon, ClockIcon, CheckCircleIcon, EyeIcon } from '@heroicons/vue/24/solid'
 import store from '@/store.js'
+import Toast from "@/Layouts/Components/Toast.vue";
 import History from './History.vue'
 import Persona from './Persona.vue'
 import Dashboard from './Dashboard.vue'
@@ -102,21 +119,30 @@ export default {
         EyeIcon,
         History,
         Persona,
-        Dashboard
+        Dashboard,
+        Toast,
     },
     data() {
         return {
             showPersona: false,
             showForm: false,
-            data: "",
-            puntosEntrega: "",
+            data: {},
+            puntosEntrega: {},
             filter: {
                 name: "",
-                num_documento: "11111111",
+                // num_documento: "11111111",
+                documento:""
             },
-            person: '',
-            products: "",
-            user: ""            
+            person: {},
+            products: [],
+            user: {}    ,
+            
+            /*Mensajeria*/
+            toastMessage: "",
+			labelType: "info",
+			showToast: false,
+
+            loadingPerson: false,
         };
     },
 
@@ -137,15 +163,31 @@ export default {
     },
     methods: {
         async searchPerson() {
-            const response = await axios.get(route('collections.getPerson', this.filter.documento))
+            if(this.filter.documento == ""){
+                console.log(this.filter.documento);
+                this.labelType = "danger";
+                this.toastMessage = "Debe Ingresar un Documento para realizar la búsqueda"
+            }else {
+                this.loadingPerson = true;
+                try {
+                    const response = await axios.get(route('collections.getPerson', this.filter.documento))
+                    this.person = await response.data.person
+                    this.history = await response.data.history
+                    this.showPersona = true
+                    this.showForm = false
 
-            if (response.status == 200) {
-                this.person = await response.data.person
-                this.history = await response.data.history
-                this.showPersona = true
-                this.showForm = false
+                } catch(error) {
+                    // this.labelType = "danger";
+					// this.toastMessage = response.data.message;
+					this.labelType = "danger";
+					this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+                } finally {
+                    this.loadingPerson = false;
+                }
+
+                
+            
             }
-            console.log(this.filter)
         },
 
         clearPerson() {
@@ -159,7 +201,11 @@ export default {
             this.puntosEntrega = await response.data.puntosEntrega
             this.products = await response.data.products
             this.user = await response.data.user
-        }
+        },
+
+        clearMessage() {
+			this.toastMessage = "";
+		},
 
     },
 
@@ -169,4 +215,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+ .placeholder-italic::placeholder {
+    font-style: italic;
+ }
+</style>

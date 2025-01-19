@@ -1,32 +1,41 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-    <div class="px-4 mt-6 sm:px-6 lg:px-8">
-        
-      <div class="text-sm font-medium text-gray-500 mb-4 hover:cursor-pointer hover:text-green-600 hover:underline" @click="clearPerson">Nueva busqueda</div>  
-      <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-          <!-- <div class="px-4 py-5 sm:px-6">
+  <div class="px-4 mt-6 sm:px-6 lg:px-8">
+
+    <!-- <div class="text-sm font-medium text-gray-500 mb-4 hover:cursor-pointer hover:text-green-600 hover:underline"
+      @click="clearPerson">Nueva busqueda</div> -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <!-- <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">Resultado</h3>
           </div> -->
-          <div class="">
-            <dl>
-              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
-                <dd class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">{{ person.name }} {{ person.lastname }}</dd>
-              </div>
-              <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt class="text-sm font-medium text-gray-500">Documento</dt>
-                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2">{{ person.num_documento }}</dd>
-              </div>
-              <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt class="text-sm font-medium text-gray-500">Dirección</dt>
-                <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2 capitalize" >
-                  {{ person.address[0].calle }} {{ person.address[0].number }} - {{ person.address[0].localidad.description }}
-                </dd>
-              </div>
-            </dl>
+          <div class="flex items-center justify-between px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Datos de la Persona
+                </h3>
           </div>
-        </div>
-        <div class="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
+            <dd class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">{{ person.name }} {{ person.lastname }}</dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Documento</dt>
+            <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2">{{ person.num_documento }}</dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Dirección</dt>
+            <dd class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2 capitalize">
+              calle 588 Villa Luro, 322
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <Entregas :person="person" :puntosEntrega="puntosEntrega" :products="products" :users="users" />
+
+    <!-- <div v-if="person.collections.length > 0" class="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
           <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">Realizar entrega</h3>
           </div>
@@ -39,7 +48,7 @@
                   No hay puntos de entrega disponibles</dd>
                 <dd v-else class="mt-1 text-base  text-gray-900 sm:mt-0 sm:col-span-2">
                   <select v-model="form.puntoEntrega" class="w-full border-gray-300 rounded-md">
-                    <option v-for="punto in puntosEntrega" :key="punto.id" :value="punto.id">{{ punto.description }}</option>
+                    <option v-for="punto in puntosEntrega" :key="punto.id" :value="punto.id">{{ punto.description ?? '' }}</option>
                   </select>
                 </dd>
               </div>
@@ -59,18 +68,22 @@
           </div>
         </div>
 
-
+      <div v-else class="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+        Hola
         <div class="mt-6">
             <button @click="submitCollection" class="bg-green-600 text-white px-4 rounded-md py-4 flex items-center w-full justify-center">
                 <CheckCircleIcon class="h-5 w-5 text-white mr-3" aria-hidden="true" />
                 Entregar
             </button>
         </div>
-    </div>
-  </template>
+      </div> -->
+
+  </div>
+</template>
   
   <script>
   import { CheckCircleIcon } from '@heroicons/vue/24/solid'
+  import Entregas from './Entregas.vue'
   
   export default {
     props: {
@@ -86,13 +99,14 @@
             type: Array,
             required: true
         },
-        user: {
+        users: {
             type: Object,
             required: true
         }
     },
     components: {
         CheckCircleIcon,
+        Entregas,
     },
     data() {
         return {

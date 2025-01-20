@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->foreignId('entrevistador_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('puntos_entrega_id')->constrained('puntos_entrega')->onDelete('cascade');
-            $table->foreignId('status_id')->constrained('cajas_entrevistas_statuses')->onDelete('cascade');             
+            $table->foreignId('status_id')->constrained('cajas_entrevistas_statuses')->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
 
             $table->string('estudios')->nullable();
@@ -37,7 +36,7 @@ return new class extends Migration
             $table->string('tratamiento_medico')->nullable();
             $table->string('medicacion')->nullable();
             $table->string('discapacidad')->nullable();
-            
+
 
 
 

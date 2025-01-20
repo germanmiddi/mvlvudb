@@ -13,7 +13,7 @@ class Person extends Model
     protected $primaryKey = 'id';
     public $timestamps = true;
     protected $hidden = ['created_at', 'updated_at'];
-    
+
     protected $fillable = [
         'lastname',
         'name',
@@ -24,7 +24,7 @@ class Person extends Model
         'genero'
     ];
 
-    protected $appends = ['age']; 
+    protected $appends = ['age'];
 
     public function getAgeAttribute()
     {
@@ -38,17 +38,24 @@ class Person extends Model
         return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
     }
 
-    public function personas()
+    // public function personas()
+    // {
+    //     return $this->belongsToMany(Person::class, 'person_programa_social', 'programa_social_id', 'person_id');
+    // }
+
+    public function programaSocial()
     {
-        return $this->belongsToMany(Person::class, 'person_programa_social', 'programa_social_id', 'person_id');
+        return $this->belongsToMany(ProgramaSocial::class, 'person_programa_social', 'person_id', 'programa_social_id');
     }
 
-    public function tramites(){
+    public function tramites()
+    {
         return $this->belongsToMany(Tramite::class, 'person_tramite')
             ->withPivot('rol_tramite_id');
     }
 
-    public function rol_tramite(){
+    public function rol_tramite()
+    {
         return $this->belongsToMany(RolTramite::class, 'person_tramite');
     }
 

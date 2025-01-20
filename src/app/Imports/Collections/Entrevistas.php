@@ -20,6 +20,8 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
+use App\Services\CajasServices;
+
 use Carbon\Carbon;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -31,7 +33,14 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
     private $rowsError = 0;
     private $rowsDuplicados = "";
     private $rowsDuplicadosCount = 0;
-    
+    private $CajasServices;
+
+    public function __construct()
+    {
+        $this->CajasServices = new CajasServices();
+
+    }
+
     public function model(array $row)
     {
         ++$this->rows;
@@ -48,11 +57,17 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
 
         if (!$check_unique) {
             ++$this->rowsDuplicadosCount;
-
             return null;
         }
 
-        $this->storeEntrevista($data);
+        $entrevista = $this->storeEntrevista($data);
+
+        $status_aprobada = CajasEntrevistasStatus::where('nombre', 'APROBADA')->first()->id;
+        Log::info('Estado de la entrevista', ['estado' => $data['estado'], 'estado_aprobada' => $status_aprobada]);
+
+        if ($data['estado'] == $status_aprobada) {
+            $this->CajasServices->createTramite($entrevista);
+        }
         return;
     }
 
@@ -70,15 +85,15 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
     {
         // Verificar si la persona existe en la tabla Person
         $person = Person::where('num_documento', $data['num_documento'])
-                        ->where('tipo_documento_id', $data['tipo_documento_id'])
-                        ->first();
+            ->where('tipo_documento_id', $data['tipo_documento_id'])
+            ->first();
 
         if ($person) {
             // Si la persona existe, verificar si ya tiene una entrevista registrada
             $unique = CajasEntrevista::where('person_id', $person->id)->first();
 
             if ($unique) {
-                Log::error('La persona ya cuenta con una entrevista registrada. DNI: '.$data['num_documento'] );
+                Log::error('La persona ya cuenta con una entrevista registrada. DNI: ' . $data['num_documento']);
                 $this->rowsDuplicados .= "La persona ya cuenta con una entrevista registrada. DNI: " . $data['num_documento'] . "<br>";
                 return null;
             }
@@ -160,16 +175,16 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             );
 
 
-            $status_pendiente = CajasEntrevistasStatus::where('nombre', 'PENDIENTE')->first()->id;
+            // $status_pendiente = CajasEntrevistasStatus::where('nombre', 'PENDIENTE')->first()->id;
 
 
-            $entrevista = CajasEntrevista::updateOrCreate(
-                ['person_id' => $person->id],
+            $entrevista = CajasEntrevista::create(
                 [
+                    'person_id' => $person->id,
                     'fecha' => $data['fecha_entrevista'],
                     'entrevistador_id' => $data['entrevistador_id'],
                     'puntos_entrega_id' => $data['sede_id'],
-                    'status_id' => $status_pendiente,
+                    'status_id' => $data['estado'],
                     'created_by' => Auth::user()->id,
                     'vive_solo' => $data['vive_solo'],
                     'cant_convivientes' => $data['cant_convivientes'],
@@ -179,13 +194,12 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
                 ]
             );
 
-            $entrevista->save();
-
             Log::info('Entrevista creada correctamente', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Entrevista" => $entrevista->id]);
 
             ++$this->rowsSuccess;
 
             DB::commit();
+            return $entrevista;
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -260,6 +274,7 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
         }
 
         $data = [
+            'estado' => $this->extractID($row['estado']),
             'tipo_documento_id' => $this->extractID($row['tipo_documento']),
             'num_documento' => $row['num_documento'],
             'lastname' => $row['apellido'],
@@ -370,7 +385,6 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             return null;
         }
     }
-
     public function getImportResult()
     {
 
@@ -382,7 +396,6 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             'rowsDuplicadosCount' => $this->rowsDuplicadosCount
         ];
     }
-
     public function batchSize(): int
     {
         return 1000;
@@ -393,6 +406,6 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
         return [
             0 => $this // Aquí asumimos que la primera hoja tiene el índice 0
         ];
-    }    
+    }
 }
 

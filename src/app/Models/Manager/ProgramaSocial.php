@@ -15,8 +15,13 @@ class ProgramaSocial extends Model
         'description',
     ];
 
-    public function programasSociales()
+    // public function programasSociales()
+    // {
+    //     return $this->belongsToMany(ProgramaSocial::class, 'person_programa_social', 'person_id', 'programa_social_id');
+    // }
+
+    public function personas()
     {
-        return $this->belongsToMany(ProgramaSocial::class, 'person_programa_social', 'person_id', 'programa_social_id');
+        return $this->belongsToMany(Person::class, 'person_programa_social', 'programa_social_id', 'person_id');
     }
 }

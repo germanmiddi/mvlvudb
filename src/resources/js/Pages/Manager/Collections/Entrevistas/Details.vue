@@ -1,4 +1,3 @@
-
 <template>
 	<main class="flex-1 bg-gray-50 pb-40">
 		<!-- Page title & actions -->
@@ -35,8 +34,8 @@
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6 flex justify-between">
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Información General</h3>
-				
-					<div v-if="entrevista.status_id == 1" class="flex justify-end items-center gap-4" > 
+
+					<div v-if="entrevista.status_id == 1" class="flex justify-end items-center gap-4">
 						<button class="px-4 py-2 border border-transparent 
 									shadow-sm text-sm font-medium rounded-md 
 									text-white bg-red-600 hover:bg-red-700 
@@ -58,33 +57,35 @@
 					<dl class="sm:divide-y sm:divide-gray-200">
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(entrevista.fecha) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								store.dateFormateada(entrevista.fecha) }}</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Estado</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-								<span class="px-3 py-2 rounded-md" 
-									  :class="estadoClass[status_name]"> 
+								<span class="px-3 py-2 rounded-md" :class="estadoClass[status_name]">
 									{{ status_name }}</span>
 							</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Punto de Entrega</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.puntos_entrega.description }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.puntos_entrega.description }}</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Entrevistador</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.entrevistador.name }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.entrevistador.name }}</dd>
 						</div>
-						
+
 					</dl>
 				</div>
 
 			</div>
-		</div>	
+		</div>
 
 
 		<!-- Datos Titular -->
@@ -97,55 +98,61 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ entrevista.person.lastname}}, {{ entrevista.person.name }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								entrevista.person.lastname }}, {{ entrevista.person.name }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Documento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.num_documento }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.num_documento }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ store.dateFormateada(entrevista.person.fecha_nac) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								store.dateFormateada(entrevista.person.fecha_nac) }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Dirección</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 								{{ entrevista.person.address[0].calle }} {{ entrevista.person.address[0].number }}
 								<span v-if="entrevista.person.address[0].piso">
-									, Piso: {{ entrevista.person.address[0].piso }}</span> 
+									, Piso: {{ entrevista.person.address[0].piso }}</span>
 								<span v-if="entrevista.person.address[0].dpto">
-									, DPTO: {{ entrevista.person.address[0].dpto }}</span> 
+									, DPTO: {{ entrevista.person.address[0].dpto }}</span>
 								<span v-if="entrevista.person.address[0].localidad">
-									, {{ entrevista.person.address[0].localidad.description }}</span>			
+									, {{ entrevista.person.address[0].localidad.description }}</span>
 							</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Email</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.contact[0].email ? entrevista.person.contact[0].email : "" }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.contact[0].email ? entrevista.person.contact[0].email : "" }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Telefono</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.contact[0].phone }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.contact[0].phone }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Celular</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.contact[0].celular }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.contact[0].celular }}</dd>
 						</div>
 
 					</dl>
 				</div>
-				
+
 			</div>
-		</div>	
+		</div>
 		<!-- Fin  Datos Titular -->
 
 
@@ -156,25 +163,28 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-					
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Pais de Origen</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.aditional[0].nacionalidad }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.aditional[0].nacionalidad }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Situación Conyugal</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.aditional[0].situacion_conyugal?.description ?? '' }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.aditional[0].situacion_conyugal?.description ?? '' }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cantidad Hijos</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.person.aditional[0].cant_hijos }}</dd>
-						</div>		
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.person.aditional[0].cant_hijos }}</dd>
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
@@ -182,14 +192,15 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-					
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Vive Solo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.vive_solo }}</dd>
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cant. Convivientes</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.cant_convivientes }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.cant_convivientes
+								}}</dd>
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Tipo Tenencia</dt>
@@ -201,10 +212,11 @@
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Pago Inquilino</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.pago_inquilino }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.pago_inquilino
+								}}</dd>
 						</div>
 
-<!-- 
+						<!-- 
 						<div v-if="nivelEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ nivelEducativo }}</dd>
@@ -230,9 +242,9 @@
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tipoPension}}</dd>
 						</div>  -->
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -241,19 +253,19 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-						<div v-if="nivelEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="nivelEducativo != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Último Nivel Educativo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ nivelEducativo }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ nivelEducativo }}</dd>
+						</div>
 
-						<div v-if="estadoEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="estadoEducativo != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Estado Alcanzado</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ estadoEducativo }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ estadoEducativo }}</dd>
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -263,27 +275,29 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-						<div v-if="ocupacion != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="ocupacion != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ocupación</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ ocupacion }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ ocupacion }}</dd>
+						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ingresos Trabajo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >$ {{ entrevista.ingresos_trabajo }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{
+								entrevista.ingresos_trabajo }}</dd>
+						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Percibe Jubilación / Pensión</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ tipoPension }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ tipoPension }}</dd>
+						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ingresos Planes</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" >$ {{ entrevista.ingresos_planes }}</dd>
-						</div>							
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.ingresos_planes
+								}}</dd>
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -292,21 +306,31 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-						<div v-if="ocupacion != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="ocupacion != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cobertura de Salud</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ coberturaMedica }}</dd>
-						</div>	
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ coberturaMedica }}</dd>
+						</div>
 
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Recibe Programa Social</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ programaSocial }}</dd>
-						</div>	
+						<div class="px-4 my-4 sm:px-6 lg:px-8">
+							<dt class="text-sm font-medium text-gray-700 mb-3">Recibe Programa Social</dt>
+							<div v-if="entrevista.person.programa_social && entrevista.person.programa_social.length > 0"
+								class="space-y-2 pl-2">
+								<div v-for="(programa, index) in entrevista.person.programa_social"
+									:key="programa.id || index"
+									class="flex items-center bg-green-50 text-green-800 rounded-lg shadow px-2 py-3">
+									<span class="text-xs font-semibold">{{ programa.description }}</span>
+								</div>
+							</div>
+							<div v-else class="text-sm text-gray-500 italic">
+								No hay programas sociales registrados.
+							</div>
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 		<div v-if="entrevista.status_id == 1" class="px-4 mt-6 sm:px-6 lg:px-8">
-			<div class="flex justify-end gap-4 px-4" > 
+			<div class="flex justify-end gap-4 px-4">
 				<button class="px-4 py-2 border border-transparent 
 							   shadow-sm text-sm font-medium rounded-md 
 							   text-white bg-red-600 hover:bg-red-700 
@@ -389,12 +413,12 @@ export default {
 			newDepObservacion: "",
 			// assignment: this.tramite[0].assigned,
 			fileInvalid: false,
-            estadoClass: {
-                'APROBADA': 'badgeStatus bg-green-600 text-green-100',
-                'PENDIENTE': 'badgeStatus bg-gray-200 text-gray-800',
-                'RECHAZADA': 'badgeStatus bg-red-600 text-red-100'
-            }
-		
+			estadoClass: {
+				'APROBADA': 'badgeStatus bg-green-600 text-green-100',
+				'PENDIENTE': 'badgeStatus bg-gray-200 text-gray-800',
+				'RECHAZADA': 'badgeStatus bg-red-600 text-red-100'
+			}
+
 		}
 	},
 	setup() {
@@ -414,18 +438,18 @@ export default {
 	},
 
 	methods: {
-		goBack(){
+		goBack() {
 			window.history.back();
 		},
-		
-		handleMessage(data){
-            this.labelType = data.labelType;
-            this.toastMessage = data.toastMessage;
-        },
 
-		async changeStatus(newEstado){
+		handleMessage(data) {
+			this.labelType = data.labelType;
+			this.toastMessage = data.toastMessage;
+		},
 
-			let rt = route('collections.entrevistas.update', {id: this.entrevista.id});
+		async changeStatus(newEstado) {
+
+			let rt = route('collections.entrevistas.update', { id: this.entrevista.id });
 
 			let formData = new FormData();
 			formData.append('status_id', newEstado)
@@ -472,37 +496,33 @@ export default {
 	},
 
 	computed: {
-  		nivelEducativo: function() {
-    		return this.entrevista?.person.education[0]?.nivel_educativo?.description ?? '';
-  		},
-  		estadoEducativo: function() {
-    		return this.entrevista?.person.education[0]?.estado_educativo?.description ?? '';
-  		},
-		ocupacion: function() {
+		nivelEducativo: function () {
+			return this.entrevista?.person.education[0]?.nivel_educativo?.description ?? '';
+		},
+		estadoEducativo: function () {
+			return this.entrevista?.person.education[0]?.estado_educativo?.description ?? '';
+		},
+		ocupacion: function () {
 			return this.entrevista?.person.social[0]?.tipo_ocupacion?.description ?? '';
-  		},
-		coberturaMedica: function() {
+		},
+		coberturaMedica: function () {
 			return this.entrevista?.person.social[0]?.cobertura_medica?.description ?? '';
-  		},
-		programaSocial: function() {
+		},
+		programaSocial: function () {
 			return this.entrevista?.person.social[0]?.programa_social?.description ?? '';
-  		},
-		tipoPension: function() {
+		},
+		tipoPension: function () {
 			return this.entrevista?.person.social[0]?.tipo_pension?.description ?? '';
-	  	},
+		},
 
-		status_name: function() {
-            switch (this.entrevista.status_id) {
-                case 1: return 'PENDIENTE';
-                case 2: return 'APROBADA';
-                case 3: return 'RECHAZADA';
-                default: return '';
-            }
-        }
+		status_name: function () {
+			switch (this.entrevista.status_id) {
+				case 1: return 'PENDIENTE';
+				case 2: return 'APROBADA';
+				case 3: return 'RECHAZADA';
+				default: return '';
+			}
+		}
 	},
 }
 </script>
-
-
-
-

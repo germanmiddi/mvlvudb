@@ -37,14 +37,53 @@ class CollectionController extends Controller
 
     public function padron()
     {
-        return Inertia::render('Manager/Collections/Padron/List');
+        return Inertia::render('Manager/Collections/Padron/List', [
+            'sedes' => PuntoEntrega::all(),
+            'entrevistadores' => User::whereHas('puntosEntrega')->get()
+        ]);
     }
 
     public function padronList()
     {
         $length = 30;
+        $entrevistas = CajasEntrevista::query();
 
-        return CajasEntrevista::query()
+        if (request('name')) {
+            $name = request('name');
+            $entrevistas->whereHas('person', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('lastname', 'LIKE', '%' . $name . '%');
+            });
+        }
+
+        if (request('num_documento')) {
+            $num_documento = request('num_documento');
+            $entrevistas->whereHas('person', function ($query) use ($num_documento) {
+                $query->where('num_documento', $num_documento);
+            });
+        }
+
+        if (request('date')) {
+            $date = json_decode(request('date'));
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $entrevistas->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
+        }
+
+        if (request('punto_entrega_id')) {
+            $punto_entrega_id = request('punto_entrega_id');
+            $entrevistas->where('puntos_entrega_id', $punto_entrega_id);
+        }
+
+        if (request('entrevistador_id')) {
+            $entrevistador_id = request('entrevistador_id');
+            $entrevistas->where('entrevistador_id', $entrevistador_id);
+        }
+
+        return $entrevistas
             ->where('status_id', 2)
             ->orderBy('fecha', 'DESC')
             ->paginate($length)

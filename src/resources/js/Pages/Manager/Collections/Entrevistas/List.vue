@@ -86,20 +86,23 @@
                             <select v-model="filter.estado" name="estado" id="estado"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 <option value="" selected>Selecciones un estado</option>
-                                <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{  estado.nombre }}</option>
+                                <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{ estado.nombre
+                                    }}</option>
                             </select>
                         </div>
 
                         <div class="col-span-12 sm:col-span-3">
-                            <label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-                            <select v-model="filter.sede_id" name="sede_id" id="sede_id"
+                            <label for="punto_entrega_id" class="block text-sm font-medium text-gray-700">Sede</label>
+                            <select v-model="filter.punto_entrega_id" name="punto_entrega_id" id="punto_entrega_id"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 <option value="" selected>Selecciones una sede</option>
-                                <option v-for="sede in sedes" :key="sede.id" :value="sede.id">{{  sede.description }}</option>
+                                <option v-for="sede in sedes" :key="sede.id" :value="sede.id">{{ sede.description }}
+                                </option>
                             </select>
                         </div>
                         <div class="col-span-12 sm:col-span-3">
-                            <label for="entrevistador_id" class="block text-sm font-medium text-gray-700">Entrevistador</label>
+                            <label for="entrevistador_id"
+                                class="block text-sm font-medium text-gray-700">Entrevistador</label>
                             <select v-model="filter.entrevistador_id" name="entrevistador_id" id="entrevistador_id"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 <option value="" selected>Selecciones un entrevistador</option>
@@ -263,24 +266,24 @@ export default {
 
             let filter = `&length=${this.length}`
 
-            if(this.filter.name){
+            if (this.filter.name) {
                 filter += `&name=${this.filter.name}`
             }
-            if(this.filter.num_documento){
+            if (this.filter.num_documento) {
                 filter += `&num_documento=${this.filter.num_documento}`
             }
-            if(this.filter.date) {
+            if (this.filter.date) {
                 filter += `&date=${JSON.stringify(this.filter.date)}`
             }
 
-            if(this.filter.punto_entrega_id){
+            if (this.filter.punto_entrega_id) {
                 filter += `&punto_entrega_id=${this.filter.punto_entrega_id}`
             }
 
-            if(this.filter.entrevistador_id){
+            if (this.filter.entrevistador_id) {
                 filter += `&entrevistador_id=${this.filter.entrevistador_id}`
             }
-            if(this.filter.estado){
+            if (this.filter.estado) {
                 filter += `&estado=${this.filter.estado}`
             }
 

@@ -49,24 +49,27 @@ class DiscapacidadController extends Controller
 
     public function index()
     {
-        return Inertia::render('Manager/Tramites/Discapacidad/Index',
-        [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
-            'estados' => TramiteEstado::all(),
-            'users' => User::orderBy('name')->get(),
-            'modalidadesAtencion' => ModalidadAtencion::all(),
-            'toast' => Session::get('toast')
-        ]);
+        return Inertia::render(
+            'Manager/Tramites/Discapacidad/Index',
+            [
+                'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
+                'estados' => TramiteEstado::all(),
+                'users' => User::orderBy('name')->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'toast' => Session::get('toast')
+            ]
+        );
     }
     //create
     public function create()
     {
-        return Inertia::render('Manager/Tramites/Discapacidad/Create',
+        return Inertia::render(
+            'Manager/Tramites/Discapacidad/Create',
             [
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -77,7 +80,7 @@ class DiscapacidadController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
@@ -228,7 +231,7 @@ class DiscapacidadController extends Controller
             $list_tramites_id = array();
 
             // tramite
-            if($request['tramites_id'] != null){
+            if ($request['tramites_id'] != null) {
 
                 foreach ($request['tramites_id'] as $indice => $valor) {
 
@@ -254,16 +257,16 @@ class DiscapacidadController extends Controller
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
 
-                    if($request['files'] != null){
+                    if ($request['files'] != null) {
                         foreach ($request['files'] as $indice => $valor) {
 
                             $fileController = new FileController;
                             $data = [];
 
                             $data['base64'] = $request['files'][$indice];
-                            $data['tramite_id'] =  $tramite_data['id'];
-                            $data['description'] =  $request['files_descripcion'][$indice];
-                            $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
+                            $data['tramite_id'] = $tramite_data['id'];
+                            $data['description'] = $request['files_descripcion'][$indice];
+                            $data['dependencia'] = $tramite_data->tipoTramite->dependencia->description;
 
                             $fileController->uploadbase64($data);
                         }
@@ -272,19 +275,19 @@ class DiscapacidadController extends Controller
 
 
                     $list_tramites_id[] = $tramite_data['id'];
-                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Discapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $tramite_data['id']]);
                 }
-            }else{
+            } else {
                 // Se verifica que se haya enviado tipos de tramite
                 DB::rollBack();
-                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Discapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
                 return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
             }
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Discapacidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Discapacidad:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -296,12 +299,13 @@ class DiscapacidadController extends Controller
     //edit
     public function edit($id)
     {
-        return Inertia::render('Manager/Tramites/Discapacidad/Edit',
+        return Inertia::render(
+            'Manager/Tramites/Discapacidad/Edit',
             [
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -312,7 +316,7 @@ class DiscapacidadController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
                 'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
@@ -324,7 +328,7 @@ class DiscapacidadController extends Controller
         DB::beginTransaction();
         try {
 
-            Person::where('id',$request['person_id'])->update(
+            Person::where('id', $request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
                     'num_documento' => $request['num_documento'],
@@ -336,7 +340,7 @@ class DiscapacidadController extends Controller
                 ]
             );
 
-            AditionalData::where('person_id',$request['person_id'])->update(
+            AditionalData::where('person_id', $request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
@@ -400,7 +404,7 @@ class DiscapacidadController extends Controller
              */
 
             if ($request['beneficiario_control'] == 'true') {
-                Person::where('id',$request['beneficiario_id'])->update(
+                Person::where('id', $request['beneficiario_id'])->update(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
                         'num_documento' => $request['beneficiario_num_documento'],
@@ -454,19 +458,19 @@ class DiscapacidadController extends Controller
                 $data = [];
 
                 $data['file'] = $request->file('file');
-                $data['tramite_id'] =  $request['tramite_id'];
-                $data['description'] =  $request['description_file'];
-                $data['dependencia'] =  $dependencia['description'];
+                $data['tramite_id'] = $request['tramite_id'];
+                $data['description'] = $request['description_file'];
+                $data['dependencia'] = $dependencia['description'];
 
-                $fileController->upload($data );
+                $fileController->upload($data);
             }
 
             DB::commit();
-            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Discapacidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
-            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Discapacidad:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $request['tramite_id']]);
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id']], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Discapacidad:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Discapacidad:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -484,51 +488,51 @@ class DiscapacidadController extends Controller
 
         $result->where('dependencia_id', 2);
 
-        if(request('tramite_id')){
+        if (request('tramite_id')) {
             $tramite_id = json_decode(request('tramite_id'));
             $result->where('id', $tramite_id);
         }
 
-        if(request('name')){
+        if (request('name')) {
             $name = json_decode(request('name'));
-            $result->whereIn('id', function ($sub) use($name) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.name', 'LIKE', '%'.$name.'%')
-                            ->orWhere('person.lastname', 'LIKE', '%'.$name.'%');
-                    });
+            $result->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
         }
-        if(request('num_documento')){
+        if (request('num_documento')) {
             $num_documento = json_decode(request('num_documento'));
-            $result->whereIn('id', function ($sub) use($num_documento) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.num_documento', 'LIKE', '%'.$num_documento.'%');
-                    });
+            $result->whereIn('id', function ($sub) use ($num_documento) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento . '%');
+            });
         }
-        if(request('date')){
+        if (request('date')) {
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
             $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
 
-            $result->where('fecha','>=', $from)
-                    ->where('fecha', '<', $to);
+            $result->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
         }
-        if(request('tipo_tramite_id')){
+        if (request('tipo_tramite_id')) {
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
-        
-        if(request('estado_id')){
+
+        if (request('estado_id')) {
             $result->where('estado_id', request('estado_id'));
         }
 
-        if(request('modalidad_atencion_id')){
+        if (request('modalidad_atencion_id')) {
             $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
             $result->where('modalidad_atencion_id', $modalidad_atencion_id);
         }
@@ -536,28 +540,28 @@ class DiscapacidadController extends Controller
 
         // Si no posee rol operador ejecuta los filtros.
         $users_id = [];
-        if(request('assigned_me')){
+        if (request('assigned_me')) {
             $users_id[] = Auth::user()->id;
         }
 
-        if(request('user_id')){
+        if (request('user_id')) {
             $users_id[] = json_decode(request('user_id'));
         }
 
-        if(request('not_assigned')){
+        if (request('not_assigned')) {
             $result->whereNull('assigned');
         }
 
-        if(count($users_id) > 0){
+        if (count($users_id) > 0) {
             $result->whereIn('assigned', $users_id);
         }
 
-        return  $result->orderBy("tramites.fecha", 'DESC')
+        return $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
-            ->through(fn ($tramite) => [
-                'tramite'   => $tramite,
-                'persons'   => $tramite->persons,
+            ->through(fn($tramite) => [
+                'tramite' => $tramite,
+                'persons' => $tramite->persons,
                 'contact_data' => $tramite->persons[0]->contact,
                 'rol_tramite' => $tramite->rol_tramite[0]['description'],
                 'tipo_tramite' => $tramite->tipoTramite,

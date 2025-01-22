@@ -19,7 +19,7 @@
                                 <Bars4Icon class="h-5 w-5" aria-hidden="true" />
                             </MenuButton>
                         </div>
-        
+
                         <transition enter-active-class="z-50 transition ease-out duration-100"
                             enter-from-class="transform opacity-0 scale-95"
                             enter-to-class="transform opacity-100 scale-100"
@@ -59,7 +59,7 @@
 
     </div>
 
-    <DeleteModal :show="showDelete" :id="intervencion.id" :title="`¿Está seguro que desea eliminar la intervención?`"
+    <DeleteModal v-if="showDelete" :id="intervencion.id" :title="`¿Está seguro que desea eliminar la intervención?`"
         @viewDeleted="fnShowDelete" @responseDeleted="fnDelete" />
 </template>
 

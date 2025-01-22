@@ -13,6 +13,7 @@ class ProgramaSocial extends Model
 
     protected $fillable = [
         'description',
+        'activo',
     ];
 
     // public function programasSociales()
@@ -23,5 +24,10 @@ class ProgramaSocial extends Model
     public function personas()
     {
         return $this->belongsToMany(Person::class, 'person_programa_social', 'programa_social_id', 'person_id');
+    }
+
+    public function scopeActivo($query)
+    {
+        return $query->where('activo', true);
     }
 }

@@ -11,12 +11,14 @@
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
                 <a :href="route('entidad.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
-                
-                <a  @click="generateReport()" v-if="!processReport"
+
+                <a @click="generateReport()" v-if="!processReport"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
 
                 <a v-else
-                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"><ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                    <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
+                </a>
             </div>
         </div>
 
@@ -50,7 +52,7 @@
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-3">
                             <label for="tipo_entidad_id" class="block text-sm font-medium text-gray-700">Tipo de
                                 Entidad</label>
@@ -58,9 +60,10 @@
                                 autocomplete="off"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" disabled>Selecciones un tipo de tramite</option>
-                                <option v-for="tipoEntidad in tiposEntidad" :key="tipoEntidad.id" :value="tipoEntidad.id">{{
-                                    tipoEntidad.description
-                                }}</option>
+                                <option v-for="tipoEntidad in tiposEntidad" :key="tipoEntidad.id"
+                                    :value="tipoEntidad.id">{{
+                                        tipoEntidad.description
+                                    }}</option>
                             </select>
                         </div>
 
@@ -124,7 +127,9 @@
                                         {{ data.entidad.name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{data.entidad.fecha_fundacion ? fechaFormateada(data.entidad.fecha_fundacion) : '-' }}
+                                        {{ data.entidad.fecha_fundacion ? fechaFormateada(data.entidad.fecha_fundacion)
+                                            :
+                                            '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ data.entidad.phone ? data.entidad.phone : '-' }}
@@ -167,11 +172,13 @@
                                                         </MenuItem>
 
                                                         <MenuItem v-slot="{ active }">
-                                                        <a href="#" @click="this.deleteEntidad.id = data.entidad.id, this.deleteEntidad.name = data.entidad.name, this.deleteEntidad.num_entidad = data.entidad.num_entidad, showDeleteEntidad = true" class="block px-4 py-2 text-sm">
+                                                        <a href="#"
+                                                            @click="this.deleteEntidad.id = data.entidad.id, this.deleteEntidad.name = data.entidad.name, this.deleteEntidad.num_entidad = data.entidad.num_entidad, showDeleteEntidad = true"
+                                                            class="block px-4 py-2 text-sm">
                                                             Eliminar</a>
                                                         </MenuItem>
 
-                                                       <!--  <MenuItem v-else v-slot="{ active }">
+                                                        <!--  <MenuItem v-else v-slot="{ active }">
                                                         <button @click="active(data.entidad.id)" class="block px-4 py-2 text-sm">
                                                             Activar</button>
                                                         </MenuItem> -->
@@ -209,11 +216,9 @@
         </div>
     </main>
 
-    <DeleteModal :show="showDeleteEntidad" :id="deleteEntidad.id"
-                    :title="`¿Está seguro que desea eliminar la entidad ${deleteEntidad.name}, identificada con el N° ${deleteEntidad.num_entidad}`"
-                    @viewDeleted="fnShowDeleteEntidad" 
-                    ref="componenteDeleteOrder" 
-                    @responseDeleted="fnDeleteEntidad" />
+    <DeleteModal v-if="showDeleteEntidad" :id="deleteEntidad.id"
+        :title="`¿Está seguro que desea eliminar la entidad ${deleteEntidad.name}, identificada con el N° ${deleteEntidad.num_entidad}`"
+        @viewDeleted="fnShowDeleteEntidad" ref="componenteDeleteOrder" @responseDeleted="fnDeleteEntidad" />
 </template>
 
 <script>
@@ -324,17 +329,17 @@ export default {
             this.showDeleteEntidad = false
             const response = await axios.delete(route('entidad.destroy', data));
 
-			if (response.status == 200) {
-				this.labelType = "success"
+            if (response.status == 200) {
+                this.labelType = "success"
                 this.toastMessage = response.data.message
                 this.showToast = true
                 this.getEntidades()
 
-			} else {
-				this.labelType = "danger"
+            } else {
+                this.labelType = "danger"
                 this.toastMessage = response.data.message
                 this.showToast = true
-			}
+            }
         },
         async generateReport() {
 

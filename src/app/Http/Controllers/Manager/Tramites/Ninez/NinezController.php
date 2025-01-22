@@ -44,21 +44,24 @@ use Illuminate\Support\Facades\Redirect;
 
 class NinezController extends Controller
 {
-    protected $notFamiliares = ['Hermanastra/o Mayor de Edad',
-                            'Hermana/o Mayor de Edad', 
-                            'Adulto/a Responsable'
-                        ];
+    protected $notFamiliares = [
+        'Hermanastra/o Mayor de Edad',
+        'Hermana/o Mayor de Edad',
+        'Adulto/a Responsable'
+    ];
     //index
 
     public function index()
     {
-        return Inertia::render('Manager/Tramites/Ninez/Index',
-        [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
-            'estados' => TramiteEstado::all(),
-            'users' => User::orderBy('name')->get(),
-            'toast' => Session::get('toast')
-        ]);
+        return Inertia::render(
+            'Manager/Tramites/Ninez/Index',
+            [
+                'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
+                'estados' => TramiteEstado::all(),
+                'users' => User::orderBy('name')->get(),
+                'toast' => Session::get('toast')
+            ]
+        );
     }
     //create
     public function create()
@@ -69,7 +72,7 @@ class NinezController extends Controller
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -80,7 +83,7 @@ class NinezController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 8)->active()->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
             ]
         );
@@ -90,7 +93,7 @@ class NinezController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -173,21 +176,21 @@ class NinezController extends Controller
 
             $list_tramites_id = array();
 
-            if($request['tramites_id'] != null){
+            if ($request['tramites_id'] != null) {
 
                 foreach ($request['tramites_id'] as $indice => $valor) {
-                    
+
                     // Verifico si hay niño asociado..
-                    if($request['ninos_id'] != null){
+                    if ($request['ninos_id'] != null) {
                         foreach ($request['ninos_id'] as $indice_nino => $valor) {
 
-                            $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
-    
+                            $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();
+
                             $tramite_data = Tramite::Create(
                                 [
                                     'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
                                     'observacion' => $request['tramites_observacion'][$indice],
-                
+
                                     'canal_atencion_id' => $request['canal_atencion_id'],
                                     'tipo_tramite_id' => $request['tramites_id'][$indice],
                                     'dependencia_id' => $dependencia['dependencia_id'],
@@ -207,22 +210,22 @@ class NinezController extends Controller
                                     'fecha_nac' => $request['ninos_fecha_nac'][$indice_nino],
                                     'tipo_documento_id' => $request['ninos_tipo_documento_id'][$indice_nino],
                                     'num_documento' => $request['ninos_num_documento'][$indice_nino],
-                                    ]
-                                );
+                                ]
+                            );
 
-                            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);   
+                            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]);
                             $nino->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
 
                             $list_tramites_id[] = $tramite_data['id'];
                         }
-                    }else{
-                        $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
-    
+                    } else {
+                        $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();
+
                         $tramite_data = Tramite::Create(
                             [
                                 'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
                                 'observacion' => $request['tramites_observacion'][$indice],
-            
+
                                 'canal_atencion_id' => $request['canal_atencion_id'],
                                 'tipo_tramite_id' => $request['tramites_id'][$indice],
                                 'dependencia_id' => $dependencia['dependencia_id'],
@@ -235,8 +238,8 @@ class NinezController extends Controller
                         $list_tramites_id[] = $tramite_data['id'];
                     }
                     // Verifico si existe familiar asociado.
-                  
-                    if($request['familiar_id']){
+
+                    if ($request['familiar_id']) {
                         foreach ($request['familiar_id'] as $indice => $valor) {
                             $familiar = Person::updateOrCreate(
                                 [
@@ -262,28 +265,28 @@ class NinezController extends Controller
                         }
                     }
 
-                    if($request['files'] != null){
+                    if ($request['files'] != null) {
                         foreach ($request['files'] as $indice => $valor) {
-        
+
                             $fileController = new FileController;
                             $data = [];
-                
+
                             $data['base64'] = $request['files'][$indice];
-                            $data['tramite_id'] =  $tramite_data['id'];
-                            $data['description'] =  $request['files_descripcion'][$indice]; 
-                            $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
-                            
+                            $data['tramite_id'] = $tramite_data['id'];
+                            $data['description'] = $request['files_descripcion'][$indice];
+                            $data['dependencia'] = $tramite_data->tipoTramite->dependencia->description;
+
                             $fileController->uploadbase64($data);
                         }
                     }
 
-                    
-                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Niñez:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $tramite_data['id']]);
                 }
-            }else{
+            } else {
                 // Se verifica que se haya enviado tipos de tramite
                 DB::rollBack();
-                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Niñez:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
                 return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
             }
             DB::commit();
@@ -291,7 +294,7 @@ class NinezController extends Controller
         } catch (\Throwable $th) {
             //dd($th);
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Niñez:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Niñez:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -303,14 +306,14 @@ class NinezController extends Controller
     //edit
     public function edit($id)
     {
-       
-       return Inertia::render(
+
+        return Inertia::render(
             'Manager/Tramites/Ninez/Edit',
             [
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -321,7 +324,7 @@ class NinezController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 8)->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'familiares', 'familiares.person', 'familiares.parentesco')->get()
             ]
@@ -332,8 +335,8 @@ class NinezController extends Controller
     {
         DB::beginTransaction();
         try {
-           
-            Person::where('id',$request['person_id'])->update(
+
+            Person::where('id', $request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
                     'num_documento' => $request['num_documento'],
@@ -345,7 +348,7 @@ class NinezController extends Controller
                 ]
             );
 
-            AditionalData::where('person_id',$request['person_id'])->update(
+            AditionalData::where('person_id', $request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
@@ -400,8 +403,8 @@ class NinezController extends Controller
              * Registro de Beneficiario
              */
 
-             if ($request['beneficiario_control'] == 'true') {
-                Person::where('id',$request['beneficiario_id'])->update(
+            if ($request['beneficiario_control'] == 'true') {
+                Person::where('id', $request['beneficiario_id'])->update(
                     [
                         'lastname' => $request['beneficiario_lastname'],
                         'name' => $request['beneficiario_name'],
@@ -410,7 +413,7 @@ class NinezController extends Controller
                         'num_documento' => $request['beneficiario_num_documento'],
                     ]
                 );
-    
+
             }
 
             /**
@@ -418,7 +421,7 @@ class NinezController extends Controller
              */
 
             // Obtengo ID de la dependencia.
-            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();
 
 
             // tramite
@@ -436,21 +439,21 @@ class NinezController extends Controller
             if ($request->hasFile('file')) {
                 $fileController = new FileController;
                 $data = [];
-    
+
                 $data['file'] = $request->file('file');
-                $data['tramite_id'] =  $request['tramite_id'];
-                $data['description'] =  $request['description_file']; 
-                $data['dependencia'] =  $dependencia['description'];
-                
-                $fileController->upload($data );
+                $data['tramite_id'] = $request['tramite_id'];
+                $data['description'] = $request['description_file'];
+                $data['dependencia'] = $dependencia['description'];
+
+                $fileController->upload($data);
             }
 
             DB::commit();
-            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Ninez:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
-            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Ninez:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $request['tramite_id']]);
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id']], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Ninez:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Ninez:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -459,56 +462,56 @@ class NinezController extends Controller
     {
         //
     }
-    
+
     public function list()
     {
         $length = request('length');
-        
+
         $result = Tramite::query();
 
         $result->where('dependencia_id', 8);
 
-        if(request('tramite_id')){
+        if (request('tramite_id')) {
             $tramite_id = json_decode(request('tramite_id'));
             $result->where('id', $tramite_id);
         }
 
-        if(request('name')){
-            $name = json_decode(request('name'));  
-            $result->whereIn('id', function ($sub) use($name) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.name', 'LIKE', '%'.$name.'%')
-                            ->orWhere('person.lastname', 'LIKE', '%'.$name.'%');
-                    });
+        if (request('name')) {
+            $name = json_decode(request('name'));
+            $result->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
         }
-        if(request('num_documento')){
-            $num_documento = json_decode(request('num_documento'));  
-            $result->whereIn('id', function ($sub) use($num_documento) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.num_documento', 'LIKE', '%'.$num_documento.'%');
-                    });
+        if (request('num_documento')) {
+            $num_documento = json_decode(request('num_documento'));
+            $result->whereIn('id', function ($sub) use ($num_documento) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento . '%');
+            });
         }
-        if(request('date')){
+        if (request('date')) {
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
-            $result->where('fecha','>=', $from)
-                    ->where('fecha', '<', $to);
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $result->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
         }
-        if(request('tipo_tramite_id')){
+        if (request('tipo_tramite_id')) {
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        if(request('estado_id')){
+        if (request('estado_id')) {
             $result->where('estado_id', request('estado_id'));
         }
 
@@ -517,31 +520,31 @@ class NinezController extends Controller
             // Si posee un rol que posee permiso operador visualizará unicamente sus tramites
             $result->where('assigned', Auth::user()->id);
         }else{ */
-            // Si no posee rol operador ejecuta los filtros.
-            $users_id = [];
-            if(request('assigned_me')){
-                $users_id[] = Auth::user()->id;
-            }
+        // Si no posee rol operador ejecuta los filtros.
+        $users_id = [];
+        if (request('assigned_me')) {
+            $users_id[] = Auth::user()->id;
+        }
 
-            if(request('user_id')){
-                $users_id[] = json_decode(request('user_id'));
-            }
+        if (request('user_id')) {
+            $users_id[] = json_decode(request('user_id'));
+        }
 
-            if(request('not_assigned')){
-                $result->whereNull('assigned');
-            }
-            
-            if(count($users_id) > 0){
-                $result->whereIn('assigned', $users_id);
-            }
+        if (request('not_assigned')) {
+            $result->whereNull('assigned');
+        }
+
+        if (count($users_id) > 0) {
+            $result->whereIn('assigned', $users_id);
+        }
         //}
-        
-        return  $result->orderBy("tramites.fecha", 'DESC')
+
+        return $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
-            ->through(fn ($tramite) => [
-                'tramite'   => $tramite,
-                'persons'   => $tramite->persons,
+            ->through(fn($tramite) => [
+                'tramite' => $tramite,
+                'persons' => $tramite->persons,
                 'contact_data' => $tramite->persons[0]->contact,
                 'rol_tramite' => $tramite->rol_tramite[0]['description'],
                 'tipo_tramite' => $tramite->tipoTramite,

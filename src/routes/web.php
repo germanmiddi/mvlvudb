@@ -237,7 +237,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
         Route::post('/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
         Route::post('/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
-        
+
         Route::get('/get_centro_salud', [MasterdataController::class, 'get_centroSalud'])->name('masterdata.get_centro_salud');
         Route::post('/store_centro_salud/', [MasterdataController::class, 'store_centroSalud'])->name('masterdata.store_centro_salud');
         Route::post('/update_centro_salud/', [MasterdataController::class, 'update_centroSalud'])->name('masterdata.update_centro_salud');
@@ -262,14 +262,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/centros-barriales/update-areas-legajo-cb/', [MasterdataController::class, 'update_areas_legajo_cb'])->name('masterdata.centros_barriales.update_areas_legajo_cb');
         Route::post('/centros-barriales/hide-areas-legajo-cb/', [MasterdataController::class, 'hideAreaLegajoCB'])->name('masterdata.centros_barriales.hide_areas_legajo_cb');
         Route::post('/centros-barriales/destroy-areas-legajo-cbe/', [MasterdataController::class, 'destroyAreaLegajoCB'])->name('masterdata.centros_barriales.destroy_areas_legajo_cb');
-    
-        Route::get( '/fortalecimiento/get-puntos-entrega', [MasterdataFortalecimientoController::class, 'get_puntos_entrega'])->name('masterdata.fortalecimiento.get_puntos_entrega');
+
+        //PROGRAMAS SOCIALES GENERAL
+        Route::get('/programas-sociales/get-programas-sociales', [MasterdataController::class, 'get_programaSocial'])->name('masterdata.programasSociales.get_programaSocial');
+        Route::post('/programas-sociales/store-programas-sociales/', [MasterdataController::class, 'store_programaSocial'])->name('masterdata.programasSociales.store_programaSocial');
+        Route::post('/programas-sociales/update-programas-sociales/', [MasterdataController::class, 'update_programaSocial'])->name('masterdata.programasSociales.update_programaSocial');
+        Route::post('/programas-sociales/hide-programas-sociales/', [MasterdataController::class, 'hide_programaSocial'])->name('masterdata.programasSociales.hide_programaSocial');
+        Route::post('/programas-sociales/destroy-programas-sociales/', [MasterdataController::class, 'destroy_programaSocial'])->name('masterdata.programasSociales.destroy_programaSocial');
+
+        Route::get('/fortalecimiento/get-puntos-entrega', [MasterdataFortalecimientoController::class, 'get_puntos_entrega'])->name('masterdata.fortalecimiento.get_puntos_entrega');
         Route::post('/fortalecimiento/store-puntos-entrega/', [MasterdataFortalecimientoController::class, 'store_puntos_entrega'])->name('masterdata.fortalecimiento.store_puntos_entrega');
         Route::post('/fortalecimiento/update-puntos-entrega/', [MasterdataFortalecimientoController::class, 'update_puntos_entrega'])->name('masterdata.fortalecimiento.update_puntos_entrega');
         Route::post('/fortalecimiento/hide-puntos-entrega/', [MasterdataFortalecimientoController::class, 'hide_puntos_entrega'])->name('masterdata.fortalecimiento.hide_puntos_entrega');
         Route::post('/fortalecimiento/destroy-puntos-entrega/', [MasterdataFortalecimientoController::class, 'destroy_puntos_entrega'])->name('masterdata.fortalecimiento.destroy_puntos_entrega');
 
-        Route::get( '/fortalecimiento/get-productos', [MasterdataFortalecimientoController::class, 'get_productos'])->name('masterdata.fortalecimiento.get_productos');
+        Route::get('/fortalecimiento/get-productos', [MasterdataFortalecimientoController::class, 'get_productos'])->name('masterdata.fortalecimiento.get_productos');
         Route::post('/fortalecimiento/store-productos/', [MasterdataFortalecimientoController::class, 'store_productos'])->name('masterdata.fortalecimiento.store_productos');
         Route::post('/fortalecimiento/update-productos/', [MasterdataFortalecimientoController::class, 'update_productos'])->name('masterdata.fortalecimiento.update_productos');
         Route::post('/fortalecimiento/hide-productos/', [MasterdataFortalecimientoController::class, 'hide_productos'])->name('masterdata.fortalecimiento.hide_productos');
@@ -293,11 +300,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/detail/changedependencia/', [DetailController::class, 'changeDependencia'])->name('detail.changeDependencia');
     Route::post('/detail/changeEstado/', [DetailController::class, 'changeEstado'])->name('detail.changeEstado');
     Route::post('/detail/changeAssigment/', [DetailController::class, 'changeAssigment'])->name('detail.changeAssigment');
-    
-    // Downloads
-    Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads'); 
 
-    Route::get('/downloads/getfieldsItems/{dependencia}', [DownloadController::class, 'getfieldsItems'])->name('downloads.fieldsItems'); 
+    // Downloads
+    Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads');
+
+    Route::get('/downloads/getfieldsItems/{dependencia}', [DownloadController::class, 'getfieldsItems'])->name('downloads.fieldsItems');
 
     // Entrega de Cajas a Personas
     Route::get('/person-boxes', [PersonBoxesController::class, 'index'])->name('person.boxes');
@@ -338,7 +345,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-informe', [LegajosCBController::class, 'update_informe'])->name('legajoCB.updateInforme');
             Route::put('/update-programa-intervencion', [LegajosCBController::class, 'update_programa_intervencion'])->name('legajoCB.updateProgramaIntervencion');
 
-            
+
             Route::delete('/delete-informe/{id}', [LegajosCBController::class, 'delete_informe'])->name('legajoCB.deleteInforme');
             Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
             Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
@@ -355,7 +362,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-legajo-emprendedor', [LegajosCBController::class, 'update_legajoEmprendedor'])->name('legajoCB.updateLegajoEmprendedor');
             Route::put('/update-legajo-titular', [LegajosCBController::class, 'update_legajoTitular'])->name('legajoCB.updateLegajoTitular');
             Route::put('/update-legajo-assigned', [LegajosCBController::class, 'update_assignedResponsable'])->name('legajoCB.assignedResponsable');
-            
+
         });
 
         // Rutas para Gabinete
@@ -363,7 +370,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [MilDiasController::class, 'index'])->name('mil-dias');
             Route::get('/inscripcion', [MilDiasController::class, 'create'])->name('mil-dias.create');
             Route::post('/inscripcion', [MilDiasController::class, 'store'])->name('mil-dias.store');
-         });
+        });
     });
 
     Route::get('/legajo/{id}', [LegajoController::class, 'index'])->name('legajo.index');

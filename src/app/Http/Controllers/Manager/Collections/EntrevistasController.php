@@ -69,7 +69,7 @@ class EntrevistasController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'puntosEntrega' => PuntoEntrega::all(),
                 'entrevistadores' => User::whereHas('puntosEntrega')->get()
             ]

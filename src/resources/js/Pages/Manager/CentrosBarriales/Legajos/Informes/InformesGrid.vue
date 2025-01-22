@@ -39,7 +39,8 @@
                         <MenuItem v-slot="{ active }">
                         <a @click="showDelete = true"
                             :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                            <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                            <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true" />
                             Borrar
                         </a>
                         </MenuItem>
@@ -50,7 +51,7 @@
     </div>
     <div class="mt-4 space-y-6 text-sm text-gray-800 mb-4 text-justify" v-html="informe.description ?? '-'" />
 
-    <DeleteModal :show="showDelete" :id="informe.id" :title="`¿Está seguro que desea eliminar la informe?`"
+    <DeleteModal v-if="showDelete" :id="informe.id" :title="`¿Está seguro que desea eliminar la informe?`"
         @viewDeleted="fnShowDelete" @responseDeleted="fnDelete" />
 </template>
 

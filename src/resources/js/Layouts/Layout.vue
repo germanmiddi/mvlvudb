@@ -432,7 +432,7 @@
 
             <Disclosure as="div" v-show="store.userCan('CAJA', $page.props.userGroups)">
 
-            
+
               <DisclosureButton as="template"
                 class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
                 <button class="flex items-center">
@@ -451,18 +451,18 @@
                   </li>
                 </a>
                 <hr>
-                <a :href="route('collections.entregas')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <a :href="route('collections.entregas')">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Entregas
                   </li>
                 </a>
                 <hr>
-                <a :href="route('collections.puntosEntrega')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <a :href="route('collections.puntosEntrega')">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Puntos de Entrega
                   </li>
                 </a>
-                <a :href="route('collections.personal')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <a :href="route('collections.personal')">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Personal
                   </li>

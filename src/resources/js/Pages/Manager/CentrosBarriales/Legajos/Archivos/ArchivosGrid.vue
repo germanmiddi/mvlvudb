@@ -27,7 +27,8 @@
                     <div class="py-1">
                         <MenuItem v-slot="{ active }">
                         <a :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']"
-                            :href="'/file/download/' + archivo.id + '/legajo'" target="_blank" title="Descargar Archivo">
+                            :href="'/file/download/' + archivo.id + '/legajo'" target="_blank"
+                            title="Descargar Archivo">
                             <DocumentArrowDownIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                                 aria-hidden="true" />
                             Descargar
@@ -36,7 +37,8 @@
                         <MenuItem v-slot="{ active }">
                         <a :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']"
                             :href="'/file/render/' + archivo.id + '/legajo'" target="_blank" title="Descargar Archivo">
-                            <DocumentIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                            <DocumentIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true" />
                             Ver Archivo
                         </a>
                         </MenuItem>
@@ -45,7 +47,8 @@
                         <MenuItem v-slot="{ active }">
                         <a @click="showDelete = true"
                             :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
-                            <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                            <TrashIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true" />
                             Borrar
                         </a>
                         </MenuItem>
@@ -54,7 +57,7 @@
             </transition>
         </Menu>
     </div>
-    <DeleteModal :show="showDelete" :id="archivo.id"
+    <DeleteModal v-if="showDelete" :id="archivo.id"
         :title="`¿Está seguro que desea eliminar el archivo - ${archivo.description}?`" @viewDeleted="fnShowDelete"
         @responseDeleted="fnDelete" />
 </template>

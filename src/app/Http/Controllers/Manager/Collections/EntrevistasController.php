@@ -69,7 +69,7 @@ class EntrevistasController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'puntosEntrega' => PuntoEntrega::all(),
                 'entrevistadores' => User::whereHas('puntosEntrega')->get()
             ]
@@ -240,7 +240,7 @@ class EntrevistasController extends Controller
 
         if (request('punto_entrega_id')) {
             $punto_entrega_id = request('punto_entrega_id');
-            $entrevistas->where('punto_entrega_id', $punto_entrega_id);
+            $entrevistas->where('puntos_entrega_id', $punto_entrega_id);
         }
 
         if (request('entrevistador_id')) {
@@ -282,6 +282,7 @@ class EntrevistasController extends Controller
                     ->with('person.aditional')
                     ->with('person.social')
                     ->with('person.education')
+                    ->with('person.programaSocial')
                     ->first()
             ]
         );

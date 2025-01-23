@@ -46,23 +46,26 @@ use Illuminate\Support\Facades\Redirect;
 
 class GeneroController extends Controller
 {
-    protected $notFamiliares =  ['Hermanastra/o Mayor de Edad',
-                                    'Hermana/o Mayor de Edad', 
-                                    'Adulto/a Responsable'
-                                ];
+    protected $notFamiliares = [
+        'Hermanastra/o Mayor de Edad',
+        'Hermana/o Mayor de Edad',
+        'Adulto/a Responsable'
+    ];
     //index
 
     public function index()
     {
-        return Inertia::render('Manager/Tramites/Genero/Index',
-        [
-            'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
-            'estados' => TramiteEstado::all(),
-            'users' => User::orderBy('name')->get(),
-            'modalidadesAtencion' => ModalidadAtencion::all(),
-            'categorias' => Category::all(),
-            'toast' => Session::get('toast')
-        ]);
+        return Inertia::render(
+            'Manager/Tramites/Genero/Index',
+            [
+                'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
+                'estados' => TramiteEstado::all(),
+                'users' => User::orderBy('name')->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'categorias' => Category::all(),
+                'toast' => Session::get('toast')
+            ]
+        );
     }
     //create
     public function create()
@@ -73,7 +76,7 @@ class GeneroController extends Controller
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -84,7 +87,7 @@ class GeneroController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
                 'modalidadesAtencion' => ModalidadAtencion::all(),
@@ -137,7 +140,7 @@ class GeneroController extends Controller
                     'person_id' => $person->id
                 ],
                 [
-            
+
                     'nivel_educativo_id' => $request['nivel_educativo_id'],
                     'estado_educativo_id' => $request['estado_educativo_id']
                 ]
@@ -176,12 +179,12 @@ class GeneroController extends Controller
                     'email' => $request['email']
                 ]
             );
-            
+
             /**
              * Registro de Beneficiario
              */
 
-             if ($request['beneficiario_control'] == 'true') {
+            if ($request['beneficiario_control'] == 'true') {
                 $beneficiario = Person::updateOrCreate(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
@@ -195,7 +198,7 @@ class GeneroController extends Controller
                         'num_documento' => $request['beneficiario_num_documento'],
                     ]
                 );
-    
+
                 ContactData::updateOrCreate(
                     [
                         'person_id' => $beneficiario->id
@@ -205,7 +208,7 @@ class GeneroController extends Controller
                         'email' => $request['beneficiario_email']
                     ]
                 );
-    
+
             }
 
 
@@ -216,18 +219,18 @@ class GeneroController extends Controller
             $list_tramites_id = array();
 
             // tramite
-            if($request['tramites_id'] != null){
+            if ($request['tramites_id'] != null) {
 
                 foreach ($request['tramites_id'] as $indice => $valor) {
-                    
+
                     // Obtengo ID de la dependencia.
-                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();   
-    
+                    $dependencia = TipoTramite::where('id', $request['tramites_id'][$indice])->first();
+
                     $tramite_data = Tramite::Create(
                         [
                             'fecha' => date("Y-m-d ", strtotime($request['fecha'])),
                             'observacion' => $request['tramites_observacion'][$indice],
-        
+
                             'canal_atencion_id' => $request['canal_atencion_id'],
                             'tipo_tramite_id' => $request['tramites_id'][$indice],
                             'dependencia_id' => $dependencia['dependencia_id'],
@@ -241,17 +244,17 @@ class GeneroController extends Controller
                     if (isset($beneficiario)) {
                         $beneficiario->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
                     }
-                    if($request['files'] != null){
+                    if ($request['files'] != null) {
                         foreach ($request['files'] as $indice => $valor) {
-        
+
                             $fileController = new FileController;
                             $data = [];
-                
+
                             $data['base64'] = $request['files'][$indice];
-                            $data['tramite_id'] =  $tramite_data['id'];
-                            $data['description'] =  $request['files_descripcion'][$indice]; 
-                            $data['dependencia'] =  $tramite_data->tipoTramite->dependencia->description;
-                            
+                            $data['tramite_id'] = $tramite_data['id'];
+                            $data['description'] = $request['files_descripcion'][$indice];
+                            $data['dependencia'] = $tramite_data->tipoTramite->dependencia->description;
+
                             $fileController->uploadbase64($data);
                         }
                     }
@@ -265,22 +268,22 @@ class GeneroController extends Controller
                             'tramite_id' => $tramite_data['id']
                         ]
                     );
-                    
-                    
+
+
                     $list_tramites_id[] = $tramite_data['id'];
-                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $tramite_data['id'] ]);
+                    Log::info("Se ha almacenado un nuevo tramite", ["Modulo" => "Genero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $tramite_data['id']]);
                 }
-            }else{
+            } else {
                 // Se verifica que se haya enviado tipos de tramite
                 DB::rollBack();
-                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
+                Log::error("Por favor ingrese un tipo de tramite", ["Modulo" => "Genero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => "No se ha ingresado ninguno tramite."]);
                 return response()->json(['message' => 'Por favor ingrese un tipo de tramite.'], 203);
             }
             DB::commit();
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idTramites' => $list_tramites_id], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Genero:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de almacenar el tramite", ["Modulo" => "Genero:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -298,7 +301,7 @@ class GeneroController extends Controller
                 'paises' => Pais::all(),
                 'barrios' => Barrio::all(),
                 'localidades' => Localidad::all(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'coberturasMedica' => CoberturaMedica::all(),
                 'estadosEducativo' => EstadoEducativo::all(),
                 'nivelesEducativo' => NivelEducativo::all(),
@@ -309,7 +312,7 @@ class GeneroController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
-                'programasSocial' => ProgramaSocial::all(),
+                'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'tramite_data')->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
@@ -322,8 +325,8 @@ class GeneroController extends Controller
     {
         DB::beginTransaction();
         try {
-        
-            Person::where('id',$request['person_id'])->update(
+
+            Person::where('id', $request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
                     'num_documento' => $request['num_documento'],
@@ -335,7 +338,7 @@ class GeneroController extends Controller
                 ]
             );
 
-            AditionalData::where('person_id',$request['person_id'])->update(
+            AditionalData::where('person_id', $request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
                     'situacion_conyugal_id' => $request['situacion_conyugal_id']
@@ -390,8 +393,8 @@ class GeneroController extends Controller
              * Registro de Beneficiario
              */
 
-             if ($request['beneficiario_control'] == 'true') {
-                Person::where('id',$request['beneficiario_id'])->update(
+            if ($request['beneficiario_control'] == 'true') {
+                Person::where('id', $request['beneficiario_id'])->update(
                     [
                         'tipo_documento_id' => $request['beneficiario_tipo_documento_id'],
                         'num_documento' => $request['beneficiario_num_documento'],
@@ -409,14 +412,14 @@ class GeneroController extends Controller
                         'email' => $request['beneficiario_email']
                     ]
                 );
-    
+
             }
             /**
              * FIN Registro de Beneficiario
              */
 
             // Obtengo ID de la dependencia.
-            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();   
+            $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();
 
 
             // tramite
@@ -436,13 +439,13 @@ class GeneroController extends Controller
             if ($request->hasFile('file')) {
                 $fileController = new FileController;
                 $data = [];
-    
+
                 $data['file'] = $request->file('file');
-                $data['tramite_id'] =  $request['tramite_id'];
-                $data['description'] =  $request['description_file']; 
-                $data['dependencia'] =  $dependencia['description'];
-                
-                $fileController->upload($data );
+                $data['tramite_id'] = $request['tramite_id'];
+                $data['description'] = $request['description_file'];
+                $data['dependencia'] = $dependencia['description'];
+
+                $fileController->upload($data);
             }
 
             TramiteData::where('tramite_id', $request['tramite_id'])->update(
@@ -453,11 +456,11 @@ class GeneroController extends Controller
             );
 
             DB::commit();
-            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Genero:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'] ]);
-            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id'] ], 200);
+            Log::info("Se ha actualizado un nuevo tramite", ["Modulo" => "Genero:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "ID Tramite" => $request['tramite_id']]);
+            return response()->json(['message' => 'Se actualizado correctamente el tramite del usuario.', 'idTramite' => $request['tramite_id']], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Genero:update","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de actualizar el tramite", ["Modulo" => "Genero:update", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el tramite. Verifique los datos ingresados.'], 203);
         }
     }
@@ -470,108 +473,108 @@ class GeneroController extends Controller
     public function list()
     {
         $length = request('length');
-        
+
         $result = Tramite::query();
 
         $result->where('dependencia_id', 6);
 
-        if(request('tramite_id')){
+        if (request('tramite_id')) {
             $tramite_id = json_decode(request('tramite_id'));
             $result->where('id', $tramite_id);
         }
 
-        if(request('name')){
-            $name = json_decode(request('name'));  
-            $result->whereIn('id', function ($sub) use($name) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.name', 'LIKE', '%'.$name.'%')
-                            ->orWhere('person.lastname', 'LIKE', '%'.$name.'%');
-                    });
+        if (request('name')) {
+            $name = json_decode(request('name'));
+            $result->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
         }
-        if(request('num_documento')){
-            $num_documento = json_decode(request('num_documento'));  
-            $result->whereIn('id', function ($sub) use($num_documento) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
-                            ->join('person', 'person.id', '=', 'person_tramite.person_id')
-                            ->where('person.num_documento', 'LIKE', '%'.$num_documento.'%');
-                    });
+        if (request('num_documento')) {
+            $num_documento = json_decode(request('num_documento'));
+            $result->whereIn('id', function ($sub) use ($num_documento) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('person_tramite', 'tramites.id', '=', 'person_tramite.tramite_id')
+                    ->join('person', 'person.id', '=', 'person_tramite.person_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento . '%');
+            });
         }
-        if(request('date')){
+        if (request('date')) {
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-            
-            $result->where('fecha','>=', $from)
-                    ->where('fecha', '<', $to);
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $result->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
         }
-        if(request('tipo_tramite_id')){
+        if (request('tipo_tramite_id')) {
             $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
             $result->where('tipo_tramite_id', $tipo_tramite_id);
         }
 
-        if(request('estado_id')){
+        if (request('estado_id')) {
             $result->where('estado_id', request('estado_id'));
         }
 
-        if(request('boton_antipanico')){
-            $boton_antipanico = json_decode(request('boton_antipanico'));  
-            $result->whereIn('tramites.id', function ($sub) use($boton_antipanico) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.boton_antipanico', '=' ,$boton_antipanico);
-                    });
+        if (request('boton_antipanico')) {
+            $boton_antipanico = json_decode(request('boton_antipanico'));
+            $result->whereIn('tramites.id', function ($sub) use ($boton_antipanico) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+                    ->where('tramite_data.boton_antipanico', '=', $boton_antipanico);
+            });
         }
 
-        if(request('ingreso_nuevo')){
-            $ingreso_nuevo = json_decode(request('ingreso_nuevo'));  
-            $result->whereIn('id', function ($sub) use($ingreso_nuevo) {
-                        $sub->selectRaw('tramites.id')
-                            ->from('tramites')
-                            ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
-                            ->where('tramite_data.ingreso_nuevo','=', $ingreso_nuevo);
-                    });
+        if (request('ingreso_nuevo')) {
+            $ingreso_nuevo = json_decode(request('ingreso_nuevo'));
+            $result->whereIn('id', function ($sub) use ($ingreso_nuevo) {
+                $sub->selectRaw('tramites.id')
+                    ->from('tramites')
+                    ->join('tramite_data', 'tramite_data.tramite_id', '=', 'tramites.id')
+                    ->where('tramite_data.ingreso_nuevo', '=', $ingreso_nuevo);
+            });
         }
         // Si no posee rol operador ejecuta los filtros.
         $users_id = [];
-        if(request('assigned_me')){
+        if (request('assigned_me')) {
             $users_id[] = Auth::user()->id;
         }
 
-        if(request('user_id')){
+        if (request('user_id')) {
             $users_id[] = json_decode(request('user_id'));
         }
 
-        if(request('not_assigned')){
+        if (request('not_assigned')) {
             $result->whereNull('assigned');
         }
-        
-        if(count($users_id) > 0){
+
+        if (count($users_id) > 0) {
             $result->whereIn('assigned', $users_id);
         }
 
-        if(request('modalidad_atencion_id')){
+        if (request('modalidad_atencion_id')) {
             $modalidad_atencion_id = json_decode(request('modalidad_atencion_id'));
             $result->where('modalidad_atencion_id', $modalidad_atencion_id);
         }
 
-        if(request('categoria_id')){
+        if (request('categoria_id')) {
             $categoria_id = json_decode(request('categoria_id'));
             $result->where('category_id', $categoria_id);
         }
-        
-        return  $result->orderBy("tramites.fecha", 'DESC')
+
+        return $result->orderBy("tramites.fecha", 'DESC')
             ->paginate($length)
             ->withQueryString()
-            ->through(fn ($tramite) => [
-                'tramite'   => $tramite,
-                'persons'   => $tramite->persons,
+            ->through(fn($tramite) => [
+                'tramite' => $tramite,
+                'persons' => $tramite->persons,
                 'contact_data' => $tramite->persons[0]->contact,
                 'rol_tramite' => $tramite->rol_tramite[0]['description'],
                 'tipo_tramite' => $tramite->tipoTramite,

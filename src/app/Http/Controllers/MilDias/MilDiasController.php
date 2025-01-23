@@ -32,13 +32,15 @@ class MilDiasController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/MilDias/Index',
-        [
-            //'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
-            //'estados' => TramiteEstado::all(),
-            //'users' => User::orderBy('name')->get(),
-            'toast' => Session::get('toast')
-        ]);
+        return Inertia::render(
+            'Manager/CentrosBarriales/MilDias/Index',
+            [
+                //'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
+                //'estados' => TramiteEstado::all(),
+                //'users' => User::orderBy('name')->get(),
+                'toast' => Session::get('toast')
+            ]
+        );
     }
 
     /**
@@ -48,7 +50,8 @@ class MilDiasController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Manager/CentrosBarriales/MilDias/Create',
+        return Inertia::render(
+            'Manager/CentrosBarriales/MilDias/Create',
             [
                 'sedes' => Sede::get(),
                 'barrios' => Barrio::all(),
@@ -79,7 +82,7 @@ class MilDiasController extends Controller
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 9)->get(),
-                'programasSocial' => ProgramaSocial::all() */
+                'programasSocial' => ProgramaSocial::activo()->get() */
             ]
         );
     }

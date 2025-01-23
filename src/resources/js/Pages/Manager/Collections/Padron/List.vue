@@ -4,7 +4,7 @@
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-                     Padrón Inscriptos a Entrega de Cajas
+                    Padrón Inscriptos a Entrega de Cajas
                 </h1>
             </div>
         </div>
@@ -20,10 +20,12 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
                         </div>
                         <div class="flex-shrink-0">
-                            <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
-                                    @click="clearFilter">Limpiar Filtro</button>
+                            <button v-if="Object.keys(this.filter).length"
+                                class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
+                                @click="clearFilter">Limpiar Filtro</button>
                             <button type="button"
-                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" @click="getList()">Aplicar
+                                class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+                                @click="getList()">Aplicar
                                 Filtro</button>
                         </div>
                     </div>
@@ -33,29 +35,49 @@
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2 ">
-                            <label for="num_documento" class="block text-sm font-medium text-gray-700">NumDoc</label>
+                            <label for="num_documento" class="block text-sm font-medium text-gray-700">Documento</label>
                             <input v-model="filter.num_documento" type="text" name="num_documento" id="num_documento"
                                 autocomplete="address-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
                         <div class="col-span-12 sm:col-span-3">
                             <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
-                            <Datepicker class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" v-model="filter.date" range multiCalendars
-                                    :closeOnAutoApply="true" :enableTimePicker="false" :format="customFormat"></Datepicker>
+                            <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.date" range multiCalendars :closeOnAutoApply="true"
+                                :enableTimePicker="false" :format="customFormat"></Datepicker>
                         </div>
-                        <div class="col-span-12 sm:col-span-2">
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="punto_entrega_id" class="block text-sm font-medium text-gray-700">Sede</label>
+                            <select v-model="filter.punto_entrega_id" name="punto_entrega_id" id="punto_entrega_id"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <option value="" selected>Selecciones una sede</option>
+                                <option v-for="sede in sedes" :key="sede.id" :value="sede.id">{{ sede.description }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="entrevistador_id"
+                                class="block text-sm font-medium text-gray-700">Entrevistador</label>
+                            <select v-model="filter.entrevistador_id" name="entrevistador_id" id="entrevistador_id"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                <option value="" selected>Selecciones un entrevistador</option>
+                                <option v-for="entrevistador in entrevistadores" :key="entrevistador.id"
+                                    :value="entrevistador.id">{{ entrevistador.name }}</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-span-12 sm:col-span-2">
                             <label for="estado_id" class="block text-sm font-medium text-gray-700">Estado</label>
-                            <select v-model="filter.estado_id" id="estado_id" name="estado_id"
-                                autocomplete="off"
+                            <select v-model="filter.estado_id" id="estado_id" name="estado_id" autocomplete="off"
                                 class="uppercase mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="">TODOS</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
                                 }}</option>
                             </select>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>
@@ -87,7 +109,8 @@
                                         DNI
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrevistador
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Entrevistador
                                     </th>
 
                                     <th scope="col"
@@ -144,11 +167,12 @@ import {
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 import store from '@/store.js'
-    
+
 export default {
     props: {
         toast: Object,
-        users: Object
+        sedes: Object,
+        entrevistadores: Object
     },
     components: {
         ListItem,
@@ -185,13 +209,33 @@ export default {
     },
     methods: {
 
-        async getList(){
-            const get = `${route('collections.padron.list')}`
+        async getList() {
+
+            let filter = `&length=${this.length}`
+
+            if (this.filter.name) {
+                filter += `&name=${this.filter.name}`
+            }
+            if (this.filter.num_documento) {
+                filter += `&num_documento=${this.filter.num_documento}`
+            }
+            if (this.filter.date) {
+                filter += `&date=${JSON.stringify(this.filter.date)}`
+            }
+            if (this.filter.punto_entrega_id) {
+                filter += `&punto_entrega_id=${this.filter.punto_entrega_id}`
+            }
+
+            if (this.filter.entrevistador_id) {
+                filter += `&entrevistador_id=${this.filter.entrevistador_id}`
+            }
+
+            const get = `${route('collections.padron.list')}?${filter}`
             const response = await fetch(get, { method: "GET" });
             this.list = await response.json();
         },
 
-        clearFilter(){
+        clearFilter() {
             this.filter = {}
             this.getList()
         },
@@ -257,13 +301,11 @@ export default {
 </script>
 
 <style>
-
-.btn-green{
+.btn-green {
     @apply inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3
 }
 
-.badgeStatus{
+.badgeStatus {
     @apply uppercase inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs font-medium rounded-md
-
 }
 </style>

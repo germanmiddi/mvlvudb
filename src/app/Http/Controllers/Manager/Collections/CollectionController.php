@@ -37,14 +37,53 @@ class CollectionController extends Controller
 
     public function padron()
     {
-        return Inertia::render('Manager/Collections/Padron/List');
+        return Inertia::render('Manager/Collections/Padron/List', [
+            'sedes' => PuntoEntrega::all(),
+            'entrevistadores' => User::whereHas('puntosEntrega')->get()
+        ]);
     }
 
     public function padronList()
     {
         $length = 30;
-        
-        return CajasEntrevista::query()
+        $entrevistas = CajasEntrevista::query();
+
+        if (request('name')) {
+            $name = request('name');
+            $entrevistas->whereHas('person', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('lastname', 'LIKE', '%' . $name . '%');
+            });
+        }
+
+        if (request('num_documento')) {
+            $num_documento = request('num_documento');
+            $entrevistas->whereHas('person', function ($query) use ($num_documento) {
+                $query->where('num_documento', $num_documento);
+            });
+        }
+
+        if (request('date')) {
+            $date = json_decode(request('date'));
+
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $entrevistas->where('fecha', '>=', $from)
+                ->where('fecha', '<', $to);
+        }
+
+        if (request('punto_entrega_id')) {
+            $punto_entrega_id = request('punto_entrega_id');
+            $entrevistas->where('puntos_entrega_id', $punto_entrega_id);
+        }
+
+        if (request('entrevistador_id')) {
+            $entrevistador_id = request('entrevistador_id');
+            $entrevistas->where('entrevistador_id', $entrevistador_id);
+        }
+
+        return $entrevistas
             ->where('status_id', 2)
             ->orderBy('fecha', 'DESC')
             ->paginate($length)
@@ -67,12 +106,14 @@ class CollectionController extends Controller
 
     public function entregas()
     {
-        return Inertia::render('Manager/Collections/Entregas/Index', 
-        [
-            'puntosEntrega' => PuntoEntrega::all(),
-            'products' => Product::all(),
-            'users' =>  User::whereHas('puntosEntrega')->get()
-        ]);
+        return Inertia::render(
+            'Manager/Collections/Entregas/Index',
+            [
+                'puntosEntrega' => PuntoEntrega::all(),
+                'products' => Product::all(),
+                'users' => User::whereHas('puntosEntrega')->get()
+            ]
+        );
     }
 
     public function personal()
@@ -108,23 +149,23 @@ class CollectionController extends Controller
 
     public function getCollectionList()
     {
-        
+
         $length = request('length');
 
         $collections = Collection::query();
 
-        if(request('name')){
+        if (request('name')) {
 
             $name = request('name');
             //buscar por nombre o apellido
             $collections->whereHas('person', function ($query) use ($name) {
-                $query->where('name', 'LIKE', '%'.$name.'%')
-                      ->orWhere('lastname', 'LIKE', '%'.$name.'%');
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('lastname', 'LIKE', '%' . $name . '%');
             });
 
         }
         // dd(request('num_documento'));
-        if(request('num_documento')){
+        if (request('num_documento')) {
             $num_documento = request('num_documento');
             // dd($num_documento);
             $collections->whereHas('person', function ($query) use ($num_documento) {
@@ -132,27 +173,27 @@ class CollectionController extends Controller
             });
         }
 
-        if(request('date')){
+        if (request('date')) {
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
-            $collections->where('date','>=', $from)
-                        ->where('date', '<', $to);
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
+            $collections->where('date', '>=', $from)
+                ->where('date', '<', $to);
         }
 
-        if(request('product_id')){
+        if (request('product_id')) {
             $product_id = request('product_id');
             $collections->where('product_id', $product_id);
         }
 
-        if(request('punto_entrega_id')){
+        if (request('punto_entrega_id')) {
             $punto_entrega_id = request('punto_entrega_id');
             $collections->where('punto_entrega_id', $punto_entrega_id);
         }
 
-        if(request('entregado_por')){
+        if (request('entregado_por')) {
             $user_id = request('entregado_por');
             $collections->where('user_id', $user_id);
         }
@@ -174,48 +215,51 @@ class CollectionController extends Controller
 
     public function getPerson($documento)
     {
-        if ($documento) {
-            $person = Person::where('num_documento', $documento)
-                ->with(
-                    'collections',
-                    'address',
-                    'address.localidad',
-                    'address.barrio',
-                    'collections.puntoEntrega',
-                    'collections.product',
-                    'collections.user'
+        $person = Person::where('num_documento', $documento)
+            ->with(
+                'collections',
+                'address',
+                'address.localidad',
+                'address.barrio',
+                'collections.puntoEntrega',
+                'collections.product',
+                'collections.user'
 
-                )
-                ->first();
-            if ($person) {
-                $address = $person->address[0]->calle ? "calle:" . $person->address[0]->calle : '';
-                $address .= $person->address[0]->number ? "num:" . $person->address[0]->number : '';
-                $address .= $person->address[0]->piso ? "piso:" . $person->address[0]->piso : '';
-                $address .= $person->address[0]->dpto ? "dpto:" . $person->address[0]->dpto : '';
-                $address .= $person->address[0]->localidad_id ? "localidad:" . $person->address[0]->localidad_id : '';
-                $address .= $person->address[0]->barrio_id ? "barrio:" . $person->address[0]->barrio_id : '';
-                $address = str_replace(' ', '', $address);
-                
-                // dd($address);
-                $history = Collection::where('address', $address)
-                                    ->where('person_id', '!=', $person->id)
-                                    ->with('puntoEntrega')
-                                    ->with('product')
-                                    ->with('user')
-                                    ->with('person')
-                                    ->orderBy('date', 'desc')
-                                    ->get();
-            }
+            )
+            ->first();
+        if ($person) {
+            $address = $person->address[0]->calle ? "calle:" . $person->address[0]->calle : '';
+            $address .= $person->address[0]->number ? "num:" . $person->address[0]->number : '';
+            $address .= $person->address[0]->piso ? "piso:" . $person->address[0]->piso : '';
+            $address .= $person->address[0]->dpto ? "dpto:" . $person->address[0]->dpto : '';
+            $address .= $person->address[0]->localidad_id ? "localidad:" . $person->address[0]->localidad_id : '';
+            $address .= $person->address[0]->barrio_id ? "barrio:" . $person->address[0]->barrio_id : '';
+            $address = str_replace(' ', '', $address);
+
+            // dd($address);
+            $history = Collection::where('address', $address)
+                ->where('person_id', '!=', $person->id)
+                ->with('puntoEntrega')
+                ->with('product')
+                ->with('user')
+                ->with('person')
+                ->orderBy('date', 'desc')
+                ->get();
+
 
             $fullHistory = array_merge($history->toArray(), $person->collections->toArray());
             //sort by date descending
-            usort($fullHistory, function($a, $b) {
+            usort($fullHistory, function ($a, $b) {
                 return strtotime($b['date']) - strtotime($a['date']);
             });
 
-            return response()->json(['person' => $person, 'history' => $fullHistory]);
+            $response = $fullHistory != []
+                ? ['person' => $person, 'history' => $fullHistory, 'message' => 'Datos Encontrados', 'status' => 200]
+                : ['person' => $person, 'history' => $fullHistory, 'message' => 'No se encontró historial de entregas', 'status' => 204];
+
+            return response()->json($response);
         } else {
-            return response()->json(['message' => 'No se encontró ninguna persona con el documento proporcionado']);
+            return response()->json(['message' => 'No se encontró ninguna persona con el documento proporcionado', 'status' => 404]);
         }
     }
 

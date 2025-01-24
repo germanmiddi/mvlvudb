@@ -81,6 +81,12 @@
 								entrevista.entrevistador.name }}</dd>
 						</div>
 
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Observaciónes</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.observaciones }}</dd>
+						</div>
+
 					</dl>
 				</div>
 
@@ -167,7 +173,7 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Pais de Origen</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
-								entrevista.person.aditional[0].nacionalidad }}</dd>
+								entrevista.person.aditional[0]?.pais?.description }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -176,10 +182,53 @@
 								entrevista.person.aditional[0].situacion_conyugal?.description ?? '' }}</dd>
 						</div>
 
+					</dl>
+				</div>
+			</div>
+		</div>
+		<div class="px-4 mt-6 sm:px-6 lg:px-8">
+			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Redes Socio Vinculares </h3>
+				</div>
+				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+					<dl class="sm:divide-y sm:divide-gray-200">
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Cantidad Hijos</dt>
+							<dt class="text-sm font-medium text-gray-500">Vive Solo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
-								entrevista.person.aditional[0].cant_hijos }}</dd>
+								entrevista.vive_solo ? 'Si' : 'No' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Cantidad Convivientes</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.cant_convivientes }}</dd>
+						</div>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Tiene hijos menores a cargo</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.has_hijos ? 'Si' : 'No' }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Cuantos hijos tiene?</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.cant_hijos }}</dd>
+						</div>
+
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Cuantas personas trabajan en el hogar?</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.cant_personas_trabajando }}</dd>
+						</div>
+
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">¿Algún conviviente tiene alguna discapacidad?
+							</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.conviviente_discapacidad ? 'Si' : 'No' }}</dd>
 						</div>
 					</dl>
 				</div>
@@ -192,55 +241,15 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Vive Solo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.vive_solo }}</dd>
-						</div>
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Cant. Convivientes</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.cant_convivientes
-								}}</dd>
-						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Tipo Tenencia</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.tenencia }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								entrevista.tipo_tenencia?.descripcion }}</dd>
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cant. Ambientes</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ entrevista.ambientes }}</dd>
 						</div>
-						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Pago Inquilino</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.pago_inquilino
-								}}</dd>
-						</div>
-
-						<!-- 
-						<div v-if="nivelEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ nivelEducativo }}</dd>
-						</div>				
-
-						<div v-if="ocupacion !=''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Ocupación</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ocupacion}}</dd>
-						</div>
-
-						<div v-if="coberturaMedica != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Cobertura Médica</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{coberturaMedica}}</dd>
-						</div>
-
-						<div v-if="programaSocial != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Programa Social</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{programaSocial}}</dd>
-						</div>
-
-						<div v-if="tipoPension != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Tipo Pensión</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tipoPension}}</dd>
-						</div>  -->
 					</dl>
 				</div>
 			</div>
@@ -294,7 +303,19 @@
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.ingresos_planes
 								}}</dd>
 						</div>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Recibe Programa Social</dt>
+							<dd v-if="entrevista.person.programa_social && entrevista.person.programa_social.length > 0"
+								class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								<p v-for="(programa, index) in entrevista.person.programa_social" class="pb-2"
+									:key="programa.id || index">
+									{{ programa.description }}
+								</p>
+
+							</dd>
+						</div>
 					</dl>
+
 				</div>
 			</div>
 		</div>
@@ -302,7 +323,7 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
 				<div class="px-4 py-5 sm:px-6">
-					<h3 class="text-lg leading-6 font-medium text-gray-900">Datos Adicionales</h3>
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Situación de Salud</h3>
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
@@ -310,22 +331,25 @@
 							<dt class="text-sm font-medium text-gray-500">Cobertura de Salud</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ coberturaMedica }}</dd>
 						</div>
-
-						<div class="px-4 my-4 sm:px-6 lg:px-8">
-							<dt class="text-sm font-medium text-gray-700 mb-3">Recibe Programa Social</dt>
-							<div v-if="entrevista.person.programa_social && entrevista.person.programa_social.length > 0"
-								class="space-y-2 pl-2">
-								<div v-for="(programa, index) in entrevista.person.programa_social"
-									:key="programa.id || index"
-									class="flex items-center bg-green-50 text-green-800 rounded-lg shadow px-2 py-3">
-									<span class="text-xs font-semibold">{{ programa.description }}</span>
-								</div>
-							</div>
-							<div v-else class="text-sm text-gray-500 italic">
-								No hay programas sociales registrados.
-							</div>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Recibe tratamiento médico</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								entrevista.tratamiento_medico ? `Si - ${entrevista.tratamiento_medico}` : 'No' }}</dd>
+						</div>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Recibe tratamiento médico</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								entrevista.medicacion ? `Si - ${entrevista.medicacion}` : 'No' }}</dd>
+						</div>
+						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Tiene discapacidad:</dt>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								discapacidad }}</dd>
 						</div>
 					</dl>
+
+
+
 				</div>
 			</div>
 		</div>
@@ -522,7 +546,16 @@ export default {
 				case 3: return 'RECHAZADA';
 				default: return '';
 			}
+		},
+		discapacidad: function () {
+
+			if (this.entrevista.discapacidad) {
+				return `Si - Diagnostico: ${this.entrevista.person.cud?.diagnostico ?? ''} - CUD:
+								${this.entrevista.person.cud?.codigo ?? ''}`
+			}
+			return 'No'
 		}
+
 	},
 }
 </script>

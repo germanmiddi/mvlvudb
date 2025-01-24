@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 class CajasEntrevista extends Model
 {
-   
+
     protected $table = 'cajas_entrevistas';
 
     protected $fillable = [
@@ -33,7 +33,13 @@ class CajasEntrevista extends Model
         'tratamiento_medico',
         'medicacion',
         'discapacidad',
-        'ingresos_planes'
+        'ingresos_planes',
+        'habitacional_tipo_tenencia_id',
+        'has_hijos',
+        'cant_hijos',
+        'cant_personas_trabajando',
+        'conviviente_discapacidad',
+        'observaciones'
     ];
 
     protected $with = [
@@ -43,12 +49,17 @@ class CajasEntrevista extends Model
         'status',
         'statusUpdatedBy',
         'createdBy',
+        'tipoTenencia'
     ];
 
     protected $casts = [
         'vive_solo' => 'boolean',
         'tiene_pami' => 'boolean',
         'tiene_obra_social' => 'boolean',
+        'has_hijos' => 'boolean',
+        'conviviente_discapacidad' => 'boolean',
+        'discapacidad' => 'boolean',
+
     ];
 
     public function person()
@@ -81,4 +92,8 @@ class CajasEntrevista extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function tipoTenencia()
+    {
+        return $this->belongsTo(TipoTenencia::class, 'habitacional_tipo_tenencia_id');
+    }
 }

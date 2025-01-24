@@ -68,7 +68,7 @@
 
 							<div class="col-span-12 sm:col-span-4">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.sede_id" id="sede_id" name="sede_id" autocomplete="off"
+								<select v-model="form.sede_id" id="sede_id" name="sede_id"
 									:class="v$.form.sede_id.$error ? 'border-red-500' : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
@@ -98,6 +98,18 @@
 
 
 						</div>
+						<div class="col-span-12 sm:col-span-9">
+							<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
+							</label>
+							<div class="mt-1">
+								<textarea v-model="form.observaciones" id="observacion" name="observacion" rows="3"
+									class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
+							</div>
+							<p class="mt-2 text-sm text-gray-500">
+								Ingrese información adicional de la entrevista.
+							</p>
+						</div>
+
 					</div>
 				</div>
 
@@ -153,8 +165,7 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
-									ref="inputName"
+								<input v-model="form.name" type="text" name="name" id="name" ref="inputName"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable" />
@@ -165,7 +176,6 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
 								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
-									autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable" />
@@ -191,20 +201,20 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
+								<input v-model="form.email" type="text" name="email" id="email"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"
+								<input v-model="form.phone" type="text" name="phone" id="phone"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
+								<input v-model="form.celular" type="text" name="cellphone" id="cellphone"
 									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -224,8 +234,7 @@
 								<label for="localidad_id"
 									class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
-									autocomplete="localidad_id-name" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una localidad</option>
 									<option v-for="localidad in localidades" :key="localidad.id" :value="localidad.id">
@@ -237,7 +246,6 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
 								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
-									autocomplete="barrio_id-name"
 									:disabled="barriosComputed.length === 0 || input_disable"
 									:class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -255,29 +263,27 @@
 							<div class="col-span-12 sm:col-span-4 ">
 								<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
 								<input v-model="form.calle" type="text" name="calle" id="calle"
-									autocomplete="calle-level2" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2 ">
 								<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
 								<input v-model="form.number" type="text" name="number" id="number"
-									autocomplete="number-level2" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-2 ">
 								<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.piso" type="text" name="piso" id="piso" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2 ">
 								<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.dpto" type="text" name="dpto" id="dpto" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
@@ -335,7 +341,7 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de
 									Origen</label>
 								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"
@@ -348,7 +354,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="situacion_conyugal_id"
 									class="block text-sm font-medium text-gray-700">Situación Conyugal</label>
 								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
@@ -363,14 +369,14 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-4 ">
+							<!-- <div class="col-span-12 sm:col-span-4 ">
 								<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad
 									Hijos</label>
 								<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos"
 									autocomplete="address-level2" :disabled="input_disable"
 									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
+							</div> -->
 
 						</div>
 
@@ -382,18 +388,23 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Habitacional</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Redes Socio Vinculares</h3>
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="vive_solo" class="block text-sm font-medium text-gray-700">Vive Solo</label>
-								<input v-model="form.vive_solo" type="text" name="vive_solo" id="vive_solo"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+								<select v-model="form.vive_solo" id="vive_solo" name="vive_solo"
+									autocomplete="vive_solo-name" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
 							</div>
 
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="cant_convivientes" class="block text-sm font-medium text-gray-700">Cant.
 									Convivientes</label>
 								<input v-model="form.cant_convivientes" type="number" name="cant_convivientes"
@@ -404,7 +415,64 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
+								<label for="vive_solo" class="block text-sm font-medium text-gray-700">Tiene hijos
+									menores a cargo:</label>
+								<select v-model="form.has_hijos" id="has_hijos" name="has_hijos"
+									autocomplete="has_hijos" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="ambientes" class="block text-sm font-medium text-gray-700">Cuantos hijos
+									tiene?</label>
+								<input v-model="form.cant_hijos" type="number" name="cant_hijos" id="cant_hijos"
+									autocomplete="ambientes-level2" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+						</div>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-4">
+								<label for="ambientes" class="block text-sm font-medium text-gray-700">Cuantas
+									personas trabajan en el hogar?</label>
+								<input v-model="form.cant_trabajadores" type="number" name="cant_trabajadores"
+									id="cant_trabajadores" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="vive_solo" class="block text-sm font-medium text-gray-700">¿Algún
+									conviviente tiene alguna discapacidad?</label>
+								<select v-model="form.has_discapacidad_conviviente" id="has_discapacidad_conviviente"
+									name="has_discapacidad_conviviente" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+						<div>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Situación Habitacional</h3>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="tenencia" class="block text-sm font-medium text-gray-700 ">Tipo
 									tenencia</label>
 
@@ -414,27 +482,20 @@
 										:class="input_disable ? bg_disable : ''"
 										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 										<option disabled value="">Selecciones una tenencia</option>
-										<option value="propia">Propia</option>
-										<option value="alquilada">Alquilada</option>
-										<option value="cedida">Cedida</option>
+										<option v-for="tipo in tipoTenencia" :key="tipo.id" :value="tipo.id"
+											:bind:select="tipo.id == form.tenencia">{{
+												tipo.descripcion
+											}}</option>
 									</select>
 								</div>
 
 							</div>
 
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="ambientes" class="block text-sm font-medium text-gray-700">Cant.
 									ambientes</label>
 								<input v-model="form.ambientes" type="number" name="ambientes" id="ambientes"
 									autocomplete="ambientes-level2" :disabled="input_disable"
-									:class="input_disable ? bg_disable : ''"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="pago_inquilino" class="block text-sm font-medium text-gray-700">Es
-									Inquilino: Cuanto paga?</label>
-								<input v-model="form.pago_inquilino" type="number" name="pago_inquilino"
-									id="pago_inquilino" autocomplete="pago_inquilino-level2" :disabled="input_disable"
 									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -449,7 +510,7 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo en curso</label>
 								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id"
@@ -464,7 +525,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo alcanzado</label>
 								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
@@ -492,7 +553,7 @@
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="tipo_ocupacion_id"
 									class="block text-sm font-medium text-gray-700">Ocupación</label>
 								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
@@ -507,7 +568,7 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ingresos
 								</label>
 								<input v-model="form.ingresos_trabajo" id="ingresos_trabajo" name="ingresos_trabajo"
@@ -517,9 +578,7 @@
 
 						</div>
 						<div class="grid grid-cols-12 gap-6">
-
-
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
 									Jubilación / Pensión</label>
 								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
@@ -533,12 +592,55 @@
 										}}</option>
 								</select>
 							</div>
-							<div class="col-span-12 sm:col-span-3">
+							<div class="col-span-12 sm:col-span-4">
 								<label for="tipo_ocupacion_id" class="block text-sm font-medium text-gray-700">Ingresos
 								</label>
 								<input v-model="form.ingresos_planes" id="ingresos_planes" name="ingresos_planes"
 									type="number" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+							</div>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-8">
+								<div class="flex items-center justify-between">
+									<label for="name" class="block text-sm font-medium text-gray-700">Programa
+										Social</label>
+									<a class="ml-2 flex items-center space-x-2 bg-blue-500 rounded-md py-1 px-2 hover:bg-blue-800 hover:cursor-pointer"
+										@click="addPrograma">
+										<PlusIcon class="h-5 w-5 text-white" />
+										<span class="text-xs text-white text-bold">AGREGAR</span>
+									</a>
+								</div>
+								<div>
+									<select v-model="programaSelect" id="label_id" name="label_id" autocomplete="off"
+										:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+										<option disabled value="">
+											Seleccione un programa
+										</option>
+										<option v-for="programa in programasSocial" :key="programa.id"
+											:value="programa">
+											{{ programa.description }}
+										</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div v-if="programasSelected.length > 0" class="grid grid-cols-12 gap-6 mt-4">
+							<div class="col-span-12 sm:col-span-8">
+								<label for="message" class="block text-base  font-semibold leading-6 text-gray-900">
+									Programas seleccionados</label>
+								<ul class="w-full bg-gray-50 rounded-sm mt-4">
+									<li v-for="(programa, index) in this.programasSelected" :key="index"
+										class="w-full inline-flex items-center justify-between px-6 py-4 text-base font-medium text-gray-600 mr-2 border-b border-gray-300">
+										{{ programa.description }}
+										<TrashIcon @click="removePrograma(programa.id)"
+											class="h-5 w-5 text-red-500 ml-2 cursor-pointer hover:text-red-700" />
+									</li>
+
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -547,7 +649,7 @@
 				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 						<div>
-							<h3 class="text-lg leading-6 font-medium text-gray-900">Datos Adicionales</h3>
+							<h3 class="text-lg leading-6 font-medium text-gray-900">Situación de Salud</h3>
 						</div>
 
 						<div class="grid grid-cols-12 gap-6">
@@ -583,7 +685,7 @@
 								</select>
 							</div> -->
 
-							<div class="col-span-12 sm:col-span-4">
+							<!-- <div class="col-span-12 sm:col-span-4">
 								<div class="flex items-center justify-between">
 									<label for="name" class="block text-sm font-medium text-gray-700">Programa
 										Social</label>
@@ -615,8 +717,86 @@
 									{{ programa.description }}
 									<TrashIcon @click="removePrograma(programa.id)" class="h-5 w-5 text-red-700 ml-2" />
 								</span>
+							</div> -->
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="vive_solo" class="block text-sm font-medium text-gray-700">Recibe
+									tratamiento médico</label>
+								<select v-model="form.recibe_tratamiento_medico" id="recibe_tratamiento_medico"
+									name="recibe_tratamiento_medico" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="ambientes" class="block text-sm font-medium text-gray-700">Cual?</label>
+								<input v-model="form.tratamiento_medico" type="text" name="tratamiento_medico"
+									id="tratamiento_medico" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 						</div>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="vive_solo" class="block text-sm font-medium text-gray-700">Recibe
+									medicación</label>
+								<select v-model="form.recibe_medicacion" id="recibe_medicacion" name="recibe_medicacion"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
+							</div>
+
+							<div class="col-span-12 sm:col-span-4">
+								<label for="ambientes" class="block text-sm font-medium text-gray-700">Cual?</label>
+								<input v-model="form.medicacion" type="text" name="medicacion" id="medicacion"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-3">
+								<label for="vive_solo" class="block text-sm font-medium text-gray-700">Tiene
+									discapacidad:</label>
+								<select v-model="form.has_discapacidad" id="has_discapacidad" name="has_discapacidad"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+									<option disabled value="">Selecciones una opción</option>
+									<option value="true">Si</option>
+									<option value="false">No</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="grid grid-cols-12 gap-6">
+
+							<div class="col-span-12 sm:col-span-3 ">
+								<label for="cud" class="block text-sm font-medium text-gray-700">Nro CUD</label>
+								<input v-model="form.cud" type="text" name="cud" id="cud" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+							<div class="col-span-12 sm:col-span-4 ">
+								<label for="diagnostico"
+									class="block text-sm font-medium text-gray-700">Diagnóstico</label>
+								<input v-model="form.diagnostico" type="text" name="diagnostico" id="diagnostico"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
+
+
+						</div>
+
 					</div>
 				</div>
 
@@ -624,12 +804,6 @@
 		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
-			<!-- <button
-				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
-				@click="submit" :disabled="btnGuardar || input_disable">
-				Guardar
-			</button> -->
 
 			<button
 				class="hover:cursor-pointer order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
@@ -677,7 +851,8 @@ export default {
 		tiposTramite: Object,
 		programasSocial: Object,
 		puntosEntrega: Object,
-		entrevistadores: Object
+		entrevistadores: Object,
+		tipoTenencia: Object
 	},
 	components: {
 		ArrowLeftCircleIcon,
@@ -775,6 +950,7 @@ export default {
 			if (!result) {
 				return
 			}
+
 			this.btnGuardar = true
 			this.loading = true
 			let rt = route('collections.entrevistas.store');
@@ -811,9 +987,9 @@ export default {
 
 					this.loading = false
 
-					// setTimeout(() => {
-					// 	window.location.href = '/collections/entrevistas';
-					// }, 2500)
+					setTimeout(() => {
+						window.location.href = '/collections/entrevistas';
+					}, 2500)
 
 				} else {
 					this.labelType = "danger";
@@ -854,6 +1030,8 @@ export default {
 			this.form_temp.num_documento = this.form.num_documento;
 			this.form_temp.tipo_documento_id = this.form.tipo_documento_id;
 			this.form_temp.fecha = this.form.fecha;
+			this.form_temp.observaciones = this.form.observaciones;
+
 
 			this.form_temp.entrevistador_id = this.form.entrevistador_id
 			this.form_temp.sede_id = this.form.sede_id

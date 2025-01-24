@@ -38,7 +38,8 @@ use App\Models\Manager\CajasEntrevistasStatus;
 use App\Models\Manager\PuntoEntrega;
 use App\Models\User;
 use App\Models\Manager\EducationData;
-
+use App\Models\Manager\TipoTenencia;
+use App\Models\Manager\Cud;
 class EntrevistasController extends Controller
 {
     public function index()
@@ -71,7 +72,8 @@ class EntrevistasController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 5)->active()->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
                 'puntosEntrega' => PuntoEntrega::all(),
-                'entrevistadores' => User::whereHas('puntosEntrega')->get()
+                'entrevistadores' => User::whereHas('puntosEntrega')->get(),
+                'tipoTenencia' => TipoTenencia::all()
             ]
         );
     }
@@ -151,8 +153,10 @@ class EntrevistasController extends Controller
                 ]
             );
 
-            $selectedPrograms = explode(',', $request['selected_programs']);
-            $person->programaSocial()->sync($selectedPrograms);
+            if (!empty($request['selected_programs'])) {
+                $selectedPrograms = explode(',', $request['selected_programs']);
+                $person->programaSocial()->sync($selectedPrograms);
+            }
 
             EducationData::updateOrCreate(
                 [
@@ -164,8 +168,21 @@ class EntrevistasController extends Controller
                 ]
             );
 
+            if ($request['cud']) {
+                Cud::updateOrCreate(
+                    [
+                        'person_id' => $person->id
+                    ],
+                    [
+                        'codigo' => $request['cud'],
+                        'diagnostico' => $request['diagnostico']
+                    ]
+                );
+            }
+
             $status_pendiente = CajasEntrevistasStatus::where('nombre', 'PENDIENTE')->first()->id;
 
+            $observaciones = $request['observaciones'] ? $request['observaciones'] : null;
             $entrevista = CajasEntrevista::updateOrCreate(
                 ['person_id' => $person->id],
                 [
@@ -175,16 +192,26 @@ class EntrevistasController extends Controller
                     'status_id' => $status_pendiente,
                     'created_by' => Auth::user()->id,
 
-                    'vive_solo' => $request['vive_solo'],
+                    'vive_solo' => filter_var($request['vive_solo'], FILTER_VALIDATE_BOOLEAN),
                     'cant_convivientes' => $request['cant_convivientes'],
+                    'has_hijos' => filter_var($request['has_hijos'], FILTER_VALIDATE_BOOLEAN),
+                    'cant_hijos' => $request['cant_hijos'],
+                    'cant_personas_trabajando' => $request['cant_trabajadores'],
                     'tenencia' => $request['tenencia'],
                     'pago_inquilino' => $request['pago_inquilino'],
-                    'ambientes' => $request['ambientes'],
                     'ingresos_trabajo' => $request['ingresos_trabajo'],
                     'ingresos_planes' => $request['ingresos_planes'],
-                    // 'tratamiento_medico' => $request['tratamiento_medico'],
-                    // 'medicacion' => $request['medicacion'],
-                    // 'discapacidad' => $request['discapacidad']
+
+                    'habitacional_tipo_tenencia_id' => $request['tenencia'],
+                    'ambientes' => $request['ambientes'],
+                    'discapacidad' => filter_var($request['has_discapacidad'], FILTER_VALIDATE_BOOLEAN),
+
+                    'medicacion' => $request['medicacion'],
+                    'tratamiento_medico' => $request['tratamiento_medico'],
+                    'observaciones' => $observaciones,
+                    'conviviente_discapacidad' => filter_var($request['has_discapacidad_conviviente'], FILTER_VALIDATE_BOOLEAN),
+
+
                 ]
             );
 
@@ -283,6 +310,7 @@ class EntrevistasController extends Controller
                     ->with('person.social')
                     ->with('person.education')
                     ->with('person.programaSocial')
+                    ->with('person.cud')
                     ->first()
             ]
         );

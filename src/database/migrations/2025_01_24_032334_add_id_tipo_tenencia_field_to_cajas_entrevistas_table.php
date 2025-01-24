@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->integer('cant_personas_trabajando')->nullable();
             $table->boolean('conviviente_discapacidad')->nullable();
 
-            $table->text('observaciones')->nullable()->change();
+            $table->text('observaciones')->nullable();
 
             $table->foreign('habitacional_tipo_tenencia_id')
                 ->references('id')

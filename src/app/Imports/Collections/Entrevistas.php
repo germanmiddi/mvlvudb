@@ -125,7 +125,7 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
                     'person_id' => $person->id
                 ],
                 [
-                    'cant_hijos' => $data['cant_hijos'],
+                    // 'cant_hijos' => $data['cant_hijos'],
                     'situacion_conyugal_id' => $data['situacion_conyugal_id'],
                     'nacionalidad' => $data['pais_id'],
                 ]
@@ -191,6 +191,7 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
                     'tenencia' => $data['tenencia'],
                     'pago_inquilino' => $data['pago_inquilino'],
                     'ambientes' => $data['ambientes'],
+                    'cant_hijos' => $data['cant_hijos'],
                 ]
             );
 

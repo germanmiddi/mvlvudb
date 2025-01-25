@@ -78,18 +78,21 @@
 										{{ canalAtencion.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+								<span v-if="v$.form.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="modalidad_atencion" class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
-								<select v-model="form.modalidad_atencion_id" id="modalidad_atencion" name="modalidad_atencion"
+								<label for="modalidad_atencion"
+									class="block text-sm font-medium text-gray-700">Modalidad de Atención</label>
+								<select v-model="form.modalidad_atencion_id" id="modalidad_atencion"
+									name="modalidad_atencion"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Selecciones una modalidad de atención
 									</option>
-									<option class="capitalize" v-for="modatencion in modalidadesAtencion" :key="modatencion.id"
-										:value="modatencion.id">
+									<option class="capitalize" v-for="modatencion in modalidadesAtencion"
+										:key="modatencion.id" :value="modatencion.id">
 										{{ modatencion.description }}
 									</option>
 								</select>
@@ -102,15 +105,15 @@
 									<option value="" disabled>
 										Selecciones una categoría
 									</option>
-									<option class="capitalize" v-for="cat in categories" :key="cat.id"
-										:value="cat.id">
+									<option class="capitalize" v-for="cat in categories" :key="cat.id" :value="cat.id">
 										{{ cat.nombre }}
 									</option>
 								</select>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Ingreso Nuevo</label>
+								<label for="aut_firmada" class="block text-sm font-medium text-gray-700">Ingreso
+									Nuevo</label>
 								<select v-model="form.ingreso_nuevo" id="ingreso_nuevo" name="ingreso_nuevo"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -120,7 +123,8 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="boton_antipanico" class="block text-sm font-medium text-gray-700">Boton Antipanico</label>
+								<label for="boton_antipanico" class="block text-sm font-medium text-gray-700">Boton
+									Antipanico</label>
 								<select v-model="form.boton_antipanico" id="boton_antipanico" name="boton_antipanico"
 									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -222,7 +226,7 @@
 								</h3>
 							</div>
 							<div class="flex-shrink-0">
-								<button type="button" @click="addBeneficiario()"  v-show="!input_disable"
+								<button type="button" @click="addBeneficiario()" v-show="!input_disable"
 									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
 									:class="showBenef
 										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
@@ -238,7 +242,9 @@
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
 								<select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off" :class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable"
+									autocomplete="off"
+									:class="v$.form.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione un tipo de documento
@@ -256,9 +262,10 @@
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
 								<div class="relative">
-									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()" :class="v$.form.num_documento.$error ? 'border-red-500' : ''"
+									<input type="text" v-model="form.num_documento" @keyup.enter="getPerson()"
+										:class="v$.form.num_documento.$error ? 'border-red-500' : ''"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-									<a @click="getPerson()" 
+									<a @click="getPerson()"
 										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
 										Verificar
 									</a>
@@ -272,16 +279,19 @@
 								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
 								<input v-model="form.name" type="text" name="name" id="name" autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable"/>
+									:class="v$.form.name.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable" />
 								<span v-if="v$.form.name.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
+								<input v-model="form.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''" :disabled="input_disable"/>
+									:class="v$.form.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
+									:disabled="input_disable" />
 								<span v-if="v$.form.lastname.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
@@ -294,7 +304,8 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									:style="v$.form.fecha_nac.$error ? datepickerStyle : ''" v-model="form.fecha_nac"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 								<span v-if="v$.form.fecha_nac.$error" class="text-red-500 text-xs">Campo
@@ -303,18 +314,21 @@
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.email" type="text" name="email" id="email" autocomplete="email"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.phone" type="text" name="phone" id="phone" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.celular" type="text" name="celular" id="phone" autocomplete="off"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 						</div>
@@ -324,12 +338,14 @@
 								<label for="tipo_documento_id"
 									class="block text-sm font-medium text-gray-700">Parentesco</label>
 								<select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
-									autocomplete="parentesco_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									autocomplete="parentesco_id-name" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione un tipo de documento
 									</option>
-									<option v-for="parentesco in parentescos" :key="parentesco.id" :value="parentesco.id">
+									<option v-for="parentesco in parentescos" :key="parentesco.id"
+										:value="parentesco.id">
 										{{ parentesco.description }}
 									</option>
 								</select>
@@ -351,9 +367,11 @@
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="localidad_id" class="block text-sm font-medium text-gray-700">Localidad</label>
+								<label for="localidad_id"
+									class="block text-sm font-medium text-gray-700">Localidad</label>
 								<select v-model="form.localidad_id" id="localidad_id" name="localidad_id"
-									autocomplete="localidad_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									autocomplete="localidad_id-name" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione una localidad
@@ -365,15 +383,15 @@
 							</div>
 							<div class="col-span-12 sm:col-span-3">
 								<label for="barrio_id" class="block text-sm font-medium text-gray-700">Barrio</label>
-								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id" autocomplete="barrio_id-name" 
-							        :disabled="barriosComputed.length === 0 || input_disable"
-							        :class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"		
-							        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+								<select v-model="form.barrio_id" id="barrio_id" name="barrio_id"
+									autocomplete="barrio_id-name"
+									:disabled="barriosComputed.length === 0 || input_disable"
+									:class="barriosComputed.length === 0 || input_disable ? bg_disable : ''"
+									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione un barrio</option>
-									<option v-for="barrio in barriosComputed" :key="barrio.id"
-										:value="barrio.id">{{
-												barrio.description
-										}}</option>
+									<option v-for="barrio in barriosComputed" :key="barrio.id" :value="barrio.id">{{
+										barrio.description
+									}}</option>
 								</select>
 							</div>
 						</div>
@@ -381,25 +399,30 @@
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-4">
 								<label for="calle" class="block text-sm font-medium text-gray-700">Calle</label>
-								<input v-model="form.calle" type="text" name="calle" id="calle" autocomplete="calle-level2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.calle" type="text" name="calle" id="calle"
+									autocomplete="calle-level2" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2">
 								<label for="number" class="block text-sm font-medium text-gray-700">Número</label>
 								<input v-model="form.number" type="text" name="number" id="number"
-									autocomplete="number-level2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									autocomplete="number-level2" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 							<div class="col-span-12 sm:col-span-2">
 								<label for="piso" class="block text-sm font-medium text-gray-700">Piso</label>
-								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.piso" type="text" name="piso" id="piso" autocomplete="piso-level2"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-2">
 								<label for="dpto" class="block text-sm font-medium text-gray-700">Departamento</label>
-								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.dpto" type="text" name="dpto" id="dpto" autocomplete="dptolevel2"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 						</div>
@@ -408,7 +431,8 @@
 								<label for="google_address" class="block text-sm font-medium text-gray-700">Dirección
 									Google</label>
 								<!-- <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" /> -->
-								<vue-google-autocomplete ref="address" id="map" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<vue-google-autocomplete ref="address" id="map" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									classname="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									placeholder="Ingrese la dirección" v-on:placechanged="getAddressData">
 								</vue-google-autocomplete>
@@ -436,7 +460,8 @@
 								{{ this.form.google_address }}
 							</p>
 							<div class="col-span-12 sm:col-span-12">
-								<GoogleMap v-if="this.showMap" :form_map="form_google" @coordenadas_google="coord_google">
+								<GoogleMap v-if="this.showMap" :form_map="form_google"
+									@coordenadas_google="coord_google">
 								</GoogleMap>
 							</div>
 						</div>
@@ -453,8 +478,10 @@
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de Origen</label>
-								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<label for="pais_id" class="block text-sm font-medium text-gray-700">Pais de
+									Origen</label>
+								<select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="pais_id-name"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un pais
@@ -466,10 +493,12 @@
 								</select>
 							</div>
 							<div class="col-span-12 sm:col-span-3">
-								<label for="situacion_conyugal_id" class="block text-sm font-medium text-gray-700">Situación
+								<label for="situacion_conyugal_id"
+									class="block text-sm font-medium text-gray-700">Situación
 									Conyugal</label>
 								<select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
-									name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="situacion_conyugal_id" autocomplete="situacion_conyugal_id-name"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones una situacion conyugal
@@ -485,7 +514,8 @@
 							<div class="col-span-12 sm:col-span-4">
 								<label for="cant_hijos" class="block text-sm font-medium text-gray-700">Cantidad
 									Hijos</label>
-								<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.cant_hijos" type="text" name="cant_hijos" id="cant_hijos"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									autocomplete="address-level2"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -507,8 +537,9 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo en curso</label>
-								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									autocomplete="nivel_educativo_id-name"
+								<select v-model="form.nivel_educativo_id" id="nivel_educativo_id"
+									name="nivel_educativo_id" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''" autocomplete="nivel_educativo_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un nivel educativo
@@ -525,7 +556,8 @@
 								<label for="estado_educativo_id" class="block text-sm font-medium text-gray-700">Nivel
 									educativo alcanzado</label>
 								<select v-model="form.estado_educativo_id" id="estado_educativo_id"
-									name="estado_educativo_id" autocomplete="estado_educativo_id-name"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="estado_educativo_id" autocomplete="estado_educativo_id-name"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un estado educativo
@@ -554,7 +586,8 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_ocupacion_id"
 									class="block text-sm font-medium text-gray-700">Ocupación</label>
-								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									autocomplete="tipo_ocupacion_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
@@ -571,7 +604,8 @@
 							<div class="col-span-12 sm:col-span-3">
 								<label for="tipo_pension_id" class="block text-sm font-medium text-gray-700">Percibe
 									Jubilación / Pensión</label>
-								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"  :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<select v-model="form.tipo_pension_id" id="tipo_pension_id" name="tipo_pension_id"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									autocomplete="tipo_pension_id-name"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
@@ -599,10 +633,12 @@
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-3">
-								<label for="cobertura_medica_id" class="block text-sm font-medium text-gray-700">Cobertura
+								<label for="cobertura_medica_id"
+									class="block text-sm font-medium text-gray-700">Cobertura
 									de Salud</label>
 								<select v-model="form.cobertura_medica_id" id="cobertura_medica_id"
-									name="cobertura_medica_id" autocomplete="cobertura_medica_id-name" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
+									name="cobertura_medica_id" autocomplete="cobertura_medica_id-name"
+									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option disabled value="">
 										Selecciones un tipo de cobertura medica
@@ -616,50 +652,48 @@
 								</select>
 							</div>
 
-							<!-- <div class="col-span-12 sm:col-span-3">
-								<label for="programa_social_id" class="block text-sm font-medium text-gray-700">Recibe
-									Programa Social</label>
-								<select v-model="form.programa_social_id" id="programa_social_id" name="programa_social_id"
-									autocomplete="programa_social_id-name" :disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="">
-										Selecciones un programa social
-									</option>
-									<option v-for="programaSocial in programasSocial" :key="programaSocial.id"
-										:value="programaSocial.id" :bind:select="programaSocial.id ==
-											form.programa_social_id
-											">
-										{{ programaSocial.description }}
-									</option>
-								</select>
-							</div> -->
-
-							<div class="col-span-12 sm:col-span-3">
-								<div class="flex items-center">
-									<label for="name" class="block text-sm font-medium text-gray-700">Recibe
-									Programa Social</label>
-									<a class="ml-2 items-center" @click="addPrograma"><Icons name="plus-circle" class="h-5 w-5 text-green-500 hover:text-green-700"/></a>
+						</div>
+						<div class="grid grid-cols-12 gap-6">
+							<div class="col-span-12 sm:col-span-8">
+								<div class="flex items-center justify-between">
+									<label for="name" class="block text-sm font-medium text-gray-700">Programa
+										Social</label>
+									<a class="ml-2 flex items-center space-x-2 bg-blue-500 rounded-md py-1 px-2 hover:bg-blue-800 hover:cursor-pointer"
+										@click="addPrograma">
+										<PlusIcon class="h-5 w-5 text-white" />
+										<span class="text-xs text-white text-bold">AGREGAR</span>
+									</a>
 								</div>
 								<div>
-									<select  v-model="programaSelect" id="label_id" name="label_id" autocomplete="off"
+									<select v-model="programaSelect" id="label_id" name="label_id" autocomplete="off"
+										:disabled="input_disable" :class="input_disable ? bg_disable : ''"
 										class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-										<option value="" disabled>
-										Seleccione un programa
+										<option disabled value="">
+											Seleccione un programa
 										</option>
-										<option v-for="programa in programasSocial" :key="programa.id" :value="programa">
-										{{ programa.description }}
+										<option v-for="programa in programasSocial" :key="programa.id"
+											:value="programa">
+											{{ programa.description }}
 										</option>
 									</select>
 								</div>
 							</div>
-							<div class="col-span-12 sm:col-span-6">
-								<label for="message" class="block text-sm font-semibold leading-6 text-gray-900 mb-2">Programas seleccionados</label>
-								<span  v-for="(programa, index) in this.programasSelected" :key="index" 
-									class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 mr-2 mb-2">
-									{{programa.description}} <Icons name="trash" @click="removePrograma(programa.id)" class="h-5 w-5 text-red-700 ml-2"></Icons>
-								</span>
-							</div>
+						</div>
 
+						<div v-if="programasSelected.length > 0" class="grid grid-cols-12 gap-6 mt-4">
+							<div class="col-span-12 sm:col-span-8">
+								<label for="message" class="block text-base  font-semibold leading-6 text-gray-900">
+									Programas seleccionados</label>
+								<ul class="w-full bg-gray-50 rounded-sm mt-4">
+									<li v-for="(programa, index) in this.programasSelected" :key="index"
+										class="w-full inline-flex items-center justify-between px-6 py-4 text-base font-medium text-gray-600 mr-2 border-b border-gray-300">
+										{{ programa.description }}
+										<TrashIcon @click="removePrograma(programa.id)"
+											class="h-5 w-5 text-red-500 ml-2 cursor-pointer hover:text-red-700" />
+									</li>
+
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -676,22 +710,25 @@
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-8">
-								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+								<label for="descripcion"
+									class="block text-sm font-medium text-gray-700">Descripción</label>
 								<div class="flex">
-									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
-										autocomplete="off"
+									<input v-model="form.description_file" type="text" name="descripcion"
+										id="descripcion" autocomplete="off"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
-										autocomplete="off"
+									<input @change="handleFileChange"
+										accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file"
+										name="file" id="file" ref="inputfile" autocomplete="off"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
-										<div class="flex-shrink-0">
-											<button @click="addFile()" type="button"
+									<div class="flex-shrink-0">
+										<button @click="addFile()" type="button"
 											class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
 											Agregar Archivo
 										</button>
 									</div>
 								</div>
-								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen, office o PDF.</p>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione
+									un archivo de imagen, office o PDF.</p>
 							</div>
 							<div class="col-span-12 sm:col-span-12">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6 sm:col-span-12">
@@ -737,12 +774,12 @@
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
 			<button
 				class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'" @click="submit"
-				:disabled="btnGuardar || input_disable">
+				:class="btnGuardar ? 'bg-gray-600 hover:bg-gray-700' : 'bg-green-600 hover:bg-green-700'"
+				@click="submit" :disabled="btnGuardar || input_disable">
 				Guardar
 			</button>
 		</div>
-		<ViewFile :file="fileView"  :show="openModal" @closeModal="closeModal" />
+		<ViewFile :file="fileView" :show="openModal" @closeModal="closeModal" />
 	</main>
 </template>
 
@@ -836,7 +873,7 @@ export default {
 			fileInvalid: false,
 
 			programaSelect: '',
-          	programasSelected: [],
+			programasSelected: [],
 		};
 	},
 	validations() {
@@ -869,31 +906,30 @@ export default {
 	},
 	methods: {
 		// Programas Sociales
-        addPrograma(){
-            let existe_programa = this.programasSelected.find( programa => programa.id === this.programaSelect.id );
-            if(this.programaSelect === ''){
-                this.programaType = "info";
-                this.toastMessage = "Debe ingresar un Programa";
-            }else{
-                if(!existe_programa)
-                {
-                    this.programasSelected.push(this.programaSelect);
-                }else{
-                    this.labelType = "info";
-                    this.toastMessage = "El Programa ya se encuentra asignada";
-                }
-            }
-            this.programaSelect = '';
-        },
-        removePrograma(id){
-            const index = this.programasSelected.findIndex(item => item.id === id);
-            this.programasSelected.splice(index, 1);
-            this.labelType = "success";
-            this.toastMessage = "Se ha eliminado correctamente el Programa";
-        },
+		addPrograma() {
+			let existe_programa = this.programasSelected.find(programa => programa.id === this.programaSelect.id);
+			if (this.programaSelect === '') {
+				this.programaType = "info";
+				this.toastMessage = "Debe ingresar un Programa";
+			} else {
+				if (!existe_programa) {
+					this.programasSelected.push(this.programaSelect);
+				} else {
+					this.labelType = "info";
+					this.toastMessage = "El Programa ya se encuentra asignada";
+				}
+			}
+			this.programaSelect = '';
+		},
+		removePrograma(id) {
+			const index = this.programasSelected.findIndex(item => item.id === id);
+			this.programasSelected.splice(index, 1);
+			this.labelType = "success";
+			this.toastMessage = "Se ha eliminado correctamente el Programa";
+		},
 		closeModal() {
-            this.openModal = false
-        },
+			this.openModal = false
+		},
 		viewFile(data) {
 			this.fileView = data
 			this.openModal = true
@@ -910,6 +946,9 @@ export default {
 			let rt = route("genero.store");
 
 			const formData = new FormData();
+
+			this.form.selected_programs = [];
+			this.form.selected_programs = this.programasSelected.map((item) => item.id);
 
 			Object.entries(this.tramites).forEach(([clave, valor]) => {
 				formData.append("tramites_id[]", valor.id);
@@ -1098,7 +1137,7 @@ export default {
 		/* ********************
 		 ** * MANEJO DE ARCHIVOS
 		 */
-		 handleFileChange(event) {
+		handleFileChange(event) {
 			this.fileInvalid = false
 			const file = event.target.files[0];
 			if (file) {

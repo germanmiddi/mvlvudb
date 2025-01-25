@@ -18,52 +18,57 @@ use Illuminate\Support\Facades\Log;
 
 class DetailController extends Controller
 {
- 
-    public function view($id){
 
-        return Inertia::render('Manager/Tramites/Detail/Details',
-            [   
+    public function view($id)
+    {
+
+        return Inertia::render(
+            'Manager/Tramites/Detail/Details',
+            [
                 'estados' => TramiteEstado::all(),
                 'users' => User::orderBy('name')->get(),
                 'dependencias' => Dependencia::all(),
                 'tramite' => Tramite::where('id', $id)
-                                    ->with('persons', 
-                                           'persons.contact',
-                                           'persons.address', 
-                                           'persons.address.localidad',
-                                           'archivos', 
-                                           'tipoTramite', 
-                                           'canalAtencion',
-                                           'sede',
-                                           'rol_tramite',
-                                           'dependencia',
-                                           'parentesco',
-                                           'persons.cud',
-                                           'cbi_data',
-                                           'cbj_data',
-                                           'familiares',
-                                           'contactos',
-                                           'persons.education',
-                                           'persons.education.nivelEducativo',
-                                           'persons.social',
-                                           'persons.social.tipoOcupacion',
-                                           'persons.social.coberturaMedica',
-                                           'persons.social.tipoPension',
-                                           'persons.social.programaSocial',
-                                           'comments',
-                                           'comments.dependencia',
-                                           'comments.user',
-                                           'estado',
-                                           'modalidadAtencion',
-                                           'category'
+                    ->with(
+                        'persons',
+                        'persons.contact',
+                        'persons.address',
+                        'persons.address.localidad',
+                        'persons.programaSocial',
+                        'archivos',
+                        'tipoTramite',
+                        'canalAtencion',
+                        'sede',
+                        'rol_tramite',
+                        'dependencia',
+                        'parentesco',
+                        'persons.cud',
+                        'cbi_data',
+                        'cbj_data',
+                        'familiares',
+                        'contactos',
+                        'persons.education',
+                        'persons.education.nivelEducativo',
+                        'persons.social',
+                        'persons.social.tipoOcupacion',
+                        'persons.social.coberturaMedica',
+                        'persons.social.tipoPension',
+                        'persons.social.programaSocial',
+                        'comments',
+                        'comments.dependencia',
+                        'comments.user',
+                        'estado',
+                        'modalidadAtencion',
+                        'category'
 
-                                           )
-                                    ->get()
+                    )
+                    ->get()
             ]
         );
     }
 
-    public function addComment(Request $request){
+    public function addComment(Request $request)
+    {
         DB::beginTransaction();
         try {
             // dd($request->all());
@@ -79,35 +84,37 @@ class DetailController extends Controller
             DB::commit();
             return response()->json(['message' => 'Comentario almacenado correctamente'], 200);
 
-        
+
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar el comentario", ["Modulo" => "Comentarios:add","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error almacenando el comentario'], 203);         
+            Log::error("Se ha generado un error al momento de almacenar el comentario", ["Modulo" => "Comentarios:add", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            return response()->json(['message' => 'Se ha producido un error almacenando el comentario'], 203);
         }
     }
 
-    public function getComments($tramite_id){
+    public function getComments($tramite_id)
+    {
         try {
 
             $comments = TramiteComment::where('tramite_id', $tramite_id)
-                        ->with(['user', 'dependencia']) 
-                        ->get();
-            
+                ->with(['user', 'dependencia'])
+                ->get();
+
             return response()->json($comments, 200);
         } catch (\Throwable $th) {
-            Log::error("Se ha generado un error al momento de obtener los comentarios", ["Modulo" => "Comentarios:get","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error obteniendo los comentarios'], 203);         
+            Log::error("Se ha generado un error al momento de obtener los comentarios", ["Modulo" => "Comentarios:get", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            return response()->json(['message' => 'Se ha producido un error obteniendo los comentarios'], 203);
         }
     }
 
-    public function changeDependencia(Request $request){
+    public function changeDependencia(Request $request)
+    {
         DB::beginTransaction();
         try {
 
             $tramite = Tramite::find($request->tramite_id);
             $old_dependencia_id = $tramite->dependencia_id;
-            $tramite->dependencia_id = $request->dependencia_id;    
+            $tramite->dependencia_id = $request->dependencia_id;
             $tramite->save();
 
             $comment = new TramiteComment();
@@ -120,54 +127,55 @@ class DetailController extends Controller
             DB::commit();
             return response()->json(['message' => 'Cambio de Dependencia correctamente'], 200);
 
-        
+
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de modificar la dependencia", ["Modulo" => "Details:CambioDependencia","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error'], 203);         
+            Log::error("Se ha generado un error al momento de modificar la dependencia", ["Modulo" => "Details:CambioDependencia", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            return response()->json(['message' => 'Se ha producido un error'], 203);
         }
     }
 
-    public function changeEstado(Request $request){
+    public function changeEstado(Request $request)
+    {
         DB::beginTransaction();
         try {
 
             $tramite = Tramite::find($request->tramite_id);
-            $tramite->estado_id = $request->estado_id;    
+            $tramite->estado_id = $request->estado_id;
             $tramite->save();
 
             $comment = new TramiteComment();
             $comment->tramite_id = $request->tramite_id;
             $comment->user_id = Auth::user()->id;
             $comment->dependencia_id = $tramite->dependencia_id;
-            
-            if($request->estado_id == 1){
+
+            if ($request->estado_id == 1) {
                 $comment->content = 'Se abrio el Trámite';
-            }
-            else{
+            } else {
                 $comment->content = 'Se cerro el Trámite';
             }
-            
+
             $comment->save();
 
             DB::commit();
             return response()->json(['message' => 'Cambio de Estado correctamente'], 200);
 
-        
+
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de modificar el estado", ["Modulo" => "Details:CambioEstado","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error'], 203);         
+            Log::error("Se ha generado un error al momento de modificar el estado", ["Modulo" => "Details:CambioEstado", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            return response()->json(['message' => 'Se ha producido un error'], 203);
         }
     }
 
-    public function changeAssigment(Request $request){
-        
+    public function changeAssigment(Request $request)
+    {
+
         DB::beginTransaction();
         try {
 
-        
-        //TODO: Confirmar si es necesario almacenar info en la tabla de tramite_assigment o con la de comentarios es suficiente
+
+            //TODO: Confirmar si es necesario almacenar info en la tabla de tramite_assigment o con la de comentarios es suficiente
             $tramite = Tramite::find($request->tramite_id);
             $tramite->assigned = $request->user_id;
             $tramite->estado_id = 3; //En proceso    
@@ -179,20 +187,20 @@ class DetailController extends Controller
             $comment->tramite_id = $request->tramite_id;
             $comment->user_id = Auth::user()->id;
             $comment->dependencia_id = $tramite->dependencia_id;
-            $comment->content = 'Se asignó el trámite a: ' . $user->name . ' (' . $user->email . ')' ;
-            
+            $comment->content = 'Se asignó el trámite a: ' . $user->name . ' (' . $user->email . ')';
+
             $comment->save();
 
             DB::commit();
             return response()->json(['message' => 'Se reasignó el trámite correctamente'], 200);
 
-        
+
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Error al reasignar el tramite", ["Modulo" => "Details:CambioAsignacion","Tramite" => $request->tramite_id, "Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
-            return response()->json(['message' => 'Se ha producido un error'], 203);         
+            Log::error("Error al reasignar el tramite", ["Modulo" => "Details:CambioAsignacion", "Tramite" => $request->tramite_id, "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
+            return response()->json(['message' => 'Se ha producido un error'], 203);
         }
     }
 
-    
+
 }

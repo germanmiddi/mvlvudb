@@ -215,6 +215,10 @@ class GeneroController extends Controller
             /**
              * FIN Registro de Beneficiario
              */
+            if (!empty($request['selected_programs'])) {
+                $selectedPrograms = explode(',', $request['selected_programs']);
+                $person->programaSocial()->sync($selectedPrograms);
+            }
 
             $list_tramites_id = array();
 
@@ -314,7 +318,7 @@ class GeneroController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
-                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'tramite_data')->get(),
+                'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'tramite_data', 'persons.programaSocial')->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
                 'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
@@ -325,7 +329,6 @@ class GeneroController extends Controller
     {
         DB::beginTransaction();
         try {
-
             Person::where('id', $request['person_id'])->update(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
@@ -337,7 +340,6 @@ class GeneroController extends Controller
                     'num_documento' => $request['num_documento']
                 ]
             );
-
             AditionalData::where('person_id', $request['person_id'])->update(
                 [
                     'cant_hijos' => $request['cant_hijos'],
@@ -417,6 +419,11 @@ class GeneroController extends Controller
             /**
              * FIN Registro de Beneficiario
              */
+            $person = Person::where('id', $request['person_id'])->first();
+            if (!empty($request['selected_programs'])) {
+                $selectedPrograms = explode(',', $request['selected_programs']);
+                $person->programaSocial()->sync($selectedPrograms);
+            }
 
             // Obtengo ID de la dependencia.
             $dependencia = TipoTramite::where('id', $request['tipo_tramite_id'])->first();

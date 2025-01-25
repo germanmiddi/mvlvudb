@@ -1,4 +1,3 @@
-
 <template>
 	<main class="flex-1 bg-gray-50 pb-40">
 		<!-- Page title & actions -->
@@ -8,23 +7,27 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</button>
 				<h1 class="font-sm font-medium text-gray-600 sm:truncate">
-					Detalle del Trámite 
-					<span class="text-indigo-700 text-xl font-semibold ">{{tramite[0].dependencia.description}}</span>
+					Detalle del Trámite
+					<span class="text-indigo-700 text-xl font-semibold ">{{ tramite[0].dependencia.description }}</span>
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
-				<button v-if="tramite[0].estado_id == 1 || tramite[0].estado_id == 3" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3"
-						@click="changeStatus(2)">
-						Cerrar Trámite
+				<button v-if="tramite[0].estado_id == 1 || tramite[0].estado_id == 3"
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 focus:ring-blue-500 sm:order-1 sm:ml-3"
+					@click="changeStatus(2)">
+					Cerrar Trámite
 				</button>
-				<button v-else class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-500  focus:ring-indigo-500 sm:order-1 sm:ml-3"
-						@click="changeStatus(1)">
-					    Re Abrir Trámite					
+				<button v-else
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-500  focus:ring-indigo-500 sm:order-1 sm:ml-3"
+					@click="changeStatus(1)">
+					Re Abrir Trámite
 				</button>
-				<a target="_blank" :href="route('pdf.acusepdf', tramite[0].id)" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 focus:ring-green-500 sm:order-1 sm:ml-3">
-					Imprimir Acuse					
+				<a target="_blank" :href="route('pdf.acusepdf', tramite[0].id)"
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 focus:ring-green-500 sm:order-1 sm:ml-3">
+					Imprimir Acuse
 				</a>
-				<a :href="route('pdf.acuseobservacionpdf', tramite[0].id)" target="_blank" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-purple-500 focus:ring-green-500 sm:order-1 sm:ml-3">
+				<a :href="route('pdf.acuseobservacionpdf', tramite[0].id)" target="_blank"
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-purple-500 focus:ring-green-500 sm:order-1 sm:ml-3">
 					Imprimir Acuse Obs.</a>
 			</div>
 		</div>
@@ -42,39 +45,47 @@
 					<dl class="sm:divide-y sm:divide-gray-200">
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Ingreso</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ store.dateFormateada(tramite[0].fecha) }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								store.dateFormateada(tramite[0].fecha) }}</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Tipo de Trámite</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].tipo_tramite.description }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								tramite[0].tipo_tramite.description }}</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Canal de Atención</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].canal_atencion.description }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								tramite[0].canal_atencion.description }}</dd>
 						</div>
-						
-						<div v-if="tramite[0].dependencia_id == 6" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+
+						<div v-if="tramite[0].dependencia_id == 6"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Modalidad de Atención</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].modalidad_atencion?.description }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								tramite[0].modalidad_atencion?.description }}</dd>
 						</div>
-						
-						<div v-if="tramite[0].dependencia_id == 6" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+
+						<div v-if="tramite[0].dependencia_id == 6"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cetegoría</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].category?.nombre }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].category?.nombre
+								}}</dd>
 						</div>
-						
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Observaciones</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].observacion }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tramite[0].observacion }}
+							</dd>
 						</div>
-						
+
 					</dl>
 				</div>
 
 			</div>
-		</div>	
+		</div>
 
 
 		<!-- Datos Titular -->
@@ -87,62 +98,77 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{tramite[0].persons[0].lastname}}, {{ tramite[0].persons[0].name }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].lastname }}, {{ tramite[0].persons[0].name }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Documento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].num_documento}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].num_documento }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].fecha_nac}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].fecha_nac }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Dirección</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-								{{ tramite[0].persons[0].address[0].calle }} {{ tramite[0].persons[0].address[0].number }}  
-								<span v-if="tramite[0].persons[0].address[0].piso">, Piso: {{ tramite[0].persons[0].address[0].piso }}</span>
-								<span v-if="tramite[0].persons[0].address[0].dpto">, DPTO: {{ tramite[0].persons[0].address[0].dpto }}</span>
-								<span v-if="tramite[0].persons[0].address[0].dpto">, {{ tramite[0].persons[0].address[0].localidad.description }}</span>						
+								{{ tramite[0].persons[0].address[0].calle }} {{ tramite[0].persons[0].address[0].number
+								}}
+								<span v-if="tramite[0].persons[0].address[0].piso">, Piso: {{
+									tramite[0].persons[0].address[0].piso }}</span>
+								<span v-if="tramite[0].persons[0].address[0].dpto">, DPTO: {{
+									tramite[0].persons[0].address[0].dpto }}</span>
+								<span v-if="tramite[0].persons[0].address[0].dpto">, {{
+									tramite[0].persons[0].address[0].localidad.description }}</span>
 							</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Email</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].contact[0].email ? tramite[0].persons[0].contact[0].email : "" }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].contact[0].email ? tramite[0].persons[0].contact[0].email : ""
+								}}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Telefono</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].contact[0].phone}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].contact[0].phone }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Celular</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].contact[0].celular}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].contact[0].celular }}</dd>
 						</div>
 
-						<div v-if="tramite[0].dependencia_id == 2" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="tramite[0].dependencia_id == 2"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">CUD</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].cud?.codigo}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].cud?.codigo }}</dd>
 						</div>
 
-						<div v-if="tramite[0].dependencia_id == 2" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="tramite[0].dependencia_id == 2"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Diagnostico</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tramite[0].persons[0].cud?.diagnostico}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								{{ tramite[0].persons[0].cud?.diagnostico }}</dd>
 						</div>
 
 					</dl>
 				</div>
-				
+
 			</div>
-		</div>	
+		</div>
 		<!-- Fin  Datos Titular -->
 
 		<!-- Datos Beneficiario -->
@@ -155,43 +181,53 @@
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nombre Completo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ dataBeneficiario.lastname}}, {{ dataBeneficiario.name }}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+								dataBeneficiario.lastname }}, {{ dataBeneficiario.name }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Documento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ dataBeneficiario.num_documento}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
+								dataBeneficiario.num_documento }}</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{  dataBeneficiario.fecha_nac}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ dataBeneficiario.fecha_nac
+								}}
+							</dd>
 						</div>
-			
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Email</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].email : ''}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ dataBeneficiario.contact[0]
+								?
+								dataBeneficiario.contact[0].email : '' }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Telefono</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].phone : ''}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ dataBeneficiario.contact[0]
+								?
+								dataBeneficiario.contact[0].phone : '' }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Celular</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{dataBeneficiario.contact[0] ? dataBeneficiario.contact[0].celular : ''}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ dataBeneficiario.contact[0]
+								?
+								dataBeneficiario.contact[0].celular : '' }}</dd>
 						</div>
 
 
 					</dl>
 				</div>
-				
+
 			</div>
-		</div>			
+		</div>
 		<!-- Fin Datos Beneficiario -->
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
@@ -202,34 +238,42 @@
 				</div>
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-						<div v-if="nivelEducativo != '' " class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="nivelEducativo != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > {{ nivelEducativo }}</dd>
-						</div>				
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{ nivelEducativo }}</dd>
+						</div>
 
-						<div v-if="ocupacion !=''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="ocupacion != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ocupación</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ocupacion}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ ocupacion }}</dd>
 						</div>
 
 						<div v-if="coberturaMedica != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Cobertura Médica</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{coberturaMedica}}</dd>
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ coberturaMedica }}</dd>
 						</div>
 
-						<div v-if="programaSocial != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-							<dt class="text-sm font-medium text-gray-500">Programa Social</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{programaSocial}}</dd>
+						<div v-if="tramite[0]?.persons[0]?.programa_social.length > 0"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+							<dt class="text-sm font-medium text-gray-500">Recibe Programa Social</dt>
+							<dd v-if="tramite[0].persons[0].programa_social"
+								class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								<p v-for="(programa, index) in tramite[0].persons[0].programa_social" class="pb-2"
+									:key="programa.id || index">
+									{{ programa.description }}
+								</p>
+
+							</dd>
 						</div>
 
 						<div v-if="tipoPension != ''" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Tipo Pensión</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{tipoPension}}</dd>
-						</div> 
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ tipoPension }}</dd>
+						</div>
 					</dl>
-				</div>	
+				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -241,33 +285,36 @@
 					<dl class="sm:divide-y sm:divide-gray-200">
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Estado</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase" >
-								<span :class="estado[estadoTramite]"> {{ estadoTramite }}</span>	
-							
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase">
+								<span :class="estado[estadoTramite]"> {{ estadoTramite }}</span>
+
 							</dd>
-						</div>		
+						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 flex items-center">
 							<dt class="text-sm font-medium text-gray-500">Responsable</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase flex items-center " >
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 uppercase flex items-center ">
 								<select v-model="assignment" id="assignment" name="assignment" autocomplete="off"
 									class=" block w-80 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option disabled value="" :bind:select="tramite[0].assigned == null " >Seleccione un Responsable</option>
+									<option disabled value="" :bind:select="tramite[0].assigned == null">Seleccione un
+										Responsable</option>
 									<option v-for="u in users" :key="u.id" :value="u.id"
 										:bind:select="u.id == tramite[0].assigned">
 										{{ u.name }}
 									</option>
-								</select>	
+								</select>
 								<button type="button"
-										class="relative ml-4 inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-										@click="changeAssignment()">
-										Confirmar</button>						
+									class="relative ml-4 inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+									@click="changeAssignment()">
+									Confirmar</button>
 							</dd>
-						</div>		
+						</div>
 						<!-- Si el tramite esta cerrado no se puede re asignar -->
-						<div v-if="tramite[0].estado_id != 2"  class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+						<div v-if="tramite[0].estado_id != 2"
+							class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Re Asignar</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 
-								<select v-model="newDependencia" id="newDependencia" name="newDependencia" autocomplete="off"
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+								<select v-model="newDependencia" id="newDependencia" name="newDependencia"
+									autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option v-for="d in dependencias" :key="d.id" :value="d.id"
 										:bind:select="d.id == tramite[0].dependencia_id">
@@ -275,26 +322,29 @@
 									</option>
 								</select>
 
-								<label for="newDepObservacion" class="block text-xs font-medium text-gray-500 mt-5 mb-1">Ingrese los detalles relacionados al cambio de Dependencia.</label>
+								<label for="newDepObservacion"
+									class="block text-xs font-medium text-gray-500 mt-5 mb-1">Ingrese los detalles
+									relacionados al cambio de Dependencia.</label>
 								<div class="mb-5">
-									<textarea v-model="newDepObservacion" id="newDepObservacion" name="newDepObservacion" rows="3"
+									<textarea v-model="newDepObservacion" id="newDepObservacion"
+										name="newDepObservacion" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
 								</div>
-					
+
 								<button type="button"
-										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-										@click="changeDependencia()">
-										Confirmar
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+									@click="changeDependencia()">
+									Confirmar
 								</button>
 							</dd>
-						</div>				
+						</div>
 					</dl>
-				</div>	
+				</div>
 
-			
+
 
 			</div>
-		</div>	
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -305,10 +355,10 @@
 				<!-- Si el tramite esta cerrado no se puede agregar observaciones -->
 				<div v-if="tramite[0].estado_id != 2" class="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
 					<dl class="sm:divide-y sm:divide-gray-200">
-		
+
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Nueva Observación</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" > 
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 								<div class="mt-1">
 									<textarea v-model="form.newObservacion" id="observacion" name="observacion" rows="3"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" />
@@ -316,32 +366,31 @@
 								<p class="mt-1 mb-5 text-xs text-gray-500">
 									Ingrese información adicional del tramite.
 								</p>
-					
+
 								<button type="button"
-										class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-										@click="addObservacion()">
-										Agregar Observación
+									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
+									@click="addObservacion()">
+									Agregar Observación
 								</button>
 							</dd>
-						</div>				
+						</div>
 					</dl>
-				</div>	
-				
+				</div>
+
 				<div class="grid grid-cols-12 gap-2">
 					<div class="px-4 py-5 sm:px-6">
 						<h3 class="text-lg leading-6 font-medium text-gray-900">Comentarios</h3>
 						<p class="mt-1 max-w-2xl text-sm text-gray-500"></p>
 					</div>
-					<div v-for="(comment, index) in comments" :key="index" class="min-w-full divide-y divide-gray-200 w-full col-span-12">
-						<Comment v-if="comment.activo === 1"
-									:comment=comment 
-									@message="handleMessage"
-									@deleteComment="handleDeleteComment" >
+					<div v-for="(comment, index) in comments" :key="index"
+						class="min-w-full divide-y divide-gray-200 w-full col-span-12">
+						<Comment v-if="comment.activo === 1" :comment=comment @message="handleMessage"
+							@deleteComment="handleDeleteComment">
 						</Comment>
 					</div>
-				</div>				
+				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8">
 			<form action="#" method="POST" enctype="multipart/form-data">
@@ -358,12 +407,15 @@
 						<!-- Si el tramite esta cerrado no se puede agregar archivos -->
 						<div class="grid grid-cols-12 gap-6">
 							<div v-if="tramite[0].estado_id != 2" class="col-span-12 sm:col-span-10 ">
-								<label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+								<label for="descripcion"
+									class="block text-sm font-medium text-gray-700">Descripción</label>
 								<div class="flex ">
-									<input v-model="form.description_file" type="text" name="descripcion" id="descripcion"
-										autocomplete="descripcion-level2"
+									<input v-model="form.description_file" type="text" name="descripcion"
+										id="descripcion" autocomplete="descripcion-level2"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 shadow-sm sm:text-sm border-gray-300 rounded-md mr-6" />
-									<input @change="handleFileUpload" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file" name="file" id="file" ref="inputfile"
+									<input @change="handleFileUpload"
+										accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx" type="file"
+										name="file" id="file" ref="inputfile"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 rounded-md" />
 									<div class="flex-shrink-0">
 										<button @click="uploadFile()" type="button"
@@ -371,7 +423,8 @@
 											Subir Archivo</button>
 									</div>
 								</div>
-								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione un archivo de imagen, office o PDF.</p>
+								<p v-show="this.fileInvalid" class="mt-2 text-red-500 text-xs"> - Por favor, seleccione
+									un archivo de imagen, office o PDF.</p>
 							</div>
 							<div class="col-span-12 sm:col-span-10 ">
 								<table class="min-w-full divide-y divide-gray-200 w-full col-span-6">
@@ -435,8 +488,8 @@ import Comment from '@/Layouts/Components/Tramites/Comment.vue';
 import store from '@/store.js'
 
 const estado = {
-	'abierto' : 'px-2 py-1 bg-green-50 text-green-800 border border-green-400',
-	'cerrado' : 'px-2 py-1 bg-red-50 text-red-800 border border-red-300',
+	'abierto': 'px-2 py-1 bg-green-50 text-green-800 border border-green-400',
+	'cerrado': 'px-2 py-1 bg-red-50 text-red-800 border border-red-300',
 	'en proceso': 'px-2 py-1 bg-blue-50 text-blue-800 border border-blue-300',
 }
 
@@ -505,19 +558,19 @@ export default {
 	},
 
 	methods: {
-		goBack(){
+		goBack() {
 			window.history.back();
 		},
-		handleMessage(data){
-            this.labelType = data.labelType;
-            this.toastMessage = data.toastMessage;
-        },
-		handleDeleteComment(id){
+		handleMessage(data) {
+			this.labelType = data.labelType;
+			this.toastMessage = data.toastMessage;
+		},
+		handleDeleteComment(id) {
 			this.getComments();
-        },
-		async changeAssignment(){
-			
-			if(this.assignment == this.tramite[0].assigned){
+		},
+		async changeAssignment() {
+
+			if (this.assignment == this.tramite[0].assigned) {
 				this.labelType = "danger";
 				this.toastMessage = "Debe seleccionar un responsable distinto";
 				return
@@ -549,7 +602,7 @@ export default {
 
 		},
 
-		async changeStatus(newEstado){
+		async changeStatus(newEstado) {
 
 			let rt = route('detail.changeEstado');
 
@@ -575,14 +628,14 @@ export default {
 
 		},
 
-		async changeDependencia(){
-			if(this.newDependencia == this.tramite[0].dependencia_id){
+		async changeDependencia() {
+			if (this.newDependencia == this.tramite[0].dependencia_id) {
 				this.labelType = "danger";
 				this.toastMessage = "Debe seleccionar una dependencia distinta";
 				return
 			}
 
-			if(this.newDepObservacion == ""){
+			if (this.newDepObservacion == "") {
 				this.labelType = "danger";
 				this.toastMessage = "Debe ingresar una observación para el cambio de dependencia";
 				return
@@ -591,9 +644,9 @@ export default {
 
 			let rt = route('detail.changeDependencia', this.tramite[0].id);
 			let formData = new FormData();
-				formData.append('dependencia_id', this.newDependencia)
-				formData.append('tramite_id', this.tramite[0].id)
-				formData.append('observacion', this.newDepObservacion)
+			formData.append('dependencia_id', this.newDependencia)
+			formData.append('tramite_id', this.tramite[0].id)
+			formData.append('observacion', this.newDepObservacion)
 
 			try {
 				const response = await axios.post(rt, formData);
@@ -610,7 +663,7 @@ export default {
 				console.log(error)
 			}
 		},
-		async getComments(){
+		async getComments() {
 			let rt = route('detail.getComments', this.tramite[0].id);
 
 			try {
@@ -625,32 +678,32 @@ export default {
 			} catch (error) {
 				console.log(error)
 			}
-	
+
 		},
 
-		async addObservacion(){
-			
-				let rt = route('detail.addComment');
+		async addObservacion() {
 
-				let formData = new FormData();
-				formData.append('observacion', this.form.newObservacion)
-				formData.append('tramite_id', this.tramite[0].id)
-				
-				try {
-					const response = await axios.post(rt, formData);
-					if (response.status == 200) {
-						this.labelType = "success";
-						this.toastMessage = response.data.message;
-						this.getComments()
-					} else {
-						this.labelType = "danger";
-						this.toastMessage = response.data.message;
-						this.btnGuardar = false
-					}
-				} catch (error) {
-					console.log(error)
+			let rt = route('detail.addComment');
+
+			let formData = new FormData();
+			formData.append('observacion', this.form.newObservacion)
+			formData.append('tramite_id', this.tramite[0].id)
+
+			try {
+				const response = await axios.post(rt, formData);
+				if (response.status == 200) {
+					this.labelType = "success";
+					this.toastMessage = response.data.message;
+					this.getComments()
+				} else {
+					this.labelType = "danger";
+					this.toastMessage = response.data.message;
+					this.btnGuardar = false
 				}
-			
+			} catch (error) {
+				console.log(error)
+			}
+
 		},
 
 		clearMessage() {
@@ -741,7 +794,7 @@ export default {
 						this.toastMessage = response.data.message;
 						this.form_archivo.push(response.data.archivo)
 						this.form.description_file = ''
-						
+
 						this.file = null
 						const fileValue = this.$refs.inputfile;
 						fileValue.value = null;
@@ -762,24 +815,24 @@ export default {
 	},
 
 	computed: {
-		estadoTramite: function() {
-			return  this.estados.find(estado => estado.id === this.tramite[0].estado_id).description;
-  		},
-  		nivelEducativo: function() {
-    		return this.tramite[0]?.persons[0]?.education[0]?.nivel_educativo?.description ?? '';
-  		},
-		ocupacion: function() {
+		estadoTramite: function () {
+			return this.estados.find(estado => estado.id === this.tramite[0].estado_id).description;
+		},
+		nivelEducativo: function () {
+			return this.tramite[0]?.persons[0]?.education[0]?.nivel_educativo?.description ?? '';
+		},
+		ocupacion: function () {
 			return this.tramite[0]?.persons[0]?.social[0]?.tipo_ocupacion?.description ?? '';
-  		},
-		coberturaMedica: function() {
+		},
+		coberturaMedica: function () {
 			return this.tramite[0]?.persons[0]?.social[0]?.cobertura_medica?.description ?? '';
-  		},
-		programaSocial: function() {
+		},
+		programaSocial: function () {
 			return this.tramite[0]?.persons[0]?.social[0]?.programa_social?.description ?? '';
-  		},
-		tipoPension: function() {
+		},
+		tipoPension: function () {
 			return this.tramite[0]?.persons[0]?.social[0]?.tipo_pension?.description ?? '';
-	  	},
+		},
 		dataTitular() {
 			// Filtrar la lista de personas para obtener solo el titular (rol_tramite_id === 1)
 			const titular = this.tramite[0].persons.find(person => person.pivot.rol_tramite_id === 1);
@@ -794,10 +847,7 @@ export default {
 
 	mounted() {
 		this.getComments()
-	 	this.form_archivo = this.tramite[0].archivos
+		this.form_archivo = this.tramite[0].archivos
 	},
 }
 </script>
-
-
-

@@ -76,6 +76,7 @@ class DatabaseSeeder extends Seeder
             EstadoGabineteCBSeeder::class,
             CajasEntrevistasStatusesSeeder::class,
             RoleCajasSeeder::class,
+            TipoTenenciaSeeder::class,
         ]);
 
         User::create([

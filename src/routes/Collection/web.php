@@ -43,7 +43,7 @@ Route::middleware(['auth'])
             Route::delete('/delete/{id}', [EntrevistasController::class, 'delete'])->name('collections.entrevistas.delete');
             Route::post('/import', [EntrevistasImportController::class, 'importEntrevistas'])->name('collections.entrevistas.import');
 
-            Route::get('/export/template', [ExportController::class, 'exportTemplateEntrevistas2'])->name('collections.entrevistas.export.template');
+            Route::get('/export/template', [ExportController::class, 'exportTemplateEntrevistas'])->name('collections.entrevistas.export.template');
         });
     });
 

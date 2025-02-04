@@ -2,36 +2,59 @@
 
 namespace App\Exports\Cajas;
 
-use App\Models\Manager\Entrevista;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class TemplateEntrevistasExport implements FromArray
+use App\Exports\Cajas\TemplateEntrevistasHeaderExport;
+use App\Exports\Cajas\TemplateEntrevistasDatosReferenciaExport;
+
+class TemplateEntrevistasExport implements WithMultipleSheets
 {
-    public function array(): array
+    protected $puntosEntrega;
+    protected $entrevistadores;
+    protected $tipoDocumento;
+    protected $situacionConyugal;
+    protected $paises;
+    protected $tenencia;
+    protected $ocupacion;
+    protected $coberturaMedica;
+    protected $tipoPension;
+    protected $programaSocial;
+    protected $nivelEducativo;
+    protected $estadoEducativo;
+    public function __construct($puntosEntrega, $entrevistadores, $tipoDocumento, $situacionConyugal, $paises, $tenencia, $ocupacion, $coberturaMedica, $tipoPension, $programaSocial, $nivelEducativo, $estadoEducativo)
+    {
+        $this->puntosEntrega = $puntosEntrega;
+        $this->entrevistadores = $entrevistadores;
+        $this->tipoDocumento = $tipoDocumento;
+        $this->situacionConyugal = $situacionConyugal;
+        $this->paises = $paises;
+        $this->tenencia = $tenencia;
+        $this->ocupacion = $ocupacion;
+        $this->coberturaMedica = $coberturaMedica;
+        $this->tipoPension = $tipoPension;
+        $this->programaSocial = $programaSocial;
+        $this->nivelEducativo = $nivelEducativo;
+        $this->estadoEducativo = $estadoEducativo;
+    }
+    public function sheets(): array
     {
         return [
-            [
-                'FECHA',
-                'SEDE',
-                'ENTREVISTADOR',
-                'ESTADO',
-                'TIPO_DOCUMENTO',
-                'NUM_DOCUMENTO',
-                'APELLIDO',
-                'NOMBRE',
-                'FECHA_NACIMIENTO',
-                'CANT_HIJOS',
-                'CANT_CONVIVIENTES',
-                'TENENCIA',
-                'PAGO_INQUILINO',
-                'AMBIENTES',
-                'OCUPACION',
-                'COBERTURA_SALUD',
-                'RECIBE_PENSION',
-                'PROGRAMA_SOCIAL',
-                'NIVEL_EDUCATIVO',
-                'NIVEL_EDUCATIVO_ALCANZADO'
-            ]
+            new TemplateEntrevistasHeaderExport(),
+            new TemplateEntrevistasDatosReferenciaExport(
+                $this->puntosEntrega,
+                $this->entrevistadores,
+                $this->tipoDocumento,
+                $this->situacionConyugal,
+                $this->paises,
+                $this->tenencia,
+                $this->ocupacion,
+                $this->coberturaMedica,
+                $this->tipoPension,
+                $this->programaSocial,
+                $this->nivelEducativo,
+                $this->estadoEducativo
+            ),
         ];
     }
 }

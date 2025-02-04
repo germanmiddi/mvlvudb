@@ -7,23 +7,23 @@ use App\Models\Manager\Entrevista;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Cajas\TemplateEntrevistasExport;
-use App\Exports\Cajas\TemplateEntrevistasExport2;
 
 use App\Models\Manager\PuntoEntrega;
-use App\Models\Manager\SituacionConyugal;
 use App\Models\User;
-use App\Models\Manager\Pais;
 use App\Models\Manager\TipoDocumento;
+use App\Models\Manager\SituacionConyugal;
+use App\Models\Manager\Pais;
+use App\Models\Manager\TipoTenencia;
+use App\Models\Manager\TipoOcupacion;
+use App\Models\Manager\CoberturaMedica;
+use App\Models\Manager\TipoPension;
+use App\Models\Manager\ProgramaSocial;
+use App\Models\Manager\NivelEducativo;
+use App\Models\Manager\EstadoEducativo;
 
 class ExportController extends Controller
 {
     public function exportTemplateEntrevistas()
-    {
-
-        return Excel::download(new TemplateEntrevistasExport(), 'template_entrevistas.xlsx');
-    }
-
-    public function exportTemplateEntrevistas2()
     {
 
         // SEDE_ID
@@ -52,21 +52,54 @@ class ExportController extends Controller
         });
 
         // TENENCIA
+        $tenencia = TipoTenencia::all()->map(function ($tenencia) {
+            return $tenencia->id . '. ' . $tenencia->descripcion;
+        });
         // ocupacion
+        $ocupacion = TipoOcupacion::all()->map(function ($ocupacion) {
+            return $ocupacion->id . '. ' . $ocupacion->description;
+        });
         // cobertura_salud
-        // pensiones
-        // SOCIAL PROGRAMA 
-        // nivel_ed_curso
-        // nivel_alcanzado
+        $coberturaMedica = CoberturaMedica::all()->map(function ($coberturaMedica) {
+            return $coberturaMedica->id . '. ' . $coberturaMedica->description;
+        });
 
+        // pensiones
+        $tipoPension = TipoPension::all()->map(function ($tipoPension) {
+            return $tipoPension->id . '. ' . $tipoPension->description;
+        });
+
+        // SOCIAL PROGRAMA 
+        $programaSocial = ProgramaSocial::all()->map(function ($programaSocial) {
+            return $programaSocial->id . '. ' . $programaSocial->description;
+        });
+
+        // nivel_ed_curso
+        $nivelEducativo = NivelEducativo::all()->map(function ($nivelEducativo) {
+            return $nivelEducativo->id . '. ' . $nivelEducativo->description;
+        });
+
+
+        // nivel_alcanzado
+        $estadoEducativo = EstadoEducativo::all()->map(function ($estadoEducativo) {
+            return $estadoEducativo->id . '. ' . $estadoEducativo->description;
+        });
 
 
         return Excel::download(
-            new TemplateEntrevistasExport2(
+            new TemplateEntrevistasExport(
                 $puntosEntrega,
                 $entrevistadores,
                 $tipoDocumento,
-                $situacionConyugal
+                $situacionConyugal,
+                $paises,
+                $tenencia,
+                $ocupacion,
+                $coberturaMedica,
+                $tipoPension,
+                $programaSocial,
+                $nivelEducativo,
+                $estadoEducativo
             ),
             'template_entrevistas.xlsx'
         );

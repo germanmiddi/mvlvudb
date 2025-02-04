@@ -59,12 +59,12 @@ use Svg\Tag\Rect;
 class LegajosCBController extends Controller
 {
     protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o Mayor de Edad', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o Hijastro/a', 'Hermana/o Menor de Edad', 'Otro Familiar'];
-    
+
     public function index(Request $request)
     {
         $sede_id = $request->query('sede');
         $legajo = $request->query('tipo_legajo');
-        
+
         return Inertia::render(
             'Manager/CentrosBarriales/Legajos/Index',
             [
@@ -72,7 +72,8 @@ class LegajosCBController extends Controller
                 'estados' => EstadoCbj::all(),
                 'escuelas' => Escuela::whereNull('dependencia_id')->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
-                'selectedSede' => $sede_id, 
+                'estadoGabinetes' => EstadoGabineteCB::where('activo', '=', 1)->get(),
+                'selectedSede' => $sede_id,
                 'selectedLegajo' => $legajo,
             ]
         );
@@ -399,7 +400,7 @@ class LegajosCBController extends Controller
                     ->where('person.num_documento', 'LIKE', '%' . $num_documento_nino . '%');
             });
         }
-        
+
         if (request('num_documento_adulto')) {
             $num_documento_adulto = json_decode(request('num_documento_adulto'));
             $result->whereIn('id', function ($sub) use ($num_documento_adulto) {
@@ -415,9 +416,9 @@ class LegajosCBController extends Controller
             $result->whereIn('id', function ($sub) use ($escuela_id) {
                 $sub->selectRaw('legajos_cb.id')
                     ->from('legajos_cb')
-                    ->join('person','person.id','=', 'legajos_cb.person_id')
-                    ->join('education_data','education_data.person_id','=', 'person.id')
-                    ->where(function ($query) use ($escuela_id){
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->join('education_data', 'education_data.person_id', '=', 'person.id')
+                    ->where(function ($query) use ($escuela_id) {
                         $query->where('education_data.escuela_primaria_id', $escuela_id)
                             ->orWhere('education_data.escuela_secundaria_id', $escuela_id)
                             ->orWhere('education_data.escuela_nocturna_id', $escuela_id)
@@ -426,7 +427,7 @@ class LegajosCBController extends Controller
                     });
             });
         }
-        
+
         if (request('date')) {
             $date = json_decode(request('date'));
 
@@ -446,16 +447,21 @@ class LegajosCBController extends Controller
             $result->where('tipo_legajo_id', $tipo_legajo_id);
         }
 
+
         if (request('sede_id')) {
             $sede_id = json_decode(request('sede_id'));
             $result->where('sede_id', $sede_id);
         }
-        
+        if (request('semaforo_id')) {
+            $semaforo = json_decode(request('semaforo_id'));
+            $result->where('semaforo_id', $semaforo);
+        }
+
         if (request('min_years') && request('max_years')) {
             $min_years = (int) trim(request('min_years'), '"');
             $max_years = (int) trim(request('max_years'), '"');
-            
-            if($max_years > 0 && $max_years > $min_years){
+
+            if ($max_years > 0 && $max_years > $min_years) {
                 $dates = $this->getDatesByYearsOld($min_years, $max_years);
                 $result->whereIn('id', function ($sub) use ($dates) {
                     $sub->selectRaw('legajos_cb.id')
@@ -466,7 +472,25 @@ class LegajosCBController extends Controller
             }
         }
 
-        return  $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
+        if (request('gabinete_id')) {
+            $gabinete = json_decode(request('gabinete_id'));
+            $tipo_legajo_id = json_decode(request('tipo_legajo_id'));
+            $result->whereIn('id', function ($sub) use ($gabinete, $tipo_legajo_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('gabinetes_cb', 'gabinetes_cb.legajo_id', '=', 'legajos_cb.id')
+                    // ->when($tipo_legajo_id, function ($query, $tipo_legajo_id) {
+                    //     // Solo se aplica el filtro SI LEGAJO NO ES NULL
+                    //     $query->where('legajos_cb.tipo_legajo_id', '=', $tipo_legajo_id);
+                    // })
+                    ->where('gabinetes_cb.estado_id', '=', $gabinete);
+            });
+        }
+        // dd($result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
+        //     ->orderBy("legajos_cb.id", 'DESC')
+        //     ->paginate($length)
+        //     ->withQueryString());
+        return $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
             ->orderBy("legajos_cb.id", 'DESC')
             ->paginate($length)
             ->withQueryString();
@@ -476,11 +500,11 @@ class LegajosCBController extends Controller
     {
         $today = Carbon::today();
 
-            //Se busca personas que nacieron despues de $min_birthdate
-            $min_birthdate = $today->copy()->subYears($max_years + 1)->startOfDay(); 
+        //Se busca personas que nacieron despues de $min_birthdate
+        $min_birthdate = $today->copy()->subYears($max_years + 1)->startOfDay();
 
-            //Se busca personas que nacieron despues de $max_birthdate
-            $max_birthdate = $today->copy()->subYears($min_years)->endOfDay();
+        //Se busca personas que nacieron despues de $max_birthdate
+        $max_birthdate = $today->copy()->subYears($min_years)->endOfDay();
 
         return [$min_birthdate, $max_birthdate];
     }
@@ -494,9 +518,9 @@ class LegajosCBController extends Controller
                 $data = [];
 
                 $data['file'] = $request->file('file');
-                $data['legajo_id'] =  $request['legajo_id'];
-                $data['area_id'] =  $request['area_id'];
-                $data['description'] =  $request['description'];
+                $data['legajo_id'] = $request['legajo_id'];
+                $data['area_id'] = $request['area_id'];
+                $data['description'] = $request['description'];
 
                 $fileController->uploadFileLegajo($data);
             } else {
@@ -510,7 +534,8 @@ class LegajosCBController extends Controller
         }
     }
 
-    public function delete_archivo($id){
+    public function delete_archivo($id)
+    {
 
         try {
             $file = ArchivoLegajo::where('id', $id)->first();
@@ -528,10 +553,11 @@ class LegajosCBController extends Controller
         }
     }
 
-    public function delete_programa_intervencion($id){
+    public function delete_programa_intervencion($id)
+    {
 
         try {
-           // Buscar el recurso por ID y eliminarlo
+            // Buscar el recurso por ID y eliminarlo
             $intervencion = IntervencionProgramaSocialCB::findOrFail($id);
             $intervencion->activo = false;
             $intervencion->save();
@@ -551,10 +577,11 @@ class LegajosCBController extends Controller
         }
     }
 
-    public function update_programa_intervencion(Request $request){
+    public function update_programa_intervencion(Request $request)
+    {
 
         try {
-           // Buscar el recurso por ID y eliminarlo
+            // Buscar el recurso por ID y eliminarlo
             $intervencion = IntervencionProgramaSocialCB::findOrFail($request->id);
             $intervencion->fecha = $request->fecha;
             $intervencion->description = $request->description;
@@ -601,7 +628,7 @@ class LegajosCBController extends Controller
     {
         try {
             //code...
-            $person_id =  LegajoCB::where('id', $request->id)->value('person_id');
+            $person_id = LegajoCB::where('id', $request->id)->value('person_id');
 
             AddressData::where('person_id', $person_id)->update(
                 [
@@ -623,7 +650,7 @@ class LegajosCBController extends Controller
     {
         try {
             $person_id = LegajoCB::where('id', $request->id)->value('responsable_id');
-            
+
             if ($person_id) {
                 Person::where('id', $person_id)->update([
                     'lastname' => $request->lastname ?? null,
@@ -640,7 +667,7 @@ class LegajosCBController extends Controller
                 ]);
                 $person_id = $newPerson->id;
             }
-            
+
             ContactData::updateOrCreate(
                 ['person_id' => $person_id],
                 [
@@ -716,7 +743,7 @@ class LegajosCBController extends Controller
         try {
             $person_id = LegajoCB::where('id', $request->id)->value('person_id');
 
-            SaludData::where('person_id',$person_id)->update(
+            SaludData::where('person_id', $person_id)->update(
                 [
                     'apto_medico' => $request->apto_medico ?? null,
                     'fecha_apto_medico' => $request->fecha_apto_medico ?? null,
@@ -729,14 +756,14 @@ class LegajosCBController extends Controller
                 ]
             );
 
-            Cud::where('person_id',$person_id)->update(
+            Cud::where('person_id', $person_id)->update(
                 [
                     'posee_cud' => $request->posee_cud ?? null,
                     'presento_cud' => $request->presento_cud ?? null,
                     'vencimiento_cud' => $request->vencimiento_cud ?? null,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de salud del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de salud del legajo. Comuniquese con el administrador.'], 203);
@@ -748,7 +775,7 @@ class LegajosCBController extends Controller
         try {
             $person_id = LegajoCB::where('id', $request->id)->value('person_id');
 
-            EducationData::where('person_id',$person_id)->update(
+            EducationData::where('person_id', $person_id)->update(
                 [
                     'escuela_primaria_id' => $request->escuela_primaria_id ?? null,
                     'nivel_educativo_id' => $request->nivel_educativo_id ?? null,
@@ -762,7 +789,7 @@ class LegajosCBController extends Controller
                     'observacion' => $request->observacion ?? null,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de educacion del legajo.'], 200);
         } catch (\Throwable $th) {
             dd($th);
@@ -778,13 +805,14 @@ class LegajosCBController extends Controller
             GabineteCB::updateOrCreate(
                 [
                     'legajo_id' => $request->id
-                ],[
+                ],
+                [
                     'legajo_id' => $request->id,
                     'estado_id' => $request->estado_id ?? null,
                     'observacion' => $request->observacion ?? null,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de gabinete del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de gabinete del legajo. Comuniquese con el administrador.'], 203);
@@ -793,8 +821,8 @@ class LegajosCBController extends Controller
     public function update_legajoPedagogia(Request $request)
     {
         try {
-            
-              LegajoPedagogia::updateOrCreate(
+
+            LegajoPedagogia::updateOrCreate(
                 [
                     'id' => $request->pedagogia_id
                 ],
@@ -807,7 +835,7 @@ class LegajosCBController extends Controller
                     'profesional' => $request->profesional ?? null,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de pedagogía del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de pedagogía del legajo. Comuniquese con el administrador.'], 203);
@@ -820,14 +848,15 @@ class LegajosCBController extends Controller
             EmprendedorCB::updateOrCreate(
                 [
                     'legajo_id' => $request->id
-                ],[
+                ],
+                [
                     'legajo_id' => $request->id,
                     'participa' => $request->participa ?? null,
                     'fecha_inscripcion' => $request->fecha_inscripcion ?? null,
                     'fecha_finalizacion' => $request->fecha_finalizacion ?? null,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos de emprendedor del legajo.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos de emprendedor del legajo. Comuniquese con el administrador.'], 203);
@@ -839,7 +868,7 @@ class LegajosCBController extends Controller
         try {
             $person_id = LegajoCB::where('id', $request->id)->value('person_id');
 
-            Person::where('id',$person_id)->update(
+            Person::where('id', $person_id)->update(
                 [
                     'lastname' => $request->lastname ?? null,
                     'name' => $request->name ?? null,
@@ -848,13 +877,13 @@ class LegajosCBController extends Controller
                 ]
             );
 
-            ContactData::where('person_id',$person_id)->update(
+            ContactData::where('person_id', $person_id)->update(
                 [
                     'phone' => $request->phone ?? null
                 ]
             );
 
-            AddressData::where('person_id',$person_id)->update(
+            AddressData::where('person_id', $person_id)->update(
                 [
                     'localidad_id' => $request->localidad_id ?? null
                 ]
@@ -865,18 +894,19 @@ class LegajosCBController extends Controller
         }
     }
 
-    
+
     public function update_assignedResponsable(Request $request)
     {
         try {
             LegajoCB::updateOrCreate(
                 [
                     'id' => $request->id
-                ],[
+                ],
+                [
                     'assigned_id' => $request->assigned_id,
                 ]
             );
-            
+
             return response()->json(['message' => 'Se ha actualizado correctamente los datos del responsable asignado.'], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del responsable asignado. Comuniquese con el administrador.'], 203);

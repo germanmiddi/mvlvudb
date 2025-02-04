@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,12 +12,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('dependencias', function (Blueprint $table) {            
-            $table->string('rol_prefix',50)->nullable()->after('description');
+        Schema::table('dependencias', function (Blueprint $table) {
+            if (!Schema::hasColumn('dependencias', 'rol_prefix')) {
+                $table->string('rol_prefix', 50)->nullable()->after('description');
+            }
         });
     }
 
-    
     /**
      * Reverse the migrations.
      *
@@ -27,7 +27,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('dependencias', function (Blueprint $table) {
-            $table->string('rol_prefix',50)->nullable()->after('description');
+            if (Schema::hasColumn('dependencias', 'rol_prefix')) {
+                $table->dropColumn('rol_prefix');
+            }
         });
     }
 };

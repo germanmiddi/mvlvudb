@@ -14,7 +14,7 @@
 						Detalle del Legajo
 					</h1>
 				</div>
-				
+
 			</div>
 		</div>
 
@@ -23,8 +23,9 @@
 			<div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8">
 				<div class="lg:col-span-8 xl:col-span-8">
 					<div class="border-b border-gray-200 dark:border-gray-700">
-						<ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
-							<li v-for="(item, index) in subNavigation" :key="item.name" class="me-2 w-1/5">
+						<ul
+							class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+							<li v-for="(item, index) in subNavigation" :key="item.name" class="me-2 flex-1">
 								<a href="#" @click.prevent="selectItem(index)"
 									:class="tabs === index ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
 									class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
@@ -38,20 +39,19 @@
 						:tiposLegajo="tiposLegajo" :estados="estados" :localidades="localidades" :paises="paises"
 						:parentescos="parentescos" :situacionesConyugal="situacionesConyugal"
 						:tiposOcupacion="tiposOcupacion" :estadosEducativo="estadosEducativo"
-						:nivelesEducativo="nivelesEducativo" :centrosSalud="centrosSalud" 
-						:escuelas="escuelas" :turnosEducativo="turnosEducativo" 
-						:escuelasDependencia="escuelasDependencia" :escuelasNivel="escuelasNivel" 
-						:estadosGabinete="estadosGabinete" :actividades="actividades" :programasSociales="programasSociales"
-						:estadosPedagogia="estadosPedagogia" :tipoDocumento="tipoDocumento"
-						@message="messageToast" />
+						:nivelesEducativo="nivelesEducativo" :centrosSalud="centrosSalud" :escuelas="escuelas"
+						:turnosEducativo="turnosEducativo" :escuelasDependencia="escuelasDependencia"
+						:escuelasNivel="escuelasNivel" :estadosGabinete="estadosGabinete" :actividades="actividades"
+						:programasSociales="programasSociales" :estadosPedagogia="estadosPedagogia"
+						:tipoDocumento="tipoDocumento" @message="messageToast" />
 				</div>
 
 				<div class="lg:col-span-4 xl:col-span-4">
 					<div class="sticky top-4">
 						<!-- Datos Titular -->
-						<PersonComponent :localidades="localidades" :legajo="legajo" @message="messageToast"/>
-						<AssignedComponent :users="users" :legajo="legajo" @message="messageToast"/>
-						
+						<PersonComponent :localidades="localidades" :legajo="legajo" @message="messageToast" />
+						<AssignedComponent :users="users" :legajo="legajo" @message="messageToast" />
+
 					</div>
 				</div>
 			</div>
@@ -69,6 +69,7 @@ import Informes from './Informes/Informes.vue';
 import Actividades from './Actividades/Actividades.vue';
 import PersonComponent from './Components/Person.vue';
 import AssignedComponent from './Components/Assigned.vue';
+import Pedagogia from './Pedagogia/Pedagogia.vue';
 import FormCreate from './FormCreate.vue';
 
 import CreateModal from './CreateModal.vue';
@@ -88,7 +89,7 @@ const props = defineProps({
 	canalesAtencion: Object,
 	tiposLegajo: Object,
 	estados: Object,
-	paises: Object, 
+	paises: Object,
 	parentescos: Object,
 	situacionesConyugal: Object,
 	tiposOcupacion: Object,
@@ -115,6 +116,7 @@ const subNavigation = [
 	{ name: 'Actividades', icon: CubeIcon, componentName: Actividades },
 	{ name: 'Informes', icon: CubeIcon, componentName: Informes },
 	{ name: 'Archivos', icon: CubeIcon, componentName: Archivos },
+	{ name: 'Pedagogia', icon: CubeIcon, componentName: Pedagogia },
 ]
 
 const tabs = ref(0);

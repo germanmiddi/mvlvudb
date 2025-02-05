@@ -85,7 +85,7 @@ class LegajosCBController extends Controller
             'Manager/CentrosBarriales/Legajos/Legajo',
             [
                 'legajo' => LegajoCB::where('id', $id)
-                    ->with(
+                    ->with([
                         'estadocbj',
                         'sede',
                         'responsable',
@@ -139,9 +139,11 @@ class LegajosCBController extends Controller
                         'gabinete.estado',
                         'emprendedor',
                         'assigned',
-                        'pedagogia',
                         'pedagogia.estado',
-                    )->get(),
+                        'pedagogia' => function ($query) {
+                            $query->orderBy('fecha_prueba', 'desc')->with('estado');
+                        },
+                    ])->get(),
                 'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all(),
@@ -362,7 +364,6 @@ class LegajosCBController extends Controller
             return response()->json(['message' => 'Se ha producido un error al momento de actualizar el informe CBJ. Verifique los datos ingresados.'], 203);
         }
     }
-
     public function delete_informe($id)
     {
         // Buscar el recurso por ID y eliminarlo
@@ -373,6 +374,85 @@ class LegajosCBController extends Controller
         $informes = $legajo = LegajoCB::where('id', $legajo_id)->with('informes', 'informes.profesional', 'informes.estado', 'informes.area')->get();
         return response()->json(['message' => 'Se ha eliminado correctamente el informe.', 'informes' => $informes], 200);
         // Redireccionar o devolver una respuesta JSON
+    }
+
+    public function store_pedagogia(Request $request)
+    {
+        try {
+            $legajo = LegajoCB::where('id', $request->legajo_id)->first();
+
+            $pruebaPedagogica = LegajoPedagogia::Create(
+                [
+                    'legajo_id' => $legajo->id,
+                    'realizo_prueba' => 1,
+                    'fecha_prueba' => $request->fecha_prueba,
+                    'estado_id' => $request->estado_id,
+                    'detalles' => $request->detalles,
+                    'profesional' => $request->profesional,
+                ]
+            );
+            $pruebaPedagogicas = LegajoCB::where('id', $request->legajo_id)
+                ->with([
+                    'pedagogia' => function ($query) {
+                        $query->orderBy('fecha_prueba', 'desc');
+                    },
+                    'pedagogia.legajo',
+                    'pedagogia.estado'
+                ])
+                ->get();
+            return response()->json(['message' => 'Se registrado correctamente la Prueba Pedagógica.', 'pedagogias' => $pruebaPedagogicas], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar la Prueba Pedagógica. Verifique los datos ingresados.'], 422);
+        }
+    }
+
+    public function update_pedagogia(Request $request)
+    {
+        try {
+            LegajoPedagogia::where('id', $request->id)->update(
+                [
+                    'realizo_prueba' => $request->realizo_prueba,
+                    'fecha_prueba' => $request->fecha_prueba,
+                    'estado_id' => $request->estado_id,
+                    'detalles' => $request->detalles,
+                    'profesional' => $request->profesional,
+                ]
+            );
+
+            $pruebaPedagogias = LegajoCB::where('id', $request->legajo_id)
+                ->with([
+                    'pedagogia' => function ($query) {
+                        $query->orderBy('fecha_prueba', 'desc');
+                    },
+                    'pedagogia.legajo',
+                    'pedagogia.estado'
+                ])
+                ->get();
+            return response()->json(['message' => 'Se ha actualizado correctamente la Prueba Pedagógica.', 'pedagogias' => $pruebaPedagogias], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Se ha producido un error al momento de actualizar la Prueba Pedagógica. Verifique los datos ingresados.', 'line' => $th->getLine(), 'file' => $th->getFile(), 'error' => $th->getMessage()], 422);
+        }
+    }
+    public function delete_pedagogia($id)
+    {
+        $pruebaPedagogia = LegajoPedagogia::findOrFail($id);
+        if ($pruebaPedagogia) {
+            $legajo_id = $pruebaPedagogia['legajo_id'];
+            $pruebaPedagogia->delete();
+
+            $pruebaPedagogias = LegajoCB::where('id', $legajo_id)
+                ->with([
+                    'pedagogia' => function ($query) {
+                        $query->orderBy('fecha_prueba', 'desc');
+                    },
+                    'pedagogia.legajo',
+                    'pedagogia.estado'
+                ])
+                ->get();
+            return response()->json(['message' => 'Se ha eliminado correctamente la prueba Pedagógica.', 'pedagogias' => $pruebaPedagogias], 200);
+        } else {
+            return response()->json(['message' => 'Se ha producido un error al momento de eliminar la Prueba Pedagógica. No se encontró la Prueba'], 404);
+        }
     }
 
     public function list()

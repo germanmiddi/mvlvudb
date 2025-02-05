@@ -8,7 +8,8 @@
 
         <ResponsableComponent :legajo="legajo" :paises="paises" :parentescos="parentescos"
             :situacionesConyugal="situacionesConyugal" :tiposOcupacion="tiposOcupacion"
-            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" :tipoDocumento="tipoDocumento" @message="messageToast" />
+            :estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" :tipoDocumento="tipoDocumento"
+            @message="messageToast" />
 
         <AutorizacionesComponent :legajo="legajo" @message="messageToast" />
 
@@ -16,14 +17,13 @@
 
         <EducacionComponent :escuelas="escuelas" :estadosEducativo="estadosEducativo"
             :nivelesEducativo="nivelesEducativo" :turnosEducativo="turnosEducativo"
-            :escuelasDependencia="escuelasDependencia" :localidades="localidades" 
-            :escuelasNivel="escuelasNivel" :legajo="legajo" @message="messageToast" />
+            :escuelasDependencia="escuelasDependencia" :localidades="localidades" :escuelasNivel="escuelasNivel"
+            :legajo="legajo" @message="messageToast" />
 
         <GabineteComponent :estadosGabinete="estadosGabinete" :legajo="legajo" @message="messageToast" />
-        
+
         <EmprendedorComponent v-if="legajo[0].tipo_legajo?.id === 2" :legajo="legajo" @message="messageToast" />
-        
-        <PedagogiaComponent :estadosPedagogia="estadosPedagogia" :legajo="legajo" @message="messageToast" />
+
         <!-- Datos PEdagogia -->
         <!-- <div class="px-4 mt-6">
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -70,7 +70,6 @@ import SaludComponent from './Components/Salud.vue';
 import EducacionComponent from './Components/Educacion.vue';
 import GabineteComponent from './Components/Gabinete.vue';
 import EmprendedorComponent from './Components/Emprendedor.vue';
-import PedagogiaComponent from './Components/Pedagogia.vue';
 
 import { defineEmits } from 'vue';
 
@@ -91,11 +90,11 @@ const props = defineProps({
     escuelas: Object,
     turnosEducativo: Object,
     escuelasDependencia: Object,
-	escuelasNivel: Object,
+    escuelasNivel: Object,
     estadosGabinete: Object,
     estadosPedagogia: Object,
     tipoDocumento: Object,
-    
+
 });
 
 const legajo = props.legajo;

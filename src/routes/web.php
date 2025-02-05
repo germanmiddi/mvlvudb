@@ -342,14 +342,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
             Route::post('/store-intervencion', [LegajosCBController::class, 'store_intervencion'])->name('legajoCB.storeIntervencion');
             Route::post('/store-informe', [LegajosCBController::class, 'store_informe'])->name('legajoCB.storeInforme');
+            Route::post('/store-pedagogia', [LegajosCBController::class, 'store_pedagogia'])->name('legajoCB.storePedagogia');
             Route::put('/update-informe', [LegajosCBController::class, 'update_informe'])->name('legajoCB.updateInforme');
             Route::put('/update-programa-intervencion', [LegajosCBController::class, 'update_programa_intervencion'])->name('legajoCB.updateProgramaIntervencion');
+            Route::put('/update-pedagogia', [LegajosCBController::class, 'update_pedagogia'])->name('legajoCB.updatePedagogia');
 
 
             Route::delete('/delete-informe/{id}', [LegajosCBController::class, 'delete_informe'])->name('legajoCB.deleteInforme');
             Route::post('/store-archivo', [LegajosCBController::class, 'store_archivo'])->name('legajoCB.storeArchivo');
             Route::delete('/delete-archivo/{id}', [LegajosCBController::class, 'delete_archivo'])->name('legajoCB.deleteArchivo');
             Route::delete('/delete-programa-intervencion/{id}', [LegajosCBController::class, 'delete_programa_intervencion'])->name('legajoCB.deleteProgramaIntervencion');
+            Route::delete('/delete-pedagogia/{id}', [LegajosCBController::class, 'delete_pedagogia'])->name('legajoCB.deletePedagogia');
 
             Route::put('/update-legajo', [LegajosCBController::class, 'update_legajo'])->name('legajoCB.updateLegajo');
             Route::put('/update-legajo-direccion', [LegajosCBController::class, 'update_legajoDireccion'])->name('legajoCB.updateLegajoDireccion');

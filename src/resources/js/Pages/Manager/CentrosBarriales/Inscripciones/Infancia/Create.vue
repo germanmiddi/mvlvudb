@@ -19,15 +19,16 @@
 				</button> -->
 
 				<button
-          class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-          :class="formLoading ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
-          @click="submit"
-          :disabled="formLoading"
-        >
-          <span v-if="formLoading">Guardando...</span>
-          <span v-else>Guardar</span>
-		  <svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
-        </button>
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+					:class="formLoading ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+					@click="submit" :disabled="formLoading">
+					<span v-if="formLoading">Guardando...</span>
+					<span v-else>Guardar</span>
+					<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1"
+						viewBox="0 0 24 24" width="15" height="15">
+						<path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+					</svg>
+				</button>
 			</div>
 		</div>
 
@@ -78,13 +79,13 @@
 							Gabinete
 						</a>
 					</li>
-					<li class="me-2">
+					<!-- <li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8"
 							:class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
 							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Pedagogia
 						</a>
-					</li>
+					</li> -->
 					<li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 9"
 							:class="this.tabs === 9 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
@@ -197,15 +198,17 @@
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.contact.email" type="text" name="email" id="email" autocomplete="email"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.contact.email" type="text" name="email" id="email"
+									autocomplete="email" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
-								<input v-model="form.contact.phone" type="text" name="phone" id="phone" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.contact.phone" type="text" name="phone" id="phone"
+									autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
@@ -245,8 +248,8 @@
 								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
 								<Datepicker
 									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-									v-model="form.inscripcion.fecha" :enableTimePicker="false" :monthChangeOnScroll="true"
-									autoApply :formatinscripcionCBJ="format"
+									v-model="form.inscripcion.fecha" :enableTimePicker="false"
+									:monthChangeOnScroll="true" autoApply :formatinscripcionCBJ="format"
 									:style="v$.form.inscripcion.fecha.$error ? datepickerStyle : ''"
 									:disabled="input_disable">
 								</Datepicker>
@@ -270,14 +273,15 @@
 										{{ canalAtencion.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.inscripcion.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.inscripcion.canal_atencion_id.$error"
+									class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.inscripcion.sede_id" id="sede_id" name="sede_id" autocomplete="off"
-									:disabled="input_disable"
+								<select v-model="form.inscripcion.sede_id" id="sede_id" name="sede_id"
+									autocomplete="off" :disabled="input_disable"
 									:class="v$.form.inscripcion.sede_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una sede</option>
@@ -349,23 +353,28 @@
 
 
 				<!-- PEDAGOGIA -->
-				<TabPedagogia v-if="this.tabs === 8" :form="form.pedagogia" :input_disable="input_disable"
+				<!-- <TabPedagogia v-if="this.tabs === 8" :form="form.pedagogia" :input_disable="input_disable"
 				:estadosPedagogia="estadosPedagogia" @submit="handlePedagogia">
-				</TabPedagogia>
+				</TabPedagogia> -->
 
 				<!-- ADULTO RESPONSABLE -->
 				<TabResponsable v-if="this.tabs === 9" :v="v$" :form="form.responsable" :input_disable="input_disable"
 					:tiposDocumento="tiposDocumento" :paises="paises" :parentescos="parentescos"
 					:situacionesConyugal="situacionesConyugal" :tiposOcupacion="tiposOcupacion"
-					:estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo" @submit="handleResponsable">
+					:estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo"
+					@submit="handleResponsable">
 				</TabResponsable>
 
-				<div v-if="formLoading" class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center py-28 bg-black-transparent rounded-md border-2 border-gray-400">
-				<div>
-					<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="50" height="50"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+				<div v-if="formLoading"
+					class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center py-28 bg-black-transparent rounded-md border-2 border-gray-400">
+					<div>
+						<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg"
+							class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="50" height="50">
+							<path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+						</svg>
+					</div>
+					<div class="text-2xl">Cargando...</div>
 				</div>
-				<div class="text-2xl">Cargando...</div>
-			</div>
 			</form>
 		</div>
 	</main>
@@ -390,7 +399,7 @@ import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
 import TabResponsable from './Components/TabResponsable.vue';
 import TabGabinete from './Components/TabGabinete.vue';
-import TabPedagogia from './Components/TabPedagogia.vue';
+// import TabPedagogia from './Components/TabPedagogia.vue';
 
 
 export default {
@@ -435,7 +444,7 @@ export default {
 		TabEducacion,
 		TabResponsable,
 		TabGabinete,
-		TabPedagogia,
+		// TabPedagogia,
 		TabSalud,
 		Toast,
 		TrashIcon,
@@ -558,7 +567,7 @@ export default {
 			// VALIDACION CAMPOS OBLIGATORIOS
 			const result = await this.v$.$validate()
 			if (!result) {
-				this.formLoading = false; 
+				this.formLoading = false;
 				return
 			}
 
@@ -574,20 +583,20 @@ export default {
 				: null;
 
 			this.form.inscripcion.phone_emergency = this.form.responsable.phone_emergency
-			
+
 			try {
 				const response = await axios.post(rt, this.form);
 				this.labelType = "success";
-					this.toastMessage = response.data.message;
-					window.location.href = "/centros-barriales/infancia";
-				} catch (error) {
-					this.labelType = "danger";
-					this.toastMessage = response.data.message;
-					this.labelType = "danger";
-					this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
-				} finally {
-					this.btnGuardar = false
-					this.formLoading = false; 
+				this.toastMessage = response.data.message;
+				window.location.href = "/centros-barriales/infancia";
+			} catch (error) {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+				this.labelType = "danger";
+				this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+			} finally {
+				this.btnGuardar = false
+				this.formLoading = false;
 			}
 		},
 		async getPerson() {
@@ -700,7 +709,7 @@ export default {
 				let age = today.getFullYear() - birthDate.getFullYear();
 				const m = today.getMonth() - birthDate.getMonth();
 				if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				    age--;
+					age--;
 				}
 				this.form.age = age;
 			} else {

@@ -18,15 +18,16 @@
 					Guardar
 				</button> -->
 				<button
-          class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
-          :class="formLoading ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
-          @click="submit"
-          :disabled="formLoading"
-        >
-          <span v-if="formLoading">Guardando...</span>
-          <span v-else>Guardar</span>
-		  <svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
-        </button>
+					class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+					:class="formLoading ? 'bg-gray-600 hover:bg-gray-700 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'"
+					@click="submit" :disabled="formLoading">
+					<span v-if="formLoading">Guardando...</span>
+					<span v-else>Guardar</span>
+					<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1"
+						viewBox="0 0 24 24" width="15" height="15">
+						<path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+					</svg>
+				</button>
 			</div>
 		</div>
 
@@ -36,47 +37,65 @@
 			<div class="border-b border-gray-200 dark:border-gray-700">
 				<ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
 					<li class="me-2">
-						<a href="#" @click="this.tabs = 1" :class="this.tabs === 1 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="this.tabs = 1"
+							:class="this.tabs === 1 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Datos Inscripción
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 2" :class="this.tabs === 2 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 2"
+							:class="this.tabs === 2 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Dirección
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 3" :class="this.tabs === 3 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 3"
+							:class="this.tabs === 3 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Salud
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 4" :class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 4"
+							:class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Autorizaciones
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 5" :class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 5"
+							:class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Educación
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6" :class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 6"
+							:class="this.tabs === 6 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Gabinete
 						</a>
 					</li>
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 7" :class="this.tabs === 7 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 7"
+							:class="this.tabs === 7 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Emprendedor
 						</a>
 					</li>
-					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8" :class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+					<!-- <li class="me-2">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 8"
+							:class="this.tabs === 8 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Pedagogia
 						</a>
-					</li>
+					</li> -->
 					<li class="me-2">
-						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 9" :class="this.tabs === 9 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'" class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
+						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 9"
+							:class="this.tabs === 9 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
+							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Adulto Responsable
 						</a>
 					</li>
@@ -88,7 +107,7 @@
 					role="alert">
 					<p class="font-bold text-md mb-2">Campos requeridos </p>
 					<p v-for="error of v$.form.$errors" :key="error.$uid">
-						{{error.$message}}
+						{{ error.$message }}
 					</p>
 				</div>
 			</div>
@@ -108,8 +127,8 @@
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="tipo_documento_id" class="block text-sm font-medium text-gray-700">Tipo de
 									Documento</label>
-								<select v-model="form.person.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-									autocomplete="off"
+								<select v-model="form.person.tipo_documento_id" id="tipo_documento_id"
+									name="tipo_documento_id" autocomplete="off"
 									:class="v$.form.person.tipo_documento_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -129,7 +148,8 @@
 								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
 									Documento</label>
 								<div class="relative">
-									<input type="text" v-model="form.person.num_documento" @keyup.enter="getPerson()" :class="v$.form.person.num_documento.$error ? 'border-red-500' : ''"
+									<input type="text" v-model="form.person.num_documento" @keyup.enter="getPerson()"
+										:class="v$.form.person.num_documento.$error ? 'border-red-500' : ''"
 										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 									<a @click="getPerson()"
 										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
@@ -153,7 +173,8 @@
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form.person.lastname" type="text" name="lastname" id="lastname" autocomplete="name"
+								<input v-model="form.person.lastname" type="text" name="lastname" id="lastname"
+									autocomplete="name"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 									:class="v$.form.person.lastname.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable" />
@@ -166,9 +187,10 @@
 									Nacimiento</label>
 								<Datepicker
 									class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-									:style="v$.form.person.fecha_nac.$error ? datepickerStyle : ''" v-model="form.person.fecha_nac"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
-									:enableTimePicker="false" :monthChangeOnScroll="false" autoApply :format="format">
+									:style="v$.form.person.fecha_nac.$error ? datepickerStyle : ''"
+									v-model="form.person.fecha_nac" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''" :enableTimePicker="false"
+									:monthChangeOnScroll="false" autoApply :format="format">
 								</Datepicker>
 								<span v-if="v$.form.person.fecha_nac.$error" class="text-red-500 text-xs">Campo
 									obligatorio</span>
@@ -180,27 +202,27 @@
 									:disabled="true" :class="bg_disable"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
-							
+
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="email" class="block text-sm font-medium text-gray-700">Mail</label>
-								<input v-model="form.contact.email" type="text" name="email" id="email" autocomplete="email"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.contact.email" type="text" name="email" id="email"
+									autocomplete="email" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
-								<input v-model="form.contact.phone" type="text" name="phone" id="phone" autocomplete="off"
-									:disabled="input_disable" :class="input_disable ? bg_disable : ''"
+								<input v-model="form.contact.phone" type="text" name="phone" id="phone"
+									autocomplete="off" :disabled="input_disable"
+									:class="input_disable ? bg_disable : ''"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="genero" class="block text-sm font-medium text-gray-700">Genero</label>
-								<select v-model="form.person.genero" id="genero" name="genero"
-									autocomplete="off"
-									:class="input_disable ? bg_disable : ''"
-									:disabled="input_disable"
+								<select v-model="form.person.genero" id="genero" name="genero" autocomplete="off"
+									:class="input_disable ? bg_disable : ''" :disabled="input_disable"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
 										Seleccione un Genero
@@ -233,17 +255,20 @@
 								<label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label>
 								<Datepicker
 									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-									v-model="form.inscripcion.fecha" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:formatinscripcionCBJ="format" :style="v$.form.inscripcion.fecha.$error ? datepickerStyle : ''"
+									v-model="form.inscripcion.fecha" :enableTimePicker="false"
+									:monthChangeOnScroll="true" autoApply :formatinscripcionCBJ="format"
+									:style="v$.form.inscripcion.fecha.$error ? datepickerStyle : ''"
 									:disabled="input_disable">
 								</Datepicker>
-								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+								<span v-if="v$.form.inscripcion.fecha.$error" class="text-red-500 text-xs">Campo
+									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de Atención</label>
-								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion_id" name="canal_atencion_id"
-									autocomplete="off"
+								<label for="canal_atencion" class="block text-sm font-medium text-gray-700">Canal de
+									Atención</label>
+								<select v-model="form.inscripcion.canal_atencion_id" id="canal_atencion_id"
+									name="canal_atencion_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 									:class="v$.form.inscripcion.canal_atencion_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									:disabled="input_disable">
@@ -255,14 +280,15 @@
 										{{ canalAtencion.description }}
 									</option>
 								</select>
-								<span v-if="v$.form.inscripcion.canal_atencion_id.$error" class="text-red-500 text-xs">Campo
+								<span v-if="v$.form.inscripcion.canal_atencion_id.$error"
+									class="text-red-500 text-xs">Campo
 									obligatorio</span>
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 								<label for="sede_id" class="block text-sm font-medium text-gray-700">Sede</label>
-								<select v-model="form.inscripcion.sede_id" id="sede_id" name="sede_id" autocomplete="off"
-									:disabled="input_disable"
+								<select v-model="form.inscripcion.sede_id" id="sede_id" name="sede_id"
+									autocomplete="off" :disabled="input_disable"
 									:class="v$.form.inscripcion.sede_id.$error ? 'border-red-500' : input_disable ? bg_disable : ''"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>Seleccione una sede</option>
@@ -276,11 +302,12 @@
 							</div>
 
 							<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-								<label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha inicio CB</label>
+								<label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha inicio
+									CB</label>
 								<Datepicker
 									class="focus:ring-indigo-500 mt-1 focus:border-indigo-500 block w-full shadow-sm sm:text-sm rounded-md"
-									v-model="form.inscripcion.fecha_inicio" :enableTimePicker="false" :monthChangeOnScroll="true" autoApply
-									:formatinscripcionCBJ="format"
+									v-model="form.inscripcion.fecha_inicio" :enableTimePicker="false"
+									:monthChangeOnScroll="true" autoApply :formatinscripcionCBJ="format"
 									:disabled="input_disable">
 								</Datepicker>
 							</div>
@@ -289,9 +316,10 @@
 								<label for="observacion" class="block text-sm font-medium text-gray-700">Observaciones
 								</label>
 								<div class="mt-1">
-									<textarea v-model="form.inscripcion.observacion" id="observacion" name="observacion" rows="3" :disabled="input_disable"
+									<textarea v-model="form.inscripcion.observacion" id="observacion" name="observacion"
+										rows="3" :disabled="input_disable"
 										class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md"
-										:class="input_disable ? bg_disable : ''"/>
+										:class="input_disable ? bg_disable : ''" />
 								</div>
 							</div>
 						</div>
@@ -299,96 +327,68 @@
 				</div>
 
 				<!-- DOMICILIO -->
-				<TabDireccion 	v-if="this.tabs === 2"
-									:form="form.direccion"
-									:input_disable="input_disable"
-									:localidades="localidades"
-									@submit="handleDireccion">
+				<TabDireccion v-if="this.tabs === 2" :form="form.direccion" :input_disable="input_disable"
+					:localidades="localidades" @submit="handleDireccion">
 				</TabDireccion>
 
 				<!-- SALUD -->
-				<TabSalud 	v-if="this.tabs === 3"
-									:form="form.salud"
-									:input_disable="input_disable"
-									:centrosSalud="centrosSalud"
-									@submit="handleSalud">
+				<TabSalud v-if="this.tabs === 3" :form="form.salud" :input_disable="input_disable"
+					:centrosSalud="centrosSalud" @submit="handleSalud">
 				</TabSalud>
 
 				<!-- AUTORIZACIONES -->
-				<TabAutorizaciones 	v-if="this.tabs === 4"
-									:form="form.autorizaciones"
-									:input_disable="input_disable"
-									@submit="handleAutorizaciones">
+				<TabAutorizaciones v-if="this.tabs === 4" :form="form.autorizaciones" :input_disable="input_disable"
+					@submit="handleAutorizaciones">
 				</TabAutorizaciones>
 
 				<!-- Educacion -->
-				<TabEducacion 	v-if="this.tabs === 5"
-									:form="form.educacion"
-									:input_disable="input_disable"
-									:nivelesEducativo="nivelesEducativo"
-									:estadosEducativo="estadosEducativo"
-									:turnosEducativo="turnosEducativo"
-									:escuelas="escuelas"
-									:escuelasDependencia="escuelasDependencia"
-									:localidades="localidades"
-									:escuelasNivel="escuelasNivel"
-									@submit="handleEducacion">
+				<TabEducacion v-if="this.tabs === 5" :form="form.educacion" :input_disable="input_disable"
+					:nivelesEducativo="nivelesEducativo" :estadosEducativo="estadosEducativo"
+					:turnosEducativo="turnosEducativo" :escuelas="escuelas" :escuelasDependencia="escuelasDependencia"
+					:localidades="localidades" :escuelasNivel="escuelasNivel" @submit="handleEducacion">
 				</TabEducacion>
 
 				<!-- GABINETE -->
-				<TabGabinete 	v-if="this.tabs === 6"
-									:form="form.gabinete"
-									:input_disable="input_disable"
-									:estadosGabinete="estadosGabinete"
-									@submit="handleGabinete">
+				<TabGabinete v-if="this.tabs === 6" :form="form.gabinete" :input_disable="input_disable"
+					:estadosGabinete="estadosGabinete" @submit="handleGabinete">
 				</TabGabinete>
 
 				<!-- EMPRENDEDOR -->
-				<TabEmprendedor 	v-if="this.tabs === 7"
-									:form="form.emprendedor"
-									:input_disable="input_disable"
-									@submit="handleEmprendedor">
+				<TabEmprendedor v-if="this.tabs === 7" :form="form.emprendedor" :input_disable="input_disable"
+					@submit="handleEmprendedor">
 				</TabEmprendedor>
 
 				<!-- PEDAGOGIA -->
-				<TabPedagogia 	v-if="this.tabs === 8"
+				<!-- <TabPedagogia 	v-if="this.tabs === 8"
 									:form="form.pedagogia"
 									:input_disable="input_disable"
 									:estadosPedagogia="estadosPedagogia"
 									@submit="handlePedagogia">
-				</TabPedagogia>
+				</TabPedagogia> -->
 
 				<!-- ADULTO RESPONSABLE -->
-				<TabResponsable 	v-if="this.tabs === 9"
-									:v="v$"
-									:form="form.responsable"
-									:input_disable="input_disable"
-									:tiposDocumento="tiposDocumento"
-									:paises="paises"
-									:parentescos="parentescos"
-									:situacionesConyugal="situacionesConyugal"
-									:tiposOcupacion="tiposOcupacion"
-									:estadosEducativo="estadosEducativo"
-									:nivelesEducativo="nivelesEducativo"
-									@submit="handleResponsable">
+				<TabResponsable v-if="this.tabs === 9" :v="v$" :form="form.responsable" :input_disable="input_disable"
+					:tiposDocumento="tiposDocumento" :paises="paises" :parentescos="parentescos"
+					:situacionesConyugal="situacionesConyugal" :tiposOcupacion="tiposOcupacion"
+					:estadosEducativo="estadosEducativo" :nivelesEducativo="nivelesEducativo"
+					@submit="handleResponsable">
 				</TabResponsable>
 
-				<div v-if="formLoading" class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center py-28 bg-black-transparent rounded-md border-2 border-gray-400">
-				<div>
-					<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg" class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="50" height="50"><path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" /></svg>
+				<div v-if="formLoading"
+					class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center py-28 bg-black-transparent rounded-md border-2 border-gray-400">
+					<div>
+						<svg v-if="formLoading" xmlns="http://www.w3.org/2000/svg"
+							class="text-gray-300 animate-spin ml-1" viewBox="0 0 24 24" width="50" height="50">
+							<path fill="currentColor" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z" />
+						</svg>
+					</div>
+					<div class="text-2xl">Cargando...</div>
 				</div>
-				<div class="text-2xl">Cargando...</div>
-			</div>
 			</form>
 		</div>
 
-		<DialogModal 
-			:show="showConfirmed"  
-			:title="modalTitle" 
-			:message="modalMessage" 
-			:type="modalType" 
-			@confirmModal="confirmModal" 
-			@closeModal="closeModal" />
+		<DialogModal :show="showConfirmed" :title="modalTitle" :message="modalMessage" :type="modalType"
+			@confirmModal="confirmModal" @closeModal="closeModal" />
 	</main>
 </template>
 
@@ -397,7 +397,7 @@ import { ref } from "vue";
 import { useVuelidate } from '@vuelidate/core'
 import { required, helpers, minLength } from '@vuelidate/validators'
 
-import { ArrowLeftCircleIcon, ArrowsPointingInIcon ,PlusCircleIcon, TrashIcon} from "@heroicons/vue/24/outline";
+import { ArrowLeftCircleIcon, ArrowsPointingInIcon, PlusCircleIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -411,36 +411,36 @@ import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
 import TabResponsable from './Components/TabResponsable.vue';
 import TabGabinete from './Components/TabGabinete.vue';
-import TabPedagogia from './Components/TabPedagogia.vue';
+// import TabPedagogia from './Components/TabPedagogia.vue';
 import TabEmprendedor from './Components/TabEmprendedor.vue';
 
 
 export default {
 	props: {
 		acompanamientosCbj: Object,
-        actividadesCbj: Object,
-        barrios: Object,
-        canalesAtencion: Object,
+		actividadesCbj: Object,
+		barrios: Object,
+		canalesAtencion: Object,
 		centrosSalud: Object,
-        coberturasMedica: Object,
-        comedores: Object,
-        estadosEducativo: Object,
+		coberturasMedica: Object,
+		comedores: Object,
+		estadosEducativo: Object,
 		escuelas: Object,
 		escuelasDependencia: Object,
 		escuelasNivel: Object,
-        localidades: Object,
-        nivelesEducativo: Object,
-        paises: Object,
-        programasSocial: Object,
-        rolesTramite: Object,
-        sedes: Object,
-        situacionesConyugal: Object,
-        tiposDocumento: Object,
-        tiposOcupacion: Object,
-        tiposPension: Object,
-        tiposTramite: Object,
-        tiposVivienda: Object,
-        turnosEducativo: Object,
+		localidades: Object,
+		nivelesEducativo: Object,
+		paises: Object,
+		programasSocial: Object,
+		rolesTramite: Object,
+		sedes: Object,
+		situacionesConyugal: Object,
+		tiposDocumento: Object,
+		tiposOcupacion: Object,
+		tiposPension: Object,
+		tiposTramite: Object,
+		tiposVivienda: Object,
+		turnosEducativo: Object,
 		paises: Object,
 		parentescos: Object,
 		situacionesConyugal: Object,
@@ -451,33 +451,33 @@ export default {
 	},
 	components: {
 		ArrowsPointingInIcon,
-        ArrowLeftCircleIcon,
-        PlusCircleIcon,
-        TabAutorizaciones,
-        TabDireccion,
-        TabEducacion,
-        TabResponsable,
+		ArrowLeftCircleIcon,
+		PlusCircleIcon,
+		TabAutorizaciones,
+		TabDireccion,
+		TabEducacion,
+		TabResponsable,
 		TabGabinete,
-		TabPedagogia,
+		// TabPedagogia,
 		TabEmprendedor,
-        TabSalud,
-        Toast,
-        TrashIcon,
-        Datepicker,
-        Switch,
-        helpers,
-        minLength,
-        required,
-        store,
-        useVuelidate,
-        DialogModal
+		TabSalud,
+		Toast,
+		TrashIcon,
+		Datepicker,
+		Switch,
+		helpers,
+		minLength,
+		required,
+		store,
+		useVuelidate,
+		DialogModal
 	},
 	data() {
 		return {
 			tabs: 1,
 			// Datos formulario
 			form: {
-				person:{},
+				person: {},
 				contact: {},
 				inscripcion: {},
 				autorizaciones: {},
@@ -497,11 +497,11 @@ export default {
 
 			// Multiselect
 			actividadSelect: '',
-            actividadesSelected: [],
+			actividadesSelected: [],
 			acompanamientoSelect: '',
-            acompanamientosSelected: [],
+			acompanamientosSelected: [],
 			tallerSelect: '',
-            talleresSelected: [],
+			talleresSelected: [],
 
 			// Disabled - Enabled
 			bg_disable: 'bg-gray-100',
@@ -521,13 +521,13 @@ export default {
 	},
 	validations() {
 		const dynamicValidations = this.form.responsable.num_documento
-				? {
-					tipo_documento_id: { required: helpers.withMessage('Responsable: El campo Tipo de Documento es Obligatorio', required) },
-					name: { required: helpers.withMessage('Responsable: El campo Nombre es Obligatorio', required) },
-					lastname: { required: helpers.withMessage('Responsable: El campo Apellido es Obligatorio', required) },
-					fecha_nac: { required: helpers.withMessage('Responsable: El campo Fecha de Nacimiento es Obligatorio', required) }
-				}
-				: {};
+			? {
+				tipo_documento_id: { required: helpers.withMessage('Responsable: El campo Tipo de Documento es Obligatorio', required) },
+				name: { required: helpers.withMessage('Responsable: El campo Nombre es Obligatorio', required) },
+				lastname: { required: helpers.withMessage('Responsable: El campo Apellido es Obligatorio', required) },
+				fecha_nac: { required: helpers.withMessage('Responsable: El campo Fecha de Nacimiento es Obligatorio', required) }
+			}
+			: {};
 		return {
 
 			// Validaciones de campos obligatorios
@@ -564,14 +564,14 @@ export default {
 	},
 	methods: {
 		closeModal() {
-            this.openModal = false
-        },
+			this.openModal = false
+		},
 		clearMessage() {
 			this.toastMessage = "";
 		},
 		clearFormData() {
 			this.form = {
-				person:{},
+				person: {},
 				contact: {},
 				inscripcion: {},
 				autorizaciones: {},
@@ -589,8 +589,8 @@ export default {
 			this.formLoading = true;
 			// VALIDACION CAMPOS OBLIGATORIOS
 			const result = await this.v$.$validate()
-			if(!result){
-				this.formLoading = false; 
+			if (!result) {
+				this.formLoading = false;
 				return
 			}
 
@@ -604,28 +604,28 @@ export default {
 			this.form.fecha_nac = this.form.fecha_nac
 				? new Date(this.form.fecha_nac).toISOString()
 				: null;
-			
+
 			this.form.inscripcion.phone_emergency = this.form.responsable.phone_emergency
 
 			try {
 				const response = await axios.post(rt, this.form);
 				this.labelType = "success";
-					this.toastMessage = response.data.message;
-					window.location.href = "/centros-barriales/infancia";
-				} catch (error) {
-					this.labelType = "danger";
-					this.toastMessage = response.data.message;
-					this.labelType = "danger";
-					this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
-				} finally {
-					this.btnGuardar = false
-					this.formLoading = false; 
+				this.toastMessage = response.data.message;
+				window.location.href = "/centros-barriales/infancia";
+			} catch (error) {
+				this.labelType = "danger";
+				this.toastMessage = response.data.message;
+				this.labelType = "danger";
+				this.toastMessage = "Se ha producido un error | Por Favor Comuniquese con el Administrador!"
+			} finally {
+				this.btnGuardar = false
+				this.formLoading = false;
 			}
 		},
 
 		async getPerson() {
 			let num_documento = this.form.person.num_documento;
-						
+
 			const get = `${route('persons.getPersonDni', this.form.person.num_documento)}`
 			const response = await fetch(get, { method: 'GET' })
 			let data = await response.json()
@@ -633,21 +633,21 @@ export default {
 				this.clearFormData()
 				data = data.data[0].person
 
-				if(data.legajo_cb){
+				if (data.legajo_cb) {
 					//si es CBI se consulta si se desea registrar en Juventud
-					if(data.legajo_cb.tipo_legajo_id == 1){
+					if (data.legajo_cb.tipo_legajo_id == 1) {
 						this.tempData = data;
 						this.modalTitle = 'El DNI ya se encuentra inscripto en Centros Barriales Infancia';
 						this.modalMessage = '¿Está seguro que desea crear un nuevo legajo en CBJ?';
 						this.modalType = 'confirm';
 						this.showConfirmed = true;
-					}else{
+					} else {
 						// Si es Juventud, es un dato duplicado
 						this.labelType = "danger";
 						this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
 						this.input_disable = true;
 					}
-				}else{
+				} else {
 					this.form.person.num_documento = num_documento;
 					/// Recuperar datos.
 					this.form.person.tipo_documento_id = data.tipo_documento_id
@@ -705,43 +705,43 @@ export default {
 				this.input_disable = false;
 			}
 		},
-		confirmModal(){
+		confirmModal() {
 			this.asignarData(this.tempData);
-			
+
 		},
-		closeModal(){
+		closeModal() {
 			this.showConfirmed = false;
 		},
 
 		removeNullValues(data) {
 			return Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null && value !== undefined));
 		},
-		requiredPerson(){
+		requiredPerson() {
 			this.labelType = "info";
 			this.toastMessage = "Debe ingresar un DNI.";
 		},
-		handleAutorizaciones(data){
+		handleAutorizaciones(data) {
 			this.form.autorizaciones = data;
 		},
-		handleDireccion(data){
+		handleDireccion(data) {
 			this.form.direccion = data;
 		},
-		handleSalud(data){
+		handleSalud(data) {
 			this.form.salud = data;
 		},
-		handleEducacion(data){
+		handleEducacion(data) {
 			this.form.educacion = data;
 		},
-		handleGabinete(data){
+		handleGabinete(data) {
 			this.form.gabinete = data;
 		},
-		handleEmprendedor(data){
+		handleEmprendedor(data) {
 			this.form.emprendedor = data;
 		},
-		handlePedagogia(data){
+		handlePedagogia(data) {
 			this.form.pedagogia = data;
 		},
-		handleResponsable(data){
+		handleResponsable(data) {
 			this.form.responsable = data;
 		},
 		calculateAge() {
@@ -751,14 +751,14 @@ export default {
 				let age = today.getFullYear() - birthDate.getFullYear();
 				const m = today.getMonth() - birthDate.getMonth();
 				if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				    age--;
+					age--;
 				}
 				this.form.age = age;
 			} else {
 				this.form.age = null;
 			}
 		},
-		asignarData(data){
+		asignarData(data) {
 			this.form.person.num_documento = data.num_documento
 			/// Recuperar datos.
 			this.form.person.tipo_documento_id = data.tipo_documento_id
@@ -800,7 +800,7 @@ export default {
 				this.form.salud.centro_salud_id = data.salud.centro_salud_id
 				this.form.salud.observacion = data.salud.observacion
 
-				if(data.cud){
+				if (data.cud) {
 					this.form.salud.posee_cud = data.cud.posee_cud
 					this.form.salud.presento_cud = data.cud.presento_cud
 					this.form.salud.fecha_vencimiento_cud = data.cud.fecha_vencimiento_cud
@@ -822,13 +822,13 @@ export default {
 				this.form.educacion.escuela_nivel_id = data.education[0].escuela_nivel_id
 			}
 
-			if(data.legajo_cb.autorizacion){
+			if (data.legajo_cb.autorizacion) {
 				this.form.autorizaciones.autorizacion_firmada = data.legajo_cb.autorizacion.autorizacion_firmada
 				this.form.autorizaciones.autorizacion_retirarse = data.legajo_cb.autorizacion.autorizacion_retirarse
 				this.form.autorizaciones.autorizacion_uso_imagen = data.legajo_cb.autorizacion.autorizacion_uso_imagen
 			}
 
-			if(data.legajo_cb.responsable){
+			if (data.legajo_cb.responsable) {
 				this.form.responsable.num_documento = data.legajo_cb.responsable.num_documento
 				this.form.responsable.tipo_documento_id = data.legajo_cb.responsable.tipo_documento_id
 				this.form.responsable.name = data.legajo_cb.responsable.name

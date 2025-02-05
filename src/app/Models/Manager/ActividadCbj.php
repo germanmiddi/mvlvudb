@@ -12,6 +12,7 @@ class ActividadCbj extends Model
     public $timestamps = true;
 
     protected $fillable = [
+        'id',
         'description',
         'activo',
     ];

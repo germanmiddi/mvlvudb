@@ -8,10 +8,13 @@
                 </h1>
             </div>
 
-            <div v-if="formImport" class="mt-4 flex sm:mt-0 sm:ml-4">
+            <div v-if="formImport" class="mt-4 flex sm:mt-0 ">
+
+
+
                 <input @change="handleFileChange" accept=".jpg, .jpeg, .png, .gif, .pdf, .doc, .docx, .xls, .xlsx"
                     type="file" name="file" id="file" ref="inputfile" autocomplete="off"
-                    class="bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2" />
+                    class="bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block" />
 
                 <a @click="importFile()" v-if="!processImport"
                     class="order-0 inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white sm:order-1 sm:ml-3">Importar</a>
@@ -21,6 +24,9 @@
                     <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
                 </a>
 
+                <a :href="route('collections.entrevistas.export.template')"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Descargar
+                    Modelo</a>
                 <a @click="formImport = false"
                     class="order-0 inline-flex items-center px-4 py-2 border border-red-700 shadow-sm text-sm font-medium rounded-md text-red-700 hover:text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3">Cancelar</a>
             </div>

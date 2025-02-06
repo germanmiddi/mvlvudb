@@ -348,7 +348,7 @@
 
 				<!-- GABINETE -->
 				<TabGabinete v-if="this.tabs === 6" :form="form.gabinete" :input_disable="input_disable"
-					@submit="handleGabinete">
+					:estadosGabinete="estadosGabinete" :espacioGabinete="espacioGabinete" @submit="handleGabinete">
 				</TabGabinete>
 
 
@@ -433,6 +433,8 @@ export default {
 		situacionesConyugal: Object,
 		tiposOcupacion: Object,
 		estadosPedagogia: Object,
+		estadosGabinete: Object,
+		espacioGabinete: Object,
 
 	},
 	components: {
@@ -470,6 +472,7 @@ export default {
 				salud: {},
 				educacion: {},
 				responsable: {},
+				gabinete: {},
 				pedagogia: {}
 			},
 
@@ -559,6 +562,7 @@ export default {
 				responsable: {},
 				salud: {},
 				pedagogia: {},
+				gabinete: {},
 
 			}
 		},

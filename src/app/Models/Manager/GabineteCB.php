@@ -15,7 +15,8 @@ class GabineteCB extends Model
     protected $fillable = [
         'observacion',
         'legajo_id',
-        'estado_id'
+        'estado_id',
+        'espacio_id'
     ];
 
     public function legajo()
@@ -28,4 +29,8 @@ class GabineteCB extends Model
         return $this->BelongsTo(EstadoGabineteCB::class, 'estado_id');
     }
 
+    public function espacio()
+    {
+        return $this->BelongsTo(EspacioGabineteCb::class, 'espacio_id');
+    }
 }

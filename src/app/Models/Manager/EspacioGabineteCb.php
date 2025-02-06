@@ -5,9 +5,10 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EstadoGabineteCB extends Model
+class EspacioGabineteCb extends Model
 {
-    protected $table = 'estados_gabinete_cb';
+    use HasFactory;
+    protected $table = 'espacio_gabinete_cb';
     protected $primaryKey = 'id';
     public $timestamps = true;
 
@@ -16,14 +17,8 @@ class EstadoGabineteCB extends Model
         'activo',
     ];
 
-    public function informes()
-    {
-        return $this->hasMany(GabineteCB::class, 'estado_id');
-    }
-
     public function scopeActivo($query)
     {
         return $query->where('activo', true);
     }
-
 }

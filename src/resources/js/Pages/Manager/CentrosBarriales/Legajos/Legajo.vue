@@ -43,7 +43,7 @@
 						:turnosEducativo="turnosEducativo" :escuelasDependencia="escuelasDependencia"
 						:escuelasNivel="escuelasNivel" :estadosGabinete="estadosGabinete" :actividades="actividades"
 						:programasSociales="programasSociales" :estadosPedagogia="estadosPedagogia"
-						:tipoDocumento="tipoDocumento" @message="messageToast" />
+						:tipoDocumento="tipoDocumento" :espacioGabinete="espacioGabinete" @message="messageToast" />
 				</div>
 
 				<div class="lg:col-span-4 xl:col-span-4">
@@ -101,6 +101,7 @@ const props = defineProps({
 	escuelasDependencia: Object,
 	escuelasNivel: Object,
 	estadosGabinete: Object,
+	espacioGabinete: Object,
 	estadosPedagogia: Object,
 	tipoDocumento: Object,
 });

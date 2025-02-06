@@ -9,6 +9,7 @@ use App\Models\Manager\ActividadCBLegajo;
 use App\Models\Manager\ArchivoLegajo;
 use App\Models\Manager\AreaLegajoCB;
 use App\Models\Manager\CanalAtencion;
+use App\Models\Manager\EspacioGabineteCb;
 use App\Models\Manager\EstadoActividadCB;
 use App\Models\Manager\EstadoCbj;
 use App\Models\Manager\EstadoInformeCB;
@@ -72,7 +73,8 @@ class LegajosCBController extends Controller
                 'estados' => EstadoCbj::all(),
                 'escuelas' => Escuela::whereNull('dependencia_id')->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
-                'estadoGabinetes' => EstadoGabineteCB::where('activo', '=', 1)->get(),
+                'estadoGabinetes' => EstadoGabineteCB::activo()->get(),
+                'espacioGabinete' => EspacioGabineteCb::activo()->get(),
                 'selectedSede' => $sede_id,
                 'selectedLegajo' => $legajo,
             ]
@@ -137,6 +139,7 @@ class LegajosCBController extends Controller
                         'parentesco',
                         'gabinete',
                         'gabinete.estado',
+                        'gabinete.espacio',
                         'emprendedor',
                         'assigned',
                         'pedagogia.estado',
@@ -168,7 +171,8 @@ class LegajosCBController extends Controller
                 'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'escuelasNivel' => EscuelaNivel::get(),
 
-                'estadosGabinete' => EstadoGabineteCB::all(),
+                'estadosGabinete' => EstadoGabineteCB::activo()->get(),
+                'espacioGabinete' => EspacioGabineteCb::activo()->get(),
 
                 'estadosPedagogia' => EstadoPedagogia::all(),
                 'tipoDocumento' => TipoDocumento::all(),
@@ -889,6 +893,7 @@ class LegajosCBController extends Controller
                 [
                     'legajo_id' => $request->id,
                     'estado_id' => $request->estado_id ?? null,
+                    'espacio_id' => $request->espacio_id ?? null,
                     'observacion' => $request->observacion ?? null,
                 ]
             );

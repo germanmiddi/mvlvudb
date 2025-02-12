@@ -10,7 +10,7 @@ use App\Models\Manager\Person;
 use App\Models\Manager\SocialData;
 use App\Models\Manager\CajasEntrevista;
 use App\Models\Manager\CajasEntrevistasStatus;
-
+use App\Models\Manager\Cud;
 use App\PersonProgramaSocial;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
 use App\Services\CajasServices;
 
@@ -26,7 +27,7 @@ use Carbon\Carbon;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMultipleSheets
+class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMultipleSheets, WithStartRow
 {
     private $rows = 0;
     private $rowsSuccess = 0;
@@ -158,24 +159,40 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             );
 
             // * Social Data
-            SocialData::where('person_id', $person->id)->update(
+            SocialData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
                 [
                     'tipo_ocupacion_id' => $data['tipo_ocupacion_id'],
                     'cobertura_medica_id' => $data['cobertura_medica_id'],
-                    'tipo_pension_id' => $data['tipo_pension_id'],
-                    'programa_social_id' => $data['programa_social_id']
+                    'tipo_pension_id' => $data['tipo_pension_id']
                 ]
             );
 
-            EducationData::where('person_id', $person->id)->update(
+            EducationData::updateOrCreate(
+                [
+                    'person_id' => $person->id
+                ],
                 [
                     'nivel_educativo_id' => $data['nivel_educativo_id'],
                     'estado_educativo_id' => $data['estado_educativo_id']
                 ]
             );
 
-
             // $status_pendiente = CajasEntrevistasStatus::where('nombre', 'PENDIENTE')->first()->id;
+
+            if ($data['cud']) {
+                Cud::updateOrCreate(
+                    [
+                        'person_id' => $person->id
+                    ],
+                    [
+                        'codigo' => $data['cud'],
+                        'diagnostico' => $data['diagnostico']
+                    ]
+                );
+            }
 
 
             $entrevista = CajasEntrevista::create(
@@ -188,12 +205,22 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
                     'created_by' => Auth::user()->id,
                     'vive_solo' => $data['vive_solo'],
                     'cant_convivientes' => $data['cant_convivientes'],
-                    'tenencia' => $data['tenencia'],
-                    'pago_inquilino' => $data['pago_inquilino'],
+                    'habitacional_tipo_tenencia_id' => $data['tenencia'],
                     'ambientes' => $data['ambientes'],
+                    'has_hijos' => $data['has_hijos'],
                     'cant_hijos' => $data['cant_hijos'],
+                    'cant_personas_trabajando' => $data['cant_personas_trabajando'],
+                    'conviviente_discapacidad' => $data['conviviente_discapacidad'],
+                    'observaciones' => $data['observaciones'],
+                    'ingresos_trabajo' => $data['ingresos_trabajo'],
+                    'ingresos_planes' => $data['ingresos_planes'],
+                    'medicacion' => $data['medicacion'],
+                    'tratamiento_medico' => $data['tratamiento_medico'],
+                    'discapacidad' => $data['discapacidad'],
                 ]
             );
+
+            $person->programaSocial()->sync($data['programa_social_ids']);
 
             Log::info('Entrevista creada correctamente', ["Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Entrevista" => $entrevista->id]);
 
@@ -227,37 +254,50 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
         ];
 
         $allFields = [
+            'fecha',
+            'sede',
+            'entrevistador',
+            'observaciones',
+            'estado',
             'tipo_documento',
             'num_documento',
             'apellido',
             'nombre',
             'fecha_nacimiento',
-            'cant_hijos',
-            'situacion_conyugal',
-            'pais_de_origen',
+            'email',
+            'telefono',
+            'celular',
+            'localidad',
+            'barrio',
             'calle',
             'numero',
             'piso',
             'departamento',
-            'localidad',
-            'barrio',
-            'telefono',
-            'celular',
-            'email',
-            'ocupacion',
-            'cobertura_salud',
-            'recibe_pension',
-            'programa_social',
-            'nivel_educativo',
-            'nivel_educativo_alcanzado',
-            'fecha',
-            'entrevistador',
-            'sede',
+            'pais_de_origen',
+            'situacion_conyugal',
             'vive_solo',
             'cant_convivientes',
+            'hijos_a_cargo',
+            'cuantos_hijos_tiene',
+            'cuantas_personas_trabajan_en_el_hogar',
+            'conviviente_con_disca',
             'tenencia',
-            'pago_inquilino',
-            'ambientes'
+            'ambientes',
+            'nivel_educativo',
+            'nivel_educativo_alcanzado',
+            'ocupacion',
+            'ingresos_trabajo',
+            'percibe_jubilacion_pension',
+            'ingresos_pension',
+            'programa_social',
+            'cobertura_salud',
+            'recibe_tratamiento_medico',
+            'cual_tratamiento_medico',
+            'recibe_medicacion',
+            'cual_medicacion',
+            'tiene_discapacidad',
+            'nro_cud',
+            'diagnotico'
         ];
 
         // Check if all columns exist and required fields are not empty
@@ -283,7 +323,6 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             'fecha_nac' => $this->formatDate($row['fecha_nacimiento']),
 
             // * Aditional Data
-            'cant_hijos' => $row['cant_hijos'],
             'situacion_conyugal_id' => $this->extractID($row['situacion_conyugal']),
             'pais_id' => $this->extractID($row['pais_de_origen']),
 
@@ -300,28 +339,54 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             'celular' => $row['celular'],
             'email' => $row['email'],
 
-
             // * Social Data
             'tipo_ocupacion_id' => $this->extractID($row['ocupacion']),
             'cobertura_medica_id' => $this->extractID($row['cobertura_salud']),
-            'tipo_pension_id' => $this->extractID($row['recibe_pension']),
+            'tipo_pension_id' => $this->extractID($row['percibe_jubilacion_pension']),
             'programa_social_id' => $this->extractID($row['programa_social']),
 
             // * Education Data
             'nivel_educativo_id' => $this->extractID($row['nivel_educativo']),
             'estado_educativo_id' => $this->extractID($row['nivel_educativo_alcanzado']),
 
-
             // * Entrevista Data
             'fecha_entrevista' => $this->formatDate($row['fecha']),
             'entrevistador_id' => $this->extractID($row['entrevistador']),
             'sede_id' => $this->extractID($row['sede']),
-            'vive_solo' => $row['vive_solo'],
+            'observaciones' => $row['observaciones'],
+            'vive_solo' => $this->defineBoolean($row['vive_solo']),
             'cant_convivientes' => $row['cant_convivientes'],
-            'tenencia' => $row['tenencia'],
-            'pago_inquilino' => $row['pago_inquilino'],
+            'tenencia' => $this->extractID($row['tenencia']),
             'ambientes' => $row['ambientes'],
+
+            'has_hijos' => $this->defineBoolean($row['hijos_a_cargo']),
+            'cant_hijos' => $row['cuantos_hijos_tiene'],
+            'cant_personas_trabajando' => $row['cuantas_personas_trabajan_en_el_hogar'],
+            'conviviente_discapacidad' => $this->defineBoolean($row['conviviente_con_disca']),
+            'ingresos_trabajo' => $row['ingresos_trabajo'],
+            'ingresos_planes' => $row['ingresos_pension'],
+
+            'medicacion' => $row['cual_medicacion'],
+            'tratamiento_medico' => $row['cual_tratamiento_medico'],
+            'discapacidad' => $this->defineBoolean($row['tiene_discapacidad']),
+            'programa_social' => $row['programa_social'],
+
+            // * Cud
+            'cud' => $row['nro_cud'],
+            'diagnostico' => $row['diagnotico'],
         ];
+
+        //convertir el programa social a un array
+        if (!empty($row['programa_social'])) {
+
+            $programa_social = explode(';', $row['programa_social']);
+
+            foreach ($programa_social as $programa) {
+                $programa_social_id[] = $this->extractID(trim($programa));
+            }
+
+        }
+        $data['programa_social_ids'] = $programa_social_id;
 
         return $data;
     }
@@ -386,6 +451,19 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
             return null;
         }
     }
+
+    private function defineBoolean($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (strtolower($value) == 'si' || strtolower($value) == 'sí') {
+            return true;
+        }
+        return false;
+    }
+
     public function getImportResult()
     {
 
@@ -407,6 +485,10 @@ class Entrevistas implements ToModel, WithHeadingRow, WithBatchInserts, WithMult
         return [
             0 => $this // Aquí asumimos que la primera hoja tiene el índice 0
         ];
+    }
+    public function startRow(): int
+    {
+        return 3; // Comenzamos a procesar desde la fila 3 (omitiendo las dos primeras)
     }
 }
 

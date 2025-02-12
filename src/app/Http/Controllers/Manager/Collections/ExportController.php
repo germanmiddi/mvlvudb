@@ -20,6 +20,7 @@ use App\Models\Manager\TipoPension;
 use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\EstadoEducativo;
+use App\Models\Manager\CajasEntrevistasStatus;
 
 class ExportController extends Controller
 {
@@ -86,6 +87,10 @@ class ExportController extends Controller
         });
 
 
+        $entrevistasStatus = CajasEntrevistasStatus::all()->map(function ($status) {
+            return $status->id . '. ' . $status->nombre;
+        });
+
         return Excel::download(
             new TemplateEntrevistasExport(
                 $puntosEntrega,
@@ -99,7 +104,8 @@ class ExportController extends Controller
                 $tipoPension,
                 $programaSocial,
                 $nivelEducativo,
-                $estadoEducativo
+                $estadoEducativo,
+                $entrevistasStatus
             ),
             'template_entrevistas.xlsx'
         );

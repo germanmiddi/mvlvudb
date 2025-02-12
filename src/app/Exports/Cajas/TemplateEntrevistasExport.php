@@ -22,7 +22,8 @@ class TemplateEntrevistasExport implements WithMultipleSheets
     protected $programaSocial;
     protected $nivelEducativo;
     protected $estadoEducativo;
-    public function __construct($puntosEntrega, $entrevistadores, $tipoDocumento, $situacionConyugal, $paises, $tenencia, $ocupacion, $coberturaMedica, $tipoPension, $programaSocial, $nivelEducativo, $estadoEducativo)
+    protected $entrevistasStatus;
+    public function __construct($puntosEntrega, $entrevistadores, $tipoDocumento, $situacionConyugal, $paises, $tenencia, $ocupacion, $coberturaMedica, $tipoPension, $programaSocial, $nivelEducativo, $estadoEducativo, $entrevistasStatus)
     {
         $this->puntosEntrega = $puntosEntrega;
         $this->entrevistadores = $entrevistadores;
@@ -36,6 +37,7 @@ class TemplateEntrevistasExport implements WithMultipleSheets
         $this->programaSocial = $programaSocial;
         $this->nivelEducativo = $nivelEducativo;
         $this->estadoEducativo = $estadoEducativo;
+        $this->entrevistasStatus = $entrevistasStatus;
     }
     public function sheets(): array
     {
@@ -53,7 +55,8 @@ class TemplateEntrevistasExport implements WithMultipleSheets
                 $this->tipoPension,
                 $this->programaSocial,
                 $this->nivelEducativo,
-                $this->estadoEducativo
+                $this->estadoEducativo,
+                $this->entrevistasStatus
             ),
         ];
     }

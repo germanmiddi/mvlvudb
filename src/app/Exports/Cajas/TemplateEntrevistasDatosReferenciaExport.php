@@ -23,8 +23,9 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
     protected $programaSocial;
     protected $nivelEducativo;
     protected $estadoEducativo;
+    protected $entrevistasStatus;
 
-    public function __construct($puntosEntrega, $entrevistadores, $tipoDocumento, $situacionConyugal, $paises, $tenencia, $ocupacion, $coberturaMedica, $tipoPension, $programaSocial, $nivelEducativo, $estadoEducativo)
+    public function __construct($puntosEntrega, $entrevistadores, $tipoDocumento, $situacionConyugal, $paises, $tenencia, $ocupacion, $coberturaMedica, $tipoPension, $programaSocial, $nivelEducativo, $estadoEducativo, $entrevistasStatus)
     {
         $this->puntosEntrega = $puntosEntrega;
         $this->entrevistadores = $entrevistadores;
@@ -38,6 +39,7 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
         $this->programaSocial = $programaSocial;
         $this->nivelEducativo = $nivelEducativo;
         $this->estadoEducativo = $estadoEducativo;
+        $this->entrevistasStatus = $entrevistasStatus;
     }
 
     public function array(): array
@@ -55,7 +57,8 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
             count($this->tipoPension),
             count($this->programaSocial),
             count($this->nivelEducativo),
-            count($this->estadoEducativo)
+            count($this->estadoEducativo),
+            count($this->entrevistasStatus)
         );
 
         // Asegurarnos de que todas las columnas tengan el mismo número de filas, rellenando con valores vacíos si es necesario
@@ -72,10 +75,11 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
         $nivelEducativo = array_pad($this->nivelEducativo->toArray(), $maxRows, '');
         $estadoEducativo = array_pad($this->estadoEducativo->toArray(), $maxRows, '');
 
+        $entrevistasStatus = array_pad($this->entrevistasStatus->toArray(), $maxRows, '');
         // Organizar los datos en un arreglo para la hoja 2
         $data = [];
 
-        $data[] = ['Sedes', '', 'Entrevistador', '', 'Tipo Documento', '', 'Situación Conyugal', '', 'Pais', '', 'Tenencia', '', 'Ocupación', '', 'Cobertura Médica', '', 'Tipo Pension', '', 'Programa Social', '', 'Nivel Educativo', '', 'Estado Educativo'];
+        $data[] = ['Sedes', '', 'Entrevistador', '', 'Estado', '', 'Tipo Documento', '', 'Situación Conyugal', '', 'Pais', '', 'Tenencia', '', 'Ocupación', '', 'Cobertura Médica', '', 'Tipo Pension', '', 'Programa Social', '', 'Nivel Educativo', '', 'Estado Educativo'];
 
         // Agregar las filas con los valores
         for ($i = 0; $i < $maxRows; $i++) {
@@ -83,6 +87,8 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
                 $puntosEntrega[$i],
                 '',
                 $entrevistadores[$i],
+                '',
+                $entrevistasStatus[$i],
                 '',
                 $tipoDocumento[$i],
                 '',
@@ -130,7 +136,8 @@ class TemplateEntrevistasDatosReferenciaExport implements FromArray, WithStyles,
             'P',
             'Q',
             'R',
-            'S', // Ajustar el tamaño de las columnas A-G
+            'S',
+            'T' // Ajustar el tamaño de las columnas A-G
         ];
     }
 

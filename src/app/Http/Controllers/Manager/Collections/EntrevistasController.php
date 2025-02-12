@@ -211,7 +211,6 @@ class EntrevistasController extends Controller
                     'observaciones' => $observaciones,
                     'conviviente_discapacidad' => filter_var($request['has_discapacidad_conviviente'], FILTER_VALIDATE_BOOLEAN),
 
-
                 ]
             );
 

@@ -69,14 +69,21 @@
       </div>
     </div>
 
-    <div v-if="puntosEntrega.length != 0" class="mt-6">
-      <button @click="submitCollection"
-        class="bg-green-600 text-white px-4 rounded-md py-4 flex items-center w-full justify-center">
-        <CheckCircleIcon class="h-5 w-5 text-white mr-3" aria-hidden="true" />
+    <div v-if="puntosEntrega.length !== 0" class="mt-6">
+      <button @click="submitCollection" :disabled="!canGetBox.status"
+        class="px-6 py-3 w-full flex items-center justify-center rounded-md font-semibold transition duration-200"
+        :class="canGetBox.status
+          ? 'bg-green-600 hover:bg-green-700 text-white shadow-md'
+          : 'bg-gray-400 text-gray-200 shadow-sm'">
+        <CheckCircleIcon class="h-5 w-5 mr-3" />
         Entregar
       </button>
-    </div>
 
+      <p v-if="!canGetBox.status" class="mt-3 text-sm text-red-500 text-center">
+        Última entrega realizada hace {{ canGetBox.daysLeft == 0 ? 'unas horas' : canGetBox.daysLeft + ' días' }}.
+        Deben pasar 30 días desde la última entrega para activar esta opción.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -100,6 +107,9 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    canGetBox: {
+      type: Object,
     },
   },
   components: {

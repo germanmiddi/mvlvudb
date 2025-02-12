@@ -31,13 +31,13 @@
                 <MenuItems
                     class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                     <div class="py-1">
-                        <MenuItem v-slot="{ active }">
+                        <!-- <MenuItem v-slot="{ active }">
                         <a @click="showDetail = true"
                             :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'group flex items-center px-4 py-2 text-sm']">
                             <EyeIcon class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                             Detalle
                         </a>
-                        </MenuItem>
+                        </MenuItem> -->
                     </div>
                     <div class="py-1">
                         <MenuItem v-slot="{ active }">
@@ -70,8 +70,7 @@
     <div class="pl-3 mt-4 space-y-2 text-sm text-gray-800 mb-4 text-justify">
         <strong>Detalles:</strong>
         <div class="text-gray-900 overflow-hidden text-ellipsis"
-            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
-            v-html="pedagogia.detalles ?? '-'">
+            style="display: -webkit-box; -webkit-box-orient: vertical;" v-html="pedagogia.detalles ?? '-'">
         </div>
     </div>
 

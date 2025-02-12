@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Manager\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Carbon\Carbon;
 
 
 use App\Models\User;
@@ -253,9 +254,37 @@ class CollectionController extends Controller
                 return strtotime($b['date']) - strtotime($a['date']);
             });
 
+            $lastDelivery = Collection::where('address', $address)
+                ->where('person_id', '=', $person->id)
+                ->orderBy('date', 'asc')
+                ->first();
+
+
+            //Validaciond e entrega de Cajas
+            $daysSinceLastDelivery = $lastDelivery ? Carbon::parse($lastDelivery->date)->diffInDays(Carbon::now()) : null;
+            $canGetBox = !$lastDelivery || $daysSinceLastDelivery >= 30;
+
             $response = $fullHistory != []
-                ? ['person' => $person, 'history' => $fullHistory, 'message' => 'Datos Encontrados', 'status' => 200]
-                : ['person' => $person, 'history' => $fullHistory, 'message' => 'No se encontró historial de entregas', 'status' => 204];
+                ? [
+                    'person' => $person,
+                    'history' => $fullHistory,
+                    'canGetBox' => [
+                        'status' => $canGetBox,
+                        'daysLeft' => $daysSinceLastDelivery
+                    ],
+                    'message' => 'Datos Encontrados',
+                    'status' => 200
+                ]
+                : [
+                    'person' => $person,
+                    'history' => $fullHistory,
+                    'canGetBox' => [
+                        'status' => $canGetBox,
+                        'daysLeft' => $daysSinceLastDelivery
+                    ],
+                    'message' => 'No se encontró historial de entregas',
+                    'status' => 204
+                ];
 
             return response()->json($response);
         } else {

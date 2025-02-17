@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/cud', [ImportController::class, 'importCud'])->name('import.cud');
     Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable');
     Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');
+    Route::post('/import/importEscuelas', [ImportController::class, 'importEscuelas'])->name('import.importEscuelas');
 
     Route::post('/import/templateDependencia', [ImportController::class, 'templateDependencia'])->name('import.templateDependencia');
     Route::post('/import/infanciaCB', [ImportController::class, 'infanciaCB'])->name('import.infanciaCB');

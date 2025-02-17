@@ -14,4 +14,10 @@ class NivelEducativo extends Model
     protected $fillable = [
         'description',
     ];
+
+
+    public function escuela()
+    {
+        return $this->belongsToMany(EscuelaV2::class, 'escuelasv2_nivel_educativo', 'nivel_educativo_id', 'escuela_id');
+    }
 }

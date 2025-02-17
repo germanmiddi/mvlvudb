@@ -34,7 +34,7 @@ class FortalecimientoController extends Controller
     public function hide_puntos_entrega(Request $request)
     {
         $punto_entrega = PuntoEntrega::find($request->id);
-        $punto_entrega->activo = 0;
+        $punto_entrega->activo = $punto_entrega->activo == 1 ? 0 : 1;
         $punto_entrega->save();
         return response()->json($punto_entrega);
     }

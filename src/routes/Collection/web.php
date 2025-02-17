@@ -20,6 +20,7 @@ Route::middleware(['auth'])
         Route::get('/list_personal_data', [CollectionController::class, 'listPersonalData'])->name('collections.list_personal_data');
         Route::get('/list_personal', [CollectionController::class, 'listPersonal'])->name('collections.list_personal');
         Route::post('/store_personal', [CollectionController::class, 'storePersonal'])->name('collections.store_personal');
+        Route::post('/destroy_personal', [CollectionController::class, 'destroyPersonal'])->name('collections.destroy_personal');
         Route::get('/getStatistics', [CollectionController::class, 'getStatistics'])->name('collections.getStatistics');
 
         Route::get('/getPerson/{documento}', [CollectionController::class, 'getPerson'])->name('collections.getPerson');

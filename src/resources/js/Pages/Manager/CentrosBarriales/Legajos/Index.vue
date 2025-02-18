@@ -68,6 +68,27 @@
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
 
+                        <div class="col-span-12 sm:col-span-3">
+                            <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha Prueba
+                                Pedagoógica</label>
+                            <Datepicker
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                v-model="filter.prueba_date" range multiCalendars :closeOnAutoApply="true"
+                                :enableTimePicker="false" :format="customFormat"></Datepicker>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label for="prueba_estado_id" class="block text-sm font-medium text-gray-700">Estado de
+                                Prueba Pedagoógica</label>
+                            <select v-model="filter.prueba_estado_id" id="prueba_estado_id" name="prueba_estado_id"
+                                autocomplete="off"
+                                class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="" disabled>Seleccione un estado de la Prueba</option>
+                                <option v-for="item in estadoPedagogia" :key="item.id" :value="item.id">{{
+                                    item.description }}
+                                </option>
+                            </select>
+                        </div>
 
                         <div class="col-span-12 sm:col-span-2">
                             <label for="escuela_id" class="block text-sm font-medium text-gray-700">Escuela</label>
@@ -76,7 +97,7 @@
                                 <option value="" disabled>Seleccione una Escuela</option>
                                 <option v-for="escuela in escuelas" :key="escuela.id" :value="escuela.id">{{
                                     escuela.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
 
@@ -87,7 +108,7 @@
                                 <option value="" disabled>Seleccione un Estado</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{
                                     estado.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
 
@@ -99,7 +120,7 @@
                                 <option value="" disabled>Seleccione un Tipo Legajo</option>
                                 <option v-for="tl in tiposLegajo" :key="tl.id" :value="tl.id">{{
                                     tl.description
-                                }}</option>
+                                    }}</option>
                             </select>
                         </div>
                         <div class="col-span-12 sm:col-span-2">
@@ -111,8 +132,6 @@
                                 </option>
                             </select>
                         </div>
-
-
 
                         <div class="col-span-12 sm:col-span-2">
                             <label for="gabinete_id" class="block text-sm font-medium text-gray-700">Gabinete</label>
@@ -149,82 +168,83 @@
                         <p v-if="error" class="text-red-500 text-sm mt-1 w-full">{{ error }}</p>
 
                         <!-- <VueAgeSlider v-model="ageRange" :min="1" :max="30" /> -->
-                    </div>
-                    <div class="col-span-12 sm:col-span-2">
-                        <dt class="block text-sm font-medium text-gray-700">Semáforo</dt>
-                        <dd class="mt-6 pt-2 text-base text-gray-900 sm:mt-0">
-                            <div
-                                class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:flex-shrink-0 sm:justify-start">
-                                <Menu as="div" class="relative inline-block text-left w-16">
-                                    <div class="pb-7 w-full">
-                                        <MenuButton
-                                            class="p-2 rounded-full bg-white flex items-center justify-between w-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300"
-                                            :class="{
-                                                'bg-gray-100': filter.semaforo_id === 1,
-                                                'bg-red-100': filter.semaforo_id === 2,
-                                                'bg-yellow-100': filter.semaforo_id === 3,
-                                                'bg-green-100': filter.semaforo_id === 4
-                                            }">
-                                            <div class="relative flex items-center justify-center w-full">
-                                                <!-- Sin selección -->
-                                                <template v-if="!filter.semaforo_id">
-                                                    <span></span>
-                                                </template>
-                                                <!-- Opciones seleccionadas -->
-                                                <template v-else>
-                                                    <XCircleIcon :class="{
-                                                        'text-gray-400': filter.semaforo_id === 1,
-                                                        'text-red-400': filter.semaforo_id === 2,
-                                                        'text-yellow-400': filter.semaforo_id === 3,
-                                                        'text-green-400': filter.semaforo_id === 4
-                                                    }" class="mr-3 h-7 w-7" aria-hidden="true" />
-                                                </template>
-                                            </div>
-                                            <ChevronDownIcon class="h-5 w-5 ml-auto" aria-hidden="true" />
-                                        </MenuButton>
-                                    </div>
-                                    <transition enter-active-class="transition ease-out duration-100"
-                                        enter-from-class="transform opacity-0 scale-95"
-                                        enter-to-class="transform opacity-100 scale-100"
-                                        leave-active-class="transition ease-in duration-75"
-                                        leave-from-class="transform opacity-100 scale-100"
-                                        leave-to-class="transform opacity-0 scale-95">
-                                        <MenuItems
-                                            class="z-51 origin-top-right absolute right-0 mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            <div class="py-2 z-51">
-                                                <MenuItem v-slot="{ active }">
-                                                <button type="button" @click="filter.semaforo_id = 1"
-                                                    :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                    <XCircleIcon class="h-6 w-6 text-gray-400 mr-2"
-                                                        aria-hidden="true" />
-                                                </button>
-                                                </MenuItem>
-                                                <MenuItem v-slot="{ active }">
-                                                <button type="button" @click="filter.semaforo_id = 2"
-                                                    :class="[active ? 'bg-red-100 text-red-900' : 'text-red-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                    <XCircleIcon class="h-6 w-6 text-red-400 mr-2" aria-hidden="true" />
-                                                </button>
-                                                </MenuItem>
-                                                <MenuItem v-slot="{ active }">
-                                                <button type="button" @click="filter.semaforo_id = 3"
-                                                    :class="[active ? 'bg-yellow-100 text-red-900' : 'text-yellow-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                    <XCircleIcon class="h-6 w-6 text-yellow-400 mr-2"
-                                                        aria-hidden="true" />
-                                                </button>
-                                                </MenuItem>
-                                                <MenuItem v-slot="{ active }">
-                                                <button type="button" @click="filter.semaforo_id = 4"
-                                                    :class="[active ? 'bg-green-100 text-green-900' : 'text-green-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                                    <XCircleIcon class="h-6 w-6 text-green-400 mr-2"
-                                                        aria-hidden="true" />
-                                                </button>
-                                                </MenuItem>
-                                            </div>
-                                        </MenuItems>
-                                    </transition>
-                                </Menu>
-                            </div>
-                        </dd>
+                        <div class="col-span-12 sm:col-span-2">
+                            <dt class="block text-sm font-medium text-gray-700">Semáforo</dt>
+                            <dd class="mt-6 pt-2 text-base text-gray-900 sm:mt-0">
+                                <div
+                                    class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:flex-shrink-0 sm:justify-start">
+                                    <Menu as="div" class="relative inline-block text-left w-16">
+                                        <div class="pb-7 w-full">
+                                            <MenuButton
+                                                class="p-2 rounded-full bg-white flex items-center justify-between w-full text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300"
+                                                :class="{
+                                                    'bg-gray-100': filter.semaforo_id === 1,
+                                                    'bg-red-100': filter.semaforo_id === 2,
+                                                    'bg-yellow-100': filter.semaforo_id === 3,
+                                                    'bg-green-100': filter.semaforo_id === 4
+                                                }">
+                                                <div class="relative flex items-center justify-center w-full">
+                                                    <!-- Sin selección -->
+                                                    <template v-if="!filter.semaforo_id">
+                                                        <span></span>
+                                                    </template>
+                                                    <!-- Opciones seleccionadas -->
+                                                    <template v-else>
+                                                        <XCircleIcon :class="{
+                                                            'text-gray-400': filter.semaforo_id === 1,
+                                                            'text-red-400': filter.semaforo_id === 2,
+                                                            'text-yellow-400': filter.semaforo_id === 3,
+                                                            'text-green-400': filter.semaforo_id === 4
+                                                        }" class="mr-3 h-7 w-7" aria-hidden="true" />
+                                                    </template>
+                                                </div>
+                                                <ChevronDownIcon class="h-5 w-5 ml-auto" aria-hidden="true" />
+                                            </MenuButton>
+                                        </div>
+                                        <transition enter-active-class="transition ease-out duration-100"
+                                            enter-from-class="transform opacity-0 scale-95"
+                                            enter-to-class="transform opacity-100 scale-100"
+                                            leave-active-class="transition ease-in duration-75"
+                                            leave-from-class="transform opacity-100 scale-100"
+                                            leave-to-class="transform opacity-0 scale-95">
+                                            <MenuItems
+                                                class="z-51 origin-top-right absolute right-0 mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <div class="py-2 z-51">
+                                                    <MenuItem v-slot="{ active }">
+                                                    <button type="button" @click="filter.semaforo_id = 1"
+                                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                        <XCircleIcon class="h-6 w-6 text-gray-400 mr-2"
+                                                            aria-hidden="true" />
+                                                    </button>
+                                                    </MenuItem>
+                                                    <MenuItem v-slot="{ active }">
+                                                    <button type="button" @click="filter.semaforo_id = 2"
+                                                        :class="[active ? 'bg-red-100 text-red-900' : 'text-red-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                        <XCircleIcon class="h-6 w-6 text-red-400 mr-2"
+                                                            aria-hidden="true" />
+                                                    </button>
+                                                    </MenuItem>
+                                                    <MenuItem v-slot="{ active }">
+                                                    <button type="button" @click="filter.semaforo_id = 3"
+                                                        :class="[active ? 'bg-yellow-100 text-red-900' : 'text-yellow-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                        <XCircleIcon class="h-6 w-6 text-yellow-400 mr-2"
+                                                            aria-hidden="true" />
+                                                    </button>
+                                                    </MenuItem>
+                                                    <MenuItem v-slot="{ active }">
+                                                    <button type="button" @click="filter.semaforo_id = 4"
+                                                        :class="[active ? 'bg-green-100 text-green-900' : 'text-green-700', 'w-full flex justify-between px-4 py-2 text-sm']">
+                                                        <XCircleIcon class="h-6 w-6 text-green-400 mr-2"
+                                                            aria-hidden="true" />
+                                                    </button>
+                                                    </MenuItem>
+                                                </div>
+                                            </MenuItems>
+                                        </transition>
+                                    </Menu>
+                                </div>
+                            </dd>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -437,6 +457,7 @@ export default {
         selectedSede: String,
         selectedLegajo: String,
         estadoGabinetes: Object,
+        estadoPedagogia: Object,
     },
     components: {
         Menu,
@@ -545,6 +566,14 @@ export default {
 
             if (this.filter.max_years) {
                 filter += `&max_years=${JSON.stringify(this.filter.max_years)}`
+            }
+
+            if (this.filter.prueba_date) {
+                filter += `&prueba_date=${JSON.stringify(this.filter.prueba_date)}`
+            }
+
+            if (this.filter.prueba_estado_id) {
+                filter += `&prueba_estado_id=${JSON.stringify(this.filter.prueba_estado_id)}`
             }
 
             const get = `${route('legajoCB.list')}?${filter}`

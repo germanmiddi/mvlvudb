@@ -73,6 +73,7 @@ class LegajosCBController extends Controller
                 'escuelas' => Escuela::whereNull('dependencia_id')->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
                 'estadoGabinetes' => EstadoGabineteCB::where('activo', '=', 1)->get(),
+                'estadoPedagogia' => EstadoPedagogia::all(),
                 'selectedSede' => $sede_id,
                 'selectedLegajo' => $legajo,
             ]
@@ -566,10 +567,27 @@ class LegajosCBController extends Controller
                     ->where('gabinetes_cb.estado_id', '=', $gabinete);
             });
         }
-        // dd($result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
-        //     ->orderBy("legajos_cb.id", 'DESC')
-        //     ->paginate($length)
-        //     ->withQueryString());
+
+        // Filtro para Pruebas Pedagógicas
+        if (request('prueba_date') || request('prueba_estado_id')) {
+            $pruebaDate = request('prueba_date') ? json_decode(request('prueba_date')) : null;
+            $estadoPedagogia = request('prueba_estado_id') ? json_decode(request('prueba_estado_id')) : null;
+
+            $result->whereIn('id', function ($sub) use ($pruebaDate, $estadoPedagogia) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('legajo_pedagogia', 'legajo_pedagogia.legajo_id', '=', 'legajos_cb.id');
+
+                if ($pruebaDate) {
+                    $from = Carbon::parse($pruebaDate[0])->startOfDay()->toDateString();
+                    $to = Carbon::parse($pruebaDate[1])->addDay()->endOfDay()->toDateString();
+                    $sub->whereBetween('legajo_pedagogia.fecha_prueba', [$from, $to]);
+                }
+                if ($estadoPedagogia) {
+                    $sub->where('legajo_pedagogia.estado_id', '=', $estadoPedagogia);
+                }
+            });
+        }
         return $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
             ->orderBy("legajos_cb.id", 'DESC')
             ->paginate($length)

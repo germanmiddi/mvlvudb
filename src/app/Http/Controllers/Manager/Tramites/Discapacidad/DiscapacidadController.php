@@ -55,7 +55,7 @@ class DiscapacidadController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
                 'estados' => TramiteEstado::all(),
                 'users' => User::orderBy('name')->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
                 'toast' => Session::get('toast')
             ]
         );
@@ -81,7 +81,7 @@ class DiscapacidadController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->active()->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
             ]
         );
     }
@@ -318,7 +318,7 @@ class DiscapacidadController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 2)->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
             ]
         );
     }

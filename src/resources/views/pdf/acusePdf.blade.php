@@ -242,7 +242,7 @@ p {
                             <div class="mt-10"><strong>Diagnostico: </strong>  </div>
                         @endif
                         <div class="mt-10"><strong>Dependencia: </strong>  </div>
-                        <div class="mt-10"><strong>Canal de Atencion: </strong>  </div>
+                        <div class="mt-10"><strong>Modalidad Atención:</strong></div>
                         <div class="mt-10"><strong>Tipo de Tramite: </strong>  </div>
                         <div class="mt-10"><strong>Observación: </strong>  </div>
                     </div>
@@ -271,7 +271,7 @@ p {
                             <div class="mt-10">{{$cud_diagnostico}}</div>
                         @endif
                         <div class="mt-10">{{$dependencia}}</div>
-                        <div class="mt-10">{{$canal_atencion}}</div>
+                        <div class="mt-10">{{$modalidad_atencion}}</div>
                         <div class="mt-10">{{$tipo_tramite}}</div> 
                         <div class="mt-10">{{$observacion}}</div> 
                     </div>

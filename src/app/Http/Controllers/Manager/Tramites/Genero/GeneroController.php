@@ -61,7 +61,7 @@ class GeneroController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 6)->active()->get(),
                 'estados' => TramiteEstado::all(),
                 'users' => User::orderBy('name')->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
                 'categorias' => Category::all(),
                 'toast' => Session::get('toast')
             ]
@@ -90,7 +90,7 @@ class GeneroController extends Controller
                 'programasSocial' => ProgramaSocial::activo()->get(),
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
             ]
         );
     }
@@ -316,7 +316,7 @@ class GeneroController extends Controller
                 'parentescos' => Parentesco::whereNotIn('description', $this->notFamiliares)->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos', 'tramite_data')->get(),
                 'categories' => Category::where('dependencia_id', 6)->get(),
-                'modalidadesAtencion' => ModalidadAtencion::all(),
+                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
             ]
         );
     }

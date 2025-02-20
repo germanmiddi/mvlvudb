@@ -37,4 +37,9 @@ class EscuelaV2 extends Model
         return $this->belongsToMany(NivelEducativo::class, 'escuelasv2_nivel_educativo', 'escuela_id', 'nivel_educativo_id');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('activo', true);
+    }
+
 }

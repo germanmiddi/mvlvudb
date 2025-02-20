@@ -54,6 +54,7 @@ import Mayores from './Mayores.vue';
 import Vivienda from './Vivienda.vue';
 import CentrosBarriales from './CentrosBarriales.vue';
 import ProgramasSociales from './ProgramasSociales.vue';
+import EscuelasGeneral from './EscuelasGeneral.vue';
 
 const subNavigation = [
     { dependencia_id: 12, name: 'Centros Barriales Infancia', componentName: 'Cbi' },
@@ -68,6 +69,7 @@ const subNavigation = [
     { dependencia_id: 11, name: 'Vivienda social', componentName: 'Vivienda' },
     { dependencia_id: 0, name: 'Centros Barriales', componentName: 'CentrosBarriales' },
     { dependencia_id: 0, name: 'Programas Sociales', componentName: 'ProgramasSociales' },
+    { dependencia_id: 0, name: 'Escuelas General', componentName: 'EscuelasGeneral' },
 
 ]
 
@@ -91,6 +93,7 @@ export default {
         Vivienda,
         CentrosBarriales,
         ProgramasSociales,
+        EscuelasGeneral,
     },
 
     setup() {

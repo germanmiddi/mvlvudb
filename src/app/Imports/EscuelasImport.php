@@ -47,147 +47,61 @@ class EscuelasImport implements ToModel, WithHeadingRow, WithBatchInserts, WithS
 
     public function model(array $row)
     {
-        if (empty($row['nro'])) {
+        if (
+            empty($row['nombre_completo'])
+        ) {
             return null;
         }
         ++$this->rows;
-        
+
         $fields = ['localidad_id', 'dependencia_id', 'nivel_educativo'];
+
+        $localidadId = null;
+        $dependenciaId = null;
+        $nivelEducativoId = null;
         try {
 
-            // foreach($fields as $field){
-            //     if(isset($row[$field])){
-            //         switch ($field) {
-            //             case 'localidad_id':
-            //                 $localidadId = $this->buscarIdPorDescripcion(Localidad::class, $row['localidad_id']);
-            //                 break;
-            //             case 'dependencia_id':
-            //                 $dependenciaId = $this->buscarIdPorDescripcion(EscuelaDependencia::class, $row['dependencia_id']);
-            //                 break;
-            //             case 'nivel_educativo':
-            //                 $nivelEducativoId = $this->buscarIdPorDescripcion(NivelEducativo::class, $row['nivel_educativo']);
-            //                 break;
-            //         }
-            //     }
-            // }
-            
+            foreach ($fields as $field) {
+                if (isset($row[$field])) {
+                    switch ($field) {
+                        case 'localidad_id':
+                            $localidadId = $this->buscarIdPorDescripcion(Localidad::class, $row['localidad_id']);
+                            break;
+                        case 'dependencia_id':
+                            $dependenciaId = $this->buscarIdPorDescripcion(EscuelaDependencia::class, $row['dependencia_id']);
+                            break;
+                        case 'nivel_educativo':
+                            $nivelEducativoId = $this->buscarIdPorDescripcion(NivelEducativo::class, $row['nivel_educativo']);
+                            break;
+                    }
+                }
+            }
 
-            EscuelaV2::create([
-                'numero/sigla' => $this->transformDate($row['numero/sigla'] ?? null),
-                'nombre_completo' => $row['nombre_completo'],
-                'localidad_id' => $localidadId,
-                'dependencia_id' => $dependenciaId,
-                'direccion' => $row['direccion'],
-                'telefono' => $row['telefono'],
-                'mail' => $row['mail'],
-                'activo' => 1
-            ]);
+            $exist = EscuelaV2::where('nombre_completo', '=', $row['nombre_completo'])->exists();
+            if ($exist) {
+                ++$this->rows;
+            } else {
+                $escuela = EscuelaV2::create([
+                    'numero/sigla' => $row['numero_sigla'],
+                    'nombre_completo' => $row['nombre_completo'],
+                    'localidad_id' => $localidadId ?? null,
+                    'dependencia_id' => $dependenciaId ?? null,
+                    'direccion' => $row['direccion'],
+                    'telefono' => $row['telefono'],
+                    'mail' => $row['mail'],
+                    'activo' => 1
+                ]);
 
+                if (!is_null($nivelEducativoId)) {
+                    $escuela->niveles()->attach($nivelEducativoId);
+                }
+                ++$this->rowsSuccess;
 
-
-
-
-
-
-
-
-
-
-
-
-
+                Log::info("Se ha importado correctamente el tramite del registro NRO:  " . $row['nombre_completo'] . " , bajo el ID de Tramite N° " . $escuela['id'], ["Modulo" => "ImportFortalecimiento:template", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
+                DB::commit();
+            }
 
 
-
-            $person = Person::updateOrCreate(
-                [
-                    'tipo_documento_id' => 1,
-                    'num_documento' => $row['num_documento']
-                ],
-                [
-                    'lastname' => $row['apellido'] !== '' ? $row['apellido'] : null,
-                    'name' => $row['nombre'] !== '' ? $row['nombre'] : null,
-                    'fecha_nac' => $this->transformDate($row['fecha_nac'] ?? null),
-                    'tipo_documento_id' => 1,
-                    'num_documento' => $row['num_documento']
-                ]
-            );
-
-            AditionalData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'cant_hijos' => $row['cantidad_hijos'],
-                    'situacion_conyugal_id' => $row['situacion_conyugal'] !== '' ? $row['situacion_conyugal'] : null
-                ]
-            );
-
-            SocialData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'tipo_ocupacion_id' => $row['ocupacion'] !== '' ? $row['ocupacion'] : null,
-                    'cobertura_medica_id' => $row['cobertura_salud'] !== '' ? $row['cobertura_salud'] : null,
-                    'tipo_pension_id' => $row['pension'] !== '' ? $row['pension'] : null,
-                ]
-            );
-
-            EducationData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'nivel_educativo_id' => $row['nivel_educativo'] !== '' ? $row['nivel_educativo'] : null,
-                    'estado_educativo_id' => $row['estado_educativo'] !== '' ? $row['estado_educativo'] : null
-                ]
-            );
-
-            AddressData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'calle' => $row['calle'] !== '' ? $row['calle'] : null,
-                    'number' => $row['numero'] !== '' ? $row['numero'] : null,
-                    'piso' => $row['piso'] !== '' ? $row['piso'] : null,
-                    'dpto' => $row['dpto'] !== '' ? $row['dpto'] : null,
-                    'pais_id' => $row['nacionalidad'] !== '' ? $row['nacionalidad'] : null,
-                    'localidad_id' => $row['localidad'] !== '' ? $row['localidad'] : null,
-                    'barrio_id' => $row['barrio'] !== '' ? $row['barrio'] : null
-
-                ]
-            );
-
-            ContactData::updateOrCreate(
-                [
-                    'person_id' => $person->id
-                ],
-                [
-                    'phone' => $row['telefono'] !== '' ? $row['telefono'] : null,
-                    'celular' => $row['celular'] !== '' ? $row['celular'] : null,
-                    'email' => $row['email'] !== '' ? $row['email'] : null
-                ]
-            );
-
-            $tramite_data = Tramite::Create(
-                [
-                    'fecha' => $this->transformDate($row['fecha'] ?? null),
-                    'canal_atencion_id' => $row['canal_atencion'],
-                    'tipo_tramite_id' => $row['tipo_tramite'],
-                    'observacion' => $row['observacion'],
-                    'dependencia_id' => 5,
-                    'estado_id' => 1
-                ]
-            );
-            $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
-
-            ++$this->rowsSuccess;
-
-            Log::info("Se ha importado correctamente el tramite del registro NRO:  " . $row['nro'] . " , bajo el ID de Tramite N° " . $tramite_data['id'], ["Modulo" => "ImportFortalecimiento:template", "Usuario" => Auth::user()->id . ": " . Auth::user()->name]);
-
-            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             ++$this->rowsError;
@@ -241,9 +155,9 @@ class EscuelasImport implements ToModel, WithHeadingRow, WithBatchInserts, WithS
     {
         if (is_numeric($value)) {
             $id = $modelo::where('id', '=', $value)->value('id');
-            $id != null ? return $id : null;
-        }else{
-            return $modelo::where('description', 'LIKE', "%$value%")->value('id') ?? $value;
+            return $id !== null ? $id : null;
+        } else {
+            return $modelo::where('description', 'LIKE', "%$value%")->value('id');
         }
 
     }

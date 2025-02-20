@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager\Masterdata;
 
 use App\Exports\MasterDataExport;
 use App\Models\Manager\CentroSalud;
+use App\Models\Manager\EscuelaV2;
 use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\SocialData;
 use Illuminate\Http\Request;
@@ -600,5 +601,10 @@ class MasterdataController extends Controller
         $programaSocial->delete();
 
         return response()->json(['message' => 'Datos eliminados correctamente'], 200);
+    }
+    public function get_escuelas()
+    {
+        $escuelas = EscuelaV2::get();
+        return response()->json($escuelas);
     }
 }

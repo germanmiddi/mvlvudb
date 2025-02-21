@@ -54,7 +54,7 @@ class MayorController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
                 'estados' => TramiteEstado::all(),
                 'users' => User::orderBy('name')->get(),
-                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
                 'toast' => Session::get('toast')
             ]
         );
@@ -80,7 +80,7 @@ class MayorController extends Controller
                 'rolesTramite' => RolTramite::all(),
                 'tiposTramite' => TipoTramite::where('dependencia_id', 14)->active()->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
-                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }
@@ -293,7 +293,7 @@ class MayorController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 14)->get(),
                 'programasSocial' => ProgramaSocial::activo()->get(),
                 'tramite' => Tramite::where('id', $id)->with('persons', 'persons.address', 'archivos')->get(),
-                'modalidadesAtencion' => ModalidadAtencion::where('id', '!=', 3)->get(),
+                'modalidadesAtencion' => ModalidadAtencion::all(),
             ]
         );
     }

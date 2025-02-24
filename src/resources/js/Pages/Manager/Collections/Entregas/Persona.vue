@@ -79,9 +79,8 @@
         Entregar
       </button>
 
-      <p v-if="!canGetBox.status" class="mt-3 text-sm text-red-500 text-center">
-        Última entrega realizada hace {{ canGetBox.daysLeft == 0 ? 'unas horas' : canGetBox.daysLeft + ' días' }}.
-        Deben pasar 30 días desde la última entrega para activar esta opción.
+      <p v-if="!canGetBox.status && canGetBox.message" class="mt-3 text-sm text-red-500 text-center">
+        {{ canGetBox.message }}
       </p>
     </div>
   </div>

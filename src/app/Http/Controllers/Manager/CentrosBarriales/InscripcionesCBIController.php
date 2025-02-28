@@ -23,6 +23,8 @@ use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\EstadoPedagogia;
+use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\EspacioGabineteCb;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
 use App\Models\Manager\LegajoPedagogia;
@@ -50,23 +52,26 @@ use Inertia\Inertia;
 class InscripcionesCBIController extends Controller
 {
     protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o - Hijastro/a', 'Otro Familiar'];
-    protected $sedesAvailables = ['Las Flores','Sivori', 'La Loma', 'El Ceibo', 'Habana'];
+    protected $sedesAvailables = ['Las Flores', 'Sivori', 'La Loma', 'El Ceibo', 'Habana'];
 
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Infancia/Index',
-        [
-            'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
-        ]);
+        return Inertia::render(
+            'Manager/CentrosBarriales/Inscripciones/Infancia/Index',
+            [
+                'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
+            ]
+        );
     }
 
     public function create()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Infancia/Create',
+        return Inertia::render(
+            'Manager/CentrosBarriales/Inscripciones/Infancia/Create',
             [
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
@@ -79,14 +84,15 @@ class InscripcionesCBIController extends Controller
                 'tiposTramite' => TipoTramite::where('dependencia_id', 12)->active()->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
                 'escuelasNivel' => EscuelaNivel::all(),
-                
+
                 'paises' => Pais::all(),
                 'estadosPedagogia' => EstadoPedagogia::all(),
                 'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
 
-
+                'estadosGabinete' => EstadoGabineteCB::activo()->get(),
+                'espacioGabinete' => EspacioGabineteCb::activo()->get(),
 
             ]
         );
@@ -143,7 +149,7 @@ class InscripcionesCBIController extends Controller
                 'inscripcion' => array_merge($request->input('inscripcion', []), ['person_id' => $person->id])
             ]);
 
-            if($request->responsable){
+            if ($request->responsable) {
                 $responsable = Person::updateOrCreate(
                     [
                         'tipo_documento_id' => $request->responsable['tipo_documento_id'],
@@ -158,7 +164,7 @@ class InscripcionesCBIController extends Controller
                     ],
                     $request->responsable
                 );
-    
+
                 AddressData::updateOrCreate(
                     [
                         'person_id' => $responsable['id']
@@ -186,11 +192,11 @@ class InscripcionesCBIController extends Controller
                     ],
                     $request->responsable
                 );
-    
+
             }
 
             // Obtiene ID de Tipo de Legajo.
-            $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
+            $tipo_legajo_cb = TipoLegajoCb::where('description', 'Centro Barrial Infancia')->first();
             $legajo = LegajoCB::updateOrCreate(
                 [
                     'person_id' => $request->inscripcion['person_id'],
@@ -215,7 +221,7 @@ class InscripcionesCBIController extends Controller
                 $request->autorizaciones
             );
 
-            if($request->gabinete){
+            if ($request->gabinete) {
                 GabineteCB::updateOrCreate(
                     [
                         'legajo_id' => $legajo['id']
@@ -224,16 +230,16 @@ class InscripcionesCBIController extends Controller
                 );
             }
 
-            if($request->pedagogia){
+            if ($request->pedagogia) {
                 LegajoPedagogia::updateOrCreate(
                     [
-                        'legajo_id' =>$legajo['id']
+                        'legajo_id' => $legajo['id']
                     ],
                     $request->pedagogia
                 );
             }
 
-            $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
+            $tipo_tramite = TipoTramite::where('description', 'INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
 
             $tramite_data = Tramite::Create(
                 [
@@ -250,7 +256,7 @@ class InscripcionesCBIController extends Controller
 
             $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
             //if(isset($responsable)){
-                //$responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
+            //$responsable->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 2]); // ROL BENEFICIARIO
             //}else{
             //    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
             //}
@@ -259,7 +265,7 @@ class InscripcionesCBIController extends Controller
             return response()->json(['message' => 'Se generado correctamente la inscripcion CBI.'], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBI", ["Modulo" => "IncripcionCBI:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBI", ["Modulo" => "IncripcionCBI:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBI. Verifique los datos ingresados.'], 203);
         }
     }
@@ -269,11 +275,11 @@ class InscripcionesCBIController extends Controller
         // Tramites relacionados con una Inscripcion de CB Infancia.
 
         // Obtiene ID de Tipo de Legajo.
-        
-        $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Infancia')->first();
+
+        $tipo_legajo_cb = TipoLegajoCb::where('description', 'Centro Barrial Infancia')->first();
 
         $legajos = LegajoCB::where('tipo_legajo_id', $tipo_legajo_cb['id'])->get();
-        $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
+        $tipo_tramite = TipoTramite::where('description', 'INSCRIPCION A CENTROS BARRIALES INFANCIA')->first();
 
         $resultados = [];
         // Recorre listado de legajos dados de alta.
@@ -287,16 +293,18 @@ class InscripcionesCBIController extends Controller
                             ->where('person_id', $legajo->person_id);
                     })
                     ->get();
-    
+
                 if ($tramites->isNotEmpty()) {
-                    $resultados[] = ['estado' => 'POSEE TRAMITE',
-                                    'legajo_id' => $legajo->id, 
-                                    'person_id' => $legajo->person_id, 
-                                    'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
-                                    'num_documento' => $legajo->person->num_documento];
+                    $resultados[] = [
+                        'estado' => 'POSEE TRAMITE',
+                        'legajo_id' => $legajo->id,
+                        'person_id' => $legajo->person_id,
+                        'person' => $legajo->person->lastname . ' - ' . $legajo->person->name,
+                        'num_documento' => $legajo->person->num_documento
+                    ];
                 } else {
                     // Verificar si se va crear el tramite.
-                    if($id === '1'){
+                    if ($id === '1') {
                         // Crea tramite
                         $tramite_data = Tramite::Create(
                             [
@@ -306,13 +314,13 @@ class InscripcionesCBIController extends Controller
                                 'canal_atencion_id' => $legajo->canal_atencion_id ?? 1,
                                 'tipo_tramite_id' => $tipo_tramite['id'],
                                 'dependencia_id' => $tipo_tramite['dependencia_id'],
-            
+
                                 'estado_id' => 1 // Estado Abierto
                             ]
                         );
                         // Busco datos del titular
                         // Verifica si posee responsable relacionado
-                        $person = Person::where('id',$legajo->person_id)->first();
+                        $person = Person::where('id', $legajo->person_id)->first();
                         $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
 
                         /* if($legajo->responsable_id){
@@ -321,21 +329,25 @@ class InscripcionesCBIController extends Controller
                         }else{
 
                         } */
-                        $resultados[] = ['estado' => 'SE HA CREADO EL TRAMITE ID: '.$tramite_data['id'],
-                                        'legajo_id' => $legajo->id, 
-                                        'person_id' => $legajo->person_id, 
-                                        'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
-                                        'num_documento' => $legajo->person->num_documento];
-                    }else{
-                        $resultados[] = ['estado' => 'NO POSEE TRAMITE',
-                                        'legajo_id' => $legajo->id, 
-                                        'person_id' => $legajo->person_id, 
-                                        'person' => $legajo->person->lastname.' - '.$legajo->person->name, 
-                                        'num_documento' => $legajo->person->num_documento];
+                        $resultados[] = [
+                            'estado' => 'SE HA CREADO EL TRAMITE ID: ' . $tramite_data['id'],
+                            'legajo_id' => $legajo->id,
+                            'person_id' => $legajo->person_id,
+                            'person' => $legajo->person->lastname . ' - ' . $legajo->person->name,
+                            'num_documento' => $legajo->person->num_documento
+                        ];
+                    } else {
+                        $resultados[] = [
+                            'estado' => 'NO POSEE TRAMITE',
+                            'legajo_id' => $legajo->id,
+                            'person_id' => $legajo->person_id,
+                            'person' => $legajo->person->lastname . ' - ' . $legajo->person->name,
+                            'num_documento' => $legajo->person->num_documento
+                        ];
                     }
                 }
             }
-            
+
             DB::commit();
             // Devolver como respuesta JSON
             return response()->json(['data' => $resultados]);

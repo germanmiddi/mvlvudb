@@ -71,14 +71,30 @@
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.estado ?? '-' }}</dd>
 
-                        <select v-else v-model="form.estado_id" id="estado_id"
-                            name="estado_id" autocomplete="off" :class="input_disable ? bg_disable : ''"
-                            :disabled="input_disable"
+                        <select v-else v-model="form.estado_id" id="estado_id" name="estado_id" autocomplete="off"
+                            :class="input_disable ? bg_disable : ''" :disabled="input_disable"
                             class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="" disabled>
                                 Seleccione un estado
                             </option>
                             <option v-for="item in estadosGabinete" :key="item.id" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Espacio</dt>
+                        <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
+                            this.form.espacio ?? '-' }}</dd>
+
+                        <select v-else v-model="form.espacio_id" id="espacio_id" name="espacio_id" autocomplete="off"
+                            :class="input_disable ? bg_disable : ''" :disabled="input_disable"
+                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="" disabled>
+                                Seleccione un espacio
+                            </option>
+                            <option v-for="item in espacioGabinete" :key="item.id" :value="item.id">
                                 {{ item.description }}
                             </option>
                         </select>
@@ -111,7 +127,8 @@ import store from '@/store.js'
 export default {
     props: {
         legajo: Object,
-        estadosGabinete: Object
+        estadosGabinete: Object,
+        espacioGabinete: Object,
     },
     components: {
         PencilSquareIcon, Bars4Icon, Datepicker, Menu, MenuButton, MenuItems, MenuItem
@@ -145,6 +162,8 @@ export default {
 
             this.form.estado = this.legajo[0].gabinete?.estado?.description ?? null
             this.form.estado_id = this.legajo[0].gabinete?.estado?.id ?? null
+            this.form.espacio = this.legajo[0].gabinete?.espacio?.description ?? null
+            this.form.espacio_id = this.legajo[0].gabinete?.espacio?.id ?? null
 
             this.form.observacion = this.legajo[0].gabinete?.observacion ?? null
 
@@ -160,6 +179,7 @@ export default {
             let rt = route("legajoCB.updateLegajoGabinete");
             // Actualiza el Form
             this.form.estado = this.estadosGabinete.find(item => item.id === this.form.estado_id)?.description || null;
+            this.form.espacio = this.espacioGabinete.find(item => item.id === this.form.espacio_id)?.description || null;
 
             try {
                 const response = await axios.put(rt, this.form);

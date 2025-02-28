@@ -350,7 +350,7 @@
 
 				<!-- GABINETE -->
 				<TabGabinete v-if="this.tabs === 6" :form="form.gabinete" :input_disable="input_disable"
-					:estadosGabinete="estadosGabinete" @submit="handleGabinete">
+					:estadosGabinete="estadosGabinete" :espacioGabinete="espacioGabinete" @submit="handleGabinete">
 				</TabGabinete>
 
 				<!-- EMPRENDEDOR -->
@@ -447,6 +447,7 @@ export default {
 		tiposOcupacion: Object,
 		estadosGabinete: Object,
 		estadosPedagogia: Object,
+		espacioGabinete: Object,
 
 	},
 	components: {

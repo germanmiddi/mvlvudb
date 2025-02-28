@@ -20,7 +20,8 @@
             :escuelasDependencia="escuelasDependencia" :localidades="localidades" :escuelasNivel="escuelasNivel"
             :legajo="legajo" @message="messageToast" />
 
-        <GabineteComponent :estadosGabinete="estadosGabinete" :legajo="legajo" @message="messageToast" />
+        <GabineteComponent :estadosGabinete="estadosGabinete" :espacioGabinete="espacioGabinete" :legajo="legajo"
+            @message="messageToast" />
 
         <EmprendedorComponent v-if="legajo[0].tipo_legajo?.id === 2" :legajo="legajo" @message="messageToast" />
 
@@ -92,7 +93,7 @@ const props = defineProps({
     escuelasDependencia: Object,
     escuelasNivel: Object,
     estadosGabinete: Object,
-    estadosPedagogia: Object,
+    espacioGabinete: Object,
     tipoDocumento: Object,
 
 });

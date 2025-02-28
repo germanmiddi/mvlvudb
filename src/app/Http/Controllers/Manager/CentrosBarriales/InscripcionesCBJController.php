@@ -21,6 +21,7 @@ use App\Models\Manager\EscuelaNivel;
 use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\EstadoGabineteCB;
+use App\Models\Manager\EspacioGabineteCb;
 use App\Models\Manager\EstadoPedagogia;
 use App\Models\Manager\GabineteCB;
 use App\Models\Manager\LegajoCB;
@@ -49,11 +50,12 @@ use Inertia\Inertia;
 class InscripcionesCBJController extends Controller
 {
     protected $FamiliarConviviente = ['Madre', 'Padre', 'Abuela/o', 'Adulto/a Responsable', 'Hermana/o', 'Tia/o', 'Madrastra/Padrastro', 'Pareja Conviviente', 'Hija/o - Hijastro/a', 'Otro Familiar'];
-    protected $sedesAvailables = ['Munro','Villa Martelli', 'La Loma', 'El Ceibo'];
+    protected $sedesAvailables = ['Munro', 'Villa Martelli', 'La Loma', 'El Ceibo'];
 
     public function index()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Index',
+        return Inertia::render(
+            'Manager/CentrosBarriales/Inscripciones/Juventud/Index',
             [
                 'sedes' => Sede::whereIn('description', $this->sedesAvailables)->get(),
             ]
@@ -62,11 +64,12 @@ class InscripcionesCBJController extends Controller
 
     public function create()
     {
-        return Inertia::render('Manager/CentrosBarriales/Inscripciones/Juventud/Create',
+        return Inertia::render(
+            'Manager/CentrosBarriales/Inscripciones/Juventud/Create',
             [
                 'actividadesCbj' => ActividadCbj::where('activo', true)->get(),
                 'acompanamientosCbj' => AcompanamientoCbj::where('activo', true)->get(),
-                'canalesAtencion' => CanalAtencion::where('id','<>',10)->get(),
+                'canalesAtencion' => CanalAtencion::where('id', '<>', 10)->get(),
                 'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
@@ -85,7 +88,8 @@ class InscripcionesCBJController extends Controller
                 'parentescos' => Parentesco::whereIn('description', $this->FamiliarConviviente)->get(),
                 'situacionesConyugal' => SituacionConyugal::all(),
                 'tiposOcupacion' => TipoOcupacion::all(),
-                'estadosGabinete' => EstadoGabineteCB::all()
+                'estadosGabinete' => EstadoGabineteCB::activo()->get(),
+                'espacioGabinete' => EspacioGabineteCb::activo()->get(),
             ]
         );
     }
@@ -141,7 +145,7 @@ class InscripcionesCBJController extends Controller
                 'inscripcion' => array_merge($request->input('inscripcion', []), ['person_id' => $person->id])
             ]);
 
-            if($request->responsable){
+            if ($request->responsable) {
                 $responsable = Person::updateOrCreate(
                     [
                         'tipo_documento_id' => $request->responsable['tipo_documento_id'],
@@ -152,7 +156,7 @@ class InscripcionesCBJController extends Controller
             }
 
             // Obtiene ID de Tipo de Legajo.
-            $tipo_legajo_cb = TipoLegajoCb::where('description','Centro Barrial Juventud')->first();
+            $tipo_legajo_cb = TipoLegajoCb::where('description', 'Centro Barrial Juventud')->first();
 
             $legajo = LegajoCB::updateOrCreate(
                 [
@@ -177,7 +181,7 @@ class InscripcionesCBJController extends Controller
                 ],
                 $request->autorizaciones
             );
-            if($request->emprendedor){
+            if ($request->emprendedor) {
                 EmprendedorCB::updateOrCreate(
                     [
                         'legajo_id' => $legajo['id']
@@ -186,7 +190,7 @@ class InscripcionesCBJController extends Controller
                 );
             }
 
-            if($request->gabinete){
+            if ($request->gabinete) {
                 GabineteCB::updateOrCreate(
                     [
                         'legajo_id' => $legajo['id']
@@ -194,9 +198,9 @@ class InscripcionesCBJController extends Controller
                     $request->gabinete
                 );
             }
-            
-            $tipo_tramite = TipoTramite::where('description','INSCRIPCION A CENTROS BARRIALES JUVENTUD')->first();
-            if(!$tipo_tramite){
+
+            $tipo_tramite = TipoTramite::where('description', 'INSCRIPCION A CENTROS BARRIALES JUVENTUD')->first();
+            if (!$tipo_tramite) {
                 DB::rollBack();
                 return response()->json(['message' => 'No se ha encontrado el tipo de tramite para la inscripcion.'], 203);
             }
@@ -222,10 +226,10 @@ class InscripcionesCBJController extends Controller
             //    $person->tramites()->attach($tramite_data['id'], ['rol_tramite_id' => 1]); // ROL TITULAR
             //}
 
-            if($request->pedagogia){
+            if ($request->pedagogia) {
                 LegajoPedagogia::updateOrCreate(
                     [
-                        'legajo_id' =>$legajo['id']
+                        'legajo_id' => $legajo['id']
                     ],
                     $request->pedagogia
                 );
@@ -236,7 +240,7 @@ class InscripcionesCBJController extends Controller
         } catch (\Throwable $th) {
             //dd($th);
             DB::rollBack();
-            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBJ", ["Modulo" => "IncripcionCBJ:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
+            Log::error("Se ha generado un error al momento de almacenar la inscripcion CBJ", ["Modulo" => "IncripcionCBJ:store", "Usuario" => Auth::user()->id . ": " . Auth::user()->name, "Error" => $th->getMessage()]);
             return response()->json(['message' => 'Se ha producido un error al momento de almacenar la inscripcion CBJ. Verifique los datos ingresados.'], 203);
         }
 
@@ -244,34 +248,40 @@ class InscripcionesCBJController extends Controller
 
     public function index_inscriptos()
     {
-        return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Index',
-        [
-            'legajos' => LegajoCB::with('person','sede', 'estadocbj')->get()
-        ]);
+        return Inertia::render(
+            'Manager/CentrosBarriales/ListaInscriptos/Index',
+            [
+                'legajos' => LegajoCB::with('person', 'sede', 'estadocbj')->get()
+            ]
+        );
     }
 
-    public function view_inscripto_cb($id){
+    public function view_inscripto_cb($id)
+    {
         $legajo = LegajoCB::find($id);
 
-        return Inertia::render('Manager/CentrosBarriales/ListaInscriptos/Details',
-            [   
-                'legajo' => LegajoCB::where('id',$id)
-                                    ->with('estadocbj', 
-                                           'sede', 
-                                           'responsable', 
-                                           'person', 
-                                           'person.contact', 
-                                           'autorizacion', 
-                                           'canal_atencion',
-                                           'person.address', 
-                                           'person.address.localidad',
-                                           'person.address.barrio',
-                                           'person.salud',
-                                           'person.cud',
-                                           'person.education',
-                                           'person.education.nivelEducativo', 
-                                           'person.education.estadoEducativo',
-                                           'person.education.escuelaTurno')->get(),                
+        return Inertia::render(
+            'Manager/CentrosBarriales/ListaInscriptos/Details',
+            [
+                'legajo' => LegajoCB::where('id', $id)
+                    ->with(
+                        'estadocbj',
+                        'sede',
+                        'responsable',
+                        'person',
+                        'person.contact',
+                        'autorizacion',
+                        'canal_atencion',
+                        'person.address',
+                        'person.address.localidad',
+                        'person.address.barrio',
+                        'person.salud',
+                        'person.cud',
+                        'person.education',
+                        'person.education.nivelEducativo',
+                        'person.education.estadoEducativo',
+                        'person.education.escuelaTurno'
+                    )->get(),
             ]
         );
     }

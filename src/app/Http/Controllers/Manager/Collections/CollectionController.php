@@ -146,6 +146,18 @@ class CollectionController extends Controller
 
         return response()->json(['message' => 'Personal data stored successfully']);
     }
+    public function destroyPersonal(Request $request)
+    {
+        //eliminar el personal (relacion)
+        $user = User::find($request->user_id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->puntosEntrega()->detach($request->punto_entrega_id);
+
+        return response()->json(['message' => 'Personal data deleted successfully']);
+    }
 
     public function getCollectionList()
     {

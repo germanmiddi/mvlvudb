@@ -1,5 +1,5 @@
 <template>
-    
+
     <tr class="hover:bg-gray-50">
         <td>
             <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -7,15 +7,18 @@
             </div>
         </td>
         <td>
-            <div v-for="punto in item.puntos_entrega" :key="punto.id" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div v-for="punto in item.puntos_entrega" :key="punto.id"
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ punto.description }}
             </div>
         </td>
         <td>
-            <div class="flex justify-between w-1/2 mx-auto" >
-                <button @click="eliminarItem" class="bg-blue-400 text-white px-2 py-1 rounded text-sm mr-3"> Eliminar</button>
+            <div v-for="punto in item.puntos_entrega" :key="punto.id" class="flex justify-between w-1/2 mx-auto">
+                <button @click="destroyItem(item.id, punto.id)"
+                    class="bg-blue-400 text-white px-2 py-1 rounded text-sm mr-3 hover:bg-blue-600">
+                    Eliminar</button>
             </div>
-        </td> 
+        </td>
     </tr>
 
 </template>
@@ -64,9 +67,9 @@ export default {
         //     this.item.activo = !this.item.activo
         //     this.$emit('hide-item',id)
         // },
-        // destroyItem(id){
-        //     this.$emit('destroy-item',id)
-        // }
+        destroyItem(userId, puntoEntregaId) {
+            this.$emit('destroy-item', { userId, puntoEntregaId })
+        }
         // viewItem() {
         //     this.edit = this.item.description
         // }
@@ -78,6 +81,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

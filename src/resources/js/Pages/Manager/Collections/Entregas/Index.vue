@@ -51,7 +51,7 @@
 
 
         <Persona v-if="showPersona" :person="person" :puntosEntrega="puntosEntrega" :products="products" :user="user"
-            :status="status" @clearPerson="clearPerson" />
+            :status="status" :canGetBox="canGetBox" @clearPerson="clearPerson" />
 
         <History v-if="showPersona" :history="history" />
 
@@ -152,6 +152,7 @@ export default {
                         this.toastMessage = response.data.message;
                         this.person = await response.data.person;
                         this.history = await response.data.history;
+                        this.canGetBox = await response.data.canGetBox;
                         this.status = await response.data.status;
                         this.showPersona = true;
                         this.showForm = false;

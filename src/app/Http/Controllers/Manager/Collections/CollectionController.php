@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Manager\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Carbon\Carbon;
 
 
 use App\Models\User;
@@ -265,14 +266,64 @@ class CollectionController extends Controller
                 return strtotime($b['date']) - strtotime($a['date']);
             });
 
+            $lastDelivery = Collection::where('address', $address)
+                ->where('person_id', '=', $person->id)
+                ->orderBy('date', 'asc')
+                ->first();
+
+
+            //Validacion de entrega de Cajas por entrevista y ultima entrega
+            $canGetBox = $this->canReceiveBox($person, $lastDelivery);
+
             $response = $fullHistory != []
-                ? ['person' => $person, 'history' => $fullHistory, 'message' => 'Datos Encontrados', 'status' => 200]
-                : ['person' => $person, 'history' => $fullHistory, 'message' => 'No se encontró historial de entregas', 'status' => 204];
+                ? [
+                    'person' => $person,
+                    'history' => $fullHistory,
+                    'canGetBox' => $canGetBox,
+                    'message' => 'Datos Encontrados',
+                    'status' => 200
+                ]
+                : [
+                    'person' => $person,
+                    'history' => $fullHistory,
+                    'canGetBox' => $canGetBox,
+                    'message' => 'No se encontró historial de entregas',
+                    'status' => 204
+                ];
 
             return response()->json($response);
         } else {
             return response()->json(['message' => 'No se encontró ninguna persona con el documento proporcionado', 'status' => 404]);
         }
+    }
+    private function canReceiveBox($person, $lastDelivery)
+    {
+        //Primero comprobnar la entrevista
+        $entrevista = CajasEntrevista::where('person_id', $person->id)->first();
+        if (!$entrevista) {
+            return ['status' => false, 'message' => 'No se encontró una entrevista registrada'];
+        }
+
+        if ($entrevista->status_id != 2) {
+            return ['status' => false, 'message' => 'La entrevista no fue aprobada'];
+        }
+
+        //Luego los diasd e entrega
+        if (!$lastDelivery) {
+            return ['status' => true,];
+        }
+
+        $daysSinceLastDelivery = Carbon::parse($lastDelivery->date)->diffInDays(Carbon::now());
+        $message = match ($daysSinceLastDelivery) {
+            0 => "Última entrega realizada hace unas horas. Deben pasar 30 días desde la última entrega para activar esta opción.",
+            1 => "Última entrega realizada hace 1 día. Deben pasar 30 días desde la última entrega para activar esta opción.",
+            default => "Última entrega realizada hace $daysSinceLastDelivery días. Deben pasar 30 días desde la última entrega para activar esta opción."
+        };
+
+        return [
+            'status' => $daysSinceLastDelivery >= 30,
+            'message' => $message,
+        ];
     }
 
     public function getCollectionsFormData()

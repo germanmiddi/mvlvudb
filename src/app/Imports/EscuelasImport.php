@@ -82,7 +82,7 @@ class EscuelasImport implements ToModel, WithHeadingRow, WithBatchInserts, WithS
                 ++$this->rows;
             } else {
                 $escuela = EscuelaV2::create([
-                    'numero/sigla' => $row['numero_sigla'],
+                    'numero_sigla' => $row['numero_sigla'],
                     'nombre_completo' => $row['nombre_completo'],
                     'localidad_id' => $localidadId ?? null,
                     'dependencia_id' => $dependenciaId ?? null,

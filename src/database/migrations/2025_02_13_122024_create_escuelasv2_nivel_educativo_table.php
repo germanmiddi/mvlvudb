@@ -39,21 +39,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::table('escuelasv2_nivel_educativo', function (Blueprint $table) {
-            $table->dropForeign(['escuela_id']);
-            $table->dropForeign(['nivel_educativo_id']);
-
-            $table->foreign('escuela_id')
-                ->references('id')
-                ->on('escuelas_v2')
-                ->onDelete('NO ACTION')
-                ->onUpdate('NO ACTION');
-
-            $table->foreign('nivel_educativo_id')
-                ->references('id')
-                ->on('nivel_educativo')
-                ->onDelete('NO ACTION')
-                ->onUpdate('NO ACTION');
-        });
+        Schema::dropIfExists('escuelasv2_nivel_educativo');
     }
 };

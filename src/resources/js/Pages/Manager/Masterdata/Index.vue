@@ -54,7 +54,7 @@ import Mayores from './Mayores.vue';
 import Vivienda from './Vivienda.vue';
 import CentrosBarriales from './CentrosBarriales.vue';
 import ProgramasSociales from './ProgramasSociales.vue';
-import EscuelasGeneral from './EscuelasGeneral.vue';
+import EscuelasGeneral from './EscuelasGeneral/EscuelasGeneral.vue';
 
 const subNavigation = [
     { dependencia_id: 12, name: 'Centros Barriales Infancia', componentName: 'Cbi' },
@@ -114,11 +114,6 @@ export default {
     watch: {
 
     },
-
-    created() {
-
-    },
-
     methods: {
         clearMessage() {
             this.toastMessage = "";

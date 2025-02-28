@@ -5,13 +5,7 @@
                 <div class="flex justify-between">
                     <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Escuelas</h2>
                     <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" 
-                            @click="showNew = !showNew">Crear</button>
-                </div>
-                <div v-if="showNew" class="my-5">
-                    <input v-model="newDescription" class="w-10/12 border rounded mr-2 font-base py-2 text-sm pl-2" />
-                    
-                    <button class="mt-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-                            @click="newItem">Guardar</button>
+                            @click="openModalForm('create')">Crear</button>
                 </div>
             </div>
             <div class="">
@@ -23,11 +17,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ListEscuelasGeneral v-for="t in this.escuelas" :key="t.id" :item=t 
-                                      @edit-item="editItem" 
+                        <ListEscuelasGeneral :data="formData" v-for="t in this.escuelas" :key="t.id" :item=t 
                                       @hide-item="hideItem" 
-                                      @destroy-item="destroyItem"/>
+                                      @destroy-item="destroyItem"
+                                      @getUpdatedData="getData"/>
 
+                         <ModalEscuelas v-if="showFormModal" :escuela=null :type="type" :data="formData"
+                                      @closeModal="closeModalForm"/>
                     </tbody>
                 </table> 
             </div>
@@ -38,9 +34,10 @@
 <script>
 import axios from 'axios'
 import ListEscuelasGeneral from './ListEscuelasGeneral.vue'
+import ModalEscuelas from './ModalEscuelas.vue';
+import { ref, watch, computed } from 'vue';
 
 export default {
-
     props: {
         dependencia_id: {
             type: Number,
@@ -48,7 +45,8 @@ export default {
         }
     },
     components: {
-        ListEscuelasGeneral
+        ListEscuelasGeneral,
+        ModalEscuelas,
     },
     setup() {
 
@@ -58,74 +56,27 @@ export default {
 
         return {
             escuelas: {},
-            showNew: false,
-            newDescription: ""
+            newDescription: "",
+            showFormModal: false,
+            formData: [],
         }
     },
     created() {
-        this.getData()
+        this.getData();
+        this.getFormData();
     },
     methods: {
         async getData() {
+            console.log('Esta accediendo a la funcion getData')
             let response = await fetch(route('masterdata.escuelas.get_escuelas'), { method: 'GET' })
             this.escuelas = await response.json()
         },
 
-        async newItem() {
-            let formData = new FormData();
-            formData.append('description', this.newDescription);
-
+        async getFormData() {
             try {
-                const response = await axios.post(route('masterdata.escuelas.store_programaSocial'), formData);
-
-                if (response.status == 200) {
-                    this.$emit('toast-message',
-                        {
-                            'message': response.data.message,
-                            'type': 'success'
-                        })
-
-                    this.newDescription = ""
-                    this.showNew = false
-                    this.getData()
-
-                } else {
-                    this.$emit('toast-message',
-                        {
-                            'message': response.data.message,
-                            'type': 'danger'
-                        })
-                }
-            } catch (error) {
-                console.log(error)
-            }
-
-        },
-        async editItem(item) {
-            let formData = new FormData();
-            formData.append('id', item.id);
-            formData.append('description', item.description);
-
-            formData.append('activo', item.activo);
-
-
-            try {
-                const response = await axios.post(route('masterdata.escuelas.update_programaSocial'), formData);
-
-                if (response.status == 200) {
-                    this.$emit('toast-message',
-                        {
-                            'message': response.data.message,
-                            'type': 'success'
-                        })
-
-                } else {
-                    this.$emit('toast-message',
-                        {
-                            'message': response.data.message,
-                            'type': 'danger'
-                        })
-                }
+                let response = await fetch(route('masterdata.escuelas.get_escuelasData'), { method: 'GET' })
+                this.formData = await response.json();
+                console.log(this.formData);
             } catch (error) {
                 console.log(error)
             }
@@ -133,7 +84,7 @@ export default {
 
         async hideItem(id) {
 
-            const response = await axios.post(route('masterdata.escuelas.hide_programaSocial'), { id: id });
+            const response = await axios.post(route('masterdata.escuelas.hide_escuela'), { id: id });
 
             if (response.status == 200) {
                 this.$emit('toast-message',
@@ -153,7 +104,7 @@ export default {
         },
 
         async destroyItem(id) {
-            const response = await axios.post(route('masterdata.escuelas.destroy_programaSocial'), { id: id });
+            const response = await axios.post(route('masterdata.escuelas.destroy_escuela'), { id: id });
 
             if (response.status == 200) {
                 this.$emit('toast-message',
@@ -171,8 +122,25 @@ export default {
                         'type': 'danger'
                     })
             }
+        },
+        openModalForm(type) {
+            this.type = type
+            this.showFormModal = true;
+        },
+
+        closeModalForm() {
+            this.showFormModal = false;
+        },
+
+        toastMessage(message, type) {
+            this.$emit('toast-message',
+                {
+                    'message': this.message,
+                    'type': this.type
+                })
         }
     },
+
 
 }
 </script>

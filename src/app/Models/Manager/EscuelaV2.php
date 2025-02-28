@@ -12,7 +12,7 @@ class EscuelaV2 extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'numero/sigla',
+        'numero_sigla',
         'nombre_completo',
         'direccion',
         'localidad_id',

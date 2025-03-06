@@ -19,6 +19,7 @@ class EscuelaV2 extends Model
         'telefono',
         'mail',
         'dependencia_id',
+        'jornada_id',
         'activo',
     ];
 
@@ -35,6 +36,16 @@ class EscuelaV2 extends Model
     public function niveles()
     {
         return $this->belongsToMany(NivelEducativo::class, 'escuelasv2_nivel_educativo', 'escuela_id', 'nivel_educativo_id');
+    }
+
+    public function turnos()
+    {
+        return $this->belongsToMany(EscuelaTurno::class, 'escuelas_v2_turnos', 'escuela_id', 'turno_id');
+    }
+
+    public function jornadas()
+    {
+        return $this->belongsTo(EscuelaJornada::class, 'jornada_id');
     }
 
     public function scopeActive($query)

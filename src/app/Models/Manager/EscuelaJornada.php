@@ -5,9 +5,9 @@ namespace App\Models\Manager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EscuelaTurno extends Model
+class EscuelaJornada extends Model
 {
-    protected $table = 'escuelas_turnos';
+    protected $table = 'escuelas_jornadas';
     protected $primaryKey = 'id';
     public $timestamps = true;
 
@@ -16,14 +16,9 @@ class EscuelaTurno extends Model
         'activo',
     ];
 
-    public function cbiData()
-    {
-        return $this->hasMany(CbiData::class);
-    }
-
     public function escuelas()
     {
-        return $this->belongsToMany(Escuela::class, 'escuelas_v2_turnos', 'turno_id', 'escuela_id');
+        return $this->hasMany(Escuela::class, 'jornada_id');
     }
 
     public function scopeActive($query)

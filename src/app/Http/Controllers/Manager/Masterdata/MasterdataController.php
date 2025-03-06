@@ -6,6 +6,8 @@ use App\Exports\MasterDataExport;
 use App\Models\Manager\CentroSalud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EscuelaDependencia;
+use App\Models\Manager\EscuelaJornada;
+use App\Models\Manager\EscuelaTurno;
 use App\Models\Manager\EscuelaV2;
 use App\Models\Manager\Localidad;
 use App\Models\Manager\NivelEducativo;
@@ -608,7 +610,7 @@ class MasterdataController extends Controller
     }
     public function get_escuelasv2()
     {
-        $escuelas = EscuelaV2::with('niveles')->get();
+        $escuelas = EscuelaV2::with('niveles', 'turnos', 'jornadas')->get();
         return response()->json($escuelas);
     }
 
@@ -636,13 +638,11 @@ class MasterdataController extends Controller
 
     public function update_escuelav2(Request $request)
     {
-        // Buscar el registro TipoTramite por su id
         $escuela = EscuelaV2::find($request->id);
         if (!$escuela) {
             return response()->json(['message' => 'No se logró encontrar el registro'], 404);
         }
 
-        // Actualizar los campos
         $escuela->update([
             'numero_sigla' => $request->numero_sigla ?? null,
             'nombre_completo' => $request->nombre_completo,
@@ -651,12 +651,16 @@ class MasterdataController extends Controller
             'telefono' => $request->telefono ?? null,
             'mail' => $request->mail ?? null,
             'dependencia_id' => $request->dependencia_id ?? null,
+            'jornada_id' => $request->jornada_id ?? null,
             'activo' => $request->activo ?? null,
             'updated_at' => Carbon::now()
         ]);
 
         if (!empty($request->nivelesSelected)) {
             $escuela->niveles()->sync($request->nivelesSelected);
+        }
+        if (!empty($request->turnosSelected)) {
+            $escuela->turnos()->sync($request->turnosSelected);
         }
 
         return response()->json(['message' => 'Datos actualizados correctamente'], 200);
@@ -698,11 +702,15 @@ class MasterdataController extends Controller
         $localidades = Localidad::all();
         $dependencia = EscuelaDependencia::all();
         $nivelesEducativos = NivelEducativo::all();
+        $jornadas = EscuelaJornada::active()->get();
+        $turnos = EscuelaTurno::active()->get();
 
         $data = [
             'localidades' => $localidades,
             'dependencias' => $dependencia,
-            'nivelesEducativos' => $nivelesEducativos
+            'nivelesEducativos' => $nivelesEducativos,
+            'jornadas' => $jornadas,
+            'turnos' => $turnos,
         ];
 
         return response()->json($data);

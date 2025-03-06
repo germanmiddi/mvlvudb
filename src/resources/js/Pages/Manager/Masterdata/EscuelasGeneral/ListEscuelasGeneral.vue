@@ -20,11 +20,12 @@
         </td>
     </tr>
 
-    <DeleteModal v-if="showModal" :id="selectedItemId" :show="showModal"
+    <DeleteModal v-if="showModalDelete" :id="selectedItemId" :show="showModalDelete"
         :title="'¿Estás seguro de que deseas eliminar esta escuela?'" @responseDeleted="destroyItem"
         @viewDeleted="closeModalDelete" />
 
-    <ModalEscuelas v-if="showFormModal" :escuela="item" :type="type" :data="data" @closeModal="closeModalForm" />
+    <ModalEscuelas v-if="showFormModal" :escuela="item" :type="type" :data="data" :show="showFormModal"
+        @closeModal="closeModalForm" />
 </template>
 
 <script>

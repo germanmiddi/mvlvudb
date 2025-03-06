@@ -22,7 +22,7 @@
                                       @destroy-item="destroyItem"
                                       @getUpdatedData="getData"/>
 
-                         <ModalEscuelas v-if="showFormModal" :escuela=null :type="type" :data="formData"
+                         <ModalEscuelas v-if="showFormModal" :escuela=null :type="type" :data="formData" :show="showFormModal"
                                       @closeModal="closeModalForm"/>
                     </tbody>
                 </table> 
@@ -67,7 +67,6 @@ export default {
     },
     methods: {
         async getData() {
-            console.log('Esta accediendo a la funcion getData')
             let response = await fetch(route('masterdata.escuelas.get_escuelas'), { method: 'GET' })
             this.escuelas = await response.json()
         },
@@ -76,7 +75,6 @@ export default {
             try {
                 let response = await fetch(route('masterdata.escuelas.get_escuelasData'), { method: 'GET' })
                 this.formData = await response.json();
-                console.log(this.formData);
             } catch (error) {
                 console.log(error)
             }
@@ -124,11 +122,14 @@ export default {
             }
         },
         openModalForm(type) {
+            this.disableScroll();
             this.type = type
             this.showFormModal = true;
         },
 
         closeModalForm() {
+            this.getData();
+            this.enableScroll();
             this.showFormModal = false;
         },
 
@@ -138,9 +139,23 @@ export default {
                     'message': this.message,
                     'type': this.type
                 })
-        }
+        },
+
+        enableScroll() {
+            document.body.classList.remove('no-scroll');
+        },
+
+        disableScroll() {
+            document.body.classList.add('no-scroll');
+        },
     },
 
 
 }
 </script>
+
+<style>
+.no-scroll {
+    overflow: hidden;
+}
+</style>

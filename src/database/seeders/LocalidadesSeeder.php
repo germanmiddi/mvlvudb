@@ -30,6 +30,7 @@ class LocalidadesSeeder extends Seeder
             // Adicional para el uso de Entidad
             ['id' => 13, 'description' => 'C.A.B.A', 'postal_code' => null],
             ['id' => 16, 'description' => 'SAN MARTIN', 'postal_code' => null],
+            ['id' => '17', 'description' => 'San Isidro', 'postal_code' => null],
             /*
             3	"Florida" => Es necesario modificar por ID 5, existe previamente
             4	"La Lucila" => Existe coincide

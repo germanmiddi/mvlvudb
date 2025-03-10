@@ -51,6 +51,29 @@
 							APROBAR
 						</button>
 					</div>
+					<div v-else class="flex justify-end items-center gap-4">
+						<div v-if="entrevista.status_id == 2" class="flex items-center gap-2">
+							<p class="text-sm text-gray-500">Pasar a:</p>
+							<button class="px-4 py-2 border border-transparent 
+										shadow-sm text-sm font-medium rounded-md 
+										text-white bg-red-600 hover:bg-red-700 
+										focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
+										sm:order-1 sm:ml-3" @click="changeStatus(3)">
+								RECHAZADO
+							</button>
+						</div>
+						<div v-else-if="entrevista.status_id == 3" class="flex items-center gap-2">
+							<p class="text-sm text-gray-500">Pasar a:</p>
+
+							<button class="px-4 py-2 border border-transparent 
+									shadow-sm text-sm font-medium rounded-md 
+									text-white bg-green-600 hover:bg-green-700 
+									focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
+									sm:order-1 sm:ml-3" @click="changeStatus(2)">
+								APROBADO
+							</button>
+						</div>
+					</div>
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -301,7 +324,7 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ingresos Planes</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.ingresos_planes
-								}}</dd>
+							}}</dd>
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Recibe Programa Social</dt>

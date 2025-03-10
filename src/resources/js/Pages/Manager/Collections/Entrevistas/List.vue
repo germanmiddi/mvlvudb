@@ -93,7 +93,7 @@
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 <option value="" selected>Selecciones un estado</option>
                                 <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{ estado.nombre
-                                    }}</option>
+                                }}</option>
                             </select>
                         </div>
 
@@ -154,7 +154,7 @@
                                         Estado
                                     </th>
                                     <th scope="col"
-                                        class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
+                                        class="px-6 py-3 text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
                                         <span>Acciones</span>
                                     </th>
                                 </tr>

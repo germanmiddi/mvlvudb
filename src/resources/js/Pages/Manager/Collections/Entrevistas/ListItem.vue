@@ -53,6 +53,20 @@
                                 Rechazar</a>
                             </MenuItem>
                         </div>
+                        <div v-else class="px-1 py-1 text-left">
+                            <p class="text-xs text-gray-500 ml-2">Pasar a:</p>
+                            <MenuItem v-if="item.status_id == 3" v-slot="{ active }" class="hover:bg-gray-100"
+                                @click="changeStatus(2)">
+                            <a href="#" class="block px-4 py-2 text-sm">
+                                Aprobar</a>
+                            </MenuItem>
+
+                            <MenuItem v-else-if="item.status_id == 2" v-slot="{ active }" class="hover:bg-gray-100"
+                                @click="changeStatus(3)">
+                            <a href="#" class="block px-4 py-2 text-sm">
+                                Rechazar</a>
+                            </MenuItem>
+                        </div>
                         <div class="px-1 py-1 text-left ">
                             <MenuItem v-slot="{ active }" class="hover:bg-gray-100">
                             <a href="#" class="block px-4 py-2 text-sm">

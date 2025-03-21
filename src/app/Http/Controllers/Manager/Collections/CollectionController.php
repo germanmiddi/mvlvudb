@@ -313,15 +313,16 @@ class CollectionController extends Controller
             return ['status' => true,];
         }
 
+        $diasPermitidos = env('MODULO_CAJAS_DIAS', 30); // Valor por defecto 30 si no está definido
         $daysSinceLastDelivery = Carbon::parse($lastDelivery->date)->diffInDays(Carbon::now());
         $message = match ($daysSinceLastDelivery) {
-            0 => "Última entrega realizada hace unas horas. Deben pasar 30 días desde la última entrega para activar esta opción.",
-            1 => "Última entrega realizada hace 1 día. Deben pasar 30 días desde la última entrega para activar esta opción.",
-            default => "Última entrega realizada hace $daysSinceLastDelivery días. Deben pasar 30 días desde la última entrega para activar esta opción."
+            0 => "Última entrega realizada hace unas horas. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción.",
+            1 => "Última entrega realizada hace 1 día. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción.",
+            default => "Última entrega realizada hace $daysSinceLastDelivery días. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción."
         };
 
         return [
-            'status' => $daysSinceLastDelivery >= 30,
+            'status' => $daysSinceLastDelivery >= $diasPermitidos,
             'message' => $message,
         ];
     }

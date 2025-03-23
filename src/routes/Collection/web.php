@@ -11,6 +11,7 @@ Route::middleware(['auth'])
         Route::get('/', [CollectionController::class, 'index'])->name('collections.index');
         Route::get('/padron', [CollectionController::class, 'padron'])->name('collections.padron');
         Route::get('/entregas', [CollectionController::class, 'entregas'])->name('collections.entregas');
+        Route::post('/entregas/export', [ExportController::class, 'exportEntregas'])->name('collections.entregas.export');
         Route::get('/puntos-entrega', [CollectionController::class, 'puntosEntrega'])->name('collections.puntosEntrega');
         Route::get('/puntos-entrega/statistics', [CollectionController::class, 'puntosEntregaStatistics'])->name('collections.puntosEntregaStatistics');
 

@@ -7,7 +7,9 @@ use App\Models\Manager\Entrevista;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Cajas\TemplateEntrevistasExport;
+use App\Exports\Cajas\EntregasExport;
 
+use App\Models\Manager\Product;
 use App\Models\Manager\PuntoEntrega;
 use App\Models\User;
 use App\Models\Manager\TipoDocumento;
@@ -21,6 +23,12 @@ use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\EstadoEducativo;
 use App\Models\Manager\CajasEntrevistasStatus;
+use App\Models\Manager\Person;
+use App\Models\Manager\Collection;
+use App\Models\Manager\Localidad;
+use App\Models\Manager\Barrio;
+use Carbon\Carbon;
+
 
 class ExportController extends Controller
 {
@@ -109,5 +117,75 @@ class ExportController extends Controller
             ),
             'template_entrevistas.xlsx'
         );
+    }
+
+    public function exportEntregas(Request $request)
+    {
+        $localidades = Localidad::get();
+        $barrios = Barrio::get();
+
+        $values = [];
+
+        $collectionQuery = Collection::with('person', 'puntoEntrega', 'product', 'user');
+
+        // Filtros
+        if (request('name')) {
+
+            $name = request('name');
+            //buscar por nombre o apellido
+            $collectionQuery->whereHas('person', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('lastname', 'LIKE', '%' . $name . '%');
+            });
+
+        }
+        // dd(request('num_documento'));
+        if (request('num_documento')) {
+            $num_documento = request('num_documento');
+            // dd($num_documento);
+            $collectionQuery->whereHas('person', function ($query) use ($num_documento) {
+                $query->where('num_documento', $num_documento);
+            });
+        }
+
+        if (request('date')) {
+            $date = request('date');
+
+            $from = Carbon::parse($date[0])->toDateString();
+            $to = Carbon::parse($date[1])->addDay()->toDateString();
+
+            $collectionQuery->whereDate('date', '>=', $from)
+                ->whereDate('date', '<', $to);
+        }
+
+        if (request('product_id')) {
+            $product_id = request('product_id');
+            $collectionQuery->where('product_id', $product_id);
+        }
+
+        if (request('punto_entrega_id')) {
+            $punto_entrega_id = request('punto_entrega_id');
+            $collectionQuery->where('punto_entrega_id', $punto_entrega_id);
+        }
+
+        if (request('entregado_por')) {
+            $user_id = request('entregado_por');
+            $collectionQuery->where('user_id', $user_id);
+        }
+
+        $collections = $collectionQuery->get();
+        $persons = Person::with('address', 'education', 'tipoDoc')->get();
+
+        $titles = [
+            'Persona',
+            'DNI',
+            'Dirección',
+            'Fecha',
+            'Punto de Entrega',
+            'Producto',
+            'Entregado Por',
+        ];
+
+        return Excel::download(new EntregasExport($values, $titles, $persons, $collections, $localidades, $barrios), 'Entregas.xlsx');
     }
 }

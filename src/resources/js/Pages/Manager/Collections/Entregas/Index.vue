@@ -6,15 +6,10 @@
             </h1>
             <div class="mt-4 flex sm:mt-0">
                 <!-- <a @click="newEntrega()" -->
-                <a
-                    class="order-0 inline-flex items-center px-4 py-2 
-                          border border-transparent shadow-sm text-sm font-medium rounded-md 
-                          text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
-                    Exportar</a>
                 <a @click="showForm = !showForm"
                     class="order-0 inline-flex items-center px-4 py-2 
                            border border-transparent shadow-sm text-sm font-medium rounded-md 
-                           text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
+                           text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3 cursor-pointer">
                     Nueva Entrega</a>
             </div>
             <!-- <button class="bg-green-600 text-white px-4 rounded-md">Nueva Entrega</button> -->
@@ -187,9 +182,10 @@ export default {
             this.puntosEntrega = await response.data.puntosEntrega
             this.products = await response.data.products
             this.user = await response.data.user
-        }
+        },
 
     },
+
 
     created() {
         this.getData()

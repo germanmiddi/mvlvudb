@@ -424,31 +424,53 @@ export default {
 
             try {
                 const response = await axios.post(rt, this.filter, {
-                    responseType: "blob", // Especifica que esperamos un archivo binario (Blob)
+                    responseType: "blob",
+                    timeout: 300000, // 5 minutes timeout
                 });
 
-                // Crear un objeto Blob con la respuesta
+                if (!response.data || response.data.size === 0) {
+                    throw new Error("No data received from server");
+                }
+
+                // Check if the response is an error message
+                if (
+                    response.headers["content-type"]?.includes(
+                        "application/json"
+                    )
+                ) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const errorData = JSON.parse(reader.result);
+                        throw new Error(
+                            errorData.message || "Error during export"
+                        );
+                    };
+                    reader.readAsText(response.data);
+                    return;
+                }
+
+                // Create blob and download
                 const blob = new Blob([response.data], {
                     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 });
 
-                // Crear una URL de objeto para el Blob
                 const url = window.URL.createObjectURL(blob);
-
-                // Crear un enlace <a> para iniciar la descarga
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "Entregas.xlsx"; // Nombre del archivo
+                a.download = `Entregas_${
+                    new Date().toISOString().split("T")[0]
+                }.xlsx`;
                 a.style.display = "none";
-
-                // Agregar el enlace al cuerpo del documento y hacer clic en él
                 document.body.appendChild(a);
                 a.click();
-
-                // Liberar la URL del objeto después de la descarga
                 window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
             } catch (error) {
-                console.error(error);
+                console.error("Export error:", error);
+                // You might want to show an error message to the user here
+                alert(
+                    "Error al exportar los datos. Por favor, intente nuevamente o contacte al administrador."
+                );
             } finally {
                 this.processExport = false;
             }

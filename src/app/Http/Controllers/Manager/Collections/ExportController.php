@@ -78,7 +78,7 @@ class ExportController extends Controller
             return $tipoPension->id . '. ' . $tipoPension->description;
         });
 
-        // SOCIAL PROGRAMA 
+        // SOCIAL PROGRAMA
         $programaSocial = ProgramaSocial::all()->map(function ($programaSocial) {
             return $programaSocial->id . '. ' . $programaSocial->description;
         });
@@ -126,23 +126,20 @@ class ExportController extends Controller
 
         $values = [];
 
-        $collectionQuery = Collection::with('person', 'puntoEntrega', 'product', 'user');
+        $collectionQuery = Collection::with(['person', 'puntoEntrega', 'product', 'user'])
+            ->select('collections.*'); // Select only needed columns
 
         // Filtros
         if (request('name')) {
-
             $name = request('name');
-            //buscar por nombre o apellido
             $collectionQuery->whereHas('person', function ($query) use ($name) {
                 $query->where('name', 'LIKE', '%' . $name . '%')
                     ->orWhere('lastname', 'LIKE', '%' . $name . '%');
             });
-
         }
-        // dd(request('num_documento'));
+
         if (request('num_documento')) {
             $num_documento = request('num_documento');
-            // dd($num_documento);
             $collectionQuery->whereHas('person', function ($query) use ($num_documento) {
                 $query->where('num_documento', $num_documento);
             });
@@ -150,31 +147,29 @@ class ExportController extends Controller
 
         if (request('date')) {
             $date = request('date');
-
             $from = Carbon::parse($date[0])->toDateString();
             $to = Carbon::parse($date[1])->addDay()->toDateString();
-
             $collectionQuery->whereDate('date', '>=', $from)
                 ->whereDate('date', '<', $to);
         }
 
         if (request('product_id')) {
-            $product_id = request('product_id');
-            $collectionQuery->where('product_id', $product_id);
+            $collectionQuery->where('product_id', request('product_id'));
         }
 
         if (request('punto_entrega_id')) {
-            $punto_entrega_id = request('punto_entrega_id');
-            $collectionQuery->where('punto_entrega_id', $punto_entrega_id);
+            $collectionQuery->where('punto_entrega_id', request('punto_entrega_id'));
         }
 
         if (request('entregado_por')) {
-            $user_id = request('entregado_por');
-            $collectionQuery->where('user_id', $user_id);
+            $collectionQuery->where('user_id', request('entregado_por'));
         }
 
-        $collections = $collectionQuery->get();
-        $persons = Person::with('address', 'education', 'tipoDoc')->get();
+        // Get only the necessary persons for the collections
+        $personIds = $collectionQuery->pluck('person_id')->unique();
+        $persons = Person::with(['address', 'education', 'tipoDoc'])
+            ->whereIn('id', $personIds)
+            ->get();
 
         $titles = [
             'Persona',
@@ -186,6 +181,15 @@ class ExportController extends Controller
             'Entregado Por',
         ];
 
-        return Excel::download(new EntregasExport($values, $titles, $persons, $collections, $localidades, $barrios), 'Entregas.xlsx');
+        // Use chunking for collections
+        $collections = collect();
+        $collectionQuery->chunk(1000, function ($chunk) use (&$collections) {
+            $collections = $collections->concat($chunk);
+        });
+
+        return Excel::download(
+            new EntregasExport($values, $titles, $persons, $collections, $localidades, $barrios),
+            'Entregas.xlsx'
+        );
     }
 }

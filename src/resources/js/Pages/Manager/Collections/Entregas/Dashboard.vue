@@ -302,9 +302,9 @@
                             </div>
 
                             <div class="flex flex-wrap -mb-1">
-                                <template
-                                    v-for="link in collections.links"
-                                    :key="link.url"
+                                <div
+                                    v-for="(link, index) in collections.links"
+                                    :key="index"
                                 >
                                     <div
                                         v-if="link.url === null"
@@ -321,7 +321,7 @@
                                         @click="getListPaginate(link.url)"
                                         v-html="link.label"
                                     ></div>
-                                </template>
+                                </div>
                             </div>
                         </div>
                     </div>

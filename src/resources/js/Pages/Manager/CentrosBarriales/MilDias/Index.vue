@@ -1,16 +1,23 @@
 <template>
     <main class="flex-1">
         <!-- Page title & actions -->
-        <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div
+            class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8"
+        >
             <div class="flex-1 min-w-0">
-                <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
+                <h1
+                    class="text-lg font-medium leading-6 text-gray-900 sm:truncate"
+                >
                     Bandeja General de Mil Dias
                 </h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
-                <a :href="route('mil-dias.create')"
-                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+                <a
+                    :href="route('mil-dias.create')"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+                    >Crear</a
+                >
 
                 <!-- <a  @click="generateReport()" v-if="!processReport"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
@@ -21,15 +28,24 @@
             </div>
         </div>
 
-        <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
+        <Toast
+            :toast="this.toastMessage"
+            :type="this.labelType"
+            @clear="clearMessage"
+        ></Toast>
 
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
-
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-                    <div class="flex items-center justify-between flex-wrap sm:flex-nowrap ">
+                    <div
+                        class="flex items-center justify-between flex-wrap sm:flex-nowrap"
+                    >
                         <div class="">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Filtro</h3>
+                            <h3
+                                class="text-lg leading-6 font-medium text-gray-900"
+                            >
+                                Filtro
+                            </h3>
                         </div>
                         <div class="flex-shrink-0">
                             <!-- <button v-if="Object.keys(this.filter).length" class="text-xs font-medium text-gray-500 hover:text-gray-700 mr-2"
@@ -51,7 +67,7 @@
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
@@ -118,54 +134,66 @@
                                 }}</option>
                             </select>
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2">
                             <label for="assigned_me" class="block text-sm font-medium text-gray-700">Asignados solo a mi</label>
                             <input @click="filter.not_assigned = ''" v-model="filter.assigned_me" id="assigned_me" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2">
                             <label for="not_assigned" class="block text-sm font-medium text-gray-700">Sin Asignar</label>
                             <input @click="filter.user_id = '', filter.assigned_me = ''" v-model="filter.not_assigned" id="not_assigned" type="checkbox" value="2" class="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         </div> -->
-
                     </div>
-
                 </div>
-
             </div>
         </div>
 
         <div class="flex flex-col mt-8 mx-4 sm:mx-6 lg:mx-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <div
+                    class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
+                >
+                    <div
+                        class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+                    >
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l-8 border-gray-500"
+                                    >
                                         N° Tramite
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         Fecha
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         Nombre
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         DNI
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         Tramite
                                     </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider">
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs text-center font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         <span>Acciones</span>
                                     </th>
                                 </tr>
@@ -205,7 +233,7 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
-                                                        
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('genero.edit', data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
@@ -232,25 +260,10 @@
                                 </tr> -->
                             </tbody>
                         </table>
-                        <hr>
-                        <div class="flex justify-between mx-5 my-3 px-2 items-center">
-                            <!-- <div>
-                                Mostrando: {{ this.tramites.from }} a {{ this.tramites.to }} - Entradas encontradas:
-                                {{ this.tramites.total }}
-                            </div>
-
-                            <div class="flex flex-wrap -mb-1">
-                                <template v-for="link in tramites.links">
-                                    <div v-if="link.url === null"
-                                        class="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded-md"
-                                        v-html="link.label"> </div>
-                                    <div v-else
-                                        class="mr-1 mb-1 px-4 py-3 text-sm leading-4 border border-gray-300 rounded-md hover:bg-blue-500 hover:text-white cursor-pointer"
-                                        :class="{ 'bg-blue-500': link.active }, { 'text-white': link.active }"
-                                        @click="getTramitesPaginate(link.url)" v-html="link.label"> </div>
-                                </template>
-                            </div> -->
-                        </div>
+                        <hr />
+                        <div
+                            class="flex justify-between mx-5 my-3 px-2 items-center"
+                        ></div>
                     </div>
                 </div>
             </div>
@@ -261,8 +274,8 @@
 <script>
 import { ref } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import Datepicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 import {
     ChevronRightIcon,
@@ -270,18 +283,18 @@ import {
     PencilSquareIcon,
     ArrowsPointingOutIcon,
     ArrowPathIcon,
-    PaperClipIcon
+    PaperClipIcon,
 } from "@heroicons/vue/24/solid";
 import Toast from "@/Layouts/Components/Toast.vue";
 
-import store from '@/store.js'
+import store from "@/store.js";
 
 export default {
     props: {
         toast: Object,
         tiposTramite: Object,
         estados: Object,
-        users: Object
+        users: Object,
     },
     components: {
         Menu,
@@ -295,7 +308,7 @@ export default {
         ArrowPathIcon,
         PaperClipIcon,
         Toast,
-        Datepicker
+        Datepicker,
     },
     data() {
         return {
@@ -306,80 +319,92 @@ export default {
             showToast: false,
             filter: {},
             length: 10,
-            customFormat: 'd-M-Y',
-            processReport: false
+            customFormat: "d-M-Y",
+            processReport: false,
         };
     },
     setup() {
         return {
-            store
-        }
+            store,
+        };
     },
     methods: {
-        clearFilter(){
-            this.filter = {}
-            this.tiposTramiteFiltrados = this.tiposTramite
-            this.getTramites()
+        clearFilter() {
+            this.filter = {};
+            this.tiposTramiteFiltrados = this.tiposTramite;
+            this.getTramites();
         },
         clearMessage() {
             this.toastMessage = "";
         },
         async getTramites() {
-            this.tramites = ''
-            let filter = `&length=${this.length}`
+            this.tramites = "";
+            let filter = `&length=${this.length}`;
 
             if (this.filter.tramite_id) {
-                filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
+                filter += `&tramite_id=${JSON.stringify(
+                    this.filter.tramite_id
+                )}`;
             }
 
             if (this.filter.user_id) {
-                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
+                filter += `&user_id=${JSON.stringify(this.filter.user_id)}`;
             }
 
             if (this.filter.assigned_me) {
-                filter += `&assigned_me=${JSON.stringify(this.filter.assigned_me)}`
+                filter += `&assigned_me=${JSON.stringify(
+                    this.filter.assigned_me
+                )}`;
             }
 
             if (this.filter.not_assigned) {
-                filter += `&not_assigned=${JSON.stringify(this.filter.not_assigned)}`
+                filter += `&not_assigned=${JSON.stringify(
+                    this.filter.not_assigned
+                )}`;
             }
 
             if (this.filter.name) {
-                filter += `&name=${JSON.stringify(this.filter.name)}`
+                filter += `&name=${JSON.stringify(this.filter.name)}`;
             }
 
             if (this.filter.num_documento) {
-                filter += `&num_documento=${JSON.stringify(this.filter.num_documento)}`
+                filter += `&num_documento=${JSON.stringify(
+                    this.filter.num_documento
+                )}`;
             }
 
             if (this.filter.date) {
-                filter += `&date=${JSON.stringify(this.filter.date)}`
+                filter += `&date=${JSON.stringify(this.filter.date)}`;
             }
 
             if (this.filter.estado_id) {
-                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`
+                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`;
             }
 
             if (this.filter.ingreso_nuevo) {
-                filter += `&ingreso_nuevo=${JSON.stringify(this.filter.ingreso_nuevo)}`
+                filter += `&ingreso_nuevo=${JSON.stringify(
+                    this.filter.ingreso_nuevo
+                )}`;
             }
 
             if (this.filter.boton_antipanico) {
-                filter += `&boton_antipanico=${JSON.stringify(this.filter.boton_antipanico)}`
+                filter += `&boton_antipanico=${JSON.stringify(
+                    this.filter.boton_antipanico
+                )}`;
             }
 
-            const get = `${route('genero.list')}?${filter}`
+            const get = `${route("genero.list")}?${filter}`;
 
             const response = await fetch(get, { method: "GET" });
             this.tramites = await response.json();
         },
         async getTramitesPaginate(link) {
             var get = `${link}`;
-            const response = await fetch(get, { method: 'GET' })
+            const response = await fetch(get, { method: "GET" });
 
-            this.tramites = await response.json()
+            this.tramites = await response.json();
             //this.tramites.persons = this.tramites[0].persons.filter(person => person.pivot.rol_tramite_id == 1)
-            //console.log(this.orders)  
+            //console.log(this.orders)
         },
         /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);
@@ -393,52 +418,53 @@ export default {
 
             return `${diaFormateado}-${mesFormateado}-${anio}`;
         }, */
-        namePersons(data){
-            let name_titular = ''
-            let name_benef = ''
-            data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
-                    name_titular = element.lastname + ', '+element.name
-                }else{
-                    name_benef = element.lastname + ', '+element.name
+        namePersons(data) {
+            let name_titular = "";
+            let name_benef = "";
+            data.forEach((element) => {
+                if (element.pivot.rol_tramite_id == 1) {
+                    name_titular = element.lastname + ", " + element.name;
+                } else {
+                    name_benef = element.lastname + ", " + element.name;
                 }
             });
-            return name_titular+'<br><br>'+name_benef
+            return name_titular + "<br><br>" + name_benef;
         },
-        dniPersons(data){
-            let name_titular = ''
-            let name_benef = ''
-            data.forEach(element => {
-                if(element.pivot.rol_tramite_id == 1){
-                    name_titular = element.num_documento
-                }else{
-                    name_benef = element.num_documento
+        dniPersons(data) {
+            let name_titular = "";
+            let name_benef = "";
+            data.forEach((element) => {
+                if (element.pivot.rol_tramite_id == 1) {
+                    name_titular = element.num_documento;
+                } else {
+                    name_benef = element.num_documento;
                 }
             });
-            return name_titular+'<br><br>'+name_benef
+            return name_titular + "<br><br>" + name_benef;
         },
         async generateReport() {
-
-            this.filter.dependencia_id = 6
-            this.processReport = true
+            this.filter.dependencia_id = 6;
+            this.processReport = true;
             let rt = route("report.exportTramiteExcel");
 
             try {
                 const response = await axios.post(rt, this.filter, {
-                    responseType: 'blob', // Especifica que esperamos un archivo binario (Blob)
+                    responseType: "blob", // Especifica que esperamos un archivo binario (Blob)
                 });
 
                 // Crear un objeto Blob con la respuesta
-                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const blob = new Blob([response.data], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
 
                 // Crear una URL de objeto para el Blob
                 const url = window.URL.createObjectURL(blob);
 
                 // Crear un enlace <a> para iniciar la descarga
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = url;
-                a.download = 'Resumen de Tramites.xlsx'; // Nombre del archivo
-                a.style.display = 'none';
+                a.download = "Resumen de Tramites.xlsx"; // Nombre del archivo
+                a.style.display = "none";
 
                 // Agregar el enlace al cuerpo del documento y hacer clic en él
                 document.body.appendChild(a);
@@ -449,8 +475,8 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-            this.processReport = false
-        }
+            this.processReport = false;
+        },
     },
     mounted() {
         if (this.toast) {

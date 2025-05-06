@@ -268,7 +268,7 @@ class CollectionController extends Controller
 
             $lastDelivery = Collection::where('address', $address)
                 ->where('person_id', '=', $person->id)
-                ->orderBy('date', 'asc')
+                ->orderBy('date', 'desc')
                 ->first();
 
 

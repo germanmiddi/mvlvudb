@@ -50,7 +50,7 @@
                             <input v-model="filter.name" type="text" name="name" id="name" autocomplete="name-level2"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                         </div>
-                        
+
                         <div class="col-span-12 sm:col-span-2 ">
                             <label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
                                 Documento</label>
@@ -227,7 +227,7 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
-                                                        
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('genero.edit', data.tramite.id)"
                                                             class="block px-4 py-2 text-sm">
@@ -244,7 +244,7 @@
                                                         <a href="#" class="block px-4 py-2 text-sm">
                                                             Ver</a>
                                                         </MenuItem> -->
-                                                        
+
                                                         <MenuItem v-slot="{ active }">
                                                         <a :href="route('pdf.acusepdf', data.tramite.id)" target="_blank"
                                                             class="block px-4 py-2 text-sm">
@@ -361,6 +361,10 @@ export default {
                 filter += `&tramite_id=${JSON.stringify(this.filter.tramite_id)}`
             }
 
+            if (this.filter.tipo_tramite_id) {
+                filter += `&tipo_tramite_id=${JSON.stringify(this.filter.tipo_tramite_id)}`
+            }
+
             if (this.filter.user_id) {
                 filter += `&user_id=${JSON.stringify(this.filter.user_id)}`
             }
@@ -416,7 +420,7 @@ export default {
 
             this.tramites = await response.json()
             //this.tramites.persons = this.tramites[0].persons.filter(person => person.pivot.rol_tramite_id == 1)
-            //console.log(this.orders)  
+            //console.log(this.orders)
         },
         /* fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha);

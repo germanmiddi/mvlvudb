@@ -483,6 +483,12 @@ class GeneroController extends Controller
             $result->where('id', $tramite_id);
         }
 
+        if (request('tipo_tramite_id')) {
+            $tipo_tramite_id = json_decode(request('tipo_tramite_id'));
+            $result->where('tipo_tramite_id', $tipo_tramite_id);
+        }
+
+
         if (request('name')) {
             $name = json_decode(request('name'));
             $result->whereIn('id', function ($sub) use ($name) {

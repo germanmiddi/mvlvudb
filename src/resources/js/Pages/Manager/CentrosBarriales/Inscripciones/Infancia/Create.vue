@@ -58,13 +58,13 @@
 							Salud
 						</a>
 					</li>
-					<li class="me-2">
+					<!-- <li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 4"
 							:class="this.tabs === 4 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
 							class="inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg group">
 							Autorizaciones
 						</a>
-					</li>
+					</li> -->
 					<li class="me-2">
 						<a href="#" @click="input_disable ? requiredPerson() : this.tabs = 5"
 							:class="this.tabs === 5 ? 'border-blue-600 text-blue-600 dark:text-blue-500 dark:border-blue-500' : 'hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'"
@@ -335,9 +335,9 @@
 				</TabSalud>
 
 				<!-- AUTORIZACIONES -->
-				<TabAutorizaciones v-if="this.tabs === 4" :form="form.autorizaciones" :input_disable="input_disable"
+				<!-- <TabAutorizaciones v-if="this.tabs === 4" :form="form.autorizaciones" :input_disable="input_disable"
 					@submit="handleAutorizaciones">
-				</TabAutorizaciones>
+				</TabAutorizaciones> -->
 
 				<!-- Educacion -->
 				<TabEducacion v-if="this.tabs === 5" :form="form.educacion" :input_disable="input_disable"
@@ -393,7 +393,7 @@ import { Switch } from "@headlessui/vue";
 import store from '@/store.js'
 
 // Tabs
-import TabAutorizaciones from './Components/TabAutorizaciones.vue';
+// import TabAutorizaciones from './Components/TabAutorizaciones.vue';
 import TabDireccion from './Components/TabDireccion.vue';
 import TabSalud from './Components/TabSalud.vue';
 import TabEducacion from './Components/TabEducacion.vue';
@@ -441,7 +441,7 @@ export default {
 		ArrowsPointingInIcon,
 		ArrowLeftCircleIcon,
 		PlusCircleIcon,
-		TabAutorizaciones,
+		// TabAutorizaciones,
 		TabDireccion,
 		TabEducacion,
 		TabResponsable,
@@ -682,9 +682,9 @@ export default {
 			this.labelType = "info";
 			this.toastMessage = "Debe ingresar un DNI.";
 		},
-		handleAutorizaciones(data) {
-			this.form.autorizaciones = data;
-		},
+		// handleAutorizaciones(data) {
+		// 	this.form.autorizaciones = data;
+		// },
 		handleDireccion(data) {
 			this.form.direccion = data;
 		},

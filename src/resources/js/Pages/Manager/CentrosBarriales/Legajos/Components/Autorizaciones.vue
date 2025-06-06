@@ -1,5 +1,5 @@
 <template>
-    <div class="px-4 mt-10">
+    <div class="px-4 mt-10" v-if="tipo_legajo === 2"> <!-- Juventud -->
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <div class="sm:flex sm:justify-between sm:items-center">
                 <div class="px-4 py-5 sm:px-6">
@@ -157,12 +157,14 @@ export default {
     },
 
     setup() {
+
         return {
             store
         }
     },
     data() {
         return {
+            tipo_legajo: this.legajo[0].tipo_legajo_id,
             editData: false,
             form: {},
             form_temp: {}

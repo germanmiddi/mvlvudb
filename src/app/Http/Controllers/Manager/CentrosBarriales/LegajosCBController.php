@@ -77,6 +77,7 @@ class LegajosCBController extends Controller
                 'espacioGabinete' => EspacioGabineteCb::activo()->get(),
                 'selectedSede' => $sede_id,
                 'selectedLegajo' => $legajo,
+                'estadoPedagogia' => EstadoPedagogia::all(),
             ]
         );
     }
@@ -485,6 +486,26 @@ class LegajosCBController extends Controller
             });
         }
 
+        if (request('genero')) {
+            $genero = json_decode(request('genero'));
+            if ($genero === 'N') {
+                $result->whereIn('id', function ($sub) use ($genero) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->whereNull('person.genero');
+                });
+            } else {
+                $result->whereIn('id', function ($sub) use ($genero) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->where('person.genero', $genero);
+                });
+            }
+        }
+
+
         if (request('num_documento_adulto')) {
             $num_documento_adulto = json_decode(request('num_documento_adulto'));
             $result->whereIn('id', function ($sub) use ($num_documento_adulto) {
@@ -625,7 +646,7 @@ class LegajosCBController extends Controller
 
                 $fileController->uploadFileLegajo($data);
             } else {
-                return response()->json(['message' => 'Se se ha detectado el archivo.'], 203);
+                return response()->json(['message' => 'Se produjo un error al momento de subir el archivo.'], 203);
             }
             $archivos = LegajoCB::where('id', $request->legajo_id)->with('archivos', 'archivos.area')->get();
             return response()->json(['message' => 'Se registrado correctamente el archivo.', 'archivos' => $archivos], 200);

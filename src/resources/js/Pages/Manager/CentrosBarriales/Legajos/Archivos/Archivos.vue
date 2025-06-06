@@ -39,6 +39,18 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Mensaje de errores de validación -->
+            <div v-if="v$.form.$error" class="px-4 mt-6 sm:px-6 lg:px-8">
+                <div class="px-4 mt-6 sm:px-6 lg:px-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md"
+                    role="alert">
+                    <p class="font-bold">Campos requeridos</p>
+                    <p v-for="error of v$.form.$errors" :key="error.$uid">
+                        {{ error.$message }}
+                    </p>
+                </div>
+            </div>
+
             <!-- Thread section-->
             <ul v-if="!showEditor" role="list" class="py-4 space-y-2 sm:space-y-4 ">
                 <li v-for="archivo in legajo[0].archivos" :key="archivo.key"
@@ -51,8 +63,7 @@
                 <div class="bg-white pt-5 pb-6 mt-2  px-4">
                     <div>
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Nuevo Archivo/Documento</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Ipsum, odit magnam.</p>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Seleccione el area y el archivo a subir</p>
                     </div>
 
                     <div class="grid grid-cols-3 gap-4 pt-5">
@@ -60,7 +71,9 @@
                             class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Descripción: </label>
                         <div class="mt-1 col-span-2">
                             <input type="text" v-model="form.description"
+                                :class="v$.form.description.$error ? 'border-red-500' : ''"
                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            <span v-if="v$.form.description.$error" class="text-red-500 text-xs">Campo obligatorio</span>
                         </div>
                     </div>
 
@@ -69,6 +82,7 @@
                         </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                             <select v-model="form.area_id" id="area_id" name="area_id" autocomplete="off"
+                                :class="v$.form.area_id.$error ? 'border-red-500' : ''"
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 <option value="" disabled>
                                     Seleccione un Area
@@ -77,6 +91,7 @@
                                     {{ a.description ?? '' }}
                                 </option>
                             </select>
+                            <span v-if="v$.form.area_id.$error" class="text-red-500 text-xs">Campo obligatorio</span>
                         </div>
                     </div>
 
@@ -85,6 +100,7 @@
                         </label>
                         <div class="mt-1 col-span-2">
                             <label
+                                :class="v$.form.file.$error ? 'border-red-500' : ''"
                                 class=" w-full justify-center relative flex flex-col items-center px-2 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:border-gray-150 hover:bg-gray-100 hover:text-gray-500">
                                 <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -96,12 +112,13 @@
                                 <input @change="handleFileChange" type="file" name="file" id="file" ref="inputfile"
                                     autocomplete="off" class="hidden" />
                             </label>
+                            <span v-if="v$.form.file.$error" class="text-red-500 text-xs">Campo obligatorio</span>
                         </div>
                     </div>
 
                 </div>
                 <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end">
-                    <button @click="this.showEditor = false" type="button"
+                    <button @click="this.showEditor = false; resetForm()" type="button"
                         class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">Cancelar</button>
                     <button @click="storeArchivo()"
                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
@@ -120,6 +137,8 @@ import { Bars4Icon, HomeIcon } from '@heroicons/vue/24/solid';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
 
 const pages = [
     { name: 'Legajo', href: '#', current: false },
@@ -143,7 +162,15 @@ export default {
         Datepicker,
         ArchivosGrid
     },
-
+    validations() {
+        return {
+            form: {
+                description: { required: helpers.withMessage('El campo Descripción es obligatorio', required) },
+                area_id: { required: helpers.withMessage('El campo Area es obligatorio', required) },
+                file: { required: helpers.withMessage('Debe seleccionar un archivo', required) }
+            }
+        }
+    },
     setup() {
         const format = (date) => {
             const day = date.getDate();
@@ -156,7 +183,8 @@ export default {
         return {
             format,
             pages,
-            store
+            store,
+            v$: useVuelidate()
         }
     },
     data() {
@@ -170,6 +198,12 @@ export default {
     },
     methods: {
         async storeArchivo() {
+            // Validar antes de enviar
+            const result = await this.v$.$validate()
+            if (!result) {
+                return
+            }
+
             let data = {}
             // RUTA
             let rt = route("legajoCB.storeArchivo");
@@ -185,7 +219,7 @@ export default {
                     data.message = response.data.message
                     data.labelType = 'success'
                     this.showEditor = false
-                    this.form = {}
+                    this.resetForm()
                     this.legajo[0].archivos = response.data.archivos[0].archivos
                 } else {
                     data.message = response.data.message
@@ -205,6 +239,14 @@ export default {
         handleFileChange(event) {
             this.file = event.target.files[0];
             this.fileName = this.file ? this.file.name : '';
+            // Actualizar la validación del archivo
+            this.form.file = this.file;
+        },
+        resetForm() {
+            this.form = {};
+            this.file = '';
+            this.fileName = '';
+            this.v$.$reset();
         },
         async fnDelete(id) {
             let data = {}
@@ -217,7 +259,7 @@ export default {
                     data.message = response.data.message
                     data.labelType = 'success'
                     this.showEditor = false
-                    this.form = {}
+                    this.resetForm()
                     this.legajo[0].archivos = response.data.archivos[0].archivos
                 } else {
                     data.message = response.data.message

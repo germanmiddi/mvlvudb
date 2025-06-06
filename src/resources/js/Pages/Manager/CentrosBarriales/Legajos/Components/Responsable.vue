@@ -64,23 +64,34 @@
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Documento</dt>
-                        <dd v-if="!editData || this.legajo[0].responsable?.num_documento || this.dniStatus"
+
+                                                <!-- Mostrar DNI como texto (modo lectura) -->
+                        <dd v-if="!editData || (hasDni && !changeDni)"
                             class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             {{ form.num_documento ?? '-' }}
+                            <button v-if="hasDni && editData && !changeDni"
+                                @click="changeDniMode()"
+                                class="block text-blue-500 text-xs cursor-pointer hover:text-blue-700 hover:underline mt-1">
+                                Cambiar DNI
+                            </button>
                         </dd>
-                        <div v-else class="relative">
-                            <input v-model="form.num_documento" @keyup.enter="getPerson()"
-                                :class="!form.num_documento ? 'border-red-500' : ''" type="text" name="num_documento"
-                                id="num_documento"
-                                class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                            <a @click="getPerson()"
-                                class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
-                                Verificar
-                            </a>
-                        </div>
 
-                        <span v-if="!form.num_documento && editData" class="text-red-500 text-xs">Campo
-                            obligatorio</span>
+                        <!-- Mostrar input para DNI (modo edición) -->
+                        <div v-else class="sm:col-span-2 relative">
+                            <input v-model="form.num_documento"
+                                @keyup.enter="getPerson()"
+                                :class="!form.num_documento ? 'border-red-500' : ''"
+                                type="text"
+                                name="num_documento"
+                                id="num_documento"
+                                placeholder="Ingrese el número de documento"
+                                class="w-full focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md pr-20" />
+                            <button @click="getPerson()"
+                                class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-green-900 text-xs rounded-r-md hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 shadow-sm font-medium flex items-center transition-colors">
+                                Verificar
+                            </button>
+                            <span v-if="!form.num_documento" class="block text-red-500 text-xs mt-1">Campo obligatorio</span>
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -285,6 +296,12 @@ export default {
             showToast: false,
             labelType: "info",
             dniStatus: false,
+            changeDni: false,
+        }
+    },
+    computed: {
+        hasDni() {
+            return !!(this.form.num_documento || this.legajo[0].responsable?.num_documento || this.dniStatus);
         }
     },
     methods: {
@@ -326,9 +343,31 @@ export default {
         },
         resetForm() {
             this.form = JSON.parse(JSON.stringify(this.form_temp));
+            this.changeDni = false;
         },
         clearMessage() {
             this.toastMessage = "";
+        },
+        changeDniMode() {
+            // Activar modo cambio de DNI
+            this.changeDni = true;
+
+            // Limpiar campos relacionados con la persona
+            this.form.num_documento = null;
+            this.form.name = null;
+            this.form.lastname = null;
+            this.form.fecha_nac = null;
+            this.form.tipo_documento_id = null;
+            this.form.tipo_documento = null;
+            this.form.phone = null;
+            this.form.celular = null;
+
+            // Resetear estados de validación
+            this.dniStatus = false;
+            this.input_disable = false;
+
+            // Limpiar mensajes
+            this.clearMessage();
         },
         async getPerson() {
             let num_documento = this.form.num_documento;
@@ -338,25 +377,19 @@ export default {
             if (!data.data.length == 0) {
                 data = data.data[0].person
 
-                if (data.legajo_cb) {
-                    this.labelType = "danger";
-                    this.toastMessage = "El DNI ya se encuentra inscripto en Centros Barriales";
-
-                    this.input_disable = true;
-                } else {
-                    this.form.num_documento = num_documento;
-                    /// Recuperar datos.
-                    this.form.tipo_documento_id = data.tipo_documento_id
-                    this.form.fecha_nac = data.fecha_nac
-                    this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
-                    this.form.name = data.name
-                    this.form.lastname = data.lastname
-                    this.form.genero = data.genero
-                    if (data.contact != '') {
-                        this.form.celular = data.contact[0].celular
-                        this.form.phone = data.contact[0].phone
-                    }
+                this.form.num_documento = num_documento;
+                /// Recuperar datos.
+                this.form.tipo_documento_id = data.tipo_documento_id
+                this.form.fecha_nac = data.fecha_nac
+                this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
+                this.form.name = data.name
+                this.form.lastname = data.lastname
+                this.form.genero = data.genero
+                if (data.contact != '') {
+                    this.form.celular = data.contact[0].celular
+                    this.form.phone = data.contact[0].phone
                 }
+
             } else {
                 this.labelType = "info";
                 this.toastMessage = "El DNI indicado no se encuentra registrado";
@@ -384,6 +417,7 @@ export default {
                     data.message = response.data.message
                     data.labelType = 'success'
                     this.editData = false
+                    this.changeDni = false
                     this.form_temp = this.form
                     this.dniStatus = true;
                 } else {

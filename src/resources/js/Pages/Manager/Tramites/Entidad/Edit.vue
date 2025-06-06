@@ -268,13 +268,29 @@
 						</div>
 						<hr v-if="this.showAutoridad">
 						<div class="grid grid-cols-12 gap-6" v-if="this.showAutoridad">
-							<div class="col-span-12 sm:col-span-3">
+
+                            <div class="col-span-12 sm:col-span-3">
+								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
+									Documento</label>
+								<div class="relative">
+									<input type="text" v-model="form_temp.num_documento" @keyup.enter="getPerson()"
+										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+									<a @click="getPerson()"
+										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
+										Verificar
+									</a>
+								</div>
+							</div>
+
+
+
+                            <div class="col-span-12 sm:col-span-3">
 								<label for="cargo_id" class="block text-sm font-medium text-gray-700">Cargo de
 									Autoridad</label>
 								<select v-model="form_temp.cargo_id" id="cargo_id" name="cargo_id" autocomplete="off"
 									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 									<option value="" disabled>
-										Seleccione un tipo de documento
+										Seleccione un cargo
 									</option>
 									<option v-for="cargo in cargos" :key="cargo.id" :value="cargo.id">{{
 										cargo.description
@@ -287,9 +303,14 @@
 								<input v-model="form_temp.name" type="text" name="name" id="name" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
+							<div class="col-span-12 sm:col-span-3">
+								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+								<input v-model="form_temp.lastname" type="text" name="lastname" id="lastname" autocomplete="off"
+									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+							</div>
 
 							<div class="col-span-12 sm:col-span-3">
-								<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
+								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
 								<input v-model="form_temp.phone" type="text" name="phone" id="phone" autocomplete="off"
 									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 							</div>
@@ -485,6 +506,7 @@ export default {
 			}
 
 		},
+
 		async editItem(item) {
 			let formData = new FormData();
 			formData.append('id', item.id);
@@ -533,6 +555,35 @@ export default {
 			}
 			this.showAutoridad = !this.showAutoridad;
 		},
+
+        async getPerson() {
+            let num_documento = this.form_temp.num_documento;
+            const get = `${route('persons.getPersonDni', this.form_temp.num_documento)}`
+            const response = await fetch(get, { method: 'GET' })
+            let data = await response.json()
+            if (!data.data.length == 0) {
+                data = data.data[0].person
+
+                    this.form_temp.num_documento = num_documento;
+                    /// Recuperar datos.
+                    this.form_temp.tipo_documento_id = data.tipo_documento_id
+                    this.form_temp.name = data.name
+                    this.form_temp.lastname = data.lastname
+                    if (data.contact != '') {
+                        this.form_temp.phone = data.contact[0].phone
+                    }
+
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "El DNI indicado no se encuentra registrado";
+                this.form.num_documento = num_documento;
+                this.input_disable = false;
+            }
+        },
+
+
+
+
 	},
 	mounted() {
 		this.form = this.entidad[0]

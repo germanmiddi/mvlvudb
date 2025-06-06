@@ -118,6 +118,41 @@
 
                         <div class="col-span-12 sm:col-span-2">
                             <label
+                                for="prueba_estado_id"
+                                class="block text-sm font-medium text-gray-700"
+                                >Genero</label
+                            >
+                            <select
+                                v-model="filter.genero"
+                                id="genero"
+                                name="genero"
+                                autocomplete="off"
+                                class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            >
+                                <option value="" disabled>
+                                    Seleccione un genero
+                                </option>
+                                <option
+                                    value="M"
+                                >
+                                    Masculino
+                                </option>
+                                <option
+                                    value="F"
+                                >
+                                    Femenino
+                                </option>
+                                <option
+                                    value="N"
+                                >
+                                    No informado
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-span-12 sm:col-span-2">
+                            <label
                                 for="num_documento_adulto"
                                 class="block text-sm font-medium text-gray-700"
                                 >Documento Adulto</label
@@ -1028,6 +1063,10 @@ export default {
                 filter += `&prueba_estado_id=${JSON.stringify(
                     this.filter.prueba_estado_id
                 )}`;
+            }
+
+            if (this.filter.genero) {
+                filter += `&genero=${JSON.stringify(this.filter.genero)}`;
             }
 
             const get = `${route("legajoCB.list")}?${filter}`;

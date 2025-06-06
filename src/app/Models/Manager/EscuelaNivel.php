@@ -22,4 +22,5 @@ class EscuelaNivel extends Model
     {
         return $this->hasMany(CbiData::class);
     }
+
 }

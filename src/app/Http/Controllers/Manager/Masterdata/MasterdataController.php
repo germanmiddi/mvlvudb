@@ -4,6 +4,13 @@ namespace App\Http\Controllers\Manager\Masterdata;
 
 use App\Exports\MasterDataExport;
 use App\Models\Manager\CentroSalud;
+use App\Models\Manager\EducationData;
+use App\Models\Manager\EscuelaDependencia;
+use App\Models\Manager\EscuelaJornada;
+use App\Models\Manager\EscuelaTurno;
+use App\Models\Manager\EscuelaV2;
+use App\Models\Manager\Localidad;
+use App\Models\Manager\NivelEducativo;
 use App\Models\Manager\ProgramaSocial;
 use App\Models\Manager\SocialData;
 use Illuminate\Http\Request;
@@ -600,5 +607,112 @@ class MasterdataController extends Controller
         $programaSocial->delete();
 
         return response()->json(['message' => 'Datos eliminados correctamente'], 200);
+    }
+    public function get_escuelasv2()
+    {
+        $escuelas = EscuelaV2::with('niveles', 'turnos', 'jornadas')->get();
+        return response()->json($escuelas);
+    }
+
+    public function store_escuelav2(Request $request)
+    {
+        // Actualizar los campos
+        $escuela = EscuelaV2::create([
+            'numero_sigla' => $request->numero_sigla ?? null,
+            'nombre_completo' => $request->nombre_completo,
+            'direccion' => $request->direccion ?? null,
+            'localidad_id' => $request->localidad_id ?? null,
+            'telefono' => $request->telefono ?? null,
+            'mail' => $request->mail ?? null,
+            'dependencia_id' => $request->dependencia_id ?? null,
+            'activo' => $request->activo,
+            'updated_at' => Carbon::now()
+        ]);
+
+        if (!empty($request->nivelesSelected)) {
+            $escuela->niveles()->sync($request->nivelesSelected);
+        }
+
+        return response()->json(['message' => 'Datos guardados correctamente'], 200);
+    }
+
+    public function update_escuelav2(Request $request)
+    {
+        $escuela = EscuelaV2::find($request->id);
+        if (!$escuela) {
+            return response()->json(['message' => 'No se logró encontrar el registro'], 404);
+        }
+
+        $escuela->update([
+            'numero_sigla' => $request->numero_sigla ?? null,
+            'nombre_completo' => $request->nombre_completo,
+            'direccion' => $request->direccion ?? null,
+            'localidad_id' => $request->localidad_id ?? null,
+            'telefono' => $request->telefono ?? null,
+            'mail' => $request->mail ?? null,
+            'dependencia_id' => $request->dependencia_id ?? null,
+            'jornada_id' => $request->jornada_id ?? null,
+            'activo' => $request->activo ?? null,
+            'updated_at' => Carbon::now()
+        ]);
+
+        if (!empty($request->nivelesSelected)) {
+            $escuela->niveles()->sync($request->nivelesSelected);
+        }
+        if (!empty($request->turnosSelected)) {
+            $escuela->turnos()->sync($request->turnosSelected);
+        }
+
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function hide_escuelav2(Request $request)
+    {
+        $escuela = EscuelaV2::find($request->id);
+
+        if (!$escuela) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+
+        $escuela->activo = $escuela->activo == 1 ? 0 : 1;
+        $escuela->save();
+
+        return response()->json(['message' => 'Datos actualizados correctamente'], 200);
+    }
+
+    public function destroy_escuelav2(Request $request)
+    {
+        $escuela = EscuelaV2::find($request->id);
+
+        if (!$escuela) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        $tramitesAsociados = EducationData::where('escuela_id', $escuela->id)->count();
+        if ($tramitesAsociados > 0) {
+            return response()->json(['message' => 'La escuela no puede ser eliminada porque tiene trámites asociados.'], 422);
+        }
+
+        $escuela->delete();
+
+        return response()->json(['message' => 'Datos eliminados correctamente'], 200);
+    }
+
+    public function get_escuelasData()
+    {
+        $localidades = Localidad::all();
+        $dependencia = EscuelaDependencia::all();
+        $nivelesEducativos = NivelEducativo::all();
+        $jornadas = EscuelaJornada::active()->get();
+        $turnos = EscuelaTurno::active()->get();
+
+        $data = [
+            'localidades' => $localidades,
+            'dependencias' => $dependencia,
+            'nivelesEducativos' => $nivelesEducativos,
+            'jornadas' => $jornadas,
+            'turnos' => $turnos,
+        ];
+
+        return response()->json($data);
     }
 }

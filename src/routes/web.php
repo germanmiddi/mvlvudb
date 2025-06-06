@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/import/cud', [ImportController::class, 'importCud'])->name('import.cud');
     Route::post('/import/updateResponsable', [ImportController::class, 'updateResponsable'])->name('import.updateResponsable');
     Route::post('/import/importCbiDev', [ImportController::class, 'importCbiDev'])->name('import.importCbiDev');
+    Route::post('/import/importEscuelas', [ImportController::class, 'importEscuelas'])->name('import.importEscuelas');
 
     Route::post('/import/templateDependencia', [ImportController::class, 'templateDependencia'])->name('import.templateDependencia');
     Route::post('/import/infanciaCB', [ImportController::class, 'infanciaCB'])->name('import.infanciaCB');
@@ -270,6 +271,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/programas-sociales/update-programas-sociales/', [MasterdataController::class, 'update_programaSocial'])->name('masterdata.programasSociales.update_programaSocial');
         Route::post('/programas-sociales/hide-programas-sociales/', [MasterdataController::class, 'hide_programaSocial'])->name('masterdata.programasSociales.hide_programaSocial');
         Route::post('/programas-sociales/destroy-programas-sociales/', [MasterdataController::class, 'destroy_programaSocial'])->name('masterdata.programasSociales.destroy_programaSocial');
+
+        //ESCUELAS GENERAL
+        Route::get('/escuelas/get-escuelas', [MasterdataController::class, 'get_escuelasv2'])->name('masterdata.escuelas.get_escuelas');
+        Route::post('/escuelas/store-escuelas/', [MasterdataController::class, 'store_escuelav2'])->name('masterdata.escuelas.store_escuela');
+        Route::post('/escuelas/update-escuelas/', [MasterdataController::class, 'update_escuelav2'])->name('masterdata.escuelas.update_escuela');
+        Route::post('/escuelas/hide-escuelas/', [MasterdataController::class, 'hide_escuelav2'])->name('masterdata.escuelas.hide_escuela');
+        Route::post('/escuelas/destroy-escuelas/', [MasterdataController::class, 'destroy_escuelav2'])->name('masterdata.escuelas.destroy_escuela');
+        Route::get('/escuelas/get-escuelas-data', [MasterdataController::class, 'get_escuelasData'])->name('masterdata.escuelas.get_escuelasData');
 
         Route::get('/fortalecimiento/get-puntos-entrega', [MasterdataFortalecimientoController::class, 'get_puntos_entrega'])->name('masterdata.fortalecimiento.get_puntos_entrega');
         Route::post('/fortalecimiento/store-puntos-entrega/', [MasterdataFortalecimientoController::class, 'store_puntos_entrega'])->name('masterdata.fortalecimiento.store_puntos_entrega');

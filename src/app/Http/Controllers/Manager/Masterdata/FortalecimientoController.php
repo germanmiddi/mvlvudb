@@ -55,6 +55,7 @@ class FortalecimientoController extends Controller
     public function update_productos(Request $request)
     {
         $producto = Product::find($request->id);
+        $producto->name = $request->name;
         $producto->description = $request->description;
         $producto->save();
         return response()->json($producto);

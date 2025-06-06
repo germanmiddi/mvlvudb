@@ -35,6 +35,7 @@ use App\Http\Controllers\Manager\Users\UserController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesController;
 use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
+use App\Http\Controllers\Manager\Setting\SettingController;
 
 use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
 
@@ -282,6 +283,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/fortalecimiento/hide-productos/', [MasterdataFortalecimientoController::class, 'hide_productos'])->name('masterdata.fortalecimiento.hide_productos');
         Route::post('/fortalecimiento/destroy-productos/', [MasterdataFortalecimientoController::class, 'destroy_productos'])->name('masterdata.fortalecimiento.destroy_productos');
 
+        Route::get('/setting/list', [SettingController::class, 'list'])->name('setting.list');
+        Route::post('/setting/update', [SettingController::class, 'update'])->name('setting.update');
 
     });
 

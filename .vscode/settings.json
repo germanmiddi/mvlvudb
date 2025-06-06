@@ -1,10 +1,14 @@
 {
-    "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "prettier.singleQuote": true,
     "prettier.tabWidth": 4,
     "prettier.semi": true,
     "prettier.trailingComma": "es5",
+
+    "prettier.bracketSameLine": true,
+    "prettier.singleAttributePerLine": false,
+    "prettier.useTabs": false,
+    "prettier.arrowParens": "avoid",
     "[php]": {
         "editor.defaultFormatter": "DEVSENSE.phptools-vscode"
     }

@@ -10,7 +10,7 @@
                 </h1>
             </div>
             <div class="mt-4 flex sm:mt-0 sm:ml-4">
-                
+
             </div>
         </div>
 
@@ -24,16 +24,16 @@
 
                             <div class="flex justify-between">
                                 <h2 id="" class="text-lg leading-6 font-medium text-gray-900">Productos</h2>
-                                <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" 
+                                <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
                                         @click="showNew = !showNew">Crear</button>
                             </div>
                             <div v-if="showNew" class="my-5">
                                 <div class="flex flex-col">
-                                    <label for="name" class="text-sm text-gray-700 mb-1">Nombre</label>                                                                
+                                    <label for="name" class="text-sm text-gray-700 mb-1">Nombre</label>
                                     <input v-model="newName" class="w-10/12 border rounded mr-2 font-base py-2 text-sm pl-2" />
                                 </div>
                                 <div class="flex flex-col mt-2">
-                                    <label for="description" class="text-sm text-gray-700 mb-1">Descripción</label>                                                                
+                                    <label for="description" class="text-sm text-gray-700 mb-1">Descripción</label>
                                     <input v-model="newDescription" class="w-10/12 border rounded mr-2 font-base py-2 text-sm pl-2" />
                                 </div>
                                 <button class="mt-4 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
@@ -41,7 +41,7 @@
                             </div>
 
                             <div class="">
-                                <table class="min-w-full divide-y divide-gray-200">    
+                                <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="border-b-1 border-indigo-600 ">
                                         <tr>
                                             <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6  text-left">Nombre</th>
@@ -50,13 +50,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            <Item v-for="t in this.productos" :key="t.id" :item=t 
-                                                    @edit-item="editItem" 
-                                                    @hide-item="hideItem" 
+                                            <Item v-for="t in this.productos" :key="t.id" :item=t
+                                                    @edit-item="editItem"
+                                                    @hide-item="hideItem"
                                                     @destroy-item="destroyItem" />
 
                                     </tbody>
-                                </table> 
+                                </table>
                             </div>
                         </div>
 
@@ -64,11 +64,11 @@
                 </div>
             </div>
         </main>
-    </main>    
+    </main>
 
 
 
-   
+
 
 </template>
 
@@ -126,7 +126,7 @@ export default {
                             'type': 'success'
                         })
 
-                    this.newDescription = ""    
+                    this.newDescription = ""
                     this.newName = ""
                     this.showNew = false
                     this.getData()
@@ -147,12 +147,13 @@ export default {
         async editItem(item) {
             let formData = new FormData();
             formData.append('id', item.id);
+            formData.append('name', item.name);
             formData.append('description', item.description);
             formData.append('activo', item.activo);
 
 
             try {
-                const response = await axios.post(route('masterdata.fortalecimiento.update_puntos_entrega'), formData);
+                const response = await axios.post(route('masterdata.fortalecimiento.update_productos'), formData);
 
                 if (response.status == 200) {
                     this.$emit('toast-message',

@@ -52,7 +52,7 @@
                     >Cancelar</a
                 >
             </div>
-            <div v-else class="mt-4 flex sm:mt-0 sm:ml-4">
+            <div v-else class="mt-4 flex sm:mt-0 sm:ml-4" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                 <div class="mt-4 flex sm:mt-0 sm:ml-4" v-if="!formImport">
                     <a
                         :href="route('collections.entrevistas.create')"

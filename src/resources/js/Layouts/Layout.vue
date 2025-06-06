@@ -197,17 +197,17 @@
                             Entregas
                           </li>
                         </a>
-                        <a :href="route('collections.puntosEntrega')">
+                        <a :href="route('collections.puntosEntrega')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                           <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                             Puntos de Entrega
                           </li>
                         </a>
-                        <a :href="route('collections.personal')">
+                        <a :href="route('collections.personal')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                           <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                             Personal
                           </li>
                         </a>
-                        <a :href="route('collections.productos')">
+                        <a :href="route('collections.productos')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                           <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                             Productos
                           </li>
@@ -457,17 +457,17 @@
                   </li>
                 </a>
                 <hr>
-                <a :href="route('collections.puntosEntrega')">
+                <a :href="route('collections.puntosEntrega')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Puntos de Entrega
                   </li>
                 </a>
-                <a :href="route('collections.personal')">
+                <a :href="route('collections.personal')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Personal
                   </li>
                 </a>
-                <a :href="route('collections.productos')">
+                <a :href="route('collections.productos')" v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
                   <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
                     Productos
                   </li>

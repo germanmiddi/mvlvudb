@@ -1,5 +1,5 @@
 <template>
-    
+
     <tr class="hover:bg-gray-50">
         <td>
             <div v-if="!editMode" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -11,7 +11,7 @@
         </td>
         <td>
             <div v-if="!editMode" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                <div v-if="!editMode" class="flex justify-between w-1/2 mx-auto">
+                <div v-if="!editMode" class="flex justify-between w-[100px] mx-auto">
                     <LightBulbIcon :class="item.infante ? 'text-green-400 hover:text-green-600' : ' text-red-400 hover:text-red-600' " class="w-5 h-5"/>
                     <LightBulbIcon :class="item.primaria ? 'text-green-400 hover:text-green-600' : ' text-red-400 hover:text-red-600' " class="w-5 h-5"/>
                     <LightBulbIcon :class="item.secundaria ? 'text-green-400 hover:text-green-600' : ' text-red-400 hover:text-red-600' " class="w-5 h-5"/>
@@ -25,29 +25,13 @@
                 <input v-model="edit.nocturna" id="turnos_nocturna" type="checkbox" value="2" class="m-3 w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
             </div>
         </td>
-        <!-- <td>
-            <div v-if="!editMode" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ item.nocturna }}
-            </div>
-            <div v-else class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <input v-model="edit.nocturna" id="turnos_primaria" type="checkbox" value="2" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-            </div>
-        </td>
         <td>
-            <div v-if="!editMode" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ item.secundaria }}
-            </div>
-            <div v-else class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <input v-model="edit.secudnaria" id="turnos_secundaria" type="checkbox" value="2" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-            </div>
-        </td> -->
-        <td>
-            <div v-if="!editMode" class="flex justify-between w-1/5 mx-auto">
+            <div v-if="!editMode" class="flex justify-between w-[50px] mx-auto">
                 <div >
-                    <EyeIcon v-if="item.activo == true" 
+                    <EyeIcon v-if="item.activo == true"
                              @click="hideItem(item.id)"
-                             class="w-5 h-5 text-green-400 hover:text-green-600"/> 
-                    <EyeSlashIcon v-else 
+                             class="w-5 h-5 text-green-400 hover:text-green-600"/>
+                    <EyeSlashIcon v-else
                              @click="hideItem(item.id)"
                              class="w-5 h-5 text-yellow-700 hover:text-yellow-900" />
                 </div>
@@ -57,7 +41,7 @@
                 <button @click="editItem" class="bg-blue-400 text-white px-2 py-1 rounded text-sm mr-3"> Guardar</button>
                 <button @click="editMode = !editMode" class="bg-red-400 text-white px-2 py-1 rounded text-sm "> Cancelar</button>
             </div>
-        </td> 
+        </td>
     </tr>
 
 </template>

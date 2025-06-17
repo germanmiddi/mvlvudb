@@ -13,48 +13,7 @@
                         <PencilSquareIcon class="h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                     </a>
                 </div>
-                <!-- <div v-if="!editData"
-                    class="mt-4 mr-2 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
-                    <Menu as="div" class="ml-3 relative inline-block text-left">
-                        <div>
-                            <MenuButton
-                                class="-my-2 p-2 rounded-full bg-white flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <span class="sr-only">Open options</span>
-                                <Bars4Icon class="h-5 w-5" aria-hidden="true" />
-                            </MenuButton>
-                        </div>
 
-                        <transition enter-active-class="transition ease-out duration-100"
-                            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-                            leave-active-class="transition ease-in duration-75"
-                            leave-from-class="transform opacity-100 scale-100"
-                            leave-to-class="transform opacity-0 scale-95">
-                            <MenuItems
-                                class="z-50 origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <div class="py-1">
-                                    <MenuItem v-slot="{ active }">
-                                    <button type="button" @click="editData = true"
-                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                        <span>Editar</span>
-                                    </button>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }" :disabled="true">
-                                    <button type="button"
-                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full flex justify-between px-4 py-2 text-sm']">
-                                        <span>Nuevo Informe</span>
-                                    </button>
-                                    </MenuItem>
-                                    <MenuItem v-slot="{ active }">
-                                    <a href="#"
-                                        :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex justify-between px-4 py-2 text-sm']">
-                                        <span>Adjuntar Archivo</span>
-                                    </a>
-                                    </MenuItem>
-                                </div>
-                            </MenuItems>
-                        </transition>
-                    </Menu>
-                </div> -->
                 <div v-else
                     class="mt-4 mr-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <button type="submit" @click="editData = false, updateLegajo()"
@@ -71,16 +30,9 @@
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.escuela_primaria ?? '-' }}</dd>
 
-                        <select v-else v-model="form.escuela_primaria_id" id="escuela_primaria_id" name="escuela_primaria_id" autocomplete="off"
-                            :class="input_disable ? bg_disable : ''" :disabled="input_disable"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="" disabled>
-                                Seleccione una escuela
-                            </option>
-                            <option v-for="item in escuelas" :key="item.id" :value="item.id">
-                                {{ item.description }}
-                            </option>
-                        </select>
+                        <div v-else class="sm:col-span-2">
+                            <SelectEscuelas :escuelas="escuelas" :modelValue="form.escuela_primaria_id" @update="form.escuela_primaria_id = $event" />
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -223,7 +175,7 @@
                                 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300"
                             :class="input_disable ? bg_disable : ''" />
                     </div>
-                </dl> 
+                </dl>
             </div>
         </div>
     </div>
@@ -234,6 +186,7 @@ import { PencilSquareIcon, Bars4Icon } from '@heroicons/vue/24/solid'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import SelectEscuelas from '@/Layouts/Components/Generics/SelectEscuelas.vue';
 import store from '@/store.js'
 
 export default {
@@ -248,7 +201,7 @@ export default {
         escuelasNivel: Object
     },
     components: {
-        PencilSquareIcon,Bars4Icon, Datepicker, Menu, MenuButton, MenuItems, MenuItem
+        PencilSquareIcon,Bars4Icon, Datepicker, Menu, MenuButton, MenuItems, MenuItem, SelectEscuelas
     },
 
     setup() {
@@ -299,7 +252,7 @@ export default {
             this.form.escuela_localidad_id = this.legajo[0].person?.education[0]?.escuela_localidad?.id ?? null
 
             this.form.certificado_escolar = this.legajo[0].person?.education[0]?.certificado_escolar ?? null
-            this.form.permanencia = this.legajo[0].person?.education[0]?.permanencia ?? null 
+            this.form.permanencia = this.legajo[0].person?.education[0]?.permanencia ?? null
             this.form.observacion = this.legajo[0].person?.education[0]?.observacion ?? null
 
             // Registro datos temporales PreEdicion

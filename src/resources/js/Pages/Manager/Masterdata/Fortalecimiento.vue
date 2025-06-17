@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="shadow sm:rounded-md sm:overflow-hidden" >
+        <div class="shadow sm:rounded-md sm:overflow-hidden my-4" >
             <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
                 <div>
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Módulo Cajas de Alimentos</h3>
@@ -114,7 +114,7 @@ export default {
             formData.append('key', 'dias_entrega_cajas');
             formData.append('value', this.dias);
             try{
-                let response = await fetch(route('setting.update'), { method: 'POST', body: formData })
+                let response = await axios.post(route('setting.update'), formData )
                 console.log(response)
                 if(response.status == 200){
                     this.$emit('toast-message',

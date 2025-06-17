@@ -17,12 +17,14 @@ class SettingController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index(){
+    public function index()
+    {
         return Inertia::render('Manager/Settings/Index');
 
     }
 
-    public function list(){
+    public function list()
+    {
 
         $query = Settings::query();
 
@@ -39,26 +41,18 @@ class SettingController extends Controller
         return response()->json($setting);
     }
 
-    public function update(Request $request){
-
-        if($request->id){
-
-        $setting = Settings::find($request->id);
-        $setting->value = $request->value;
-
-        if($request->value2){
-            $setting->value2 = $request->value2;
-        }
-
-        $setting->save();
-        }else{
-            $setting = new Settings();
-            $setting->module = $request->module;
-            $setting->key = $request->key;
-            $setting->value = $request->value;
-            $setting->value2 = $request->value2 ?? null;
-            $setting->save();
-        }
+    public function update(Request $request)
+    {
+        $setting = Settings::updateOrCreate(
+            [
+                'module' => $request->module,
+                'key' => $request->key
+            ],
+            [
+                'value' => $request->value,
+                'value2' => $request->value2 ?? null
+            ]
+        );
         return response()->json($setting);
     }
 }

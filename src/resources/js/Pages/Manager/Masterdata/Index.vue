@@ -1,8 +1,6 @@
 <template>
-    <main class="flex-1">
+    <div class="min-h-screen flex flex-col">
         <!-- Page title & actions -->
-
-
         <div class="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <div class="flex-1 min-w-0">
                 <h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
@@ -16,8 +14,8 @@
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
-        <main class="max-w-7xl mx-auto pb-10 lg:py-12 lg:px-8">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-x-5">
+        <main class="flex-1 max-w-7xl mx-auto pb-10 lg:py-12 lg:px-8 w-full">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-x-5 h-[calc(100vh-10rem)] ">
                 <aside class="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
                     <nav class="space-y-1">
                         <a v-for="(item, index) in subNavigation" :key="item.name" @click.prevent="selectItem(index)"
@@ -26,17 +24,14 @@
                         </a>
                     </nav>
                 </aside>
-
-
-                <div class="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                <div class="space-y-6 px-2 pt-2 lg:col-span-9 h-full overflow-y-auto">
                     <component :is="selectedItem.componentName" :data="selectedItem.componentData"
                         :name="selectedItem.name" :dependencia_id="selectedItem.dependencia_id"
                         @toast-message="setMessage" />
                 </div>
             </div>
         </main>
-    </main>
-
+    </div>
 </template>
 
 
@@ -57,6 +52,7 @@ import ProgramasSociales from './ProgramasSociales.vue';
 import EscuelasGeneral from './EscuelasGeneral/EscuelasGeneral.vue';
 
 const subNavigation = [
+    { dependencia_id: 0, name: 'Centros Barriales', componentName: 'CentrosBarriales' },
     { dependencia_id: 12, name: 'Centros Barriales Infancia', componentName: 'Cbi' },
     { dependencia_id: 13, name: 'Centros Barriales Juventud', componentName: 'Cbj' },
     { dependencia_id: 2, name: 'Discapacidad', componentName: 'Discapacidad' },
@@ -67,7 +63,6 @@ const subNavigation = [
     { dependencia_id: 8, name: 'Niñez y Adolescencia', componentName: 'Ninez' },
     { dependencia_id: 14, name: 'Personas Mayores', componentName: 'Mayores' },
     { dependencia_id: 11, name: 'Vivienda social', componentName: 'Vivienda' },
-    { dependencia_id: 0, name: 'Centros Barriales', componentName: 'CentrosBarriales' },
     { dependencia_id: 0, name: 'Programas Sociales', componentName: 'ProgramasSociales' },
     { dependencia_id: 0, name: 'Escuelas General', componentName: 'EscuelasGeneral' },
 

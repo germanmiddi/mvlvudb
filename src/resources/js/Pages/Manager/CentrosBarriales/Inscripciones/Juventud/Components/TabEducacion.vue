@@ -12,22 +12,10 @@
 				</div>
 			</div>
 			<div class="grid grid-cols-12 gap-6">
-				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
-					<label for="escuela_primaria_id" class="block text-sm font-medium text-gray-700">Escuela</label>
-					<select v-model="localData.escuela_primaria_id" id="escuela_primaria_id" name="escuela_primaria_id"
-						autocomplete="off" :class="input_disable ? bg_disable : ''" :disabled="input_disable"
-						class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-						<option value="" disabled>
-							Seleccione una Escuela
-						</option>
-						<option v-for="escuela in escuelas" :key="escuela.id" :value="escuela.id">
-							{{ escuela.description }}
-						</option>
-					</select>
+                <div class="col-span-12 sm:col-span-6 md:col-span-6 xl:col-span-6">
+                    <label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Escuela</label>
+                    <SelectEscuelas :escuelas="escuelas" :modelValue="localData.escuela_primaria_id" @update="localData.escuela_primaria_id = $event" />
 				</div>
-				<!-- </div>
-
-            <div class="grid grid-cols-12 gap-6"> -->
 				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 					<label for="nivel_educativo_id" class="block text-sm font-medium text-gray-700">Nivel Educativo</label>
 					<select v-model="localData.nivel_educativo_id" id="nivel_educativo_id" name="nivel_educativo_id"
@@ -72,9 +60,6 @@
 					</select>
 				</div>
 
-				<!-- </div>
-            
-            <div class="grid grid-cols-12 gap-6"> -->
 				<div class="col-span-12 sm:col-span-6 md:col-span-4 xl:col-span-3">
 					<label for="escuela_turno_id" class="block text-sm font-medium text-gray-700">Turno</label>
 					<select v-model="localData.escuela_turno_id" id="escuela_turno_id" name="escuela_turno_id"
@@ -160,6 +145,7 @@
 <script>
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import SelectEscuelas from '@/Layouts/Components/Generics/SelectEscuelas.vue';
 
 export default {
 	props: {
@@ -175,6 +161,7 @@ export default {
 	},
 	components: {
 		Datepicker,
+		SelectEscuelas
 	},
 	data() {
 		return {

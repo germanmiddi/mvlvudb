@@ -15,6 +15,8 @@ use App\Models\Manager\PuntoEntrega;
 use App\Models\Manager\Person;
 use App\Models\Manager\Product;
 use App\Models\Manager\CajasEntrevista;
+use App\Models\Manager\Settings;
+
 class CollectionController extends Controller
 {
 
@@ -313,7 +315,7 @@ class CollectionController extends Controller
             return ['status' => true,];
         }
 
-        $diasPermitidos = env('MODULO_CAJAS_DIAS', 30); // Valor por defecto 30 si no está definido
+        $diasPermitidos = Settings::where('key', 'dias_entrega_cajas')->first()->value;
         $daysSinceLastDelivery = Carbon::parse($lastDelivery->date)->diffInDays(Carbon::now());
         $message = match ($daysSinceLastDelivery) {
             0 => "Última entrega realizada hace unas horas. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción.",

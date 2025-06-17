@@ -11,7 +11,7 @@
                         <label for="dias" class="block text-sm font-medium text-gray-700"> Cantidad de días para entrega de cajas </label>
                         <p class="mt-1 text-sm text-gray-500">Por defecto 30 días.</p>
                         <div class="mt-1 flex items-center gap-x-2">
-                            <input type="number" name="dias" id="dias" v-model="dias" class="w-1/2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md" />
+                            <input type="number" min="0" name="dias" id="dias" v-model="dias" class="w-1/2 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm border-gray-300 rounded-md" />
                             <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
                                     @click="saveDias">Guardar</button>
                         </div>

@@ -75,7 +75,7 @@ class InscripcionesCBIController extends Controller
                 'centrosSalud' => CentroSalud::active()->get(),
                 'comedores' => Comedor::where('activo', true)->get(),
                 'estadosEducativo' => EstadoEducativo::all(),
-                'escuelas' => Escuela::where('primaria', true)->orWhere('infante', true)->whereNull('dependencia_id')->get(),
+                'escuelas' => Escuela::where('dependencia_id', 12)->get(),
                 'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'localidades' => Localidad::all(),
                 'nivelesEducativo' => NivelEducativo::all(),

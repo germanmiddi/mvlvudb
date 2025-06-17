@@ -64,7 +64,7 @@ const subNavigation = [
     { dependencia_id: 14, name: 'Personas Mayores', componentName: 'Mayores' },
     { dependencia_id: 11, name: 'Vivienda social', componentName: 'Vivienda' },
     { dependencia_id: 0, name: 'Programas Sociales', componentName: 'ProgramasSociales' },
-    { dependencia_id: 0, name: 'Escuelas General', componentName: 'EscuelasGeneral' },
+    // { dependencia_id: 0, name: 'Escuelas General', componentName: 'EscuelasGeneral' },
 
 ]
 

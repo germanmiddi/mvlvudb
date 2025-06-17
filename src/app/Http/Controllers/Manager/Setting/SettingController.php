@@ -43,16 +43,20 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        $setting = Settings::updateOrCreate(
-            [
-                'module' => $request->module,
-                'key' => $request->key
-            ],
-            [
-                'value' => $request->value,
-                'value2' => $request->value2 ?? null
-            ]
-        );
-        return response()->json($setting);
+        try {
+            Settings::updateOrCreate(
+                [
+                    'module' => $request->module,
+                    'key' => $request->key
+                ],
+                [
+                    'value' => $request->value,
+                    'value2' => $request->value2 ?? null
+                ]
+            );
+            return response()->json(['message' => 'Datos guardados correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al guardar los datos'], 500);
+        }
     }
 }

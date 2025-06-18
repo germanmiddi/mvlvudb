@@ -71,7 +71,7 @@ class LegajosCBController extends Controller
             [
                 'tiposLegajo' => TipoLegajoCb::all(),
                 'estados' => EstadoCbj::all(),
-                'escuelas' => Escuela::all(),
+                'escuelas' => Escuela::where('dependencia_id', 12)->get(),
                 'sedes' => Sede::whereNotIn('id', [8, 9])->get(),
                 'estadoGabinetes' => EstadoGabineteCB::activo()->get(),
                 'espacioGabinete' => EspacioGabineteCb::activo()->get(),
@@ -109,7 +109,7 @@ class LegajosCBController extends Controller
 
                 'centrosSalud' => CentroSalud::active()->get(),
 
-                'escuelas' => Escuela::all(),
+                'escuelas' => Escuela::where('dependencia_id', 12)->get(),
                 'turnosEducativo' => EscuelaTurno::all(),
                 'escuelasDependencia' => EscuelaDependencia::active()->get(),
                 'escuelasNivel' => EscuelaNivel::get(),

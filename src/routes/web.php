@@ -375,8 +375,8 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-legajo-gabinete', [LegajosCBController::class, 'update_legajoGabinete'])->name('legajoCB.updateLegajoGabinete');
             Route::put('/update-legajo-pedagogia', [LegajosCBController::class, 'update_legajoPedagogia'])->name('legajoCB.updateLegajoPedagogia');
             Route::put('/update-legajo-emprendedor', [LegajosCBController::class, 'update_legajoEmprendedor'])->name('legajoCB.updateLegajoEmprendedor');
-            Route::put('/update-legajo-titular', [LegajosCBController::class, 'update_legajoTitular'])->name('legajoCB.updateLegajoTitular');
-            Route::put('/update-legajo-assigned', [LegajosCBController::class, 'update_assignedResponsable'])->name('legajoCB.assignedResponsable');
+                    Route::put('/update-legajo-titular', [LegajosCBController::class, 'update_legajoTitular'])->name('legajoCB.updateLegajoTitular');
+        Route::put('/update-legajo-assigned', [LegajosCBController::class, 'update_assignedResponsable'])->name('legajoCB.assignedResponsable');
 
         });
 

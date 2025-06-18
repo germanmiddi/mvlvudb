@@ -1,6 +1,21 @@
 <template>
     <div class="px-4 mt-10">
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <!-- Mostrar ResponsableNew cuando showNewForm es true -->
+        <ResponsableNew
+            v-if="showNewForm"
+            :legajo="legajo"
+            :paises="paises"
+            :parentescos="parentescos"
+            :situacionesConyugal="situacionesConyugal"
+            :tiposOcupacion="tiposOcupacion"
+            :estadosEducativo="estadosEducativo"
+            :nivelesEducativo="nivelesEducativo"
+            :tipoDocumento="tipoDocumento"
+            @message="handleNewResponsableMessage"
+        />
+
+        <!-- Mostrar formulario original cuando showNewForm es false -->
+        <div v-else class="bg-white shadow overflow-hidden sm:rounded-lg">
             <div class="sm:flex sm:justify-between sm:items-center">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Datos del Adulto Responsable</h3>
@@ -65,7 +80,7 @@
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Documento</dt>
 
-                                                <!-- Mostrar DNI como texto (modo lectura) -->
+                                                        <!-- Mostrar DNI como texto (modo lectura) -->
                         <dd v-if="!editData || (hasDni && !changeDni)"
                             class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             {{ form.num_documento ?? '-' }}
@@ -98,7 +113,9 @@
                         <dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
                         <dd v-if="!editData" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"> {{
                             this.form.fecha_nac ?
-                                store.dateFormateada(this.form.fecha_nac) : '-' }}</dd>
+                                (this.form.fecha_nac instanceof Date ?
+                                    format(this.form.fecha_nac) :
+                                    store.dateFormateada(this.form.fecha_nac)) : '-' }}</dd>
                         <Datepicker v-else
                             class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                             v-model="this.form.fecha_nac" :disabled="input_disable"
@@ -256,6 +273,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import store from '@/store.js'
+import ResponsableNew from './ResponsableNew.vue'
 
 export default {
     props: {
@@ -269,7 +287,7 @@ export default {
         tipoDocumento: Object,
     },
     components: {
-        PencilSquareIcon, Datepicker, Toast,
+        PencilSquareIcon, Datepicker, Toast, ResponsableNew,
     },
 
     setup() {
@@ -297,6 +315,9 @@ export default {
             labelType: "info",
             dniStatus: false,
             changeDni: false,
+            showNewForm: false,
+            input_disable: true,
+            bg_disable: "bg-gray-100",
         }
     },
     computed: {
@@ -304,6 +325,7 @@ export default {
             return !!(this.form.num_documento || this.legajo[0].responsable?.num_documento || this.dniStatus);
         }
     },
+
     methods: {
         initForm() {
             this.form = {}
@@ -334,9 +356,20 @@ export default {
             this.form.phone_emergency = this.legajo[0].phone_emergency ?? null
             this.form.name = this.legajo[0].responsable?.name ?? null
             this.form.lastname = this.legajo[0].responsable?.lastname ?? null
-            this.form.fecha_nac = this.legajo[0].responsable?.fecha_nac ?? null
+            // Manejar fecha correctamente - si viene como string del servidor, convertir a Date para el Datepicker
+            this.form.fecha_nac = this.legajo[0].responsable?.fecha_nac ?
+                (typeof this.legajo[0].responsable.fecha_nac === 'string' ?
+                    new Date(this.legajo[0].responsable.fecha_nac + "T00:00:00.000-03:00") :
+                    this.legajo[0].responsable.fecha_nac) : null
             this.form.phone = this.legajo[0].responsable?.contact[0]?.phone ?? null
             this.form.celular = this.legajo[0].responsable?.contact[0]?.celular ?? null
+
+            // Si ya existe un responsable, habilitar campos para edición normal
+            // Solo deshabilitar si estamos en modo cambio de DNI sin verificar
+            this.input_disable = false;
+            if (this.form.num_documento) {
+                this.dniStatus = true;
+            }
 
             // Registro datos temporales PreEdicion
             this.form_temp = JSON.parse(JSON.stringify(this.form));
@@ -349,25 +382,52 @@ export default {
             this.toastMessage = "";
         },
         changeDniMode() {
-            // Activar modo cambio de DNI
-            this.changeDni = true;
+            // Mostrar el formulario nuevo en lugar del modo de edición
+            this.showNewForm = true;
+            this.editData = false;
+        },
+                        handleNewResponsableMessage(data) {
+            // Manejar el mensaje del componente ResponsableNew
+            this.$emit('message', data);
 
-            // Limpiar campos relacionados con la persona
-            this.form.num_documento = null;
-            this.form.name = null;
-            this.form.lastname = null;
-            this.form.fecha_nac = null;
-            this.form.tipo_documento_id = null;
-            this.form.tipo_documento = null;
-            this.form.phone = null;
-            this.form.celular = null;
+            // Si fue exitoso, actualizar el formulario con los nuevos datos
+            if (data.labelType === 'success' && data.responsableData) {
+                this.showNewForm = false;
+                // Actualizar el formulario con los datos del nuevo responsable
+                this.updateFormWithNewResponsable(data.responsableData);
+            }
+        },
+        updateFormWithNewResponsable(responsableData) {
+            // Actualizar el formulario con los datos del nuevo responsable
+            this.form.num_documento = responsableData.num_documento;
+            this.form.lastname = responsableData.lastname;
+            this.form.name = responsableData.name;
+            // Manejar fecha - viene como string desde ResponsableNew, convertir a Date para Datepicker
+            this.form.fecha_nac = responsableData.fecha_nac ?
+                (typeof responsableData.fecha_nac === 'string' ?
+                    new Date(responsableData.fecha_nac + "T00:00:00.000-03:00") :
+                    responsableData.fecha_nac) : null;
+            this.form.phone = responsableData.phone;
+            this.form.celular = responsableData.celular;
+            this.form.pais = responsableData.pais;
+            this.form.pais_id = responsableData.pais_id;
+            this.form.tipo_ocupacion = responsableData.tipo_ocupacion;
+            this.form.tipo_ocupacion_id = responsableData.tipo_ocupacion_id;
+            this.form.situacion_conyugal = responsableData.situacion_conyugal;
+            this.form.situacion_conyugal_id = responsableData.situacion_conyugal_id;
+            this.form.tipo_documento = responsableData.tipo_documento;
+            this.form.tipo_documento_id = responsableData.tipo_documento_id;
+            this.form.nivel_educativo = responsableData.nivel_educativo;
+            this.form.nivel_educativo_id = responsableData.nivel_educativo_id;
+            this.form.estado_educativo = responsableData.estado_educativo;
+            this.form.estado_educativo_id = responsableData.estado_educativo_id;
+            this.form.parentesco = responsableData.parentesco;
+            this.form.parentesco_id = responsableData.parentesco_id;
+            this.form.phone_emergency = responsableData.phone_emergency;
 
-            // Resetear estados de validación
-            this.dniStatus = false;
-            this.input_disable = false;
-
-            // Limpiar mensajes
-            this.clearMessage();
+            // Actualizar datos temporales para el modo edición
+            this.form_temp = JSON.parse(JSON.stringify(this.form));
+            this.dniStatus = true;
         },
         async getPerson() {
             let num_documento = this.form.num_documento;
@@ -380,8 +440,7 @@ export default {
                 this.form.num_documento = num_documento;
                 /// Recuperar datos.
                 this.form.tipo_documento_id = data.tipo_documento_id
-                this.form.fecha_nac = data.fecha_nac
-                this.form.fecha_nac = new Date(this.form.fecha_nac + "T00:00:00.000-03:00")
+                this.form.fecha_nac = data.fecha_nac ? new Date(data.fecha_nac + "T00:00:00.000-03:00") : null
                 this.form.name = data.name
                 this.form.lastname = data.lastname
                 this.form.genero = data.genero
@@ -389,11 +448,15 @@ export default {
                     this.form.celular = data.contact[0].celular
                     this.form.phone = data.contact[0].phone
                 }
+                // Habilitar campos para edición después de verificar
+                this.input_disable = false;
+                this.dniStatus = true;
 
             } else {
                 this.labelType = "info";
                 this.toastMessage = "El DNI indicado no se encuentra registrado";
                 this.form.num_documento = num_documento;
+                // Habilitar campos incluso si no se encuentra la persona para permitir crear una nueva
                 this.input_disable = false;
             }
         },

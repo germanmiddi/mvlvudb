@@ -84,70 +84,12 @@ class LegajosCBController extends Controller
 
     public function legajo($id)
     {
+        $legajoData = $this->getLegajoWithRelations($id);
+
         return Inertia::render(
             'Manager/CentrosBarriales/Legajos/Legajo',
             [
-                'legajo' => LegajoCB::where('id', $id)
-                    ->with([
-                        'estadocbj',
-                        'sede',
-                        'responsable',
-                        'responsable.contact',
-                        'responsable.social',
-                        'responsable.social.tipoOcupacion',
-                        'responsable.aditional',
-                        'responsable.aditional.situacionConyugal',
-                        'responsable.education',
-                        'responsable.education.nivelEducativo',
-                        'responsable.education.estadoEducativo',
-                        'responsable.address',
-                        'responsable.tipoDoc',
-                        'responsable.address.pais',
-                        'person',
-                        'person.contact',
-                        'autorizacion',
-                        'canal_atencion',
-                        'person.address',
-                        'person.address.localidad',
-                        'person.address.barrio',
-                        'person.salud',
-                        'person.salud.centroSalud',
-                        'person.cud',
-                        'person.education',
-                        'person.education.nivelEducativo',
-                        'person.education.estadoEducativo',
-                        'person.education.escuelaTurno',
-                        'person.education.escuelaDependencia',
-                        'person.education.escuelaLocalidad',
-                        'person.education.escuelaNivel',
-                        'person.education.escuelaPrimaria',
-                        'tipo_legajo',
-                        'programas_sociales',
-                        'programas_sociales.profesional',
-                        'programas_sociales.programa_social',
-                        'programas_sociales.estado',
-                        'programas_sociales.intervenciones',
-                        'programas_sociales.intervenciones.profesional',
-                        'actividades',
-                        'actividades.actividad',
-                        'actividades.estado',
-                        'informes',
-                        'informes.profesional',
-                        'informes.estado',
-                        'informes.area',
-                        'archivos',
-                        'archivos.area',
-                        'parentesco',
-                        'gabinete',
-                        'gabinete.estado',
-                        'gabinete.espacio',
-                        'emprendedor',
-                        'assigned',
-                        'pedagogia.estado',
-                        'pedagogia' => function ($query) {
-                            $query->orderBy('fecha_prueba', 'desc')->with('estado');
-                        },
-                    ])->get(),
+                'legajo' => $legajoData,
                 'users' => User::orderBy('name')->get(),
                 'programasSociales' => ProgramaSocialCB::all(),
                 'actividades' => ActividadCB::all(),
@@ -771,15 +713,21 @@ class LegajosCBController extends Controller
     public function update_legajoResponsable(Request $request)
     {
         try {
-            $person_id = LegajoCB::where('id', $request->id)->value('responsable_id');
+            // Buscar si ya existe una persona con ese DNI
+            $existingPerson = Person::where('num_documento', $request->num_documento)
+                                  ->where('tipo_documento_id', $request->tipo_documento_id)
+                                  ->first();
 
-            if ($person_id) {
+            if ($existingPerson) {
+                // Si existe la persona, usarla y actualizar solo los datos que vienen del form
+                $person_id = $existingPerson->id;
                 Person::where('id', $person_id)->update([
-                    'lastname' => $request->lastname ?? null,
-                    'name' => $request->name ?? null,
-                    'fecha_nac' => $request->fecha_nac ?? null,
+                    'lastname' => $request->lastname ?? $existingPerson->lastname,
+                    'name' => $request->name ?? $existingPerson->name,
+                    'fecha_nac' => $request->fecha_nac ?? $existingPerson->fecha_nac,
                 ]);
             } else {
+                // Si no existe, crear nueva persona
                 $newPerson = Person::create([
                     'lastname' => $request->lastname ?? null,
                     'name' => $request->name ?? null,
@@ -836,7 +784,11 @@ class LegajosCBController extends Controller
                     'phone_emergency' => $request->phone_emergency,
                 ]
             );
-            return response()->json(['message' => 'Se ha actualizado correctamente los datos del adulto responsable del legajo.'], 200);
+
+            return response()->json([
+                'message' => 'Se ha actualizado correctamente los datos del adulto responsable del legajo.',
+                'responsable_id' => $person_id
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del adulto responsable del legajo. Comuniquese con el administrador.'], 203);
         }
@@ -1034,5 +986,70 @@ class LegajosCBController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Se ha producido un error al momento de intentar actualizar los datos del responsable asignado. Comuniquese con el administrador.'], 203);
         }
+    }
+
+        private function getLegajoWithRelations($id)
+    {
+        return LegajoCB::where('id', $id)
+            ->with([
+                'estadocbj',
+                'sede',
+                'responsable',
+                'responsable.contact',
+                'responsable.social',
+                'responsable.social.tipoOcupacion',
+                'responsable.aditional',
+                'responsable.aditional.situacionConyugal',
+                'responsable.education',
+                'responsable.education.nivelEducativo',
+                'responsable.education.estadoEducativo',
+                'responsable.address',
+                'responsable.tipoDoc',
+                'responsable.address.pais',
+                'person',
+                'person.contact',
+                'autorizacion',
+                'canal_atencion',
+                'person.address',
+                'person.address.localidad',
+                'person.address.barrio',
+                'person.salud',
+                'person.salud.centroSalud',
+                'person.cud',
+                'person.education',
+                'person.education.nivelEducativo',
+                'person.education.estadoEducativo',
+                'person.education.escuelaTurno',
+                'person.education.escuelaDependencia',
+                'person.education.escuelaLocalidad',
+                'person.education.escuelaNivel',
+                'person.education.escuelaPrimaria',
+                'tipo_legajo',
+                'programas_sociales',
+                'programas_sociales.profesional',
+                'programas_sociales.programa_social',
+                'programas_sociales.estado',
+                'programas_sociales.intervenciones',
+                'programas_sociales.intervenciones.profesional',
+                'actividades',
+                'actividades.actividad',
+                'actividades.estado',
+                'informes',
+                'informes.profesional',
+                'informes.estado',
+                'informes.area',
+                'archivos',
+                'archivos.area',
+                'parentesco',
+                'gabinete',
+                'gabinete.estado',
+                'gabinete.espacio',
+                'emprendedor',
+                'assigned',
+                'pedagogia.estado',
+                'pedagogia' => function ($query) {
+                    $query->orderBy('fecha_prueba', 'desc')->with('estado');
+                },
+            ])->get();
     }
 }

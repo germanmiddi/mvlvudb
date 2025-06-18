@@ -34,7 +34,7 @@
 							</li>
 						</ul>
 					</div>
-					<component :is="selectedItem.componentName" :data="selectedItem.componentData" :legajo="legajo"
+										<component :is="selectedItem.componentName" :data="selectedItem.componentData" :legajo="legajo"
 						:sedes="sedes" :users="users" :areas="areas" :canalesAtencion="canalesAtencion"
 						:tiposLegajo="tiposLegajo" :estados="estados" :localidades="localidades" :paises="paises"
 						:parentescos="parentescos" :situacionesConyugal="situacionesConyugal"
@@ -43,7 +43,8 @@
 						:turnosEducativo="turnosEducativo" :escuelasDependencia="escuelasDependencia"
 						:escuelasNivel="escuelasNivel" :estadosGabinete="estadosGabinete" :actividades="actividades"
 						:programasSociales="programasSociales" :estadosPedagogia="estadosPedagogia"
-						:tipoDocumento="tipoDocumento" :espacioGabinete="espacioGabinete" @message="messageToast" />
+						:tipoDocumento="tipoDocumento" :espacioGabinete="espacioGabinete"
+						@message="messageToast" />
 				</div>
 
 				<div class="lg:col-span-4 xl:col-span-4">

@@ -8,6 +8,8 @@
                 <div class="mt-4 mr-4 flex items-center justify-between sm:mt-0 sm:ml-6 sm:flex-shrink-0 sm:justify-start">
                     <button type="submit" @click="updateLegajo()"
                         class="ml-1 inline-flex items-center px-4 py-1 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Guardar</button>
+                    <button type="button" @click="$emit('cancel')"
+                        class="ml-1 inline-flex items-center px-4 py-1 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
                 </div>
             </div>
 
@@ -18,29 +20,53 @@
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Apellido</dt>
-                        <input v-model="form.lastname" type="text" name="lastname" id="lastname"
-                            autocomplete="name-level2"
-                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <div class="sm:col-span-2">
+                            <input v-model="form.lastname" type="text" name="lastname" id="lastname"
+                                autocomplete="name-level2"
+                                :readonly="!isEditMode"
+                                :class="[
+                                    isEditMode ? 'focus:ring-indigo-500 focus:border-indigo-500' : 'bg-gray-100 text-gray-500 cursor-not-allowed',
+                                    v$?.form?.lastname?.$error ? 'border-red-500' : 'border-gray-300',
+                                    'block w-full shadow-sm sm:text-sm rounded-md'
+                                ]" />
+                            <span v-if="v$?.form?.lastname?.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Nombre</dt>
-                        <input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
-                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <div class="sm:col-span-2">
+                            <input v-model="form.name" type="text" name="name" id="name" autocomplete="name-level2"
+                                :readonly="!isEditMode"
+                                :class="[
+                                    isEditMode ? 'focus:ring-indigo-500 focus:border-indigo-500' : 'bg-gray-100 text-gray-500 cursor-not-allowed',
+                                    v$?.form?.name?.$error ? 'border-red-500' : 'border-gray-300',
+                                    'block w-full shadow-sm sm:text-sm rounded-md'
+                                ]" />
+                            <span v-if="v$?.form?.name?.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Tipo de Documento</dt>
-                        <select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
-                            autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="" disabled>
-                                Seleccione un tipo de documento
-                            </option>
-                            <option v-for="item in tipoDocumento" :key="item.id" :value="item.id">
-                                {{ item.description }}
-                            </option>
-                        </select>
+                        <div class="sm:col-span-2">
+                            <select v-model="form.tipo_documento_id" id="tipo_documento_id" name="tipo_documento_id"
+                                autocomplete="off"
+                                :disabled="!isEditMode"
+                                :class="[
+                                    isEditMode ? 'bg-white focus:ring-indigo-500 focus:border-indigo-500' : 'bg-gray-100 text-gray-500 cursor-not-allowed',
+                                    v$?.form?.tipo_documento_id?.$error ? 'border-red-500' : 'border-gray-300',
+                                    'block w-full py-2 px-3 border rounded-md shadow-sm focus:outline-none inline-flex sm:text-sm'
+                                ]">
+                                <option value="" disabled>
+                                    Seleccione un tipo de documento
+                                </option>
+                                <option v-for="item in tipoDocumento" :key="item.id" :value="item.id">
+                                    {{ item.description }}
+                                </option>
+                            </select>
+                            <span v-if="v$?.form?.tipo_documento_id?.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -48,48 +74,61 @@
                         <div class="sm:col-span-2 relative">
                             <input v-model="form.num_documento"
                                 @keyup.enter="getPerson()"
-                                :class="!form.num_documento ? 'border-red-500' : ''"
+                                :class="[
+                                    v$?.form?.num_documento?.$error ? 'border-red-500' : 'border-gray-300',
+                                    'w-full focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm rounded-md pr-20'
+                                ]"
                                 type="text"
                                 name="num_documento"
                                 id="num_documento"
-                                placeholder="Ingrese el número de documento"
-                                class="w-full focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md pr-20" />
+                                placeholder="Ingrese el número de documento" />
                             <button @click="getPerson()"
                                 class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-green-900 text-xs rounded-r-md hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 shadow-sm font-medium flex items-center transition-colors">
                                 Verificar
                             </button>
-                            <span v-if="!form.num_documento" class="block text-red-500 text-xs mt-1">Campo obligatorio</span>
+                            <span v-if="v$?.form?.num_documento?.$error" class="block text-red-500 text-xs mt-1">Campo obligatorio</span>
                         </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
-                        <Datepicker
-                            class="sm:col-span-2 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            v-model="this.form.fecha_nac"
-                            :enableTimePicker="false"
-                            :monthChangeOnScroll="false" autoApply :format="format">
-                        </Datepicker>
+                        <div class="sm:col-span-2">
+                            <Datepicker
+                                :class="[
+                                    isEditMode ? 'focus:ring-red-500 focus:border-red-500' : 'bg-gray-100 text-gray-500 cursor-not-allowed',
+                                    v$?.form?.fecha_nac?.$error ? 'border-red-500' : 'border-gray-300',
+                                    'block w-full shadow-sm sm:text-sm rounded-md'
+                                ]"
+                                v-model="this.form.fecha_nac"
+                                :disabled="!isEditMode"
+                                :enableTimePicker="false"
+                                :monthChangeOnScroll="false" autoApply :format="format">
+                            </Datepicker>
+                            <span v-if="v$?.form?.fecha_nac?.$error" class="text-red-500 text-xs">Campo obligatorio</span>
+                        </div>
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Telefono</dt>
                         <input v-model="form.phone" type="text" name="phone" id="phone"
                             autocomplete="name-level2"
-                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            :readonly="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md' : 'sm:col-span-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed'" />
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Celular</dt>
                         <input v-model="form.celular" type="text" name="celular" id="celular"
                             autocomplete="name-level2"
-                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            :readonly="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md' : 'sm:col-span-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed'" />
                     </div>
 
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Pais</dt>
                         <select v-model="form.pais_id" id="pais_id" name="pais_id" autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione un pais
                             </option>
@@ -103,7 +142,8 @@
                         <dt class="text-sm font-medium text-gray-500">Situación Laboral</dt>
                         <select v-model="form.tipo_ocupacion_id" id="tipo_ocupacion_id" name="tipo_ocupacion_id"
                             autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione una ocupación
                             </option>
@@ -117,7 +157,8 @@
                         <dt class="text-sm font-medium text-gray-500">Situación Conyugal</dt>
                         <select v-model="form.situacion_conyugal_id" id="situacion_conyugal_id"
                             name="situacion_conyugal_id" autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione una situación
                             </option>
@@ -131,7 +172,8 @@
                         <dt class="text-sm font-medium text-gray-500">Nivel Educativo</dt>
                         <select v-model="form.nivel_educativo_id" id="nivel_educativo_id"
                             name="nivel_educativo_id" autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione un nivel educativo
                             </option>
@@ -145,7 +187,8 @@
                         <dt class="text-sm font-medium text-gray-500">Estado Educativo</dt>
                         <select v-model="form.estado_educativo_id" id="estado_educativo_id"
                             name="estado_educativo_id" autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione un estado educativo
                             </option>
@@ -159,7 +202,8 @@
                         <dt class="text-sm font-medium text-gray-500">Parentesco</dt>
                         <select v-model="form.parentesco_id" id="parentesco_id" name="parentesco_id"
                             autocomplete="off"
-                            class="sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            :disabled="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none inline-flex focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm' : 'sm:col-span-2 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-500 cursor-not-allowed sm:text-sm'">
                             <option value="" disabled>
                                 Seleccione un parentesco
                             </option>
@@ -173,7 +217,8 @@
                         <dt class="text-sm font-medium text-gray-500">Teléfono de Emergencia</dt>
                         <input v-model="form.phone_emergency" type="text" name="phone_emergency"
                             id="phone_emergency" autocomplete="name-level2"
-                            class="sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                            :readonly="!isEditMode"
+                            :class="isEditMode ? 'sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md' : 'sm:col-span-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed'" />
                     </div>
                 </dl>
             </div>
@@ -221,12 +266,24 @@ export default {
             v$: useVuelidate()
         }
     },
+    validations() {
+        return {
+            form: {
+                tipo_documento_id: { required },
+                num_documento: { required },
+                name: { required },
+                lastname: { required },
+                fecha_nac: { required }
+            }
+        }
+    },
     data() {
         return {
             form: {},
             toastMessage: "",
             showToast: false,
             labelType: "info",
+            isEditMode: false,
         }
     },
     methods: {
@@ -264,6 +321,10 @@ export default {
             const get = `${route('persons.getPersonDni', this.form.num_documento)}`
             const response = await fetch(get, { method: 'GET' })
             let data = await response.json()
+
+            // Habilitar modo edición después de verificar
+            this.isEditMode = true;
+
             if (!data.data.length == 0) {
                 data = data.data[0].person
 
@@ -286,6 +347,14 @@ export default {
             }
         },
         async updateLegajo() {
+            // Validar el formulario antes de continuar
+            this.v$.$touch();
+            if (this.v$.$invalid) {
+                this.labelType = "danger";
+                this.toastMessage = "Por favor complete todos los campos obligatorios";
+                return;
+            }
+
             let data = {}
             // RUTA
             let rt = route("legajoCB.updateLegajoResponsable");

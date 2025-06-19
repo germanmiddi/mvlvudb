@@ -554,6 +554,13 @@ class LegajosCBController extends Controller
                 }
             });
         }
+
+        if (request('emprendedores')) {
+            $result->whereHas('emprendedor', function ($query) {
+                $query->where('participa', 1);
+            });
+        }
+
         return $result->with('person', 'sede', 'estadocbj', 'tipo_legajo')
             ->orderBy("legajos_cb.id", 'DESC')
             ->paginate($length)

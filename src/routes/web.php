@@ -38,6 +38,7 @@ use App\Http\Controllers\Manager\Boxes\PersonBoxesDeliveryController;
 use App\Http\Controllers\Manager\Setting\SettingController;
 
 use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
+use App\Http\Controllers\Manager\Masterdata\EntidadesController as MasterdataEntidadesController;
 
 if (App::environment('production')) {
     URL::forceScheme('https');
@@ -225,6 +226,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/entidad/update_autoridad/', [EntidadController::class, 'updateAutoridad'])->name('entidad.updateAutoridad');
     Route::post('/entidad/add_autoridad/', [EntidadController::class, 'addAutoridad'])->name('entidad.addAutoridad');
 
+    Route::post('/entidad/add_participante/', [EntidadController::class, 'addParticipante'])->name('entidad.add_participante');
+    Route::post('/entidad/update_participante/', [EntidadController::class, 'updateParticipante'])->name('entidad.update_participante');
+    Route::post('/entidad/destroy_participante/', [EntidadController::class, 'destroyParticipante'])->name('entidad.destroy_participante');
+
+    Route::get  ('/entidad/get_roles/', [EntidadController::class, 'get_roles'])->name('entidad.get_roles');
+
     // Masterdata
     Route::prefix('masterdata')->group(function () {
 
@@ -295,6 +302,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/setting/list', [SettingController::class, 'list'])->name('setting.list');
         Route::post('/setting/update', [SettingController::class, 'update'])->name('setting.update');
 
+        // Rutas para EntidadRoles
+        Route::get( '/entidad-roles', [MasterdataEntidadesController::class, 'get_entidad_roles'])->name('masterdata.get_entidad_roles');
+        Route::post('/entidad-roles', [MasterdataEntidadesController::class, 'store_entidad_roles'])->name('masterdata.store_entidad_roles');
+        Route::post('/entidad-roles/update', [MasterdataEntidadesController::class, 'update_entidad_roles'])->name('masterdata.update_entidad_roles');
+        Route::post('/entidad-roles/hide', [MasterdataEntidadesController::class, 'hide_entidad_roles'])->name('masterdata.hide_entidad_roles');
+        Route::post('/entidad-roles/destroy', [MasterdataEntidadesController::class, 'destroy_entidad_roles'])->name('masterdata.destroy_entidad_roles');
     });
 
     // Users

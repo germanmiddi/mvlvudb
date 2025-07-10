@@ -39,6 +39,8 @@ use App\Models\Manager\SocialData;
 use App\Models\Manager\TipoActividad;
 use App\Models\Manager\TipoEntidad;
 use App\Models\Manager\Tramite;
+use App\Models\Manager\EntidadRol;
+use App\Models\Manager\EntidadParticipante;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -75,7 +77,7 @@ class EntidadController extends Controller
         DB::beginTransaction();
         try {
             $entidad = Entidad::create(
-                [ 
+                [
                     'num_entidad' => $form['num_entidad'],
                     'name' => $form['name'],
                     'objeto' => $form['objeto'] ?? null,
@@ -103,12 +105,12 @@ class EntidadController extends Controller
                     [
                         'name' => $autoridad['name'],
                         'phone' =>$autoridad['phone'],
-    
+
                         'cargo_id' => $autoridad['cargo_id'],
                         'entidad_id' => $entidad->id
                     ]
                 );
-            
+
             }
             DB::commit();
             Log::info("Se ha almacenado una nueva entidad", ["Modulo" => "Entidad:store","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Entidad" => $entidad->id ]);
@@ -144,7 +146,7 @@ class EntidadController extends Controller
         $form = $request['form'];
         DB::beginTransaction();
         try {
-           
+
             Entidad::where('id',$id)->update(
                 [
                     'num_entidad' => $form['num_entidad'],
@@ -198,17 +200,17 @@ class EntidadController extends Controller
     public function list()
     {
         $length = request('length');
-        
+
         $result = Entidad::query();
 
 
-        $name = json_decode(request('name'));  
+        $name = json_decode(request('name'));
             $result->where('name', 'LIKE', '%'.$name.'%');
 
-        $num_entidad = json_decode(request('num_entidad'));  
+        $num_entidad = json_decode(request('num_entidad'));
             $result->where('num_entidad', 'LIKE', '%'.$num_entidad.'%');
 
-        
+
         if(request('tipo_entidad_id')){
             $tipo_entidad_id = json_decode(request('tipo_entidad_id'));
             $result->where('tipo_entidad_id', $tipo_entidad_id);
@@ -230,12 +232,12 @@ class EntidadController extends Controller
 
     public function updateAutoridad(Request $request){
         $autoridad = AutoridadEntidad::find($request->id);
-    
+
         if (!$autoridad) {
             Log::error("No se ha encontrado la autoridad que desea actualizar", ["Modulo" => "Entidad:updateAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "Id no encontrado ".$request->id ]);
             return response()->json(['message' => 'Se ha producido un error al momento de eliminar la autoridad.'], 203);
         }
-        
+
         $autoridad->update([
             'name'      => $request->name,
             'phone'     => $request->phone,
@@ -247,7 +249,7 @@ class EntidadController extends Controller
 
     public function addAutoridad(Request $request){
         DB::beginTransaction();
-        try {    
+        try {
 
             $autoridad = AutoridadEntidad::Create(
                 [
@@ -257,7 +259,7 @@ class EntidadController extends Controller
                     'cargo_id' => $request['cargo_id'],
                     'entidad_id' => $request['id_entidad'],
                 ]);
-            
+
             DB::commit();
             Log::info("Se ha almacenado una nueva autoridad", ["Modulo" => "Entidad:addAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $autoridad->id ]);
             return response()->json(['message' => 'Se generado correctamente el tramite del usuario.', 'idAutoridad' => $autoridad->id, 'autoridad' => $autoridad, 'cargo' => $autoridad->cargo], 200);
@@ -270,12 +272,12 @@ class EntidadController extends Controller
 
     public function destroyAutoridad(Request $request){
         $autoridad = AutoridadEntidad::find($request->id);
-    
+
         if (!$autoridad) {
             Log::error("No se ha encontrado la autoridad que desea eliminar", ["Modulo" => "Entidad:destoryAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => "Id no encontrado ".$request->id ]);
             return response()->json(['message' => 'Se ha producido un error al momento de eliminar la autoridad.'], 203);
         }
-        
+
         $autoridad->delete();
         Log::error("Se ha actualizado correctamente la autoridad", ["Modulo" => "Entidad:destoryAutoridad","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Autoridad" => $request->id ]);
         return response()->json(['message' => 'Se ha actualizado correctamente la autoridad'], 200);
@@ -293,5 +295,47 @@ class EntidadController extends Controller
             return response()->json(['message'=>'Se ha producido un error al momento de actualizar la Entidad'], 500);
         }
     }
-}
 
+
+
+    public function addParticipante(Request $request){
+        try{
+
+            $person = Person::updateOrCreate(
+                [
+                    'tipo_documento_id' => $request['tipo_documento_id'],
+                    'num_documento' => $request['num_documento']
+                ],
+                [
+                    'lastname' => $request['lastname'],
+                    'name' => $request['name'],
+                    'phone' => $request['phone']
+                ]
+            );
+
+            $participante = EntidadParticipante::create([
+                'person_id' => $person->id,
+                'entidad_id' => $request['entidad_id'],
+                'entidad_rol_id' => $request['role_id']
+            ]);
+
+            return response()->json(['message' => 'Se ha almacenado correctamente el participante.'], 200);
+        } catch (\Throwable $th) {
+            dd($th);
+            return response()->json(['message' => 'Se ha producido un error al momento de almacenar el participante.'], 203);
+        }
+    }
+    public function updateParticipante(Request $request){
+        dd($request->all());
+    }
+    public function destroyParticipante(Request $request){
+        dd($request->all());
+    }
+    public function get_roles(){
+        $roles = EntidadRol::all();
+        return response()->json($roles, 200);
+    }
+
+
+
+}

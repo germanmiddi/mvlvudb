@@ -1,44 +1,21 @@
-<template lang="">
-    <div class="shadow sm:rounded-md sm:overflow-hidden">
-        <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
-            <div>
-                <div class="flex justify-between">
-                    <h2 id="" class="text-lg leading-6 font-medium text-gray-900">{{this.name}} - Tipo de Trámite</h2>
-                    <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white" 
-                            @click="showNew = !showNew">Crear</button>
-                </div>
-                <div v-if="showNew" class="my-5">
-                    <input v-model="newDescription" class="w-10/12 border rounded mr-2 font-base py-2 text-sm pl-2" />
-                    <button class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white"
-                            @click="newItem">Guardar</button>
-                </div>
-            </div>
-            <div class="">
-                <table class="min-w-full divide-y divide-gray-200">    
-                    <thead class="border-b-1 border-indigo-600 ">
-                        <tr>
-                            <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-4/6  text-left">Descripción</th>
-                            <th class="px-6 py-4 text-sm font-medium text-gray-700 tracking-wider w-2/6 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <ListItem v-for="t in this.tipoTramite" :key="t.id" :item=t 
-                                      @edit-item="editItem" 
-                                      @hide-item="hideItem" 
-                                      @destroy-item="destroyItem" />
+<template>
 
-                    </tbody>
-                </table> 
-            </div>
-        </div>
+    <TipoTramite
+        :name="this.name"
+        :dependencia_id="this.dependencia_id"
+        @toast-message="setMessage"
+    />
+    <Roles
 
-    </div>
-
+        @toast-message="setMessage"
+    />
 </template>
 
 <script>
 import axios from 'axios'
 import ListItem from './ListItem.vue'
+import TipoTramite from './Entidades/TipoTramite.vue'
+import Roles from './Entidades/Roles.vue'
 
 export default {
 
@@ -53,7 +30,9 @@ export default {
         }
     },
     components:{
-        ListItem
+        ListItem,
+        TipoTramite,
+        Roles
     },
     setup(){
 
@@ -64,7 +43,7 @@ export default {
         return{
             tipoTramite: "",
             showNew: false,
-            newDescription: "",    
+            newDescription: "",
         }
     },
     created(){
@@ -82,20 +61,20 @@ export default {
             formData.append('description', this.newDescription);
 
 			try {
-				const response = await axios.post(route('masterdata.store_tipo_tramite') , formData  ); 
-                
+				const response = await axios.post(route('masterdata.store_tipo_tramite') , formData  );
+
 				if (response.status == 200) {
-                    this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                    this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'success'} )
-                    
+
                     this.newDescription = ""
                     this.showNew = false
                     this.getData()
 
 				} else {
-                    this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                    this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'danger'} )
 				}
 			} catch (error) {
@@ -111,16 +90,16 @@ export default {
 
 
 			try {
-				const response = await axios.post(route('masterdata.update_tipo_tramite') , formData  ); 
-                
+				const response = await axios.post(route('masterdata.update_tipo_tramite') , formData  );
+
 				if (response.status == 200) {
-                    this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                    this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'success'} )
 
 				} else {
-                    this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                    this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'danger'} )
 				}
 			} catch (error) {
@@ -130,35 +109,39 @@ export default {
 
         async hideItem(id){
 
-            const response = await axios.post(route('masterdata.hide_tipo_tramite' ), {id : id} ); 
-                
+            const response = await axios.post(route('masterdata.hide_tipo_tramite' ), {id : id} );
+
             if (response.status == 200) {
-                this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'success'} )
 
             } else {
-                this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'danger'} )
             }
 
         },
         async destroyItem(id){
-            const response = await axios.post(route('masterdata.destroy_tipo_tramite' ), {id : id} ); 
-                
+            const response = await axios.post(route('masterdata.destroy_tipo_tramite' ), {id : id} );
+
             if (response.status == 200) {
-                this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'success'} )
 
                 this.tipoTramite = this.tipoTramite.filter( item => item.id != id)
 
             } else {
-                this.$emit('toast-message', 
-                                {'message' : response.data.message, 
+                this.$emit('toast-message',
+                                {'message' : response.data.message,
                                  'type' : 'danger'} )
-            }            
+            }
+        },
+
+        setMessage(message) {
+            this.$emit('toast-message', message);
         }
 
     },

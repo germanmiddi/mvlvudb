@@ -360,6 +360,9 @@
 				</div>
 
 			</form>
+            <Participantes :entidad_id="form.id" />
+
+
 		</div>
 
 		<div class="px-4 mt-6 sm:px-6 lg:px-8 flex justify-end w-full">
@@ -383,7 +386,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import ListItem from './ListItem.vue';
-
+import Participantes from './Participantes.vue';
 export default {
 
 	props: {
@@ -402,7 +405,8 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
-		ListItem
+		ListItem,
+		Participantes
 	},
 	data() {
 		return {

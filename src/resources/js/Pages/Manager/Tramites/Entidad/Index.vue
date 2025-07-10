@@ -7,10 +7,55 @@
                     Bandeja Entidades
                 </h1>
             </div>
-            <div class="mt-4 flex sm:mt-0 sm:ml-4">
+
+            <div v-if="formImportParticipantes" class="mt-4 flex sm:mt-0">
+                <input
+                    @change="handleFileChange"
+                    accept=".xls, .xlsx"
+                    type="file"
+                    name="file"
+                    id="file"
+                    ref="inputfile"
+                    autocomplete="off"
+                    class="bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block"
+                />
+
+                <a
+                    @click="importFile()"
+                    v-if="!processImport"
+                    class="order-0 inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white sm:order-1 sm:ml-3"
+                    >Importar</a
+                >
+
+                <a
+                    v-else
+                    class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3"
+                >
+                    <ArrowPathIcon
+                        class="h-5 w-5 text-red-500 animate-spin mr-2"
+                    />
+                    Procesando...
+                </a>
+
+                <a
+                    :href="route('entidad.exportar_template_participantes')"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3"
+                    >Descargar Modelo</a
+                >
+                <a
+                    @click="formImport = false"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-red-700 shadow-sm text-sm font-medium rounded-md text-red-700 hover:text-white hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:order-1 sm:ml-3"
+                    >Cancelar</a
+                >
+            </div>
+
+            <div v-else class="mt-4 flex sm:mt-0 sm:ml-4">
                 <!-- <button type="button" class="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0">Share</button> -->
                 <a :href="route('entidad.create')"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Crear</a>
+
+                <a @click="formImportParticipantes = true"
+                    class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:order-1 sm:ml-3">Importar Participantes</a>
 
                 <a @click="generateReport()" v-if="!processReport"
                     class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">Exportar</a>
@@ -19,6 +64,7 @@
                     class="border-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md bg-yellow-200 text-yellow-900 hover:bg-yellow-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3">
                     <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...
                 </a>
+
             </div>
         </div>
 
@@ -268,7 +314,15 @@ export default {
             customFormat: 'd-M-Y',
             showDeleteEntidad: false,
             deleteEntidad: {},
-            processReport: false
+            processReport: false,
+
+            processImport: false,
+            formImportParticipantes: false,
+            file: "",
+
+            showImportResult: false,
+            importResult: "",
+
         };
     },
     setup() {
@@ -311,7 +365,7 @@ export default {
 
             this.entidades = await response.json()
             //this.tramites.persons = this.tramites[0].persons.filter(person => person.pivot.rol_tramite_id == 1)
-            //console.log(this.orders)  
+            //console.log(this.orders)
         },
         fechaFormateada(fecha) {
             const fechaObjeto = new Date(fecha + "T00:00:00.000-03:00");
@@ -374,6 +428,71 @@ export default {
             }
             this.processReport = false
         },
+        handleFileChange(event) {
+            this.file = event.target.files[0];
+        },
+        buildImportResult(response) {
+            console.log(response);
+            this.importResult =
+                '<span class="text-green-500 font-bold">' +
+                response.message +
+                "</span>";
+
+            if (response.result.rowsSuccess > 0) {
+                this.importResult +=
+                    "<br><br><span class='text-green-500'>Entrevistas registradas: " +
+                    response.result.rowsSuccess +
+                    "</span>";
+            }
+
+            if (response.result.rowsDuplicadosCount > 0) {
+                this.importResult +=
+                    "<br><br><span class='text-yellow-500'>Entrevistas duplicadas: " +
+                    response.result.rowsDuplicadosCount +
+                    "</span>";
+                this.importResult += "<br>" + response.result.rowsDuplicados;
+            }
+
+            if (response.result.rowsError > 0) {
+                this.importResult +=
+                    "<br><br><span class='text-red-500'>Entrevistas no registradas: " +
+                    response.result.rowsError +
+                    "</span>";
+            }
+
+            this.showImportResult = true;
+        },
+
+
+        async importFile() {
+            if (this.file != "") {
+                this.processImport = true;
+                // this.status = ''
+                let rt = route("entidad.importar_participantes");
+                const formData = new FormData();
+                formData.append("file", this.file);
+                try {
+                    const response = await axios.post(rt, formData);
+                    if (response.status == 200) {
+                        this.labelType = "success";
+                        this.toastMessage = response.data.message;
+                        this.buildImportResult(response.data);
+                    } else {
+                        this.labelType = "danger";
+                        this.toastMessage = response.data.message;
+                    }
+                    this.formImportParticipantes = false;
+                } catch (error) {
+                    console.log(error);
+                }
+                this.processImport = false;
+            } else {
+                this.labelType = "info";
+                this.toastMessage = "Debe seleccionar un archivo";
+            }
+        },
+
+
     },
     mounted() {
         if (this.toast) {

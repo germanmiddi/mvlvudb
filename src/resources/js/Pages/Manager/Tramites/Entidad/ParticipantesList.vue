@@ -1,4 +1,14 @@
-<script setup></script>
+<script setup>
+import ParticipantesListItem from './ParticipantesListItem.vue';
+
+const props = defineProps({
+    participantes: {
+        type: Array,
+        required: true
+    }
+})
+
+</script>
 
 <template>
     <div class="grid grid-cols-12 gap-6">
@@ -12,7 +22,7 @@
                             scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12"
                         >
-                            Cargo
+                            Rol
                         </th>
                         <th
                             scope="col"
@@ -24,7 +34,7 @@
                             scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12"
                         >
-                            Telefono
+                            Documento
                         </th>
                         <th
                             scope="col"
@@ -35,14 +45,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ListItem
-                        v-for="autoridad in this.form_autoridades"
-                        :key="autoridad.id"
-                        :item="autoridad"
-                        :cargos="cargos"
-                        @edit-item="editItem"
-                        @hide-item="hideItem"
-                        @destroy-item="destroyItem"
+                    <ParticipantesListItem
+                        v-for="participante in participantes"
+                        :key="participante.id"
+                        :item="participante"
                     />
                 </tbody>
             </table>

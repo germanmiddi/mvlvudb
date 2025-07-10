@@ -39,6 +39,13 @@ class Entidad extends Model
 
     ];
 
+    protected $with = ['participantes', 'participantes.role', 'participantes.person'];
+
+    public function participantes()
+    {
+        return $this->hasMany(EntidadParticipante::class);
+    }
+
     public function localidad()
     {
         return $this->belongsTo(Localidad::class, 'localidad_id');

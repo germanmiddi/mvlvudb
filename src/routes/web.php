@@ -40,6 +40,9 @@ use App\Http\Controllers\Manager\Setting\SettingController;
 use App\Http\Controllers\Manager\Masterdata\FortalecimientoController as MasterdataFortalecimientoController;
 use App\Http\Controllers\Manager\Masterdata\EntidadesController as MasterdataEntidadesController;
 
+use App\Http\Controllers\Manager\Tramites\Entidad\EntidadPaticipanteImportController;
+use App\Http\Controllers\Manager\Tramites\Entidad\EntidadParticipanteController;
+
 if (App::environment('production')) {
     URL::forceScheme('https');
 }
@@ -229,8 +232,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/entidad/add_participante/', [EntidadController::class, 'addParticipante'])->name('entidad.add_participante');
     Route::post('/entidad/update_participante/', [EntidadController::class, 'updateParticipante'])->name('entidad.update_participante');
     Route::post('/entidad/destroy_participante/', [EntidadController::class, 'destroyParticipante'])->name('entidad.destroy_participante');
+    Route::get('/entidad/get_participantes/{id}', [EntidadController::class, 'get_participantes'])->name('entidad.get_participantes');
+    Route::get('/entidad/get_roles/', [EntidadController::class, 'get_roles'])->name('entidad.get_roles');
 
-    Route::get  ('/entidad/get_roles/', [EntidadController::class, 'get_roles'])->name('entidad.get_roles');
+    Route::post('/entidad/import_participantes/', [EntidadPaticipanteImportController::class, 'importEntidadPaticipante'])->name('entidad.importar_participantes');
+    Route::get('/entidad/export_template_participantes/', [EntidadParticipanteController::class, 'exportTemplateEntidadParticipante'])->name('entidad.exportar_template_participantes');
 
     // Masterdata
     Route::prefix('masterdata')->group(function () {

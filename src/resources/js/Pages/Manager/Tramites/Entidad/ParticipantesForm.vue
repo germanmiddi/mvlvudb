@@ -2,11 +2,11 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['toast-message'])
+const emit = defineEmits(['toast-message', 'get-participantes', 'close-form'])
 
 const form = ref({
     num_documento: '',
-    tipo_documento_id: '',
+    tipo_documento_id: '1',
     name: '',
     lastname: '',
     phone: ''
@@ -29,13 +29,13 @@ const getPerson = async () => {
     if (!data.data.length == 0) {
         data = data.data[0].person
 
-            form_temp.value.num_documento = num_documento;
+            form.value.num_documento = num_documento;
             /// Recuperar datos.
-            form_temp.value.tipo_documento_id = data.tipo_documento_id
-            form_temp.value.name = data.name
-            form_temp.value.lastname = data.lastname
+            form.value.tipo_documento_id = data.tipo_documento_id
+            form.value.name = data.name
+            form.value.lastname = data.lastname
             if (data.contact != '') {
-                form_temp.value.phone = data.contact[0].phone
+                form.value.phone = data.contact[0].phone
             }
 
     } else {
@@ -53,16 +53,27 @@ const getRoles = async () => {
 
 }
 
+const clearForm = () => {
+    form.value = {
+        num_documento: '',
+        tipo_documento_id: '1',
+        name: '',
+        lastname: '',
+        phone: '',
+        role_id: ''
+    }
+}
+
 const addParticipante = async () => {
 
     const formData = new FormData();
 
-    formData.append('num_documento', form_temp.value.num_documento);
-    formData.append('tipo_documento_id', form_temp.value.tipo_documento_id);
-    formData.append('name', form_temp.value.name);
-    formData.append('lastname', form_temp.value.lastname);
-    formData.append('phone', form_temp.value.phone);
-    formData.append('role_id', form_temp.value.role_id);
+    formData.append('num_documento', form.value.num_documento);
+    formData.append('tipo_documento_id', form.value.tipo_documento_id);
+    formData.append('name', form.value.name);
+    formData.append('lastname', form.value.lastname);
+    formData.append('phone', form.value.phone);
+    formData.append('role_id', form.value.role_id);
     if (props.entidad_id) {
         formData.append('entidad_id', props.entidad_id);
     }
@@ -74,11 +85,15 @@ const addParticipante = async () => {
             message: response.data.message,
             type: "success"
         })
+        emit('get-participantes')
+        clearForm()
+        emit('close-form')
     } else {
         emit('toast-message', {
             message: response.data.message,
             type: "error"
         })
+
     }
 }
 
@@ -91,8 +106,8 @@ onMounted(() => {
 
 
 <template>
-    <div class="grid grid-cols-12 gap-6">
-        <div class="col-span-12 sm:col-span-3">
+    <div class="grid grid-cols-12 gap-6 border-b pb-6 border-gray-200">
+        <div class="col-span-12 sm:col-span-4">
             <label
                 for="num_documento"
                 class="block text-sm font-medium text-gray-700"
@@ -101,7 +116,7 @@ onMounted(() => {
             <div class="relative">
                 <input
                     type="text"
-                    v-model="form_temp.num_documento"
+                    v-model="form.num_documento"
                     @keyup.enter="getPerson()"
                     class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                 />
@@ -114,14 +129,14 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="col-span-12 sm:col-span-3">
+        <div class="col-span-12 sm:col-span-4">
             <label
                 for="cargo_id"
                 class="block text-sm font-medium text-gray-700"
                 >Rol de Integrante</label
             >
             <select
-                v-model="form_temp.role_id"
+                v-model="form.role_id"
                 id="role_id"
                 name="role_id"
                 autocomplete="off"
@@ -138,12 +153,12 @@ onMounted(() => {
             </select>
         </div>
 
-        <div class="col-span-12 sm:col-span-3">
+        <div class="col-span-12 sm:col-span-4">
             <label for="name" class="block text-sm font-medium text-gray-700"
                 >Nombre</label
             >
             <input
-                v-model="form_temp.name"
+                v-model="form.name"
                 type="text"
                 name="name"
                 id="name"
@@ -151,14 +166,14 @@ onMounted(() => {
                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
             />
         </div>
-        <div class="col-span-12 sm:col-span-3">
+        <div class="col-span-12 sm:col-span-4">
             <label
                 for="lastname"
                 class="block text-sm font-medium text-gray-700"
                 >Apellido</label
             >
             <input
-                v-model="form_temp.lastname"
+                v-model="form.lastname"
                 type="text"
                 name="lastname"
                 id="lastname"
@@ -167,12 +182,12 @@ onMounted(() => {
             />
         </div>
 
-        <div class="col-span-12 sm:col-span-3">
+        <div class="col-span-12 sm:col-span-4">
             <label for="phone" class="block text-sm font-medium text-gray-700"
                 >Teléfono</label
             >
             <input
-                v-model="form_temp.phone"
+                v-model="form.phone"
                 type="text"
                 name="phone"
                 id="phone"
@@ -180,7 +195,7 @@ onMounted(() => {
                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
             />
         </div>
-        <div class="col-span-12 sm:col-span-3">
+        <div class="col-span-12 sm:col-span-4">
             <button
                 type="button"
                 @click="addParticipante()"
@@ -190,4 +205,5 @@ onMounted(() => {
             </button>
         </div>
     </div>
+
 </template>

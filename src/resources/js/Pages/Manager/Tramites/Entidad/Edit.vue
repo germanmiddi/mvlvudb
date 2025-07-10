@@ -8,7 +8,7 @@
 					<ArrowLeftCircleIcon class="w-5 h-5 text-purple-700 mr-2" />
 				</a>
 				<h1 class="text-lg font-medium leading-6 text-gray-900 sm:truncate">
-					Nueva Entidad
+					Editar Entidad
 				</h1>
 			</div>
 			<div class="mt-4 flex sm:mt-0 sm:ml-4">
@@ -246,7 +246,7 @@
 					</div>
 				</div>
 
-				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -357,10 +357,10 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 			</form>
-            <Participantes :entidad_id="form.id" />
+            <Participantes :entidad_id="form.id" :participantes="entidad[0].participantes" />
 
 
 		</div>

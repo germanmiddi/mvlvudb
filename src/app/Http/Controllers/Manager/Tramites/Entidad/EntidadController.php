@@ -136,7 +136,7 @@ class EntidadController extends Controller
                 'cargos' => CargoAutoridad::where('activo', true)->get(),
                 'tiposEntidad' => TipoEntidad::where('activo', true)->get(),
                 'tiposActividad' => TipoActividad::where('activo', true)->get(),
-                'entidad' => Entidad::where('id', $id)->with('autoridades', 'autoridades.cargo')->get()
+                'entidad' => Entidad::where('id', $id)->get()
             ]
         );
     }
@@ -296,8 +296,6 @@ class EntidadController extends Controller
         }
     }
 
-
-
     public function addParticipante(Request $request){
         try{
 
@@ -336,6 +334,10 @@ class EntidadController extends Controller
         return response()->json($roles, 200);
     }
 
+    public function get_participantes($id){
+        $participantes = EntidadParticipante::where('entidad_id', $id)->with('person', 'role')->get();
+        return response()->json($participantes, 200);
+    }
 
 
 }

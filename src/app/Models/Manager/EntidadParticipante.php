@@ -26,4 +26,7 @@ class EntidadParticipante extends Model
         return $this->belongsTo(Entidad::class);
     }
 
+    public function role(){
+        return $this->belongsTo(EntidadRol::class, 'entidad_rol_id');
+    }
 }

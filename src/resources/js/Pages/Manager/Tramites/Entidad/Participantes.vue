@@ -1,12 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import ParticipantesForm from './ParticipantesForm.vue'
-// import ParticipantesList from './ParticipantesList.vue'
+import ParticipantesList from './ParticipantesList.vue'
 
 const showParticipanteForm = ref(false)
-defineProps({
+const props = defineProps({
     entidad_id: {
         type: Number,
+        required: false
+    },
+    participantes: {
+        type: Array,
         required: false
     }
 })
@@ -17,6 +21,22 @@ const addParticipante = () => {
 const toastMessage = (message) => {
     console.log(message)
 }
+
+const listParticipantes = ref(props.participantes)
+
+const getParticipantes = async () => {
+
+    const get = `${route('entidad.get_participantes', props.entidad_id)}`
+    const response = await fetch(get, { method: 'GET' })
+    listParticipantes.value = await response.json()
+
+    console.log('getParticipantes')
+}
+
+const closeForm = () => {
+    showParticipanteForm.value = false
+}
+
 </script>
 
 <template>
@@ -37,8 +57,8 @@ const toastMessage = (message) => {
                     </button>
                 </div>
             </div>
-            <ParticipantesForm v-if="showParticipanteForm" @toast-message="toastMessage" :entidad_id="entidad_id" />
-            <!-- <ParticipantesList /> -->
+            <ParticipantesForm v-if="showParticipanteForm" @toast-message="toastMessage" @get-participantes="getParticipantes" @close-form="closeForm" :entidad_id="entidad_id" />
+            <ParticipantesList :participantes="listParticipantes" @get-participantes="getParticipantes" />
         </div>
     </div>
 

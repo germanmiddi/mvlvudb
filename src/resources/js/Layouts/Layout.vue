@@ -409,12 +409,37 @@
 
             </Disclosure>
 
-            <a :href="route('report')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+            <!-- <a :href="route('report')" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
               <div
                 class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50 flex mt-1">
                 <DocumentChartBarIcon class="w-5 h-5 mr-3" /> <label> Reportes </label>
               </div>
-            </a>
+            </a> -->
+
+            <Disclosure as="div" v-show="store.userCan('ALL-ADM', $page.props.userGroups)">
+                <DisclosureButton as="template" class="w-full text-gray-900 px-2 py-2 text-sm font-medium rounded-md bg-gray-200 hover:bg-gray-50">
+                    <button class="flex items-center">
+                        <DocumentChartBarIcon class="mr-3 flex-shrink-0 h-6 w-6" />Reportes
+                    </button>
+                </DisclosureButton>
+
+                <DisclosurePanel as="ul" class="pl-4">
+                    <a :href="route('report')">
+                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                        Descargar Reporte General
+                        </li>
+                    </a>
+                    <a :href="route('charts')">
+                        <li class="bg-white px-2 py-2 my-2 text-sm font-medium rounded-md">
+                        Gráfico de Ocupación
+                        </li>
+                    </a>
+                </DisclosurePanel>
+
+            </Disclosure>
+
+
+
 
             <a :href="route('persons')" v-show="store.userCan('-PROF', $page.props.userGroups)">
               <div

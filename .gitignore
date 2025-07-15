@@ -7,3 +7,4 @@ src/public/mix-manifest.json
 
 src/composer.lock
 src/package-lock.json
+src/public/js/*

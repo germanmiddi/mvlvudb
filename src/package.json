@@ -26,6 +26,10 @@
         "vue-loader": "^16.5.0"
     },
     "dependencies": {
+        "@deck.gl/aggregation-layers": "^9.1.13",
+        "@deck.gl/core": "^9.1.13",
+        "@deck.gl/google-maps": "^9.1.13",
+        "@deck.gl/layers": "^9.1.13",
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.0.16",
         "@suadelabs/vue3-multiselect": "^1.0.2",
@@ -34,7 +38,10 @@
         "@vuepic/vue-datepicker": "^3.6.8",
         "@vueup/vue-quill": "^1.2.0",
         "chart.js": "^4.4.0",
+        "deck.gl": "^9.1.13",
+        "jspdf": "^3.0.1",
         "vue-chartjs": "^5.2.0",
+        "vue-data-ui": "^2.15.3",
         "vue-google-autocomplete": "^1.1.4",
         "vue-multiselect": "^2.1.7",
         "vue-pdf-embed": "^1.1.6",

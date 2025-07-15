@@ -43,6 +43,8 @@ use App\Http\Controllers\Manager\Masterdata\EntidadesController as MasterdataEnt
 use App\Http\Controllers\Manager\Tramites\Entidad\EntidadPaticipanteImportController;
 use App\Http\Controllers\Manager\Tramites\Entidad\EntidadParticipanteController;
 
+use App\Http\Controllers\Manager\Charts\ChartController;
+
 if (App::environment('production')) {
     URL::forceScheme('https');
 }
@@ -408,5 +410,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/legajo/{id}', [LegajoController::class, 'index'])->name('legajo.index');
+
+
+    Route::get('/charts', [ChartController::class, 'index'])->name('charts');
+Route::get('/charts/getChartAdultosOcupadosData', [ChartController::class, 'getChartAdultosOcupadosData'])->name('charts.getChartAdultosOcupadosData');
+Route::get('/charts/getChartOcupacionesDonutData', [ChartController::class, 'getChartOcupacionesDonutData'])->name('charts.getChartOcupacionesDonutData');
+Route::get('/charts/getHeatmapSinOcupacionData', [ChartController::class, 'getHeatmapSinOcupacionData'])->name('charts.getHeatmapSinOcupacionData');
 
 });

@@ -14,5 +14,14 @@ class Localidad extends Model
     protected $fillable = [
         'description',
         'postal_code',
+        'latitud',
+        'longitud',
+        'polygon',
+    ];
+
+    protected $casts = [
+        'latitud' => 'decimal:8',
+        'longitud' => 'decimal:8',
+        'polygon' => 'array',
     ];
 }

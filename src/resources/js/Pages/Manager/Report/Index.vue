@@ -20,7 +20,7 @@
                     <ArrowPathIcon class="h-5 w-5 text-red-500 animate-spin mr-2" /> Procesando...</a>
             </div>
 
-           
+
         </div>
 
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
@@ -91,8 +91,7 @@
                                     <!--  <img class="h-12 w-12 flex-none rounded-full bg-gray-50"  alt="" /> -->
                                     <DocumentChartBarIcon class="h-12 w-12 flex-none rounded-full bg-gray-50" />
                                     <div class="min-w-0 flex-auto">
-                                        <p class="text-sm font-semibold leading-6 text-gray-900">Resumen de Total de
-                                            Tramites</p>
+                                        <p class="text-sm font-semibold leading-6 text-gray-900">Resumen de Total de Tramites</p>
                                         <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ this.registers }}</p>
                                     </div>
                                 </div>

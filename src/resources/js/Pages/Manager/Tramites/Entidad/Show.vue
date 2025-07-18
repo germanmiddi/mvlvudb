@@ -169,6 +169,59 @@
 				</div>
 			</div>
 
+            <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+
+						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+							<div class="">
+								<h3 class="text-lg leading-6 font-medium text-gray-900">
+									Autoridades
+								</h3>
+							</div>
+
+						</div>
+
+						<div class="grid grid-cols-12 gap-6" v-if="entidad[0].autoridades && entidad[0].autoridades.length > 0">
+							<div class="col-span-12 sm:col-span-12">
+                                <div >
+                                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                        <table class="min-w-full divide-y divide-gray-300">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Rol
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Nombre
+                                                    </th>
+                                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        Teléfono
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                <tr v-for="autoridad in entidad[0].autoridades" :key="autoridad.id" class="hover:bg-gray-50">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        {{ autoridad.cargo.description }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        {{ autoridad.name }}
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {{ autoridad.phone }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
 			<ParticipantesReadOnly :participantes="entidad[0].participantes" />
 		</div>
 	</main>

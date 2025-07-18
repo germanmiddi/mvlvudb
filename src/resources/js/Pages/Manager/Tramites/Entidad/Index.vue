@@ -165,22 +165,22 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="data in entidades.data" :key="data.entidad.id">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                <tr v-for="data in entidades.data" :key="data.entidad.id" class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">
                                         {{ data.entidad.num_entidad }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 text-xs text-gray-900">
                                         {{ data.entidad.name }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
                                         {{ data.entidad.fecha_fundacion ? fechaFormateada(data.entidad.fecha_fundacion)
                                             :
                                             '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
                                         {{ data.entidad.phone ? data.entidad.phone : '-' }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-900">
                                         {{ data.entidad.tipo_entidad_id ? data.entidad.tipo_entidad.description : '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-center text-sm font-medium">
@@ -203,7 +203,7 @@
                                                 <MenuItems
                                                     class="origin-top-left absolute z-50 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none">
                                                     <div class="py-1 text-left">
-                                                        <MenuItem v-slot="{ active }">
+                                                        <MenuItem v-slot="{ active }" class="cursor-pointer hover:bg-gray-100">
                                                         <a :href="route(
                                                             'entidad.edit',
                                                             data.entidad.id
@@ -212,12 +212,16 @@
                                                             Editar</a>
                                                         </MenuItem>
 
-                                                        <MenuItem v-slot="{ active }">
-                                                        <a href="#" class="block px-4 py-2 text-sm">
+                                                        <MenuItem v-slot="{ active }" class="cursor-pointer hover:bg-gray-100">
+                                                        <a :href="route(
+                                                            'entidad.show',
+                                                            data.entidad.id
+                                                        )
+                                                            " class="block px-4 py-2 text-sm">
                                                             Ver</a>
                                                         </MenuItem>
 
-                                                        <MenuItem v-slot="{ active }">
+                                                        <MenuItem v-slot="{ active }" class="cursor-pointer hover:bg-gray-100">
                                                         <a href="#"
                                                             @click="this.deleteEntidad.id = data.entidad.id, this.deleteEntidad.name = data.entidad.name, this.deleteEntidad.num_entidad = data.entidad.num_entidad, showDeleteEntidad = true"
                                                             class="block px-4 py-2 text-sm">

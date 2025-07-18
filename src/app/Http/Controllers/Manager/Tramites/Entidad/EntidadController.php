@@ -131,7 +131,7 @@ class EntidadController extends Controller
                 'cargos' => CargoAutoridad::where('activo', true)->get(),
                 'tiposEntidad' => TipoEntidad::where('activo', true)->get(),
                 'tiposActividad' => TipoActividad::where('activo', true)->get(),
-                'entidad' => Entidad::where('id', $id)->with('participantes')->get()
+                'entidad' => Entidad::where('id', $id)->with('participantes', 'autoridades', 'autoridades.cargo')->get()
             ]
         );
     }
@@ -139,8 +139,6 @@ class EntidadController extends Controller
     //edit
     public function edit($id)
     {
-
-
         return Inertia::render(
             'Manager/Tramites/Entidad/Edit',
             [

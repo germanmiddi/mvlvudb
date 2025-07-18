@@ -246,7 +246,7 @@
 					</div>
 				</div>
 
-				<!-- <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
+				<div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
 					<div class="bg-white py-6 px-4 space-y-6 sm:p-6">
 
 						<div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -255,74 +255,8 @@
 									Autoridades
 								</h3>
 							</div>
-							<div class="flex-shrink-0">
-								<button type="button" @click="addAutoridad()"
-									class="relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md"
-									:class="showAutoridad
-										? 'bg-red-200 text-red-900 hover:bg-red-600 hover:text-white'
-										: 'bg-green-200 text-green-900 hover:bg-green-600 hover:text-white'
-										">
-									{{ this.textBtnAutoridad }}
-								</button>
-							</div>
-						</div>
-						<hr v-if="this.showAutoridad">
-						<div class="grid grid-cols-12 gap-6" v-if="this.showAutoridad">
-
-                            <div class="col-span-12 sm:col-span-3">
-								<label for="num_documento" class="block text-sm font-medium text-gray-700">Nro de
-									Documento</label>
-								<div class="relative">
-									<input type="text" v-model="form_temp.num_documento" @keyup.enter="getPerson()"
-										class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-									<a @click="getPerson()"
-										class="absolute inset-y-0 right-0 px-4 py-2 bg-green-200 text-white text-xs rounded-r-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-600  shadow-sm text-xs font-medium flex items-center  text-green-900 hover:text-white">
-										Verificar
-									</a>
-								</div>
-							</div>
-
-
-
-                            <div class="col-span-12 sm:col-span-3">
-								<label for="cargo_id" class="block text-sm font-medium text-gray-700">Cargo de
-									Autoridad</label>
-								<select v-model="form_temp.cargo_id" id="cargo_id" name="cargo_id" autocomplete="off"
-									class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-									<option value="" disabled>
-										Seleccione un cargo
-									</option>
-									<option v-for="cargo in cargos" :key="cargo.id" :value="cargo.id">{{
-										cargo.description
-									}}</option>
-								</select>
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-								<input v-model="form_temp.name" type="text" name="name" id="name" autocomplete="off"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-								<input v-model="form_temp.lastname" type="text" name="lastname" id="lastname" autocomplete="off"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-
-							<div class="col-span-12 sm:col-span-3">
-								<label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-								<input v-model="form_temp.phone" type="text" name="phone" id="phone" autocomplete="off"
-									class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-							</div>
-							<div class="col-span-12 sm:col-span-3">
-								<button type="button" @click="storeAutoridad()"
-									class="mt-7 relative inline-flex items-center px-4 py-2 shadow-sm text-xs font-medium rounded-md bg-green-200 text-green-900 hover:bg-green-600 hover:text-white">
-									Agregar Autoridad
-								</button>
-							</div>
 
 						</div>
-
 
 						<div class="grid grid-cols-12 gap-6">
 							<div class="col-span-12 sm:col-span-12">
@@ -350,14 +284,14 @@
 									<tbody>
 										<ListItem v-for="autoridad in this.form_autoridades" :key="autoridad.id"
 											:item=autoridad :cargos=cargos @edit-item="editItem" @hide-item="hideItem"
-											@destroy-item="destroyItem" />
+											@destroy-item="destroyItem" @create-person="createPerson" />
 
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
-				</div> -->
+				</div>
 
 			</form>
             <Participantes :entidad_id="form.id" :participantes="entidad[0].participantes" />
@@ -584,8 +518,6 @@ export default {
                 this.input_disable = false;
             }
         },
-
-
 
 
 	},

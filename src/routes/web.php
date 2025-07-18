@@ -222,6 +222,7 @@ Route::middleware(['auth'])->group(function () {
     // Entidad
     Route::get('/entidad', [EntidadController::class, 'index'])->name('entidad');
     Route::get('/entidad/create', [EntidadController::class, 'create'])->name('entidad.create');
+    Route::get('/entidad/show/{id}', [EntidadController::class, 'show'])->name('entidad.show');
     Route::get('/entidad/edit/{id}', [EntidadController::class, 'edit'])->name('entidad.edit');
     Route::post('/entidad/store', [EntidadController::class, 'store'])->name('entidad.store');
     Route::post('/entidad/update/{id}', [EntidadController::class, 'update'])->name('entidad.update');

@@ -24,7 +24,8 @@
 
         <!-- ACCION -->
         <td>
-            <div v-if="!this.editMode" class="flex justify-between w-1/2  mx-auto">
+            <div v-if="!this.editMode" class="flex justify-between items-baseline  w-20  mx-auto">
+                <IdentificationIcon class="w-5 h-5 hover:text-blue-600  " @click="createPerson"/>
                 <PencilSquareIcon @click="editMode = true" class="w-5 h-5 hover:text-blue-600  "/>
                 <TrashIcon @click="destroyItem(item.id)" class="w-5 h-5 hover:text-red-500"/>
             </div>
@@ -43,7 +44,8 @@ import {
     TrashIcon,
     PencilSquareIcon,
     EyeIcon,
-    EyeSlashIcon
+    EyeSlashIcon,
+    IdentificationIcon
 } from '@heroicons/vue/24/outline'
 
 
@@ -61,6 +63,7 @@ export default {
         PencilSquareIcon,
         EyeIcon,
         EyeSlashIcon,
+        IdentificationIcon
     },
     data() {
         return {
@@ -86,6 +89,9 @@ export default {
     created() {
         this.temp.name = this.item.name
         this.temp.phone = this.item.phone
+    },
+    createPerson(){
+        this.$emit('create-person', this.item)
     }
 }
 </script>

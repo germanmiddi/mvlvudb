@@ -8,6 +8,15 @@ const props = defineProps({
     }
 })
 
+const emit = defineEmits(['get-participantes', 'toast-message'])
+
+const handleGetParticipantes = () => {
+    emit('get-participantes')
+}
+
+const handleToastMessage = (message) => {
+    emit('toast-message', message)
+}
 </script>
 
 <template>
@@ -20,7 +29,7 @@ const props = defineProps({
                     <tr>
                         <th
                             scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12"
                         >
                             Rol
                         </th>
@@ -32,26 +41,31 @@ const props = defineProps({
                         </th>
                         <th
                             scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12"
                         >
-                            Documento
+                            Documento / Teléfono
                         </th>
                         <th
                             scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12"
                         >
                             Acciones
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     <ParticipantesListItem
                         v-for="participante in participantes"
                         :key="participante.id"
                         :item="participante"
+                        @get-participantes="handleGetParticipantes"
+                        @toast-message="handleToastMessage"
                     />
                 </tbody>
             </table>
+            <div v-if="!participantes || participantes.length === 0" class="text-center py-8 text-gray-500">
+                No hay participantes registrados
+            </div>
         </div>
     </div>
 </template>

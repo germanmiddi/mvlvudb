@@ -2,8 +2,12 @@
 import { ref } from 'vue'
 import ParticipantesForm from './ParticipantesForm.vue'
 import ParticipantesList from './ParticipantesList.vue'
+import Toast from "@/Layouts/Components/Toast.vue";
 
 const showParticipanteForm = ref(false)
+const toastMessage = ref("")
+const labelType = ref("info")
+
 const props = defineProps({
     entidad_id: {
         type: Number,
@@ -14,34 +18,37 @@ const props = defineProps({
         required: false
     }
 })
+
 const addParticipante = () => {
     showParticipanteForm.value = !showParticipanteForm.value
 }
 
-const toastMessage = (message) => {
-    console.log(message)
+const handleToastMessage = (message) => {
+    toastMessage.value = message.message
+    labelType.value = message.type
+}
+
+const clearMessage = () => {
+    toastMessage.value = ""
 }
 
 const listParticipantes = ref(props.participantes)
 
 const getParticipantes = async () => {
-
     const get = `${route('entidad.get_participantes', props.entidad_id)}`
     const response = await fetch(get, { method: 'GET' })
     listParticipantes.value = await response.json()
-
-    console.log('getParticipantes')
 }
 
 const closeForm = () => {
     showParticipanteForm.value = false
 }
-
 </script>
 
 <template>
     <div class="shadow sm:rounded-md sm:overflow-hidden mt-6 ">
         <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
+            <Toast :toast="toastMessage" :type="labelType" @clear="clearMessage"></Toast>
 
             <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
                 <div class="">
@@ -57,10 +64,20 @@ const closeForm = () => {
                     </button>
                 </div>
             </div>
-            <ParticipantesForm v-if="showParticipanteForm" @toast-message="toastMessage" @get-participantes="getParticipantes" @close-form="closeForm" :entidad_id="entidad_id" />
-            <ParticipantesList :participantes="listParticipantes" @get-participantes="getParticipantes" />
+
+            <ParticipantesForm
+                v-if="showParticipanteForm"
+                @toast-message="handleToastMessage"
+                @get-participantes="getParticipantes"
+                @close-form="closeForm"
+                :entidad_id="entidad_id"
+            />
+
+            <ParticipantesList
+                :participantes="listParticipantes"
+                @get-participantes="getParticipantes"
+                @toast-message="handleToastMessage"
+            />
         </div>
     </div>
-
-
 </template>

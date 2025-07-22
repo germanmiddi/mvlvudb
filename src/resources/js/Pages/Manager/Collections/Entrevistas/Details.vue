@@ -18,10 +18,10 @@
 				</button>
 				<button v-else class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-500  focus:ring-indigo-500 sm:order-1 sm:ml-3"
 						@click="changeStatus(1)">
-					    Re Abrir Trámite					
+					    Re Abrir Trámite
 				</button>
 				<a target="_blank" :href="route('pdf.acusepdf', tramite[0].id)" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-green-500 focus:ring-green-500 sm:order-1 sm:ml-3">
-					Imprimir Acuse					
+					Imprimir Acuse
 				</a>
 				<a :href="route('pdf.acuseobservacionpdf', tramite[0].id)" target="_blank" class="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-purple-500 focus:ring-green-500 sm:order-1 sm:ml-3">
 					Imprimir Acuse Obs.</a>
@@ -35,45 +35,49 @@
 				<div class="px-4 py-5 sm:px-6 flex justify-between">
 					<h3 class="text-lg leading-6 font-medium text-gray-900">Información General</h3>
 
-					<div v-if="entrevista.status_id == 1" class="flex justify-end items-center gap-4">
-						<button class="px-4 py-2 border border-transparent 
-									shadow-sm text-sm font-medium rounded-md 
-									text-white bg-red-600 hover:bg-red-700 
-									focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
-									sm:order-1 sm:ml-3" @click="changeStatus(3)">
-							RECHAZAR
-						</button>
-						<button class="px-4 py-2 border border-transparent 
-									shadow-sm text-sm font-medium rounded-md 
-									text-white bg-green-600 hover:bg-green-700 
-									focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
-									sm:order-1 sm:ml-3" @click="changeStatus(2)">
-							APROBAR
-						</button>
-					</div>
-					<div v-else class="flex justify-end items-center gap-4">
-						<div v-if="entrevista.status_id == 2" class="flex items-center gap-2">
-							<p class="text-sm text-gray-500">Pasar a:</p>
-							<button class="px-4 py-2 border border-transparent 
-										shadow-sm text-sm font-medium rounded-md 
-										text-white bg-red-600 hover:bg-red-700 
-										focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
-										sm:order-1 sm:ml-3" @click="changeStatus(3)">
-								RECHAZADO
-							</button>
-						</div>
-						<div v-else-if="entrevista.status_id == 3" class="flex items-center gap-2">
-							<p class="text-sm text-gray-500">Pasar a:</p>
+                    <div v-show="store.userCan('PROF-CAJA', $page.props.userGroups)">
+                        <div v-if="entrevista.status_id == 1" class="flex justify-end items-center gap-4">
+                            <button class="px-4 py-2 border border-transparent
+                                        shadow-sm text-sm font-medium rounded-md
+                                        text-white bg-red-600 hover:bg-red-700
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                        sm:order-1 sm:ml-3" @click="changeStatus(3)">
+                                RECHAZAR
+                            </button>
+                            <button class="px-4 py-2 border border-transparent
+                                        shadow-sm text-sm font-medium rounded-md
+                                        text-white bg-green-600 hover:bg-green-700
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                        sm:order-1 sm:ml-3" @click="changeStatus(2)">
+                                APROBAR
+                            </button>
+					    </div>
+                        <div v-else class="flex justify-end items-center gap-4">
+                            <div v-if="entrevista.status_id == 2" class="flex items-center gap-2">
+                                <p class="text-sm text-gray-500">Pasar a:</p>
+                                <button class="px-4 py-2 border border-transparent
+                                            shadow-sm text-sm font-medium rounded-md
+                                            text-white bg-red-600 hover:bg-red-700
+                                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                            sm:order-1 sm:ml-3" @click="changeStatus(3)">
+                                    RECHAZADO
+                                </button>
+                            </div>
+                            <div v-else-if="entrevista.status_id == 3" class="flex items-center gap-2">
+                                <p class="text-sm text-gray-500">Pasar a:</p>
 
-							<button class="px-4 py-2 border border-transparent 
-									shadow-sm text-sm font-medium rounded-md 
-									text-white bg-green-600 hover:bg-green-700 
-									focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
-									sm:order-1 sm:ml-3" @click="changeStatus(2)">
-								APROBADO
-							</button>
-						</div>
-					</div>
+                                <button class="px-4 py-2 border border-transparent
+                                        shadow-sm text-sm font-medium rounded-md
+                                        text-white bg-green-600 hover:bg-green-700
+                                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                        sm:order-1 sm:ml-3" @click="changeStatus(2)">
+                                    APROBADO
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
 				</div>
 
 				<div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -378,17 +382,17 @@
 		</div>
 		<div v-if="entrevista.status_id == 1" class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="flex justify-end gap-4 px-4">
-				<button class="px-4 py-2 border border-transparent 
-							   shadow-sm text-sm font-medium rounded-md 
-							   text-white bg-red-600 hover:bg-red-700 
-							   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 
+				<button class="px-4 py-2 border border-transparent
+							   shadow-sm text-sm font-medium rounded-md
+							   text-white bg-red-600 hover:bg-red-700
+							   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
 							   sm:order-1 sm:ml-3" @click="changeStatus(3)">
 					RECHAZAR
 				</button>
-				<button class="px-4 py-2 border border-transparent 
-							   shadow-sm text-sm font-medium rounded-md 
-							   text-white bg-green-600 hover:bg-green-700 
-							   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 
+				<button class="px-4 py-2 border border-transparent
+							   shadow-sm text-sm font-medium rounded-md
+							   text-white bg-green-600 hover:bg-green-700
+							   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
 							   sm:order-1 sm:ml-3" @click="changeStatus(2)">
 					APROBAR
 				</button>

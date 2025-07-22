@@ -2,6 +2,9 @@
 import ChartAdultosOcupados from "./ChartAdultosOcupados.vue";
 import ChartOcupacionesDonut from "./ChartOcupacionesDonut.vue";
 import ChartSinOcupacionHeatMap from "./ChartSinOcupacionHeatMap.vue";
+import ChartCantPersons from "./ChartCantPersons.vue";
+import ChartOcupacionesEdades from "./ChartOcupacionesEdades.vue";
+import ChartOcupacionesEdadesVertical from "./ChartOcupacionesEdadesVertical.vue";
 </script>
 
 <template>
@@ -17,9 +20,16 @@ import ChartSinOcupacionHeatMap from "./ChartSinOcupacionHeatMap.vue";
 
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 px-8">
+            <ChartCantPersons />
+
             <ChartAdultosOcupados />
             <ChartOcupacionesDonut />
+
+            <!-- <ChartOcupacionesEdades /> -->
+
+            <ChartOcupacionesEdadesVertical />
+
             <ChartSinOcupacionHeatMap />
         </div>
     </main>

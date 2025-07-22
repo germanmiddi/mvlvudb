@@ -416,6 +416,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/charts', [ChartController::class, 'index'])->name('charts');
 Route::get('/charts/getChartAdultosOcupadosData', [ChartController::class, 'getChartAdultosOcupadosData'])->name('charts.getChartAdultosOcupadosData');
 Route::get('/charts/getChartOcupacionesDonutData', [ChartController::class, 'getChartOcupacionesDonutData'])->name('charts.getChartOcupacionesDonutData');
+Route::get('/charts/getChartOcupacionesPorEdadData', [ChartController::class, 'getChartOcupacionesPorEdadData'])->name('charts.getChartOcupacionesPorEdadData');
 Route::get('/charts/getHeatmapSinOcupacionData', [ChartController::class, 'getHeatmapSinOcupacionData'])->name('charts.getHeatmapSinOcupacionData');
-
+Route::get('/charts/getCantPersonsData', [ChartController::class, 'getCantPersonsData'])->name('charts.getCantPersonsData');
 });

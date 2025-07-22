@@ -18,60 +18,56 @@ class ChartController extends Controller
 
     public function getChartAdultosOcupadosData()
     {
-        // Obtener personas con sus datos sociales
-        $personas = Person::with('social.tipoOcupacion')->get();
-        $personas_mayores_18 = $personas->filter(function($persona) {
-            return $persona->fecha_nac < Carbon::now()->subYears(18);
-        });
-
         // Obtener el ID del tipo de ocupación "DESEMPLEADO"
         $tipoDesocupado = TipoOcupacion::where('description', 'DESEMPLEADO')->first();
         $desocupado_id = $tipoDesocupado ? $tipoDesocupado->id : null;
 
-        // Categorizar personas por ocupación
-        $conOcupacion = [];
-        $sinOcupacion = [];
-        $noInformado = [];
+        // Filtrar personas mayores de 18 años directamente en la consulta
+        $fechaCorte = Carbon::now()->subYears(18);
 
-        foreach ($personas_mayores_18 as $persona) {
-            $socialData = $persona->social->first(); // Tomar el primer registro social
+        // Obtener personas con ocupación (no desempleados ni nulos)
+        $conOcupacion = Person::where('fecha_nac', '<', $fechaCorte)
+            ->whereHas('social', function($query) use ($desocupado_id) {
+                $query->whereNotNull('tipo_ocupacion_id')
+                      ->when($desocupado_id, function($q) use ($desocupado_id) {
+                          $q->where('tipo_ocupacion_id', '!=', $desocupado_id);
+                      });
+            })
+            ->selectRaw('genero, COUNT(*) as total')
+            ->groupBy('genero')
+            ->get();
 
-            if (!$socialData || $socialData->tipo_ocupacion_id === null) {
-                // Sin información de ocupación
-                $noInformado[] = $persona;
-            } elseif ($socialData->tipo_ocupacion_id === $desocupado_id) {
-                // Desocupado
-                $sinOcupacion[] = $persona;
-            } else {
-                // Con ocupación
-                $conOcupacion[] = $persona;
-            }
-        }
+        // Obtener personas sin ocupación (desempleados)
+        $sinOcupacion = Person::where('fecha_nac', '<', $fechaCorte)
+            ->whereHas('social', function($query) use ($desocupado_id) {
+                $query->where('tipo_ocupacion_id', $desocupado_id);
+            })
+            ->selectRaw('genero, COUNT(*) as total')
+            ->groupBy('genero')
+            ->get();
 
-        // Función para contar por género
-        $contarPorGenero = function($personas) {
-            $hombres = 0;
-            $mujeres = 0;
-            $noInformadoGenero = 0;
+        // Obtener personas sin información de ocupación
+        $noInformado = Person::where('fecha_nac', '<', $fechaCorte)
+            ->whereDoesntHave('social')
+            ->orWhereHas('social', function($query) {
+                $query->whereNull('tipo_ocupacion_id');
+            })
+            ->selectRaw('genero, COUNT(*) as total')
+            ->groupBy('genero')
+            ->get();
 
-            foreach ($personas as $persona) {
-
-                if ($persona->genero == 'M') {
-                    $hombres++;
-                } elseif ($persona->genero == 'F') {
-                    $mujeres++;
-                } else {
-                    $noInformadoGenero++;
-                }
-            }
+        // Función para procesar los resultados agrupados
+        $procesarResultados = function($resultados) {
+            $hombres = $resultados->where('genero', 'M')->first()->total ?? 0;
+            $mujeres = $resultados->where('genero', 'F')->first()->total ?? 0;
+            $noInformadoGenero = $resultados->whereNotIn('genero', ['M', 'F'])->sum('total');
 
             return compact('hombres', 'mujeres', 'noInformadoGenero');
         };
 
-        // Contar por categoría y género
-        $conOcupacionGenero = $contarPorGenero($conOcupacion);
-        $sinOcupacionGenero = $contarPorGenero($sinOcupacion);
-        $noInformadoGenero = $contarPorGenero($noInformado);
+        $conOcupacionGenero = $procesarResultados($conOcupacion);
+        $sinOcupacionGenero = $procesarResultados($sinOcupacion);
+        $noInformadoGenero = $procesarResultados($noInformado);
 
         // Estructura de datos para el chart 3D
         $data = [
@@ -79,7 +75,8 @@ class ChartController extends Controller
         ];
 
         // Con Ocupación
-        if (count($conOcupacion) > 0) {
+        $totalConOcupacion = $conOcupacion->sum('total');
+        if ($totalConOcupacion > 0) {
             $breakdown = [];
             if ($conOcupacionGenero['hombres'] > 0) {
                 $breakdown[] = [
@@ -102,14 +99,15 @@ class ChartController extends Controller
 
             $data["series"][] = [
                 "name" => "Con Ocupación",
-                "value" => count($conOcupacion),
+                "value" => $totalConOcupacion,
                 "color" => "#10B981",
                 "breakdown" => $breakdown
             ];
         }
 
         // Sin Ocupación
-        if (count($sinOcupacion) > 0) {
+        $totalSinOcupacion = $sinOcupacion->sum('total');
+        if ($totalSinOcupacion > 0) {
             $breakdown = [];
             if ($sinOcupacionGenero['hombres'] > 0) {
                 $breakdown[] = [
@@ -132,14 +130,15 @@ class ChartController extends Controller
 
             $data["series"][] = [
                 "name" => "Sin Ocupación",
-                "value" => count($sinOcupacion),
+                "value" => $totalSinOcupacion,
                 "color" => "#EF4444",
                 "breakdown" => $breakdown
             ];
         }
 
         // No Informado
-        if (count($noInformado) > 0) {
+        $totalNoInformado = $noInformado->sum('total');
+        if ($totalNoInformado > 0) {
             $breakdown = [];
             if ($noInformadoGenero['hombres'] > 0) {
                 $breakdown[] = [
@@ -162,7 +161,7 @@ class ChartController extends Controller
 
             $data["series"][] = [
                 "name" => "Ocupación No Informada",
-                "value" => count($noInformado),
+                "value" => $totalNoInformado,
                 "color" => "#6B7280",
                 "breakdown" => $breakdown
             ];
@@ -173,44 +172,28 @@ class ChartController extends Controller
 
     public function getChartOcupacionesDonutData()
     {
-        // Obtener personas con sus datos sociales y tipos de ocupación
-        $personas = Person::with('social.tipoOcupacion')->get();
-
-        // Filtrar personas mayores de 18 años
-        $personas_mayores_18 = $personas->filter(function($persona) {
-            return $persona->fecha_nac < Carbon::now()->subYears(18);
-        });
-
         // Obtener el ID del tipo de ocupación "DESEMPLEADO" para excluirlo
         $tipoDesocupado = TipoOcupacion::where('description', 'DESEMPLEADO')->first();
         $desocupado_id = $tipoDesocupado ? $tipoDesocupado->id : null;
 
-        // Recopilar ocupaciones válidas (no NULL y no DESEMPLEADO)
-        $ocupaciones = [];
+        // Filtrar personas mayores de 18 años directamente en la consulta
+        $fechaCorte = Carbon::now()->subYears(18);
 
-        foreach ($personas_mayores_18 as $persona) {
-            $socialData = $persona->social->first();
-
-            // Verificar que tenga datos sociales, tipo de ocupación válido y no sea desempleado
-            if ($socialData &&
-                $socialData->tipo_ocupacion_id !== null &&
-                $socialData->tipo_ocupacion_id !== $desocupado_id &&
-                $socialData->tipoOcupacion) {
-
-                $nombreOcupacion = $socialData->tipoOcupacion->description;
-
-                if (!isset($ocupaciones[$nombreOcupacion])) {
-                    $ocupaciones[$nombreOcupacion] = 0;
-                }
-                $ocupaciones[$nombreOcupacion]++;
-            }
-        }
-
-        // Calcular total para porcentajes
-        $total = array_sum($ocupaciones);
+        // Obtener ocupaciones válidas con conteos usando consulta SQL eficiente con tabla correcta
+        $ocupaciones = TipoOcupacion::join('social_data as sd', 'tipo_ocupacion.id', '=', 'sd.tipo_ocupacion_id')
+            ->join('person', 'person.id', '=', 'sd.person_id')
+            ->where('person.fecha_nac', '<', $fechaCorte)
+            ->whereNotNull('sd.tipo_ocupacion_id')
+            ->when($desocupado_id, function($query) use ($desocupado_id) {
+                $query->where('sd.tipo_ocupacion_id', '!=', $desocupado_id);
+            })
+            ->selectRaw('tipo_ocupacion.description as nombre, COUNT(*) as cantidad')
+            ->groupBy('tipo_ocupacion.id', 'tipo_ocupacion.description')
+            ->orderBy('cantidad', 'desc')
+            ->get();
 
         // Si no hay datos, devolver estructura vacía
-        if ($total === 0) {
+        if ($ocupaciones->isEmpty()) {
             return response()->json([]);
         }
 
@@ -222,14 +205,12 @@ class ChartController extends Controller
             "#6B7280", "#EC4899", "#14B8A6", "#F97316", "#84CC16"
         ];
 
-        $index = 0;
-        foreach ($ocupaciones as $nombre => $cantidad) {
+        foreach ($ocupaciones as $index => $ocupacion) {
             $data[] = [
-                "name" => $nombre,
-                "values" => [$cantidad],
+                "name" => $ocupacion->nombre,
+                "values" => [$ocupacion->cantidad],
                 "color" => $colores[$index % count($colores)]
             ];
-            $index++;
         }
 
         return response()->json($data);
@@ -237,39 +218,34 @@ class ChartController extends Controller
 
         public function getHeatmapSinOcupacionData()
     {
-        // Obtener personas desempleadas con direcciones y localidades con coordenadas
-        $personas = Person::with(['social.tipoOcupacion', 'address.localidad'])->get();
+        // Filtrar personas mayores de 18 años directamente en la consulta
+        $fechaCorte = Carbon::now()->subYears(18);
 
-        // Filtrar personas mayores de 18 años
-        $personas_mayores_18 = $personas->filter(function($persona) {
-            return $persona->fecha_nac < Carbon::now()->subYears(18);
-        });
-
-        // Encontrar personas DESEMPLEADAS (tipo_ocupacion_id = 6)
-        $personasDesempleadas = $personas_mayores_18->filter(function($persona) {
-            $socialData = $persona->social->first();
-            return $socialData && $socialData->tipo_ocupacion_id === 6;
-        });
-
-        // Filtrar solo las que tienen address_data con localidad_id y coordenadas
-        $personasConDireccion = $personasDesempleadas->filter(function($persona) {
-            $addressData = $persona->address->first();
-            if (!$addressData || !$addressData->localidad_id) {
-                return false;
-            }
-
-            $localidad = $addressData->localidad;
-            return $localidad && $localidad->latitud !== null && $localidad->longitud !== null;
-        });
+        // Obtener personas DESEMPLEADAS con direcciones y localidades en una sola consulta
+        $personasDesempleadas = Person::select([
+                'person.id',
+                'person.name',
+                'person.lastname',
+                'localidades.id as localidad_id',
+                'localidades.description as localidad_nombre',
+                'localidades.latitud',
+                'localidades.longitud'
+            ])
+            ->join('social_data as sd', 'person.id', '=', 'sd.person_id')
+            ->join('address_data as ad', 'person.id', '=', 'ad.person_id')
+            ->join('localidades', 'ad.localidad_id', '=', 'localidades.id')
+            ->where('person.fecha_nac', '<', $fechaCorte)
+            ->where('sd.tipo_ocupacion_id', 6) // DESEMPLEADO
+            ->whereNotNull('localidades.latitud')
+            ->whereNotNull('localidades.longitud')
+            ->get();
 
         // Preparar datos para el mapa de calor - UN PUNTO POR PERSONA
         $heatmapData = [];
         $contadorPorLocalidad = []; // Para distribuir puntos alrededor del centro
 
-        foreach ($personasConDireccion as $persona) {
-            $addressData = $persona->address->first();
-            $localidad = $addressData->localidad;
-            $localidadId = $localidad->id;
+        foreach ($personasDesempleadas as $persona) {
+            $localidadId = $persona->localidad_id;
 
             // Inicializar contador para esta localidad
             if (!isset($contadorPorLocalidad[$localidadId])) {
@@ -289,13 +265,13 @@ class ChartController extends Controller
             $deltaLng = $distancia * sin($anguloRad);
 
             // Aplicar desplazamiento a las coordenadas de la base de datos
-            $latFinal = $localidad->latitud + $deltaLat;
-            $lngFinal = $localidad->longitud + $deltaLng;
+            $latFinal = $persona->latitud + $deltaLat;
+            $lngFinal = $persona->longitud + $deltaLng;
 
             $heatmapData[] = [
                 'person_id' => $persona->id,
                 'localidad_id' => $localidadId,
-                'localidad_nombre' => $localidad->description,
+                'localidad_nombre' => $persona->localidad_nombre,
                 'person_name' => $persona->name . ' ' . $persona->lastname,
                 'coordenadas' => [
                     'lat' => $latFinal,
@@ -309,4 +285,94 @@ class ChartController extends Controller
         return response()->json($heatmapData);
     }
 
+    public function getCantPersonsData(){
+        // Contar directamente en la base de datos sin cargar registros
+        $count = Person::count();
+        return response()->json($count);
+    }
+
+    public function getChartOcupacionesPorEdadData()
+    {
+        // Obtener el ID del tipo de ocupación "DESEMPLEADO" para excluirlo
+        $tipoDesocupado = TipoOcupacion::where('description', 'DESEMPLEADO')->first();
+        $desocupado_id = $tipoDesocupado ? $tipoDesocupado->id : null;
+
+        // Filtrar personas mayores de 18 años directamente en la consulta
+        $fechaCorte = Carbon::now()->subYears(18);
+
+                // Definir rangos de edad en SQL usando CASE WHEN
+        $rangoEdadSQL = "
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) BETWEEN 18 AND 24 THEN '18-24'
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) BETWEEN 25 AND 34 THEN '25-34'
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) BETWEEN 35 AND 49 THEN '35-49'
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) BETWEEN 50 AND 59 THEN '50-59'
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) BETWEEN 60 AND 64 THEN '60-64'
+                WHEN TIMESTAMPDIFF(YEAR, person.fecha_nac, CURDATE()) >= 65 THEN '65+'
+                ELSE NULL
+            END as rango_edad
+        ";
+
+        // Obtener datos agrupados por ocupación y rango de edad
+        $datos = TipoOcupacion::join('social_data as sd', 'tipo_ocupacion.id', '=', 'sd.tipo_ocupacion_id')
+            ->join('person', 'person.id', '=', 'sd.person_id')
+            ->where('person.fecha_nac', '<', $fechaCorte)
+            ->whereNotNull('sd.tipo_ocupacion_id')
+            ->when($desocupado_id, function($query) use ($desocupado_id) {
+                $query->where('sd.tipo_ocupacion_id', '!=', $desocupado_id);
+            })
+            ->selectRaw("tipo_ocupacion.description as ocupacion, {$rangoEdadSQL}, COUNT(*) as cantidad")
+            ->havingRaw('rango_edad IS NOT NULL')
+            ->groupBy('tipo_ocupacion.id', 'tipo_ocupacion.description', 'rango_edad')
+            ->orderBy('tipo_ocupacion.description')
+            ->get();
+
+        // Si no hay datos, devolver estructura vacía
+        if ($datos->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Obtener todas las ocupaciones únicas
+        $ocupaciones = $datos->pluck('ocupacion')->unique()->sort()->values()->toArray();
+
+        // Definir rangos de edad
+        $rangos_edad = ['18-24', '25-34', '35-49', '50-59', '60-64', '65+'];
+
+        // Crear matriz de datos organizados
+        $ocupacionesPorEdad = [];
+        foreach ($ocupaciones as $ocupacion) {
+            $ocupacionesPorEdad[$ocupacion] = array_fill_keys($rangos_edad, 0);
+        }
+
+        // Llenar la matriz con los datos obtenidos
+        foreach ($datos as $dato) {
+            $ocupacionesPorEdad[$dato->ocupacion][$dato->rango_edad] = $dato->cantidad;
+        }
+
+        // Estructurar datos para VueUiStackbar
+        $series = [];
+        $colores = [
+            "#d94126", "#f5ee38", "#6376DD", "#42d392", "#d98320", "#10B981"
+        ];
+
+        foreach ($rangos_edad as $index => $rango) {
+            $data = [];
+            foreach ($ocupaciones as $ocupacion) {
+                $data[] = $ocupacionesPorEdad[$ocupacion][$rango];
+            }
+
+            $series[] = [
+                'name' => $rango,
+                'data' => $data,
+                'color' => $colores[$index % count($colores)]
+            ];
+        }
+
+        $result = [
+            'categories' => $ocupaciones,
+            'series' => $series
+        ];
+
+        return response()->json($result);
+    }
 }

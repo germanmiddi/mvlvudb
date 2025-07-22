@@ -226,7 +226,7 @@ onMounted(() => {
                 </div>
             </div>
 
-            <!-- Grid de checkboxes para ocupaciones -->
+                        <!-- Grid de checkboxes para ocupaciones -->
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-48 overflow-y-auto">
                 <label
                     v-for="(category, index) in categories"
@@ -239,7 +239,10 @@ onMounted(() => {
                         @change="toggleOccupation(index, $event.target.checked)"
                         class="mr-2 h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     >
-                    <span class="truncate" :title="category">{{ category }}</span>
+                    <span class="truncate" :title="`${index + 1}. ${category}`">
+                        <span class="font-semibold text-blue-600">#{{ index + 1 }}</span>
+                        {{ category }}
+                    </span>
                 </label>
             </div>
 

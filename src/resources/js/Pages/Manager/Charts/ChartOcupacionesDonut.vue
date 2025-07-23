@@ -20,7 +20,7 @@ const config = ref({
                         "show": true,
                         "hideUnderValue": 3,
                         "prefix": "",
-                        "suffix": " personas"
+                        "suffix": " pers."
                     },
                     "value": {
                         "show": true,
@@ -29,12 +29,12 @@ const config = ref({
                     "percentage": {
                         "color": "#1A1A1A",
                         "bold": true,
-                        "fontSize": 14
+                        "fontSize": 12
                     },
                     "name": {
                         "color": "#1A1A1A",
                         "bold": false,
-                        "fontSize": 14
+                        "fontSize": 8,
                     },
                     "hollow": {
                         "total": {
@@ -71,7 +71,8 @@ const config = ref({
                 "fontSize": 12,
                 "bold": false,
                 "roundingValue": 0,
-                "roundingPercentage": 1
+                "roundingPercentage": 1,
+                "position": "center"
             },
             "title": {
                 "text": "Distribución por Ocupación",
@@ -89,7 +90,7 @@ const config = ref({
                 "show": true,
                 "backgroundColor": "#1A1A1A",
                 "color": "#FFFFFF",
-                "fontSize": 14,
+                "fontSize": 12,
                 "showValue": true,
                 "roundingValue": 0,
                 "showPercentage": true,
@@ -98,8 +99,21 @@ const config = ref({
         }
     },
     "userOptions": {
-        "show": true
+        "show": true,
+        buttonTitles:{
+            open: 'Abrir opciones',
+            close: 'Cerrar opciones',
+            tooltip: 'Mostrar tooltip',
+            pdf: 'Descargar PDF',
+            csv: 'Descargar CSV',
+            img: 'Descargar PNG',
+            table: 'Mostrar tabla',
+            labels: 'Mostrar etiquetas',
+            fullscreen: 'Pantalla completa',
+            annotator: 'Mostrar anotador'
+        }
     },
+
     "table": {
         "show": false,
         "responsiveBreakpoint": 400,
@@ -148,6 +162,9 @@ const loadChartData = async () => {
 
         // Verificar que tenemos datos válidos
         if (data && Array.isArray(data) && data.length > 0) {
+            console.log('dataDona');
+            console.log(data);
+
             dataset.value = data;
         } else {
             // Si no hay datos, usar un mensaje informativo
@@ -186,7 +203,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="col-span-1 px-4 mt-6 sm:px-6 lg:px-8 border border-gray-200 rounded-md p-4">
+    <div class="col-span-2 max-w-2xl px-4 mt-6 sm:px-6 lg:px-8 border border-gray-200 rounded-md p-4">
         <div v-if="error" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
             <p class="text-red-800">Error cargando los datos: {{ error }}</p>
             <button

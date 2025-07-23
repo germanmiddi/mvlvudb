@@ -1,14 +1,10 @@
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { VueUiStackbar } from "vue-data-ui";
 import "vue-data-ui/style.css";
 
-const dataset = ref([]);
-const originalData = ref(null);
 const loading = ref(true);
 const error = ref(null);
-const categories = ref([]);
-const visibleOccupations = ref([]);
 
 const config = ref({
     table: {
@@ -23,8 +19,17 @@ const config = ref({
     },
     style: {
         chart: {
+            zoom:{
+                show: false
+            },
             backgroundColor: '#FFFFFF',
             color: '#374151',
+            padding: {
+                top: 24,
+                right: 48,
+                bottom: 48,
+                left: 200  // Más espacio para los nombres largos
+            },
             grid: {
                 x: {
                     axisColor: '#D1D5DB',
@@ -32,19 +37,23 @@ const config = ref({
                         text: 'Cantidad de Personas',
                         color: '#374151'
                     },
-                    axisLabels: {
-                        color: '#374151'
+                    timeLabels: {
+                        color: '#374151',
+                        fontSize: 11,
+                        bold: false,
+                        values: []  // Aquí pondremos las ocupaciones
                     }
                 },
                 y: {
                     axisColor: '#D1D5DB',
                     axisName: {
+                        show: false,
                         text: 'Ocupaciones',
                         color: '#374151'
                     },
-                    timeLabels: {
+                    axisLabels: {
                         color: '#374151',
-                        values: []
+                        fontSize: 11
                     }
                 }
             },
@@ -53,16 +62,17 @@ const config = ref({
                 opacity: 5
             },
             legend: {
+                show: false,
                 backgroundColor: '#FFFFFF',
                 color: '#374151'
             },
             title: {
-                text: 'Ocupaciones por Rangos de Edad (Barras Verticales)',
+                text: 'Ocupaciones por Rangos de Edad',
                 color: '#1F2937',
                 textAlign: 'left',
                 paddingLeft: 24,
                 subtitle: {
-                    text: 'Distribución de personas ocupadas según grupo etario - Filtrable',
+                    text: 'Distribución de personas ocupadas según grupo etario',
                     color: '#6B7280'
                 }
             },
@@ -73,94 +83,52 @@ const config = ref({
                 backgroundOpacity: 95
             },
             bars: {
+                gapRatio: 0.5,
+                borderRadius: 4,
+                showDistributedPercentage: true,
+                distributed: true,
                 totalValues: {
-                    color: '#374151'
+                    color: '#374151',
+                    fontSize: 11,
+                    bold: false
+                },
+                dataLabels: {
+                    color: '#374151',
+                    fontSize: 12,
+                    bold: false,
+                    hideEmptyValues: true,
+                    hideEmptyPercentage: true
                 }
             }
         }
     },
-    orientation: 'horizontal'
-});
-
-// Watcher para actualizar el gráfico cuando cambien las ocupaciones visibles
-watch([visibleOccupations, originalData], () => {
-    updateChart();
-}, { deep: true });
-
-const updateChart = () => {
-    if (!originalData.value) {
-        return;
-    }
-
-    if (visibleOccupations.value.length === 0) {
-        // Cuando no hay ocupaciones seleccionadas, crear un dataset válido pero vacío
-        dataset.value = originalData.value.series.map(serie => ({
-            name: serie.name,
-            series: [],
-            color: serie.color
-        }));
-        config.value.style.chart.grid.y.timeLabels.values = [];
-        return;
-    }
-
-    const filteredCategories = originalData.value.categories.filter((category, index) =>
-        visibleOccupations.value.includes(index)
-    );
-
-    const filteredSeries = originalData.value.series.map(serie => ({
-        name: serie.name,
-        series: serie.data.filter((value, index) => visibleOccupations.value.includes(index)),
-        color: serie.color
-    }));
-
-    // Actualizar categorías en la configuración
-    config.value.style.chart.grid.y.timeLabels.values = filteredCategories;
-
-    // Actualizar dataset
-    dataset.value = filteredSeries;
-};
-
-const toggleOccupation = (index, isVisible) => {
-    if (isVisible) {
-        if (!visibleOccupations.value.includes(index)) {
-            visibleOccupations.value.push(index);
-        }
-    } else {
-        const indexPos = visibleOccupations.value.indexOf(index);
-        if (indexPos > -1) {
-            visibleOccupations.value.splice(indexPos, 1);
+    orientation: 'horizontal',
+    userOptions:{
+        buttonTitles:{
+            open: 'Abrir opciones',
+            close: 'Cerrar opciones',
+            tooltip: 'Mostrar tooltip',
+            pdf: 'Descargar PDF',
+            csv: 'Descargar CSV',
+            img: 'Descargar PNG',
+            table: 'Mostrar tabla',
+            labels: 'Mostrar etiquetas',
+            fullscreen: 'Pantalla completa',
+            annotator: 'Mostrar anotador'
         }
     }
-};
-
-const toggleAllOccupations = (showAll) => {
-    if (showAll) {
-        visibleOccupations.value = Array.from({length: categories.value.length}, (_, i) => i);
-    } else {
-        visibleOccupations.value = [];
-    }
-};
-
-const allSelected = computed(() =>
-    visibleOccupations.value.length === categories.value.length
-);
-
-const noneSelected = computed(() =>
-    visibleOccupations.value.length === 0
-);
-
-const isOccupationVisible = (index) => {
-    return visibleOccupations.value.includes(index);
-};
-
-const shouldShowChart = computed(() => {
-    return !loading.value &&
-           !error.value &&
-           originalData.value &&
-           dataset.value.length > 0 &&
-           visibleOccupations.value.length > 0 &&
-           dataset.value.every(serie => Array.isArray(serie.series));
 });
+
+const dataset = ref([]);
+
+const truncateOccupationName = (name) => {
+    if (!name) return '';
+    // Truncar nombres muy largos para mejorar la visualización
+    if (name.length > 22) {
+        return name.substring(0, 19) + '...';
+    }
+    return name;
+};
 
 const fetchData = async () => {
     try {
@@ -174,19 +142,25 @@ const fetchData = async () => {
         }
 
         const data = await response.json();
+        console.log('Data received:', data);
 
         if (!data || !data.categories || !data.series) {
             throw new Error('Datos inválidos recibidos del servidor');
         }
 
-        // Guardar datos originales
-        originalData.value = data;
-        categories.value = data.categories;
+        // Establecer las ocupaciones como timeLabels del eje X
+        const truncatedCategories = data.categories.map(category => truncateOccupationName(category));
+        config.value.style.chart.grid.x.timeLabels.values = truncatedCategories;
+        console.log('Setting timeLabels to:', truncatedCategories);
 
-        // Inicializar todas las ocupaciones como visibles
-        visibleOccupations.value = Array.from({length: data.categories.length}, (_, i) => i);
-
-        // El watcher se encargará de actualizar el gráfico
+        // Configurar el dataset directamente
+        const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
+        dataset.value = data.series.map((serie, index) => ({
+            name: serie.name,
+            series: serie.data,
+            color: colors[index % colors.length]
+        }));
+        console.log('Dataset configured:', dataset.value);
 
     } catch (err) {
         console.error('Error fetching chart data:', err);
@@ -203,55 +177,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="col-span-2">
-        <!-- Controles de filtro -->
-        <div v-if="!loading && !error && categories.length > 0" class="mb-4 p-4 bg-gray-50 rounded-lg">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-medium text-gray-700">Filtrar Ocupaciones:</h3>
-                <div class="flex gap-2">
-                    <button
-                        @click="toggleAllOccupations(true)"
-                        :disabled="allSelected"
-                        class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        Mostrar Todas
-                    </button>
-                    <button
-                        @click="toggleAllOccupations(false)"
-                        :disabled="noneSelected"
-                        class="px-3 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        Ocultar Todas
-                    </button>
-                </div>
-            </div>
-
-                        <!-- Grid de checkboxes para ocupaciones -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-48 overflow-y-auto">
-                <label
-                    v-for="(category, index) in categories"
-                    :key="index"
-                    class="flex items-center text-xs cursor-pointer hover:bg-gray-100 p-2 rounded"
-                >
-                    <input
-                        type="checkbox"
-                        :checked="isOccupationVisible(index)"
-                        @change="toggleOccupation(index, $event.target.checked)"
-                        class="mr-2 h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    >
-                    <span class="truncate" :title="`${index + 1}. ${category}`">
-                        <span class="font-semibold text-blue-600">#{{ index + 1 }}</span>
-                        {{ category }}
-                    </span>
-                </label>
-            </div>
-
-            <!-- Contador de ocupaciones visibles -->
-            <div class="mt-2 text-xs text-gray-500">
-                {{ visibleOccupations.length }} de {{ categories.length }} ocupaciones mostradas
-            </div>
-        </div>
-
+    <div class="col-span-2 border border-gray-200 rounded-md p-4">
         <!-- Estado de carga -->
         <div v-if="loading" class="flex items-center justify-center p-8">
             <div class="text-gray-600">
@@ -281,29 +207,22 @@ onMounted(() => {
             </div>
         </div>
 
-        <!-- Estado vacío -->
-        <div v-else-if="noneSelected || !shouldShowChart" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div class="text-yellow-800">
-                <p class="font-medium">
-                    {{ noneSelected ? 'No hay ocupaciones seleccionadas' : 'No hay datos disponibles' }}
-                </p>
-                <p class="text-sm mt-1">
-                    {{ noneSelected ? 'Selecciona al menos una ocupación para mostrar el gráfico.' : 'No se encontraron personas con ocupaciones registradas para mostrar en el gráfico.' }}
-                </p>
-            </div>
-        </div>
-
         <!-- Gráfico -->
-        <div v-else-if="shouldShowChart" style="width: 100%; min-height: 600px;">
+        <div v-else style="width: 100%; min-height: 700px;">
             <VueUiStackbar :config="config" :dataset="dataset" />
 
             <!-- Información adicional -->
-            <div class="mt-4 text-sm text-gray-600">
-                <p>
-                    <strong>Ocupaciones mostradas:</strong> {{ visibleOccupations.length }} de {{ categories.length }}
-                </p>
-                <p>
-                    <strong>Rangos de edad:</strong> 18-24, 25-34, 35-49, 50-59, 60-64, 65+ años
+            <div class="mt-4 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+                <p class="mb-2 text-center">
+                    <strong>Rangos de edad:</strong>
+                    <span class="inline-flex items-center gap-3 ml-2">
+                        <span class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded mr-1"></span>18-24</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-red-500 rounded mr-1"></span>25-34</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-green-500 rounded mr-1"></span>35-49</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded mr-1"></span>50-59</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-purple-500 rounded mr-1"></span>60-64</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-pink-500 rounded mr-1"></span>65+</span>
+                    </span>
                 </p>
             </div>
         </div>

@@ -206,8 +206,17 @@ class ChartController extends Controller
         ];
 
         foreach ($ocupaciones as $index => $ocupacion) {
+
+            $nombre = $ocupacion->nombre;
+
+            if( str_contains($nombre, 'EMPLEADO SECTOR PÚBLICO')){
+                $nombre = 'EMPLEADO PÚBLICO';
+            }elseif(str_contains($nombre, 'EMPLEADO SECTOR PRIVADO')){
+                $nombre = 'EMPLEADO PRIVADO';
+            }
+
             $data[] = [
-                "name" => $ocupacion->nombre,
+                "name" => $nombre,
                 "values" => [$ocupacion->cantidad],
                 "color" => $colores[$index % count($colores)]
             ];

@@ -225,7 +225,7 @@ class ChartController extends Controller
         return response()->json($data);
     }
 
-        public function getHeatmapSinOcupacionData()
+    public function getHeatmapSinOcupacionData()
     {
         // Filtrar personas mayores de 18 años directamente en la consulta
         $fechaCorte = Carbon::now()->subYears(18);
@@ -384,4 +384,8 @@ class ChartController extends Controller
 
         return response()->json($result);
     }
+
+
+
+
 }

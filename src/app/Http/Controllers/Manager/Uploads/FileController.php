@@ -129,11 +129,19 @@ class FileController extends Controller
                 "directorio_existe" => $dirExists,
                 "es_escribible" => $dirExists ? is_writable($targetDir) : 'N/A',
                 "permisos" => $dirExists ? substr(sprintf('%o', fileperms($targetDir)), -4) : 'N/A',
+                "owner_uid" => $dirExists && function_exists('fileowner') ? fileowner($targetDir) : 'N/A',
+                "owner_gid" => $dirExists && function_exists('filegroup') ? filegroup($targetDir) : 'N/A',
                 "espacio_libre" => $dirExists && disk_free_space($targetDir) ? round(disk_free_space($targetDir) / 1024 / 1024, 2) . ' MB' : 'N/A',
                 "archivo_size" => round($data['file']->getSize() / 1024, 2) . ' KB',
+                "archivo_mime" => $data['file']->getMimeType(),
+                "archivo_original" => $data['file']->getClientOriginalName(),
+                "archivo_temp_path" => $data['file']->getRealPath(),
+                "archivo_temp_readable" => is_readable($data['file']->getRealPath()),
                 "usuario_php" => get_current_user(),
                 "process_uid" => function_exists('posix_getuid') ? posix_getuid() : 'N/A',
-                "process_gid" => function_exists('posix_getgid') ? posix_getgid() : 'N/A'
+                "process_gid" => function_exists('posix_getgid') ? posix_getgid() : 'N/A',
+                "temp_dir" => sys_get_temp_dir(),
+                "temp_writable" => is_writable(sys_get_temp_dir())
             ];
 
             Log::info("Diagnóstico pre-upload", [
@@ -174,8 +182,61 @@ class FileController extends Controller
                 }
             }
 
-            // Capturar el resultado del Storage::putFileAs
-            $storagePath = Storage::putFileAs('legajo_cb', $data['file'], $fileName);
+            // Test de escritura manual antes del Storage
+            $testFile = $targetDir . '/test_write_' . time() . '.txt';
+            $manualWriteTest = file_put_contents($testFile, 'test content');
+            if ($manualWriteTest !== false) {
+                unlink($testFile); // Limpiar archivo de prueba
+                $manualWriteResult = "SUCCESS - " . $manualWriteTest . " bytes";
+            } else {
+                $manualWriteResult = "FAILED - " . error_get_last()['message'] ?? 'Unknown error';
+            }
+
+            Log::info("Test de escritura manual", [
+                "Modulo" => "File:uploadFileLegajo",
+                "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                "Test File" => $testFile,
+                "Resultado" => $manualWriteResult
+            ]);
+
+            // Test alternativo con move_uploaded_file
+            $alternativeFileName = 'test_move_' . time() . '.' . $extension;
+            $alternativePath = $targetDir . '/' . $alternativeFileName;
+            $moveResult = move_uploaded_file($data['file']->getRealPath(), $alternativePath);
+
+            if ($moveResult) {
+                Log::info("Test move_uploaded_file EXITOSO", [
+                    "Modulo" => "File:uploadFileLegajo",
+                    "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                    "Alternative Path" => $alternativePath,
+                    "File Exists" => file_exists($alternativePath)
+                ]);
+                // Limpiar archivo de prueba
+                if (file_exists($alternativePath)) {
+                    unlink($alternativePath);
+                }
+            } else {
+                Log::error("Test move_uploaded_file FALLÓ", [
+                    "Modulo" => "File:uploadFileLegajo",
+                    "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                    "Alternative Path" => $alternativePath,
+                    "Last Error" => error_get_last()
+                ]);
+            }
+
+            // Capturar el resultado del Storage::putFileAs y errores específicos
+            $storagePath = false;
+            try {
+                $storagePath = Storage::putFileAs('legajo_cb', $data['file'], $fileName);
+            } catch (\Exception $storageException) {
+                Log::error("Excepción en Storage::putFileAs", [
+                    "Modulo" => "File:uploadFileLegajo",
+                    "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                    "Exception" => $storageException->getMessage(),
+                    "File" => $storageException->getFile(),
+                    "Line" => $storageException->getLine()
+                ]);
+            }
 
             if ($storagePath) {
                 Log::info("Storage::putFileAs EXITOSO", [

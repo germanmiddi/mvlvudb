@@ -37,15 +37,15 @@ class FileController extends Controller
                     "Full Path" => Storage::disk('public')->path($fileName)
                 ]);
 
-                Archivo::Create(
-                    [
-                        'name' => $fileName,
-                        'description' => $data['description'],
-                        'ext' => $extension,
-                        'tramite_id' => $data['tramite_id']
-                    ]
-                );
-                Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:upload","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $data['tramite_id'], "Nombre File" => $fileName ]);
+            Archivo::Create(
+                [
+                    'name' => $fileName,
+                    'description' => $data['description'],
+                    'ext' => $extension,
+                    'tramite_id' => $data['tramite_id']
+                ]
+            );
+            Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:upload","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $data['tramite_id'], "Nombre File" => $fileName ]);
             } else {
                 Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
                     "Modulo" => "File:upload",
@@ -83,16 +83,16 @@ class FileController extends Controller
                         "Full Path" => Storage::disk('public')->path($fileName)
                     ]);
 
-                    $archivo = Archivo::Create(
-                        [
-                            'name' => $fileName,
-                            'description' => $request['description'],
-                            'ext' => $extension,
-                            'tramite_id' => $request['tramite_id']
-                        ]
-                    );
-                    Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'], "Nombre File" => $fileName ]);
-                    return response()->json(['message' => 'Se ha recibido un Archivo. Comuniquese con el administrador.', 'archivo' => $archivo], 200);
+                $archivo = Archivo::Create(
+                    [
+                        'name' => $fileName,
+                        'description' => $request['description'],
+                        'ext' => $extension,
+                        'tramite_id' => $request['tramite_id']
+                    ]
+                );
+                Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $request['tramite_id'], "Nombre File" => $fileName ]);
+                return response()->json(['message' => 'Se ha recibido un Archivo. Comuniquese con el administrador.', 'archivo' => $archivo], 200);
                 } else {
                     Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
                         "Modulo" => "File:uploadFile",
@@ -120,7 +120,25 @@ class FileController extends Controller
     {
         try {
             $extension = $data['file']->getClientOriginalExtension();
-            $fileName = 'Legajo-ID-'.$data['legajo_id'].'-'.$data['description'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
+            $rawFileName = 'Legajo-ID-'.$data['legajo_id'].'-'.$data['description'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
+
+            // Sanitizar el nombre del archivo para evitar caracteres problemáticos
+            $fileName = preg_replace('/[^A-Za-z0-9\-_.]/', '_', $rawFileName);
+
+            // Diagnóstico de generación de fileName
+            Log::info("Generación de fileName", [
+                "Modulo" => "File:uploadFileLegajo",
+                "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                "legajo_id" => $data['legajo_id'] ?? 'NULL',
+                "description" => $data['description'] ?? 'NULL',
+                "extension" => $extension ?? 'NULL',
+                "carbon_now" => Carbon::now()->toString(),
+                "rawFileName" => $rawFileName,
+                "fileName_sanitizado" => $fileName,
+                "fileName_length" => strlen($fileName),
+                "fileName_empty" => empty($fileName),
+                "sanitization_changed" => ($rawFileName !== $fileName)
+            ]);
 
             // Diagnóstico previo antes de intentar guardar
             $targetDir = Storage::disk('legajo_cb')->path('');
@@ -224,9 +242,47 @@ class FileController extends Controller
                 ]);
             }
 
+            // Verificación de parámetros antes de Storage::putFileAs
+            // Verificar configuración del disco
+            $diskConfig = config('filesystems.disks.legajo_cb');
+            $diskRoot = Storage::disk('legajo_cb')->path('');
+
+            Log::info("Parámetros para Storage::putFileAs", [
+                "Modulo" => "File:uploadFileLegajo",
+                "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                "disk_name" => 'legajo_cb',
+                "disk_name_empty" => empty('legajo_cb'),
+                "disk_config" => $diskConfig,
+                "disk_root" => $diskRoot,
+                "disk_root_empty" => empty($diskRoot),
+                "file_object" => get_class($data['file']),
+                "file_is_valid" => $data['file']->isValid(),
+                "file_path" => $data['file']->getRealPath(),
+                "fileName" => $fileName,
+                "fileName_empty" => empty($fileName),
+                "fileName_null" => is_null($fileName)
+            ]);
+
+            // Diagnóstico del Storage antes de usarlo
+            Log::info("Diagnóstico Storage", [
+                "Modulo" => "File:uploadFileLegajo",
+                "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                "Disk Name" => 'legajo_cb',
+                "Disk Config" => config('filesystems.disks.legajo_cb'),
+                "Disk Root" => Storage::disk('legajo_cb')->path(''),
+                "FileName" => $fileName,
+                "File Object Type" => get_class($data['file']),
+                "File Object Valid" => $data['file'] instanceof \Illuminate\Http\UploadedFile
+            ]);
+
             // Capturar el resultado del Storage::putFileAs y errores específicos
             $storagePath = false;
             try {
+                // Verificar que el archivo sea válido antes de Storage
+                if (!$data['file']->isValid()) {
+                    throw new \Exception("Uploaded file is not valid: " . $data['file']->getError());
+                }
+
                 $storagePath = Storage::putFileAs('legajo_cb', $data['file'], $fileName);
             } catch (\Exception $storageException) {
                 Log::error("Excepción en Storage::putFileAs", [
@@ -234,7 +290,8 @@ class FileController extends Controller
                     "Usuario" => Auth::user()->id.": ".Auth::user()->name,
                     "Exception" => $storageException->getMessage(),
                     "File" => $storageException->getFile(),
-                    "Line" => $storageException->getLine()
+                    "Line" => $storageException->getLine(),
+                    "Trace" => $storageException->getTraceAsString()
                 ]);
             }
 
@@ -248,16 +305,16 @@ class FileController extends Controller
                     "Full Path" => Storage::disk('legajo_cb')->path($fileName)
                 ]);
 
-                ArchivoLegajo::Create(
-                    [
-                        'name' => $fileName,
-                        'description' => $data['description'],
-                        'ext' => $extension,
-                        'legajo_id' => $data['legajo_id'],
-                        'area_id' => $data['area_id']
-                    ]
-                );
-                Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);
+            ArchivoLegajo::Create(
+                [
+                    'name' => $fileName,
+                    'description' => $data['description'],
+                    'ext' => $extension,
+                    'legajo_id' => $data['legajo_id'],
+                    'area_id' => $data['area_id']
+                ]
+            );
+            Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);
             } else {
                 // Diagnóstico post-fallo
                 $postDirExists = is_dir($targetDir);
@@ -277,6 +334,48 @@ class FileController extends Controller
                     "Diagnostico Pre" => $diskInfo,
                     "Diagnostico Post" => $postDiskInfo
                 ]);
+
+                // Intentar método alternativo ya que sabemos que move_uploaded_file funciona
+                Log::info("Intentando método alternativo con move_uploaded_file", [
+                    "Modulo" => "File:uploadFileLegajo",
+                    "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                    "FileName" => $fileName
+                ]);
+
+                $alternativePath = $targetDir . '/' . $fileName;
+                $moveResult = move_uploaded_file($data['file']->getRealPath(), $alternativePath);
+
+                if ($moveResult) {
+                    Log::info("Método alternativo EXITOSO", [
+                        "Modulo" => "File:uploadFileLegajo",
+                        "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                        "File Path" => $alternativePath,
+                        "File Size" => file_exists($alternativePath) ? filesize($alternativePath) : 'N/A'
+                    ]);
+
+                    // Crear el registro en la base de datos
+                    ArchivoLegajo::Create([
+                        'name' => $fileName,
+                        'description' => $data['description'],
+                        'ext' => $extension,
+                        'legajo_id' => $data['legajo_id'],
+                        'area_id' => $data['area_id']
+                    ]);
+
+                    Log::info("Archivo guardado exitosamente con método alternativo", [
+                        "Modulo" => "File:uploadFileLegajo",
+                        "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                        "ID Legajo" => $data['legajo_id'],
+                        "Nombre File" => $fileName
+                    ]);
+                } else {
+                    Log::error("Método alternativo también FALLÓ", [
+                        "Modulo" => "File:uploadFileLegajo",
+                        "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                        "Alternative Path" => $alternativePath,
+                        "Last Error" => error_get_last()
+                    ]);
+                }
             }
         } catch (\Throwable $th) {
             Log::error("Se ha generado un error al momento de almacenar el FILE", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => $th->getMessage() ]);
@@ -337,14 +436,14 @@ class FileController extends Controller
                     "Full Path" => Storage::disk('public')->path($fileName)
                 ]);
 
-                Archivo::Create(
-                    [
-                        'name' => $fileName,
-                        'description' => $data['description'],
-                        'ext' => $extension[1],
-                        'tramite_id' => $data['tramite_id']
-                    ]
-                );
+            Archivo::Create(
+                [
+                    'name' => $fileName,
+                    'description' => $data['description'],
+                    'ext' => $extension[1],
+                    'tramite_id' => $data['tramite_id']
+                ]
+            );
                 Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadbase64","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Tramite" => $data['tramite_id'], "Nombre File" => $fileName ]);
             } else {
                 Log::error("Storage::disk()->put() FALLÓ - No se pudo guardar el archivo base64", [

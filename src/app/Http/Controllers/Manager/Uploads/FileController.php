@@ -122,6 +122,58 @@ class FileController extends Controller
             $extension = $data['file']->getClientOriginalExtension();
             $fileName = 'Legajo-ID-'.$data['legajo_id'].'-'.$data['description'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
 
+            // Diagnóstico previo antes de intentar guardar
+            $targetDir = Storage::disk('legajo_cb')->path('');
+            $dirExists = is_dir($targetDir);
+            $diskInfo = [
+                "directorio_existe" => $dirExists,
+                "es_escribible" => $dirExists ? is_writable($targetDir) : 'N/A',
+                "permisos" => $dirExists ? substr(sprintf('%o', fileperms($targetDir)), -4) : 'N/A',
+                "espacio_libre" => $dirExists && disk_free_space($targetDir) ? round(disk_free_space($targetDir) / 1024 / 1024, 2) . ' MB' : 'N/A',
+                "archivo_size" => round($data['file']->getSize() / 1024, 2) . ' KB',
+                "usuario_php" => get_current_user(),
+                "process_uid" => function_exists('posix_getuid') ? posix_getuid() : 'N/A',
+                "process_gid" => function_exists('posix_getgid') ? posix_getgid() : 'N/A'
+            ];
+
+            Log::info("Diagnóstico pre-upload", [
+                "Modulo" => "File:uploadFileLegajo",
+                "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                "Target Directory" => $targetDir,
+                "Diagnostico" => $diskInfo
+            ]);
+
+            // Intentar crear el directorio si no existe
+            if (!is_dir($targetDir)) {
+                $parentDir = dirname($targetDir);
+                $parentWritable = is_writable($parentDir);
+
+                Log::info("Directorio no existe, intentando crear", [
+                    "Modulo" => "File:uploadFileLegajo",
+                    "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                    "Directory" => $targetDir,
+                    "Parent Directory" => $parentDir,
+                    "Parent Writable" => $parentWritable
+                ]);
+
+                if ($parentWritable) {
+                    $dirCreated = mkdir($targetDir, 0755, true);
+                    Log::info("Resultado creación directorio", [
+                        "Modulo" => "File:uploadFileLegajo",
+                        "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                        "Directory" => $targetDir,
+                        "Creado" => $dirCreated ? 'SI' : 'NO'
+                    ]);
+                } else {
+                    Log::error("No se puede crear directorio - parent sin permisos", [
+                        "Modulo" => "File:uploadFileLegajo",
+                        "Usuario" => Auth::user()->id.": ".Auth::user()->name,
+                        "Directory" => $targetDir,
+                        "Parent Directory" => $parentDir
+                    ]);
+                }
+            }
+
             // Capturar el resultado del Storage::putFileAs
             $storagePath = Storage::putFileAs('legajo_cb', $data['file'], $fileName);
 
@@ -146,13 +198,23 @@ class FileController extends Controller
                 );
                 Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);
             } else {
-                                Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
+                // Diagnóstico post-fallo
+                $postDirExists = is_dir($targetDir);
+                $postDiskInfo = [
+                    "directorio_existe_post" => $postDirExists,
+                    "es_escribible_post" => $postDirExists ? is_writable($targetDir) : 'N/A',
+                    "espacio_libre_post" => $postDirExists && disk_free_space($targetDir) ? round(disk_free_space($targetDir) / 1024 / 1024, 2) . ' MB' : 'N/A',
+                ];
+
+                Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
                     "Modulo" => "File:uploadFileLegajo",
                     "Usuario" => Auth::user()->id.": ".Auth::user()->name,
                     "ID Legajo" => $data['legajo_id'],
                     "Nombre File" => $fileName,
                     "Disco" => 'legajo_cb',
-                    "Directorio Target" => Storage::disk('legajo_cb')->path('')
+                    "Directorio Target" => $targetDir,
+                    "Diagnostico Pre" => $diskInfo,
+                    "Diagnostico Post" => $postDiskInfo
                 ]);
             }
         } catch (\Throwable $th) {

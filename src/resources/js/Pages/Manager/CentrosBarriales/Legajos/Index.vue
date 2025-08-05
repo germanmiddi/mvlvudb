@@ -1018,85 +1018,8 @@ export default {
             this.tramites = "";
             let filter = `&length=${this.length}`;
 
-            if (this.filter.name) {
-                filter += `&name=${JSON.stringify(this.filter.name)}`;
-            }
-
-            if (this.filter.num_documento_nino) {
-                filter += `&num_documento_nino=${JSON.stringify(
-                    this.filter.num_documento_nino
-                )}`;
-            }
-
-            if (this.filter.num_documento_adulto) {
-                filter += `&num_documento_adulto=${JSON.stringify(
-                    this.filter.num_documento_adulto
-                )}`;
-            }
-
-            if (this.filter.escuela_id) {
-                filter += `&escuela_id=${JSON.stringify(
-                    this.filter.escuela_id
-                )}`;
-            }
-
-            if (this.filter.date) {
-                filter += `&date=${JSON.stringify(this.filter.date)}`;
-            }
-
-            if (this.filter.estado_id) {
-                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`;
-            }
-
-            if (this.filter.tipo_legajo_id) {
-                filter += `&tipo_legajo_id=${JSON.stringify(
-                    this.filter.tipo_legajo_id
-                )}`;
-            }
-
-            if (this.filter.sede_id) {
-                filter += `&sede_id=${JSON.stringify(this.filter.sede_id)}`;
-            }
-
-            if (this.filter.semaforo_id) {
-                filter += `&semaforo_id=${JSON.stringify(
-                    this.filter.semaforo_id
-                )}`;
-            }
-
-            if (this.filter.gabinete_id) {
-                filter += `&gabinete_id=${JSON.stringify(
-                    this.filter.gabinete_id
-                )}`;
-            }
-
-            if (this.filter.min_years) {
-                filter += `&min_years=${JSON.stringify(this.filter.min_years)}`;
-            }
-
-            if (this.filter.max_years) {
-                filter += `&max_years=${JSON.stringify(this.filter.max_years)}`;
-            }
-
-            if (this.filter.prueba_date) {
-                filter += `&prueba_date=${JSON.stringify(
-                    this.filter.prueba_date
-                )}`;
-            }
-
-            if (this.filter.prueba_estado_id) {
-                filter += `&prueba_estado_id=${JSON.stringify(
-                    this.filter.prueba_estado_id
-                )}`;
-            }
-
-            if (this.filter.genero) {
-                filter += `&genero=${JSON.stringify(this.filter.genero)}`;
-            }
-
-            if (this.filter.emprendedores) {
-                filter += `&emprendedores=${JSON.stringify(this.filter.emprendedores)}`;
-            }
+            // Usar la función auxiliar para construir los filtros
+            filter += this.buildFilterString();
 
             const get = `${route("legajoCB.list")}?${filter}`;
 
@@ -1183,13 +1106,101 @@ export default {
                 return true;
             }
         },
+        buildFilterString() {
+            let filter = "";
+
+            if (this.filter.name) {
+                filter += `&name=${JSON.stringify(this.filter.name)}`;
+            }
+
+            if (this.filter.num_documento_nino) {
+                filter += `&num_documento_nino=${JSON.stringify(
+                    this.filter.num_documento_nino
+                )}`;
+            }
+
+            if (this.filter.num_documento_adulto) {
+                filter += `&num_documento_adulto=${JSON.stringify(
+                    this.filter.num_documento_adulto
+                )}`;
+            }
+
+            if (this.filter.escuela_id) {
+                filter += `&escuela_id=${JSON.stringify(
+                    this.filter.escuela_id
+                )}`;
+            }
+
+            if (this.filter.date) {
+                filter += `&date=${JSON.stringify(this.filter.date)}`;
+            }
+
+            if (this.filter.estado_id) {
+                filter += `&estado_id=${JSON.stringify(this.filter.estado_id)}`;
+            }
+
+            if (this.filter.tipo_legajo_id) {
+                filter += `&tipo_legajo_id=${JSON.stringify(
+                    this.filter.tipo_legajo_id
+                )}`;
+            }
+
+            if (this.filter.sede_id) {
+                filter += `&sede_id=${JSON.stringify(this.filter.sede_id)}`;
+            }
+
+            if (this.filter.semaforo_id) {
+                filter += `&semaforo_id=${JSON.stringify(
+                    this.filter.semaforo_id
+                )}`;
+            }
+
+            if (this.filter.gabinete_id) {
+                filter += `&gabinete_id=${JSON.stringify(
+                    this.filter.gabinete_id
+                )}`;
+            }
+
+            if (this.filter.min_years) {
+                filter += `&min_years=${JSON.stringify(this.filter.min_years)}`;
+            }
+
+            if (this.filter.max_years) {
+                filter += `&max_years=${JSON.stringify(this.filter.max_years)}`;
+            }
+
+            if (this.filter.prueba_date) {
+                filter += `&prueba_date=${JSON.stringify(
+                    this.filter.prueba_date
+                )}`;
+            }
+
+            if (this.filter.prueba_estado_id) {
+                filter += `&prueba_estado_id=${JSON.stringify(
+                    this.filter.prueba_estado_id
+                )}`;
+            }
+
+            if (this.filter.genero) {
+                filter += `&genero=${JSON.stringify(this.filter.genero)}`;
+            }
+
+            if (this.filter.emprendedores) {
+                filter += `&emprendedores=${JSON.stringify(this.filter.emprendedores)}`;
+            }
+
+            return filter;
+        },
         async generateReport() {
             this.filter.dependencia_id = 12;
             this.processReport = true;
-            let rt = route("report.exportInscriptosCBExcel");
+
+            // Construir la URL con los mismos filtros que getLegajos()
+            const filterString = this.buildFilterString();
+            let rt = route("legajoCB.downloadLegajosCB") + "?" + filterString.substring(1); // Remover el primer &
 
             try {
-                const response = await axios.post(rt, this.filter, {
+                const response = await axios.get(rt, {
                     responseType: "blob", // Especifica que esperamos un archivo binario (Blob)
                 });
 
@@ -1204,7 +1215,7 @@ export default {
                 // Crear un enlace <a> para iniciar la descarga
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "Resumen de Inscriptos.xlsx"; // Nombre del archivo
+                a.download = "Legajos_CB_Filtrados.xlsx"; // Nombre del archivo más descriptivo
                 a.style.display = "none";
 
                 // Agregar el enlace al cuerpo del documento y hacer clic en él

@@ -567,6 +567,168 @@ class LegajosCBController extends Controller
             ->withQueryString();
     }
 
+    public function download_legajos_cb()
+    {
+        // Usar la misma lógica de filtros que la función list()
+        $result = LegajoCB::query();
+
+        if (request('name')) {
+            $name = json_decode(request('name'));
+            $result->whereIn('id', function ($sub) use ($name) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->where('person.name', 'LIKE', '%' . $name . '%')
+                    ->orWhere('person.lastname', 'LIKE', '%' . $name . '%');
+            });
+        }
+
+        if (request('num_documento_nino')) {
+            $num_documento_nino = json_decode(request('num_documento_nino'));
+            $result->whereIn('id', function ($sub) use ($num_documento_nino) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_nino . '%');
+            });
+        }
+
+        if (request('genero')) {
+            $genero = json_decode(request('genero'));
+            if ($genero === 'N') {
+                $result->whereIn('id', function ($sub) use ($genero) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->whereNull('person.genero');
+                });
+            } else {
+                $result->whereIn('id', function ($sub) use ($genero) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->where('person.genero', $genero);
+                });
+            }
+        }
+
+        if (request('num_documento_adulto')) {
+            $num_documento_adulto = json_decode(request('num_documento_adulto'));
+            $result->whereIn('id', function ($sub) use ($num_documento_adulto) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.responsable_id')
+                    ->where('person.num_documento', 'LIKE', '%' . $num_documento_adulto . '%');
+            });
+        }
+
+        if (request('escuela_id')) {
+            $escuela_id = json_decode(request('escuela_id'));
+            $result->whereIn('id', function ($sub) use ($escuela_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                    ->join('education_data', 'education_data.person_id', '=', 'person.id')
+                    ->where(function ($query) use ($escuela_id) {
+                        $query->where('education_data.escuela_primaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_secundaria_id', $escuela_id)
+                            ->orWhere('education_data.escuela_nocturna_id', $escuela_id)
+                            ->orWhere('education_data.escuela_infante_id', $escuela_id)
+                            ->orWhere('education_data.escuela_id', $escuela_id);
+                    });
+            });
+        }
+
+        if (request('date')) {
+            $date = json_decode(request('date'));
+            $from = date('Y-m-d', strtotime($date[0]));
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+            $result->where('fecha_inscripcion', '>=', $from)
+                ->where('fecha_inscripcion', '<', $to);
+        }
+
+        if (request('estado_id')) {
+            $estado_id = json_decode(request('estado_id'));
+            $result->where('estado_id', $estado_id);
+        }
+
+        if (request('tipo_legajo_id')) {
+            $tipo_legajo_id = json_decode(request('tipo_legajo_id'));
+            $result->where('tipo_legajo_id', $tipo_legajo_id);
+        }
+
+        if (request('sede_id')) {
+            $sede_id = json_decode(request('sede_id'));
+            $result->where('sede_id', $sede_id);
+        }
+
+        if (request('semaforo_id')) {
+            $semaforo = json_decode(request('semaforo_id'));
+            $result->where('semaforo_id', $semaforo);
+        }
+
+        if (request('min_years') && request('max_years')) {
+            $min_years = (int) trim(request('min_years'), '"');
+            $max_years = (int) trim(request('max_years'), '"');
+
+            if ($max_years > 0 && $max_years > $min_years) {
+                $dates = $this->getDatesByYearsOld($min_years, $max_years);
+                $result->whereIn('id', function ($sub) use ($dates) {
+                    $sub->selectRaw('legajos_cb.id')
+                        ->from('legajos_cb')
+                        ->join('person', 'person.id', '=', 'legajos_cb.person_id')
+                        ->whereBetween('person.fecha_nac', $dates);
+                });
+            }
+        }
+
+        if (request('gabinete_id')) {
+            $gabinete = json_decode(request('gabinete_id'));
+            $tipo_legajo_id = json_decode(request('tipo_legajo_id'));
+            $result->whereIn('id', function ($sub) use ($gabinete, $tipo_legajo_id) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('gabinetes_cb', 'gabinetes_cb.legajo_id', '=', 'legajos_cb.id')
+                    ->where('gabinetes_cb.estado_id', '=', $gabinete);
+            });
+        }
+
+        // Filtro para Pruebas Pedagógicas
+        if (request('prueba_date') || request('prueba_estado_id')) {
+            $pruebaDate = request('prueba_date') ? json_decode(request('prueba_date')) : null;
+            $estadoPedagogia = request('prueba_estado_id') ? json_decode(request('prueba_estado_id')) : null;
+
+            $result->whereIn('id', function ($sub) use ($pruebaDate, $estadoPedagogia) {
+                $sub->selectRaw('legajos_cb.id')
+                    ->from('legajos_cb')
+                    ->join('legajo_pedagogia', 'legajo_pedagogia.legajo_id', '=', 'legajos_cb.id');
+
+                if ($pruebaDate) {
+                    $from = Carbon::parse($pruebaDate[0])->startOfDay()->toDateString();
+                    $to = Carbon::parse($pruebaDate[1])->addDay()->endOfDay()->toDateString();
+                    $sub->whereBetween('legajo_pedagogia.fecha_prueba', [$from, $to]);
+                }
+                if ($estadoPedagogia) {
+                    $sub->where('legajo_pedagogia.estado_id', '=', $estadoPedagogia);
+                }
+            });
+        }
+
+        if (request('emprendedores')) {
+            $result->whereHas('emprendedor', function ($query) {
+                $query->where('participa', 1);
+            });
+        }
+
+        // Obtener los legajos filtrados con sus relaciones
+        $legajos = $result->with('person', 'sede', 'estadocbj', 'tipo_legajo', 'responsable', 'parentesco', 'autorizacion')
+            ->orderBy("legajos_cb.id", 'DESC')
+            ->get();
+
+        // Usar la clase Export para generar el archivo Excel
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LegajosCBExport($legajos), 'Legajos_CB_Filtrados.xlsx');
+    }
+
     public function getDatesByYearsOld($min_years, $max_years)
     {
         $today = Carbon::today();

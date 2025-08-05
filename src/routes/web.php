@@ -372,6 +372,8 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update-estado-programa/{id}', [LegajosCBController::class, 'update_estado_programa'])->name('legajoCB.updateEstadoPrograma');
             Route::put('/update-estado-actividad/{id}', [LegajosCBController::class, 'update_estado_actividad'])->name('legajoCB.updateEstadoActividad');
 
+            Route::get('/download-legajos-cb', [LegajosCBController::class, 'download_legajos_cb'])->name('legajoCB.downloadLegajosCB');
+
             Route::post('/store-programa-social', [LegajosCBController::class, 'store_programa_social'])->name('legajoCB.storeProgramaSocial');
             Route::post('/store-actividad', [LegajosCBController::class, 'store_actividad'])->name('legajoCB.storeActividad');
             Route::post('/store-intervencion', [LegajosCBController::class, 'store_intervencion'])->name('legajoCB.storeIntervencion');

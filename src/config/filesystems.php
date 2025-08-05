@@ -40,9 +40,14 @@ return [
             'root' => storage_path('app/tramites'),
         ],
 
+
         'legajo_cb' => [
             'driver' => 'local',
-            'root' => storage_path('app/legajo_cb'),
+            'root' => storage_path('app/public/legajo_cb'), // La ruta correcta para archivos públicos
+            'url' => env('APP_URL').'/storage/legajo_cb', // Opcional, pero útil para generar URLs
+            'visibility' => 'public',
+            // 'driver' => 'local',
+            // 'root' => storage_path('app/legajo_cb'),
         ],
 
         'restore_legacy' => [

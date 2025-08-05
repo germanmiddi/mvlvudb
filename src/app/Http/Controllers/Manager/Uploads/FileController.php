@@ -123,7 +123,7 @@ class FileController extends Controller
             $fileName = 'Legajo-ID-'.$data['legajo_id'].'-'.$data['description'].'-'.Carbon::now().'.'.$extension; // Generar un nuevo nombre para el archivo
 
             // Capturar el resultado del Storage::putFileAs
-            $storagePath = Storage::putFileAs('public/legajo_cb', $data['file'], $fileName);
+            $storagePath = Storage::putFileAs('legajo_cb', $data['file'], $fileName);
 
             if ($storagePath) {
                 Log::info("Storage::putFileAs EXITOSO", [
@@ -132,7 +132,7 @@ class FileController extends Controller
                     "ID Legajo" => $data['legajo_id'],
                     "Nombre File" => $fileName,
                     "Storage Path" => $storagePath,
-                    "Full Path" => Storage::disk('public/legajo_cb')->path($fileName)
+                    "Full Path" => Storage::disk('legajo_cb')->path($fileName)
                 ]);
 
                 ArchivoLegajo::Create(
@@ -275,7 +275,7 @@ class FileController extends Controller
         $archivo = ArchivoLegajo::where('id', $id)->first();
 
         // Verificar si el archivo existe
-        if (!Storage::disk('public/legajo_cb')->exists($archivo['name'])) {
+        if (!Storage::disk('legajo_cb')->exists($archivo['name'])) {
             Log::error("Se ha generado un error al momento de descargar el FILE", ["Modulo" => "File:renderfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Error" => 'File no existente' ]);
             abort(404);
         }

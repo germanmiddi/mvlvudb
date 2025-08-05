@@ -97,7 +97,7 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
             $person_tramite = $query->get();
 
             foreach ($person_tramite as $pt) {
-                // Recorro las personas asociadas, y se cargan los datos del tramite. 
+                // Recorro las personas asociadas, y se cargan los datos del tramite.
                 $data_temp = [];
                 $data_temp['Id'] = $tramite['id'] + 12000000;
                 $data_temp['Fecha'] = $tramite->getFecha();
@@ -106,10 +106,14 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 $data_temp['Dependencia'] = $tramite->dependencia->description;
                 $data_temp['Estado Tramite'] = $tramite->estado->description;
                 $data_temp['Asignado'] = $tramite->assigned->name ?? null;
-                $data_temp['Email del Asignado'] = User::where('users.id', $tramite['assigned'])->first()->email ?? '';
+                $data_temp['Email del Asignado'] = $tramite->assigned->email ?? '';
 
-                //Person
-                $person = $persons->where('id', $pt->person_id)->first();
+                //Person - Usar acceso directo por clave en lugar de búsqueda
+                $person = $persons->get($pt->person_id);
+
+                if (!$person) {
+                    continue; // Saltar si no se encuentra la persona
+                }
 
                 $data_temp['Nombre'] = $person->name;
                 $data_temp['Apellido'] = $person->lastname;
@@ -120,7 +124,7 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 $data_temp['Telefono'] = $person->contact[0]->phone ?? null;
                 $data_temp['Celular'] = $person->contact[0]->celular ?? null;
                 $data_temp['Email'] = $person->contact[0]->email ?? null;
-                //LegajoCBData
+                //LegajoCBData - Usar acceso directo por clave
                 $cb = $cbs->where('person_id', $pt->person_id)->first();
 
                 if (isset($cb)) {
@@ -191,8 +195,8 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                     $data_temp['Observacion'] = null;
                 }
 
-                //CUD
-                $cud = $cuds->where('person_id', $person->id)->first();
+                //CUD - Usar acceso directo por clave
+                $cud = $cuds->get($person->id);
                 if (isset($cud)) {
                     $data_temp['Posee Cud'] = $cud->posee_cud === null ? 'No' : ($cud->posee_cud == 1 ? 'Si' : 'No');
                     $data_temp['Presento Cud'] = $cud->presento_cud === null ? 'No' : ($cud->presento_cud == 1 ? 'Si' : 'No');
@@ -234,8 +238,8 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                 $data_temp['Realiza Permanencia'] = isset($person->education[0]->permanencia) && $person->education[0]->permanencia == 1 ? 'Si' : 'No';
                 $data_temp['Observacion'] = $person->education[0]->observacion ?? null;
 
-                //CB DATA
-                $cbJI = $cbsJI->where('tramite_id', $tramite->id)->first();
+                //CB DATA - Usar acceso directo por clave
+                $cbJI = $cbsJI->get($tramite->id);
                 $data_temp['Año Inicio'] = $cbJI->anio_inicio ?? null;
 
 
@@ -245,7 +249,7 @@ class InscriptosCBExport implements WithStyles, FromView, ShouldAutoSize
                         ($cbJI->estadoCbj ? $cbJI->estadoCbj->description : null) : null);
 
 
-                $gabinete = isset($cb) ? $gabinetes->where('legajo_id', $cb->id)->first() : null;
+                $gabinete = isset($cb) ? $gabinetes->get($cb->id) : null;
                 $data_temp['Estado Gabinete'] = isset($gabinete->estado_id) ? $gabinete->estado->description : null;
                 $data_temp['Acompañamiento'] = isset($cbJI->acompanamiento_cbj_id) ? $cbJI->acompanamiento->description : null;
 

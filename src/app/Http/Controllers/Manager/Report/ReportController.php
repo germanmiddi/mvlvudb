@@ -39,7 +39,7 @@ class ReportController extends Controller
     public function summary()
     {
         //$length = request('length');
-        
+
         $result = Tramite::query();
             //->with('person_tramite') // Carga la relación "documentos" para evitar problemas de carga perezosa (eager loading)
             //->orderBy('person_tramite.rol_tramite_id', 'asc') // Ordena los trámites por la columna "fecha" de la relación "documentos" de forma descendente
@@ -54,8 +54,8 @@ class ReportController extends Controller
             $date = json_decode(request('date'));
 
             $from = date('Y-m-d', strtotime($date[0]));
-            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1]))); 
-                   
+            $to = date('Y-m-d', strtotime("+1 day", strtotime($date[1])));
+
             $result->where('fecha','>=', $from)
                     ->where('fecha', '<', $to);
         }
@@ -73,8 +73,8 @@ class ReportController extends Controller
         if($request->date){
 
             $data['from'] = date('Y-m-d', strtotime($request->date[0]));
-            $data['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
-                   
+            $data['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1])));
+
         }
         if($request->dependencia_id){
             $data['dependencia_id'] = json_decode($request->dependencia_id);
@@ -106,26 +106,26 @@ class ReportController extends Controller
 
         if(isset($request->boton_antipanico)){
             $data['boton_antipanico'] = json_decode($request->boton_antipanico);
-        } 
+        }
 
         if(isset($request->modalidad_atencion_id)){
             $data['modalidad_atencion_id'] = json_decode($request->modalidad_atencion_id);
-        } 
+        }
 
         if(isset($request->categoria_id)){
             $data['categoria_id'] = json_decode($request->categoria_id);
-        } 
+        }
 
         if($request->user_id){
             $data['user_id'] = json_decode($request->user_id);
         }
-        
+
         return Excel::download(new TramitesExport($data), 'tramites.xlsx');
     }
     public function exportTest(Request $request){
         $updateOrder = $request->input('updateOrder');
         $query = Tramite::query();
-        
+
         $query = $query
         ->join('person_tramite', 'person_tramite.tramite_id', '=', 'tramites.id')
         ->join('person', 'person.id', '=', 'person_tramite.person_id');
@@ -149,13 +149,13 @@ class ReportController extends Controller
             $columns[] = $item['table'] . '.' . $item['column'] . ' ' . 'as' . ' ' . $item['label'];
             $titles[] = $item['label'];
         }
-        
+
         if (empty($columns)) {
             return response()->json(['error' => 'No hay columnas activas para exportar.'], 400);
         }
-        
+
         $query->select($columns)->where('person_tramite.rol_tramite_id', '1');
-        
+
         $data = $query->get();
 
         return Excel::download(new TestExport($data, $titles), 'tramites.xlsx');
@@ -185,7 +185,7 @@ class ReportController extends Controller
                     break;
                 case 'tramites':
                     break;
-                
+
                 default:
                     break;
             }
@@ -197,17 +197,12 @@ class ReportController extends Controller
     }
 
     public function exportInscriptosCBExcel(Request $request){
+        // Aumentar el límite de memoria para exportaciones grandes
+        ini_set('memory_limit', '512M');
+        set_time_limit(300); // 5 minutos
 
-        $cuds = Cud::with('person')->get();
-
-        $cbsJI = CbiData::with('estadoCbi', 'estadoGabineteCb')->get()
-            ->merge(
-                CbjData::with('estadoCbj', 'acompanamiento')->get()
-            );
-        $gabinetes = GabineteCB::with('legajo', 'estado')->get();
-        
         $values = [];
-        
+
         $cbsQuery = LegajoCB::with('responsable', 'autorizacion', 'sede', 'canal_atencion', 'estadocbj', 'autorizacion', 'tipo_legajo', 'parentesco', 'gabinete');
 
         // Filtros
@@ -223,14 +218,14 @@ class ReportController extends Controller
         if ($request->estado_id) {
             $cbsQuery->where('estado_id', $request['estado_id']);
         }
-        
+
         if ($request->tipo_legajo_id) {
             $cbsQuery->where('tipo_legajo_id', $request['tipo_legajo_id']);
             $values['tipo_legajo_id'] = json_decode($request->tipo_legajo_id);
         } else {
-            $values['tipo_legajo_id'] = [1, 2]; 
+            $values['tipo_legajo_id'] = [1, 2];
         }
-        
+
         if ($request->sede_id) {
             $cbsQuery->where('sede_id', $request['sede_id']);
         }
@@ -263,12 +258,12 @@ class ReportController extends Controller
                     ->where('person.num_documento', 'LIKE', '%' . $num_documento_adulto . '%');
             });
         }
-        
+
         // Aplicar los filtros de edad
         if ($request->min_years && $request->max_years) {
             $minYears = (int)$request['min_years'];
             $maxYears = (int)$request['max_years'];
-            
+
             if($maxYears > 0 && $maxYears > $minYears){
                 $dates = $this->getDatesByYearsOld($minYears, $maxYears);
                 $cbsQuery->whereIn('id', function ($sub) use ($dates) {
@@ -281,7 +276,7 @@ class ReportController extends Controller
         }
         if ($request->escuela_id) {
             $escuela_id = $request->escuela_id;
-            
+
             $cbsQuery->whereIn('id', function ($sub) use ($escuela_id) {
                 $sub->selectRaw('legajos_cb.id')
                     ->from('legajos_cb')
@@ -296,12 +291,21 @@ class ReportController extends Controller
                     });
             });
         }
-        
+
         $cbs = $cbsQuery->get();
 
         $personIds = ($request->sede_id || $request->tipo_legajo_id || $request->estado_id || $request->num_documento_adulto || $request->num_documento_nino || $request->escuela_id  || $request->name || $request->min_years || $request->max_years || $request->date) ? $cbs->pluck('person_id')->toArray() : [];
-        $persons = Person::with('address', 'education', 'tipoDoc')->get();
-        
+
+        // Solo cargar personas que realmente necesitamos
+        $allPersonIds = $cbs->pluck('person_id')->unique()->toArray();
+        $responsableIds = $cbs->pluck('responsable_id')->filter()->unique()->toArray();
+        $requiredPersonIds = array_unique(array_merge($allPersonIds, $responsableIds));
+
+        $persons = Person::with('address', 'education', 'tipoDoc', 'contact')
+            ->whereIn('id', $requiredPersonIds)
+            ->get()
+            ->keyBy('id'); // Indexar por ID para búsquedas más rápidas
+
         //Ver como hacer con el tema de tipo de trámite
         //Ya que estan 144,145,146 (barrial, juventud, infancia)
         switch ($request->tipo_legajo_id) {
@@ -328,7 +332,7 @@ class ReportController extends Controller
                     'Estado Tramite',
                     'Asignado',
                     'Email del Asignado',
-        
+
                     //Person
                     'Nombre',
                     'Apellido',
@@ -339,7 +343,7 @@ class ReportController extends Controller
                     'Telefono',
                     'Celular',
                     'Email',
-        
+
                     //LegajoCB
                     'Nro Legajo',
                     'Sede',
@@ -351,13 +355,13 @@ class ReportController extends Controller
                     'Autorizacion Firmada',
                     'Autorizacion Retirarse',
                     'Autorizacion Uso de Imagen',
-                    
+
                     //Adulto Responsable
                     'Adulto Nombre',
                     'Adulto Apellido',
                     'Adulto Documento',
                     'Adulto Parentesco',
-        
+
                     //Direccion
                     'Localidad',
                     'Calle',
@@ -365,7 +369,7 @@ class ReportController extends Controller
                     'Piso',
                     'Dpto',
                     'Observacion',
-        
+
                     //Salud
                     'Apto medico',
                     'Fecha de Apto Medico',
@@ -379,7 +383,7 @@ class ReportController extends Controller
                     'Posee Cud',
                     'Presento Cud',
                     'Cud Vencimiento',
-        
+
                     //Educación
                     'Escuela',
                     'Nivel Educativo',
@@ -390,7 +394,7 @@ class ReportController extends Controller
                     'Localidad',
                     'Realiza Permanencia',
                     'Observacion',
-        
+
                     //CBData
                     'Año Inicio',
                     'Estado CB',
@@ -398,14 +402,50 @@ class ReportController extends Controller
                     'Acompañamiento',
                 ];
 
+        // Solo cargar los datos que realmente necesitamos basados en los trámites filtrados
+        $tramitesQuery = Tramite::whereIn('dependencia_id', $values['dependencia_id'])
+            ->with(['canalAtencion', 'sede', 'tipoTramite', 'dependencia', 'parentesco', 'estado', 'assigned', 'category', 'modalidadAtencion', 'rol_tramite']);
+
+        // Filtra por person_id si no está vacio
+        if (!empty($personIds)) {
+            $tramitesQuery->whereHas('persons', function ($query) use ($personIds) {
+                $query->whereIn('person_id', $personIds)
+                    ->where('rol_tramite_id', '!=', 2);
+            });
+        }
+        $tramites = $tramitesQuery->get();
+        $tramiteIds = $tramites->pluck('id')->toArray();
+
+        // Solo cargar CUDs, CBsJI y gabinetes necesarios
+        $cuds = Cud::with('person')
+            ->whereIn('person_id', $requiredPersonIds)
+            ->get()
+            ->keyBy('person_id');
+
+        $cbsJI = CbiData::with('estadoCbi', 'estadoGabineteCb')
+            ->whereIn('tramite_id', $tramiteIds)
+            ->get()
+            ->merge(
+                CbjData::with('estadoCbj', 'acompanamiento')
+                    ->whereIn('tramite_id', $tramiteIds)
+                    ->get()
+            )
+            ->keyBy('tramite_id');
+
+        $legajoIds = $cbs->pluck('id')->toArray();
+        $gabinetes = GabineteCB::with('legajo', 'estado')
+            ->whereIn('legajo_id', $legajoIds)
+            ->get()
+            ->keyBy('legajo_id');
+
         return Excel::download(new InscriptosCBExport($values, $titles, $persons, $cbs, $cuds, $cbsJI, $gabinetes, $personIds), 'InscriptosCB.xlsx');
     }
-    
+
     // if($request->date){
 
     //     $values['from'] = date('Y-m-d', strtotime($request->date[0]));
-    //     $values['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1]))); 
-               
+    //     $values['to'] = date('Y-m-d', strtotime("+1 day", strtotime($request->date[1])));
+
     // }
     public function exportPersonsExcel(Request $request){
         $data = [];

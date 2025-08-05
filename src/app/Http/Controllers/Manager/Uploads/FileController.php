@@ -146,13 +146,13 @@ class FileController extends Controller
                 );
                 Log::info("Se ha almacenado un FILE ", ["Modulo" => "File:uploadFileLegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "ID Legajo" => $data['legajo_id'], "Nombre File" => $fileName ]);
             } else {
-                Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
+                                Log::error("Storage::putFileAs FALLÓ - No se pudo guardar el archivo", [
                     "Modulo" => "File:uploadFileLegajo",
                     "Usuario" => Auth::user()->id.": ".Auth::user()->name,
                     "ID Legajo" => $data['legajo_id'],
                     "Nombre File" => $fileName,
-                    "Disco" => 'public/legajo_cb',
-                    "Directorio Target" => Storage::disk('public/legajo_cb')->path('')
+                    "Disco" => 'legajo_cb',
+                    "Directorio Target" => Storage::disk('legajo_cb')->path('')
                 ]);
             }
         } catch (\Throwable $th) {
@@ -251,7 +251,7 @@ class FileController extends Controller
         }
         // Generar la respuesta de descarga
         Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:downloadfile","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
-        return response()->download(storage_path('app/public/' . $archivo['name']));
+        return response()->download(Storage::disk('public')->path($archivo['name']));
     }
 
     public function downloadfilelegajo($id)
@@ -266,7 +266,7 @@ class FileController extends Controller
         }
         // Generar la respuesta de descarga
         Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:downloadfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
-        return response()->download(storage_path('app/legajo_cb/' . $archivo['name']));
+        return response()->download(Storage::disk('legajo_cb')->path($archivo['name']));
     }
 
     public function renderfilelegajo($id)
@@ -281,7 +281,7 @@ class FileController extends Controller
         }
         // Generar la respuesta de descarga
         Log::info("Se ha realizado la descarga de un FILE ", ["Modulo" => "File:renderfilelegajo","Usuario" => Auth::user()->id.": ".Auth::user()->name, "Nombre File" => $archivo['name'] ]);
-        return response()->file(storage_path('app/public/legajo_cb/' . $archivo['name']));
+        return response()->file(Storage::disk('legajo_cb')->path($archivo['name']));
 
     }
 

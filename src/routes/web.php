@@ -255,6 +255,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store_escuela/', [MasterdataController::class, 'store_escuela'])->name('masterdata.store_escuela');
         Route::post('/update_escuela/', [MasterdataController::class, 'update_escuela'])->name('masterdata.update_escuela');
         Route::post('/hide_escuela/', [MasterdataController::class, 'hide_escuela'])->name('masterdata.hide_escuela');
+        Route::post('/export_escuelas/', [MasterdataController::class, 'export_escuelas'])->name('masterdata.export_escuelas');
+        Route::post('/import_escuelas/', [MasterdataController::class, 'import_escuelas'])->name('masterdata.import_escuelas');
 
         Route::get('/get_centro_salud', [MasterdataController::class, 'get_centroSalud'])->name('masterdata.get_centro_salud');
         Route::post('/store_centro_salud/', [MasterdataController::class, 'store_centroSalud'])->name('masterdata.store_centro_salud');

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Manager\Masterdata;
 
 use App\Exports\MasterDataExport;
+use App\Exports\EscuelasExport;
+use App\Imports\EscuelasCbiImport;
 use App\Models\Manager\CentroSalud;
 use App\Models\Manager\EducationData;
 use App\Models\Manager\EscuelaDependencia;
@@ -228,6 +230,40 @@ class MasterdataController extends Controller
     public function export_datos(Request $request)
     {
         return Excel::download(new MasterDataExport(), 'masteData.xlsx');
+    }
+
+    public function export_escuelas(Request $request)
+    {
+        $dependencia_id = $request->input('dependencia_id');
+        return Excel::download(new EscuelasExport($dependencia_id), 'escuelas.xlsx');
+    }
+
+    public function import_escuelas(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls|max:10240', // máximo 10MB
+                'dependencia_id' => 'nullable|integer'
+            ]);
+
+            $archivoExcel = $request->file('file');
+            $dependencia_id = $request->input('dependencia_id');
+
+            $import = new EscuelasCbiImport($dependencia_id);
+            Excel::import($import, $archivoExcel);
+
+            $status = $import->getStatus();
+
+            return response()->json([
+                'message' => 'Se ha finalizado el proceso de importación de escuelas.',
+                'status' => $status
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al procesar el archivo: ' . $e->getMessage()
+            ], 422);
+        }
     }
 
     /// Programas Sociales - Centros Barriales..

@@ -25,6 +25,8 @@ use App\Models\Manager\Escuela;
 use App\Models\Manager\ProgramaSocialCB;
 use Carbon\Carbon;
 use App\Models\Manager\TipoTramite;
+use App\Models\Padron;
+use App\Models\Manager\CajasMotivoSuspension;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MasterdataController extends Controller
@@ -750,5 +752,180 @@ class MasterdataController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    /**
+     * PADRONES
+     */
+
+    public function get_padrones()
+    {
+        $padrones = Padron::orderBy('fecha_inicio', 'desc')->get();
+        return response()->json($padrones);
+    }
+
+    public function store_padron(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'activo' => 'boolean'
+        ]);
+
+        $padron = Padron::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'activo' => $request->activo ?? true,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Padrón creado correctamente'], 200);
+    }
+
+    public function update_padron(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:padrones,id',
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'activo' => 'boolean'
+        ]);
+
+        $padron = Padron::find($request->id);
+
+        if (!$padron) {
+            return response()->json(['message' => 'Padrón no encontrado'], 404);
+        }
+
+        $padron->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'activo' => $request->activo,
+            'updated_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Padrón actualizado correctamente'], 200);
+    }
+
+    public function hide_padron(Request $request)
+    {
+        $padron = Padron::find($request->id);
+
+        if (!$padron) {
+            return response()->json(['message' => 'Padrón no encontrado'], 404);
+        }
+
+        $padron->activo = !$padron->activo;
+        $padron->save();
+
+        return response()->json(['message' => 'Estado del padrón actualizado correctamente'], 200);
+    }
+
+    public function destroy_padron(Request $request)
+    {
+        $padron = Padron::find($request->id);
+
+        if (!$padron) {
+            return response()->json(['message' => 'Padrón no encontrado'], 404);
+        }
+
+        // Verificar si hay entrevistas asociadas
+        $entrevistasAsociadas = $padron->cajasEntrevistas()->count();
+        if ($entrevistasAsociadas > 0) {
+            return response()->json(['message' => 'No se puede eliminar este padrón porque tiene entrevistas asociadas'], 422);
+        }
+
+        $padron->delete();
+
+        return response()->json(['message' => 'Padrón eliminado correctamente'], 200);
+    }
+
+    /**
+     * MOTIVOS DE SUSPENSIÓN
+     */
+
+    public function get_motivos_suspension()
+    {
+        $motivos = CajasMotivoSuspension::orderBy('description', 'asc')->get();
+        return response()->json($motivos);
+    }
+
+    public function store_motivo_suspension(Request $request)
+    {
+        $request->validate([
+            'description' => 'required|string|max:255',
+        ]);
+
+        $motivo = CajasMotivoSuspension::create([
+            'description' => $request->description,
+            'activo' => 1,
+            'created_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Motivo de suspensión creado correctamente'], 200);
+    }
+
+    public function update_motivo_suspension(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:cajas_motivos_suspension,id',
+            'description' => 'required|string|max:255',
+            'activo' => 'boolean'
+        ]);
+
+        $motivo = CajasMotivoSuspension::find($request->id);
+
+        if (!$motivo) {
+            return response()->json(['message' => 'Motivo de suspensión no encontrado'], 404);
+        }
+
+        $motivo->update([
+            'description' => $request->description,
+            'activo' => $request->activo,
+            'updated_at' => Carbon::now()
+        ]);
+
+        return response()->json(['message' => 'Motivo de suspensión actualizado correctamente'], 200);
+    }
+
+    public function hide_motivo_suspension(Request $request)
+    {
+        $motivo = CajasMotivoSuspension::find($request->id);
+
+        if (!$motivo) {
+            return response()->json(['message' => 'Motivo de suspensión no encontrado'], 404);
+        }
+
+        $motivo->activo = !$motivo->activo;
+        $motivo->save();
+
+        return response()->json(['message' => 'Estado del motivo actualizado correctamente'], 200);
+    }
+
+    public function destroy_motivo_suspension(Request $request)
+    {
+        $motivo = CajasMotivoSuspension::find($request->id);
+
+        if (!$motivo) {
+            return response()->json(['message' => 'Motivo de suspensión no encontrado'], 404);
+        }
+
+        // Verificar si hay entrevistas asociadas
+        $entrevistasAsociadas = $motivo->cajasEntrevistas()->count();
+        if ($entrevistasAsociadas > 0) {
+            return response()->json(['message' => 'No se puede eliminar este motivo porque tiene entrevistas asociadas'], 422);
+        }
+
+        $motivo->delete();
+
+        return response()->json(['message' => 'Motivo de suspensión eliminado correctamente'], 200);
     }
 }

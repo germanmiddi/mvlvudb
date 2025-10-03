@@ -7,8 +7,8 @@
             <div class="mt-4 flex sm:mt-0">
                 <!-- <a @click="newEntrega()" -->
                 <a @click="showForm = !showForm"
-                    class="order-0 inline-flex items-center px-4 py-2 
-                           border border-transparent shadow-sm text-sm font-medium rounded-md 
+                    class="order-0 inline-flex items-center px-4 py-2
+                           border border-transparent shadow-sm text-sm font-medium rounded-md
                            text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:order-1 sm:ml-3 cursor-pointer">
                     Nueva Entrega</a>
             </div>
@@ -17,6 +17,7 @@
         <Toast :toast="this.toastMessage" :type="this.labelType" @clear="clearMessage"></Toast>
 
         <div v-if="showForm" class="px-4 mt-6 sm:px-6 lg:px-8 w-full">
+            <label for="num_documento" class="block text-sm font-medium text-gray-700 mb-2">Nro de Documento:</label>
             <div class="flex items-center bg-white rounded-md w-full" :class="loadingPerson ? 'opacity-50' : ''">
                 <!-- Campo de entrada -->
                 <input v-model="filter.documento" type="text" id="num_documento" placeholder="Ingrese un documento"

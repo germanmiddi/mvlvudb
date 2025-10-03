@@ -57,6 +57,13 @@
                                 <p class="text-sm text-gray-500">Pasar a:</p>
                                 <button class="px-4 py-2 border border-transparent
                                             shadow-sm text-sm font-medium rounded-md
+                                            text-white bg-orange-600 hover:bg-orange-700
+                                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500
+                                            sm:order-1 sm:ml-3" @click="openSuspensionModal">
+                                    SUSPENDER
+                                </button>
+                                <button class="px-4 py-2 border border-transparent
+                                            shadow-sm text-sm font-medium rounded-md
                                             text-white bg-red-600 hover:bg-red-700
                                             focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
                                             sm:order-1 sm:ml-3" @click="changeStatus(3)">
@@ -65,7 +72,6 @@
                             </div>
                             <div v-else-if="entrevista.status_id == 3" class="flex items-center gap-2">
                                 <p class="text-sm text-gray-500">Pasar a:</p>
-
                                 <button class="px-4 py-2 border border-transparent
                                         shadow-sm text-sm font-medium rounded-md
                                         text-white bg-green-600 hover:bg-green-700
@@ -74,6 +80,23 @@
                                     APROBADO
                                 </button>
                             </div>
+                        <div v-else-if="entrevista.status_id == 4" class="flex items-center gap-2">
+                            <p class="text-sm text-gray-500">Pasar a:</p>
+                            <button class="px-4 py-2 border border-transparent
+                                    shadow-sm text-sm font-medium rounded-md
+                                    text-white bg-red-600 hover:bg-red-700
+                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                                    sm:order-1 sm:ml-3" @click="changeStatus(3)">
+                                RECHAZADO
+                            </button>
+                            <button class="px-4 py-2 border border-transparent
+                                    shadow-sm text-sm font-medium rounded-md
+                                    text-white bg-green-600 hover:bg-green-700
+                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                    sm:order-1 sm:ml-3" @click="changeStatus(2)">
+                                APROBADO
+                            </button>
+                        </div>
                         </div>
                     </div>
 
@@ -93,6 +116,13 @@
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 								<span class="px-3 py-2 rounded-md" :class="estadoClass[status_name]">
 									{{ status_name }}</span>
+							</dd>
+						</div>
+
+						<div v-if="entrevista.status_id == 4 && entrevista.motivo_suspension" class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-orange-50">
+							<dt class="text-sm font-medium text-orange-700">Motivo de Suspensión</dt>
+							<dd class="mt-1 text-sm text-orange-900 sm:mt-0 sm:col-span-2 font-semibold">
+								{{ entrevista.motivo_suspension.description }}
 							</dd>
 						</div>
 
@@ -141,7 +171,7 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Documento</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{
-								entrevista.person.num_documento }}</dd>
+								formatNumber(entrevista.person.num_documento) }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -318,7 +348,7 @@
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ingresos Trabajo</dt>
 							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{
-								entrevista.ingresos_trabajo }}</dd>
+								formatNumber(entrevista.ingresos_trabajo) }}</dd>
 						</div>
 
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -327,7 +357,7 @@
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 							<dt class="text-sm font-medium text-gray-500">Ingresos Planes</dt>
-							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ entrevista.ingresos_planes
+							<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$ {{ formatNumber(entrevista.ingresos_planes)
 							}}</dd>
 						</div>
 						<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -380,6 +410,39 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Sección de Actividades -->
+		<div v-if="actividades.length > 0" class="px-4 mt-6 sm:px-6 lg:px-8 pb-6">
+			<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+				<div class="px-4 py-5 sm:px-6">
+					<h3 class="text-lg leading-6 font-medium text-gray-900">Historial de Actividades</h3>
+					<p class="mt-1 max-w-2xl text-sm text-gray-500">Registro de cambios y modificaciones</p>
+				</div>
+				<div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+					<div class="space-y-3">
+						<div v-for="(actividad, index) in actividades" :key="index"
+							 class="flex items-start p-3 bg-gray-50 rounded-lg border border-gray-200">
+							<div class="flex-shrink-0">
+								<div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+									<svg class="h-5 w-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+									</svg>
+								</div>
+							</div>
+							<div class="ml-3 flex-1">
+								<div class="flex items-baseline justify-between">
+									<p class="text-sm font-medium text-gray-900">{{ actividad.usuario }}</p>
+									<p class="text-xs text-gray-500">{{ actividad.fecha }}</p>
+								</div>
+								<p class="mt-1 text-sm text-gray-600">{{ actividad.detalle }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div v-if="entrevista.status_id == 1" class="px-4 mt-6 sm:px-6 lg:px-8">
 			<div class="flex justify-end gap-4 px-4">
 				<button class="px-4 py-2 border border-transparent
@@ -398,6 +461,14 @@
 				</button>
 			</div>
 		</div>
+
+		<!-- Modal de Suspensión -->
+		<ModalSuspension
+			:show="showSuspensionModal"
+			:motivos="motivosSuspension"
+			@close="showSuspensionModal = false"
+			@confirm="confirmSuspension"
+		/>
 	</main>
 </template>
 
@@ -414,6 +485,7 @@ import Toast from "@/Layouts/Components/Toast.vue";
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import Comment from '@/Layouts/Components/Tramites/Comment.vue';
+import ModalSuspension from './ModalSuspension.vue';
 
 import store from '@/store.js'
 
@@ -438,7 +510,8 @@ export default {
 		useVuelidate,
 		helpers,
 		minLength,
-		Comment
+		Comment,
+		ModalSuspension
 	},
 	data() {
 		return {
@@ -463,11 +536,14 @@ export default {
 			// newDependencia: this.tramite[0].dependencia_id,
 			newDepObservacion: "",
 			// assignment: this.tramite[0].assigned,
+			showSuspensionModal: false,
+			motivosSuspension: [],
 			fileInvalid: false,
 			estadoClass: {
 				'APROBADA': 'badgeStatus bg-green-600 text-green-100',
 				'PENDIENTE': 'badgeStatus bg-gray-200 text-gray-800',
-				'RECHAZADA': 'badgeStatus bg-red-600 text-red-100'
+				'RECHAZADA': 'badgeStatus bg-red-600 text-red-100',
+				'SUSPENDIDO': 'badgeStatus bg-orange-600 text-orange-100'
 			}
 
 		}
@@ -489,6 +565,11 @@ export default {
 	},
 
 	methods: {
+		formatNumber(value) {
+			if (!value && value !== 0) return '';
+			return Number(value).toLocaleString('es-AR');
+		},
+
 		goBack() {
 			window.history.back();
 		},
@@ -496,6 +577,34 @@ export default {
 		handleMessage(data) {
 			this.labelType = data.labelType;
 			this.toastMessage = data.toastMessage;
+		},
+
+		async openSuspensionModal() {
+			this.showSuspensionModal = true;
+		},
+
+		async confirmSuspension(motivoId) {
+			let rt = route('collections.entrevistas.update', { id: this.entrevista.id });
+
+			let formData = new FormData();
+			formData.append('status_id', 4); // 4 = SUSPENDIDO
+			formData.append('motivo_suspension_id', motivoId);
+			formData.append('id', this.entrevista.id);
+
+			try {
+				const response = await axios.post(rt, formData);
+				if (response.status == 200) {
+					this.toastMessage = response.data.message;
+					this.labelType = "success";
+					// Recargar la página para ver los cambios
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
+				}
+			} catch (error) {
+				this.toastMessage = error.response?.data?.message || 'Error al suspender la entrevista';
+				this.labelType = "danger";
+			}
 		},
 
 		async changeStatus(newEstado) {
@@ -571,6 +680,7 @@ export default {
 				case 1: return 'PENDIENTE';
 				case 2: return 'APROBADA';
 				case 3: return 'RECHAZADA';
+				case 4: return 'SUSPENDIDO';
 				default: return '';
 			}
 		},
@@ -581,8 +691,46 @@ export default {
 								${this.entrevista.person.cud?.codigo ?? ''}`
 			}
 			return 'No'
+		},
+
+		actividades: function () {
+			if (!this.entrevista.actividades) return [];
+
+			// Parsear las actividades del formato: [DD/MM/YYYY HH:MM] Nombre Usuario: Detalle
+			const lineas = this.entrevista.actividades.split('\n').filter(linea => linea.trim());
+
+			return lineas.map(linea => {
+				const regex = /\[(.+?)\]\s+(.+?):\s+(.+)/;
+				const match = linea.match(regex);
+
+				if (match) {
+					return {
+						fecha: match[1],
+						usuario: match[2],
+						detalle: match[3]
+					};
+				}
+
+				// Si no coincide con el formato esperado, devolver el texto completo
+				return {
+					fecha: '',
+					usuario: '',
+					detalle: linea
+				};
+			}).reverse(); // Mostrar las más recientes primero
 		}
 
 	},
+
+	async mounted() {
+		// Cargar motivos de suspensión
+		try {
+			const response = await fetch(route('masterdata.get_motivos_suspension'));
+			const motivos = await response.json();
+			this.motivosSuspension = motivos.filter(m => m.activo);
+		} catch (error) {
+			console.error('Error cargando motivos de suspensión:', error);
+		}
+	}
 }
 </script>

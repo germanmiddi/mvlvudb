@@ -236,6 +236,30 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="col-span-12 sm:col-span-3">
+                            <label
+                                for="padron_id"
+                                class="block text-sm font-medium text-gray-700"
+                                >Padrón</label
+                            >
+                            <select
+                                v-model="filter.padron_id"
+                                name="padron_id"
+                                id="padron_id"
+                                class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            >
+                                <option value="" selected>
+                                    Seleccione un padrón
+                                </option>
+                                <option
+                                    v-for="padron in padrones"
+                                    :key="padron.id"
+                                    :value="padron.id"
+                                >
+                                    {{ padron.nombre }}
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,7 +296,7 @@
                                     </th>
                                     <th
                                         scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
                                         DNI
                                     </th>
@@ -281,6 +305,12 @@
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
                                         Entrevistador
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        Padrón
                                     </th>
                                     <th
                                         scope="col"
@@ -369,6 +399,7 @@ const estadoClass = {
     APROBADA: "badgeStatus bg-green-600 text-green-100",
     PENDIENTE: "badgeStatus bg-gray-200 text-gray-800",
     RECHAZADA: "badgeStatus bg-red-600 text-red-100",
+    SUSPENDIDO: "badgeStatus bg-orange-600 text-orange-100",
 };
 
 export default {
@@ -377,6 +408,7 @@ export default {
         estados: Object,
         sedes: Object,
         entrevistadores: Object,
+        padrones: Object,
     },
     components: {
         ListItem,
@@ -441,6 +473,9 @@ export default {
 
             if (this.filter.entrevistador_id) {
                 filter += `&entrevistador_id=${this.filter.entrevistador_id}`;
+            }
+            if (this.filter.padron_id) {
+                filter += `&padron_id=${this.filter.padron_id}`;
             }
             if (this.filter.estado) {
                 filter += `&estado=${this.filter.estado}`;

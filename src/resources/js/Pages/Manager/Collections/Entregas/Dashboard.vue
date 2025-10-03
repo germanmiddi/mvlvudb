@@ -230,7 +230,7 @@
                                         Nombre
                                     </th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
                                         Documento
                                     </th>
@@ -268,9 +268,9 @@
                                         {{ item.person }}
                                     </td>
                                     <td
-                                        class="px-6 py-3 whitespace-nowrap text-xs text-gray-700"
+                                        class="px-6 py-3 whitespace-nowrap text-xs text-gray-700 text-right"
                                     >
-                                        {{ item.num_documento }}
+                                        {{ formatNumberWithDots(item.num_documento) }}
                                     </td>
                                     <td
                                         class="px-6 py-3 whitespace-nowrap text-xs text-gray-700"
@@ -337,6 +337,7 @@ import { CheckCircleIcon, ArrowPathIcon } from "@heroicons/vue/24/solid";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import store from "@/store.js";
+import formatNumberWithDots from "@/composables/formatter";
 
 export default {
     props: {
@@ -371,6 +372,7 @@ export default {
         this.getCollectionList();
     },
     methods: {
+        formatNumberWithDots,
         clearFilter() {
             this.filter = {};
             this.getCollectionList();

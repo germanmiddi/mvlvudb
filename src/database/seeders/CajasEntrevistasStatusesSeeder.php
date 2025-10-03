@@ -1,4 +1,4 @@
-<?php   
+<?php
 
 namespace Database\Seeders;
 
@@ -19,7 +19,8 @@ class CajasEntrevistasStatusesSeeder extends Seeder
         $data = [
             ['id' => 1,  'nombre' => 'PENDIENTE', 'descripcion' => 'Entrevista pendiente' ],
             ['id' => 2,  'nombre' => 'APROBADA', 'descripcion' => 'Entrevista aprobada' ],
-            ['id' => 3,  'nombre' => 'RECHAZADA', 'descripcion' => 'Entrevista rechazada' ]
+            ['id' => 3,  'nombre' => 'RECHAZADA', 'descripcion' => 'Entrevista rechazada' ],
+            ['id' => 4,  'nombre' => 'SUSPENDIDO', 'descripcion' => 'Entrevista suspendida' ]
         ];
 
 

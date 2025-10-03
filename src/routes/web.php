@@ -265,6 +265,37 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/export_datos', [MasterdataController::class, 'export_datos'])->name('masterdata.exportDatos');
 
+        // Padrones
+        Route::get('/get_padrones', [MasterdataController::class, 'get_padrones'])->name('masterdata.get_padrones');
+        Route::post('/store_padron/', [MasterdataController::class, 'store_padron'])->name('masterdata.store_padron');
+        Route::post('/update_padron/', [MasterdataController::class, 'update_padron'])->name('masterdata.update_padron');
+        Route::post('/hide_padron/', [MasterdataController::class, 'hide_padron'])->name('masterdata.hide_padron');
+        Route::post('/destroy_padron/', [MasterdataController::class, 'destroy_padron'])->name('masterdata.destroy_padron');
+
+        // Motivos de Suspensión
+        Route::get('/get_motivos_suspension', [MasterdataController::class, 'get_motivos_suspension'])->name('masterdata.get_motivos_suspension');
+        Route::post('/store_motivo_suspension/', [MasterdataController::class, 'store_motivo_suspension'])->name('masterdata.store_motivo_suspension');
+        Route::post('/update_motivo_suspension/', [MasterdataController::class, 'update_motivo_suspension'])->name('masterdata.update_motivo_suspension');
+        Route::post('/hide_motivo_suspension/', [MasterdataController::class, 'hide_motivo_suspension'])->name('masterdata.hide_motivo_suspension');
+        Route::post('/destroy_motivo_suspension/', [MasterdataController::class, 'destroy_motivo_suspension'])->name('masterdata.destroy_motivo_suspension');
+
+        // Debug route - temporary
+        Route::get('/debug_person/{dni}', function($dni) {
+            $person = \App\Models\Manager\Person::where('num_documento', $dni)
+                ->with('entrevistas.padron')
+                ->first();
+
+            if (!$person) {
+                return response()->json(['error' => 'Person not found']);
+            }
+
+            return response()->json([
+                'person' => $person,
+                'entrevistas_count' => $person->entrevistas->count(),
+                'latest_interview' => $person->entrevistas->sortByDesc('fecha')->first()
+            ]);
+        });
+
         Route::get('/centros-barriales/get-programas-sociales-cb', [MasterdataController::class, 'get_programas_sociales_cb'])->name('masterdata.centros_barriales.get_programas_sociales_cb');
         Route::post('/centros-barriales/store-programas-sociales-cb/', [MasterdataController::class, 'store_programa_social_cb'])->name('masterdata.centros_barriales.store_programas_sociales_cb');
         Route::post('/centros-barriales/update-programas-sociales-cb/', [MasterdataController::class, 'update_programa_social_cb'])->name('masterdata.centros_barriales.update_programas_sociales_cb');

@@ -2,10 +2,10 @@
 <template>
     <div class="px-4 mt-6 sm:px-6 lg:px-8">
         <div
-            class="text-sm font-medium text-gray-500 mb-4 hover:cursor-pointer hover:text-green-600 hover:underline"
+            class="flex items-center text-sm font-medium text-gray-500 mb-4 hover:cursor-pointer hover:text-green-600 hover:underline"
             @click="clearPerson"
         >
-            Nueva busqueda
+            <ArrowLeftIcon class="h-4 w-4 mr-2" /> Nueva busqueda
         </div>
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <!-- <div class="px-4 py-5 sm:px-6">
@@ -34,7 +34,7 @@
                         <dd
                             class="mt-1 text-base text-gray-900 sm:mt-0 sm:col-span-2"
                         >
-                            {{ person.num_documento }}
+                            {{ formatNumber(person.num_documento) }}
                         </dd>
                     </div>
                     <div
@@ -136,8 +136,12 @@
                         >
                             <select
                                 v-model="form.product"
+                                @change="checkProductAvailability"
                                 class="w-full border-gray-300 rounded-md"
                             >
+                                <option :value="null" disabled selected>
+                                    Seleccione un producto
+                                </option>
                                 <option
                                     v-for="product in products"
                                     :key="product.id"
@@ -152,35 +156,44 @@
             </div>
         </div>
 
-        <div v-if="puntosEntrega.length !== 0 && canGetBox.status" class="mt-6">
+        <!-- Mensaje de validación de producto -->
+        <div v-if="puntosEntrega.length !== 0" class="mt-6">
+            <div v-if="!productValidation.checked" class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-sm text-blue-700">
+                    {{ productValidation.message }}
+                </p>
+            </div>
+
+            <div v-else-if="productValidation.status" class="bg-green-50 p-4 rounded-lg mb-4">
+                <p class="text-sm text-green-700">
+                    ✓ {{ productValidation.message }}
+                </p>
+            </div>
+
+            <div v-else class="bg-red-50 p-4 rounded-lg mb-4">
+                <p class="text-base text-red-500 font-semibold">
+                    No se puede realizar la entrega
+                </p>
+                <p class="mt-2 text-sm text-gray-500">
+                    {{ productValidation.message }}
+                </p>
+            </div>
+
             <button
+                v-if="productValidation.checked && productValidation.status"
                 @click="submitCollection"
-                :disabled="!canGetBox.status"
-                class="px-6 py-3 w-full flex items-center justify-center rounded-md font-semibold transition duration-200"
-                :class="
-                    canGetBox.status
-                        ? 'bg-green-600 hover:bg-green-700 text-white shadow-md'
-                        : 'bg-gray-200 text-gray-500 shadow-sm cursor-auto'
-                "
+                class="px-6 py-3 w-full flex items-center justify-center rounded-md font-semibold transition duration-200 bg-green-600 hover:bg-green-700 text-white shadow-md"
             >
                 <CheckCircleIcon class="h-5 w-5 mr-3" />
                 Entregar
             </button>
-        </div>
-        <div v-else class="bg-red-50 p-4 rounded-lg mt-6">
-            <p class="text-base text-red-500 font-semibold text-left">
-                No se puede realizar la entrega
-            </p>
-            <p class="mt-3 text-sm text-gray-500 text-left">
-                {{ canGetBox.message }}
-            </p>
         </div>
     </div>
 </template>
 
 <script>
 import { CheckCircleIcon } from "@heroicons/vue/24/solid";
-
+import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 export default {
     props: {
         person: {
@@ -205,6 +218,7 @@ export default {
     },
     components: {
         CheckCircleIcon,
+        ArrowLeftIcon,
     },
     data() {
         return {
@@ -213,11 +227,52 @@ export default {
                     this.puntosEntrega.length > 0
                         ? this.puntosEntrega[0].id
                         : null,
-                product: this.products.length > 0 ? this.products[0].id : null,
+                product: null,
             },
+            productValidation: {
+                checked: false,
+                status: false,
+                message: 'Por favor, seleccione un producto para verificar disponibilidad'
+            }
         };
     },
+    watch: {
+        'form.product': function(newProduct) {
+            if (newProduct) {
+                this.checkProductAvailability();
+            }
+        }
+    },
     methods: {
+        formatNumber(value) {
+            if (!value) return '';
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        },
+        async checkProductAvailability() {
+            if (!this.form.product) return;
+
+            try {
+                const response = await axios.post(
+                    route('collections.checkProductAvailability'),
+                    {
+                        person_id: this.person.id,
+                        product_id: this.form.product
+                    }
+                );
+
+                this.productValidation = {
+                    checked: true,
+                    status: response.data.status,
+                    message: response.data.message
+                };
+            } catch (error) {
+                this.productValidation = {
+                    checked: true,
+                    status: false,
+                    message: 'Error al verificar disponibilidad'
+                };
+            }
+        },
         async submitCollection() {
             //format the address, if any value is null, it will not be included
             let address = this.person.address[0].calle

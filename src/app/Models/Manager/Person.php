@@ -104,6 +104,12 @@ class Person extends Model
         return $this->hasMany(Collection::class);
     }
 
+    public function entrevistas()
+    {
+        return $this->hasMany(CajasEntrevista::class);
+    }
+
+    // Mantener método entrevista() para compatibilidad hacia atrás
     public function entrevista()
     {
         return $this->hasOne(CajasEntrevista::class);

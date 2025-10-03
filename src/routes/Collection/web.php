@@ -26,6 +26,7 @@ Route::middleware(['auth'])
 
         Route::get('/getPerson/{documento}', [CollectionController::class, 'getPerson'])->name('collections.getPerson');
         Route::get('/getCollectionsFormData', [CollectionController::class, 'getCollectionsFormData'])->name('collections.getCollectionsFormData');
+        Route::post('/checkProductAvailability', [CollectionController::class, 'checkProductAvailability'])->name('collections.checkProductAvailability');
         Route::post('/storeCollection', [CollectionController::class, 'storeCollection'])->name('collections.storeCollection');
 
         Route::get('/getCollectionList', [CollectionController::class, 'getCollectionList'])->name('collections.getCollectionList');

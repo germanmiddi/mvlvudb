@@ -4,6 +4,7 @@ namespace App\Models\Manager;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Padron;
 class CajasEntrevista extends Model
 {
 
@@ -11,10 +12,12 @@ class CajasEntrevista extends Model
 
     protected $fillable = [
         'person_id',
+        'padron_id',
         'fecha',
         'entrevistador_id',
         'puntos_entrega_id',
         'status_id',
+        'motivo_suspension_id',
         'status_updated_by',
         'status_updated_at',
         'created_by',
@@ -39,14 +42,17 @@ class CajasEntrevista extends Model
         'cant_hijos',
         'cant_personas_trabajando',
         'conviviente_discapacidad',
-        'observaciones'
+        'observaciones',
+        'actividades'
     ];
 
     protected $with = [
         'person',
+        'padron',
         'entrevistador',
         'puntosEntrega',
         'status',
+        'motivoSuspension',
         'statusUpdatedBy',
         'createdBy',
         'tipoTenencia'
@@ -65,6 +71,11 @@ class CajasEntrevista extends Model
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id');
+    }
+
+    public function padron()
+    {
+        return $this->belongsTo(Padron::class, 'padron_id');
     }
 
     public function entrevistador()
@@ -95,5 +106,10 @@ class CajasEntrevista extends Model
     public function tipoTenencia()
     {
         return $this->belongsTo(TipoTenencia::class, 'habitacional_tipo_tenencia_id');
+    }
+
+    public function motivoSuspension()
+    {
+        return $this->belongsTo(CajasMotivoSuspension::class, 'motivo_suspension_id');
     }
 }

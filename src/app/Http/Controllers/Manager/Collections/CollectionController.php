@@ -274,8 +274,8 @@ class CollectionController extends Controller
                 ->first();
 
 
-            //Validacion de entrega de Cajas por entrevista y ultima entrega
-            $canGetBox = $this->canReceiveBox($person, $lastDelivery);
+            //Validacion solo de entrevista (ya no validamos días aquí, se hace por producto)
+            $canGetBox = $this->canShowForm($person);
 
             $response = $fullHistory != []
                 ? [
@@ -298,9 +298,10 @@ class CollectionController extends Controller
             return response()->json(['message' => 'No se encontró ninguna persona con el documento proporcionado', 'status' => 404]);
         }
     }
-    private function canReceiveBox($person, $lastDelivery)
+    private function canShowForm($person)
     {
-        //Primero comprobnar la entrevista
+        // Solo verificar la entrevista para mostrar el formulario
+        // La validación de días se hace por producto en checkProductAvailability
         $entrevista = CajasEntrevista::where('person_id', $person->id)->first();
         if (!$entrevista) {
             return ['status' => false, 'message' => 'No se encontró una entrevista registrada'];
@@ -310,23 +311,77 @@ class CollectionController extends Controller
             return ['status' => false, 'message' => 'La entrevista no fue aprobada'];
         }
 
-        //Luego los diasd e entrega
-        if (!$lastDelivery) {
-            return ['status' => true,];
+        return ['status' => true, 'message' => 'Puede realizar entregas'];
+    }
+
+    public function checkProductAvailability(Request $request)
+    {
+        $person = Person::find($request->person_id);
+        $productId = $request->product_id;
+
+        // Buscar última entrega de este producto específico
+        $lastDeliveryOfProduct = Collection::where('person_id', $person->id)
+            ->where('product_id', $productId)
+            ->orderBy('date', 'desc')
+            ->first();
+
+        // Verificar entrevista (igual que antes)
+        $entrevista = CajasEntrevista::where('person_id', $person->id)->first();
+        if (!$entrevista) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontró una entrevista registrada'
+            ]);
         }
 
-        $diasPermitidos = Settings::where('key', 'dias_entrega_cajas')->first()->value;
-        $daysSinceLastDelivery = Carbon::parse($lastDelivery->date)->diffInDays(Carbon::now());
-        $message = match ($daysSinceLastDelivery) {
-            0 => "Última entrega realizada hace unas horas. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción.",
-            1 => "Última entrega realizada hace 1 día. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción.",
-            default => "Última entrega realizada hace $daysSinceLastDelivery días. Deben pasar {$diasPermitidos} días desde la última entrega para activar esta opción."
-        };
+        if ($entrevista->status_id != 2) {
+            $statusMessage = $entrevista->status_id == 4
+                ? 'La entrevista está suspendida'
+                : 'La entrevista no fue aprobada';
+            return response()->json([
+                'status' => false,
+                'message' => $statusMessage
+            ]);
+        }
 
-        return [
-            'status' => $daysSinceLastDelivery >= $diasPermitidos,
+        // Si no hay entrega previa de este producto, puede recibir
+        if (!$lastDeliveryOfProduct) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Puede recibir este producto'
+            ]);
+        }
+
+        // Verificar días desde última entrega de ESTE producto
+        $diasPermitidos = Settings::where('key', 'dias_entrega_cajas')->first()->value;
+        $daysSinceLastDelivery = Carbon::parse($lastDeliveryOfProduct->date)->diffInDays(Carbon::now());
+
+        // Determinar si puede recibir el producto
+        $canReceive = $daysSinceLastDelivery >= $diasPermitidos;
+
+        // Construir mensaje según el estado
+        if ($canReceive) {
+            $message = match ($daysSinceLastDelivery) {
+                0 => "Puede recibir este producto. Última entrega hace unas horas (permitido: {$diasPermitidos} días).",
+                1 => "Puede recibir este producto. Última entrega hace 1 día (permitido: {$diasPermitidos} días).",
+                default => "Puede recibir este producto. Última entrega hace {$daysSinceLastDelivery} días (supera los {$diasPermitidos} días permitidos)."
+            };
+        } else {
+            $diasFaltantes = $diasPermitidos - $daysSinceLastDelivery;
+            $message = match ($daysSinceLastDelivery) {
+                0 => "No puede recibir este producto. Última entrega hace unas horas. Deben pasar {$diasPermitidos} días (faltan {$diasFaltantes} días).",
+                1 => "No puede recibir este producto. Última entrega hace 1 día. Deben pasar {$diasPermitidos} días (faltan {$diasFaltantes} días).",
+                default => "No puede recibir este producto. Última entrega hace {$daysSinceLastDelivery} días. Deben pasar {$diasPermitidos} días (faltan {$diasFaltantes} días)."
+            };
+        }
+
+        return response()->json([
+            'status' => $canReceive,
             'message' => $message,
-        ];
+            'daysSinceLastDelivery' => $daysSinceLastDelivery,
+            'diasPermitidos' => $diasPermitidos,
+            'lastDelivery' => $lastDeliveryOfProduct->date ?? null
+        ]);
     }
 
     public function getCollectionsFormData()

@@ -17,6 +17,7 @@ use App\Models\Manager\Product;
 use App\Models\Manager\CajasEntrevista;
 use App\Models\Manager\Settings;
 use App\Models\Padron;
+use Illuminate\Support\Facades\URL;
 
 class CollectionController extends Controller
 {
@@ -49,6 +50,12 @@ class CollectionController extends Controller
 
     public function padronList()
     {
+        // Forzar HTTPS para la generación de URLs
+        if (config('app.env') === 'production' || config('app.force_https')) {
+            URL::forceScheme('https');
+            URL::forceRootUrl(config('app.url'));
+        }
+
         $length = 30;
         $entrevistas = CajasEntrevista::query();
 

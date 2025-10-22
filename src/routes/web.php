@@ -45,9 +45,6 @@ use App\Http\Controllers\Manager\Tramites\Entidad\EntidadParticipanteController;
 
 use App\Http\Controllers\Manager\Charts\ChartController;
 
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}
 
 //import collections routes
 require_once 'Collection/web.php';

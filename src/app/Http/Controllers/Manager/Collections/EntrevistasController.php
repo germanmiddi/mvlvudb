@@ -42,6 +42,9 @@ use App\Models\Manager\TipoTenencia;
 use App\Models\Manager\Cud;
 use App\Models\Manager\CajasMotivoSuspension;
 use App\Models\Padron;
+use App\Helpers\UrlHelper;
+use Illuminate\Support\Facades\URL;
+
 class EntrevistasController extends Controller
 {
     public function index()
@@ -253,6 +256,12 @@ class EntrevistasController extends Controller
 
     public function list()
     {
+        // Forzar HTTPS para la generación de URLs
+        if (config('app.env') === 'production' || config('app.force_https')) {
+            URL::forceScheme('https');
+            URL::forceRootUrl(config('app.url'));
+        }
+
         $length = 10;
 
         $entrevistas = CajasEntrevista::query();

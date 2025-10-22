@@ -9,9 +9,23 @@
 
             </div>
         </div>
-        <!-- Pinned projects -->
+
+        <!-- Stats Cards -->
         <div class="px-4 mt-6 sm:px-6 lg:px-8">
-            <h2 class="text-gray-500 text-xs font-medium uppercase tracking-wide">Destacados</h2>
+            <StatsCards />
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="px-4 mt-6 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <ChartEvolucionTramites />
+                <ChartTramitesPorDependencia />
+            </div>
+        </div>
+
+        <!-- Pinned projects -->
+        <div class="pb-12 px-4 mt-12 sm:px-6 lg:px-8">
+            <h2 class="text-gray-500 text-xs font-medium uppercase tracking-wide">Bandeja por dependencia</h2>
             <ul role="list" class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 xl:grid-cols-3 mt-3">
                 <li v-for="project in data" :key="project.id" class="relative col-span-1 flex shadow-sm rounded-md" v-show="store.userCan(project.module, $page.props.userGroups)">
                     <div :class="[project.bgColorClass, 'flex-shrink-0 flex items-center justify-center w-16 text-white text-sm font-medium rounded-l-md']">{{ project.initials }}
@@ -33,7 +47,7 @@
 
 <script>
 import { ref } from 'vue'
-import { Menu, 
+import { Menu,
          MenuButton,
          MenuItems,
          MenuItem
@@ -41,9 +55,12 @@ import { Menu,
 
 import { ChevronRightIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
 import store from '@/store.js'
+import StatsCards from './StatsCards.vue'
+import ChartEvolucionTramites from './ChartEvolucionTramites.vue'
+import ChartTramitesPorDependencia from './ChartTramitesPorDependencia.vue'
 
 const projects = [
-      
+
     {
       id: 12,
       title: 'Centro Barriales Infancia | CBI',
@@ -132,22 +149,25 @@ const projects = [
       route: 'vivienda',
       module: 'VIV'
     },
-    
+
     // More projects...
   ]
 const pinnedProjects = projects.filter((project) => project.pinned)
-  
+
 export default {
     props: {
 
     },
     components:{
-        Menu, 
+        Menu,
         MenuButton,
         MenuItems,
         MenuItem,
         EllipsisVerticalIcon,
-        ChevronRightIcon
+        ChevronRightIcon,
+        StatsCards,
+        ChartEvolucionTramites,
+        ChartTramitesPorDependencia
     },
     data() {
         return {
@@ -157,7 +177,7 @@ export default {
 
     setup() {
        const sidebarOpen = ref(false)
-  
+
       return {
         projects,
         pinnedProjects,
@@ -192,7 +212,7 @@ export default {
     mounted() {
         this.getStatistics()
     }
-    
+
 
 }
 </script>

@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Manager\Person;
 use App\Models\Manager\TipoOcupacion;
+use App\Models\Manager\Tramite;
+use App\Models\Manager\Dependencia;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class ChartController extends Controller
 {
@@ -385,7 +388,214 @@ class ChartController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * Obtener distribución de trámites por dependencia (para gráfico de dona)
+     * Filtrado por los últimos 30 días
+     */
+    public function getTramitesPorDependenciaData()
+    {
+        // Calcular fecha de hace 30 días
+        $fechaInicio = Carbon::now()->subDays(30);
 
+        // Obtener trámites agrupados por dependencia con nombres (últimos 30 días)
+        $tramitesPorDependencia = Tramite::select(
+                'dependencias.id',
+                'dependencias.description as nombre',
+                DB::raw('COUNT(tramites.id) as cantidad')
+            )
+            ->join('dependencias', 'tramites.dependencia_id', '=', 'dependencias.id')
+            ->where('tramites.fecha', '>=', $fechaInicio)
+            ->groupBy('dependencias.id', 'dependencias.description')
+            ->orderBy('cantidad', 'desc')
+            ->get();
 
+        // Si no hay datos, devolver estructura vacía
+        if ($tramitesPorDependencia->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Colores para cada dependencia
+        $colores = [
+            "#3B82F6", // Azul
+            "#EF4444", // Rojo
+            "#10B981", // Verde
+            "#F59E0B", // Amarillo/Naranja
+            "#8B5CF6", // Púrpura
+            "#EC4899", // Rosa
+            "#14B8A6", // Teal
+            "#F97316", // Naranja
+            "#84CC16", // Lima
+            "#6366F1", // Indigo
+            "#06B6D4", // Cyan
+        ];
+
+        // Función para abreviar nombres largos
+        $abreviarNombre = function($nombre) {
+            // Mapeo de abreviaciones específicas
+            $abreviaciones = [
+                'Centro Barriales Infancia' => 'CBI',
+                'Centro Barriales Juventud' => 'CBJ',
+                'Discapacidad' => 'Discapacidad',
+                'Entidades Intermedias' => 'Ent. Intermedias',
+                'Fortalecimiento Comunitario' => 'Fort. Comunitario',
+                'Género y Diversidad' => 'Género y Div.',
+                'Habitat' => 'Hábitat',
+                'Niñez y Adolescencia' => 'Niñez y Adol.',
+                'Promoción y Protección de Derechos' => 'Prom. y Protección',
+                'Personas Mayores' => 'Pers. Mayores',
+                'Vivienda Social' => 'Vivienda Social'
+            ];
+
+            // Si existe una abreviación específica, usarla
+            if (isset($abreviaciones[$nombre])) {
+                return $abreviaciones[$nombre];
+            }
+
+            // Si el nombre es muy largo, truncarlo
+            if (strlen($nombre) > 20) {
+                return substr($nombre, 0, 17) . '...';
+            }
+
+            return $nombre;
+        };
+
+        // Convertir a formato para el gráfico de dona
+        $data = [];
+        foreach ($tramitesPorDependencia as $index => $item) {
+            $data[] = [
+                "name" => $abreviarNombre($item->nombre),
+                "values" => [$item->cantidad],
+                "color" => $colores[$index % count($colores)]
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    /**
+     * Obtener evolución temporal de trámites (últimos 6 meses)
+     */
+    public function getEvolucionTramitesData()
+    {
+        // Calcular fecha de inicio (6 meses atrás)
+        $fechaInicio = Carbon::now()->subMonths(6)->startOfMonth();
+
+        // Obtener trámites agrupados por mes
+        $tramitesPorMes = Tramite::select(
+                DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
+                DB::raw('COUNT(*) as cantidad')
+            )
+            ->where('fecha', '>=', $fechaInicio)
+            ->groupBy('mes')
+            ->orderBy('mes', 'asc')
+            ->get();
+
+        // Generar array con todos los meses (para llenar vacíos)
+        $meses = [];
+        $categorias = [];
+        $valores = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $mes = Carbon::now()->subMonths($i)->format('Y-m');
+            $mesNombre = Carbon::now()->subMonths($i)->locale('es')->isoFormat('MMM YYYY');
+
+            $categorias[] = $mesNombre;
+
+            // Buscar si hay datos para este mes
+            $dato = $tramitesPorMes->firstWhere('mes', $mes);
+            $valores[] = $dato ? $dato->cantidad : 0;
+        }
+
+        // Formato para VueUiXy (gráfico de líneas)
+        $result = [
+            'categories' => $categorias,
+            'series' => [
+                [
+                    'name' => 'Trámites',
+                    'values' => $valores,
+                    'type' => 'line'
+                ]
+            ]
+        ];
+
+        return response()->json($result);
+    }
+
+    /**
+     * Obtener estadísticas generales para tarjetas mejoradas
+     */
+    public function getStatsGeneralesData()
+    {
+        // Total de personas
+        $totalPersonas = Person::count();
+
+        // Personas nuevas (últimos 30 días)
+        $fechaInicio30Dias = Carbon::now()->subDays(30);
+        $personasNuevas = Person::where('created_at', '>=', $fechaInicio30Dias)->count();
+
+        // Trámites del mes actual
+        $tramitesMesActual = Tramite::whereYear('fecha', Carbon::now()->year)
+            ->whereMonth('fecha', Carbon::now()->month)
+            ->count();
+
+        // Trámites del mes anterior
+        $tramitesMesAnterior = Tramite::whereYear('fecha', Carbon::now()->subMonth()->year)
+            ->whereMonth('fecha', Carbon::now()->subMonth()->month)
+            ->count();
+
+        // Calcular porcentaje de cambio
+        $porcentajeCambio = 0;
+        if ($tramitesMesAnterior > 0) {
+            $porcentajeCambio = round((($tramitesMesActual - $tramitesMesAnterior) / $tramitesMesAnterior) * 100, 1);
+        } elseif ($tramitesMesActual > 0) {
+            $porcentajeCambio = 100;
+        }
+
+        // ===== TRÁMITES DE LOS ÚLTIMOS 30 DÍAS =====
+        $fechaInicio = Carbon::now()->subDays(30);
+
+        // Total de trámites de los últimos 30 días
+        $totalUltimos30Dias = Tramite::where('fecha', '>=', $fechaInicio)->count();
+
+        // Trámites por estado (últimos 30 días)
+        $tramitesAbiertos = Tramite::where('fecha', '>=', $fechaInicio)
+            ->where('estado_id', 1) // abierto
+            ->count();
+
+        $tramitesEnProceso = Tramite::where('fecha', '>=', $fechaInicio)
+            ->where('estado_id', 3) // en proceso
+            ->count();
+
+        $tramitesCerrados = Tramite::where('fecha', '>=', $fechaInicio)
+            ->where('estado_id', 2) // cerrado
+            ->count();
+
+        // Calcular porcentaje de trámites cerrados
+        $porcentajeCerrados = 0;
+        if ($totalUltimos30Dias > 0) {
+            $porcentajeCerrados = round(($tramitesCerrados / $totalUltimos30Dias) * 100, 1);
+        }
+
+        return response()->json([
+            'totalPersonas' => [
+                'total' => $totalPersonas,
+                'nuevas' => $personasNuevas
+            ],
+            'tramitesMes' => [
+                'cantidad' => $tramitesMesActual,
+                'porcentajeCambio' => $porcentajeCambio,
+                'tendencia' => $porcentajeCambio >= 0 ? 'up' : 'down'
+            ],
+            // Trámites últimos 30 días con desglose por estado
+            'tramitesUltimos30Dias' => [
+                'total' => $totalUltimos30Dias,
+                'abiertos' => $tramitesAbiertos,
+                'enProceso' => $tramitesEnProceso,
+                'cerrados' => $tramitesCerrados
+            ],
+            // Porcentaje de trámites cerrados
+            'porcentajeCerrados' => $porcentajeCerrados
+        ]);
+    }
 
 }

@@ -456,4 +456,9 @@ Route::get('/charts/getChartOcupacionesDonutData', [ChartController::class, 'get
 Route::get('/charts/getChartOcupacionesPorEdadData', [ChartController::class, 'getChartOcupacionesPorEdadData'])->name('charts.getChartOcupacionesPorEdadData');
 Route::get('/charts/getHeatmapSinOcupacionData', [ChartController::class, 'getHeatmapSinOcupacionData'])->name('charts.getHeatmapSinOcupacionData');
 Route::get('/charts/getCantPersonsData', [ChartController::class, 'getCantPersonsData'])->name('charts.getCantPersonsData');
+
+// Dashboard - Rutas para gráficos del home
+Route::get('/dashboard/getTramitesPorDependenciaData', [ChartController::class, 'getTramitesPorDependenciaData'])->name('dashboard.getTramitesPorDependenciaData');
+Route::get('/dashboard/getEvolucionTramitesData', [ChartController::class, 'getEvolucionTramitesData'])->name('dashboard.getEvolucionTramitesData');
+Route::get('/dashboard/getStatsGeneralesData', [ChartController::class, 'getStatsGeneralesData'])->name('dashboard.getStatsGeneralesData');
 });

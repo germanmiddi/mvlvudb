@@ -16,6 +16,7 @@ use App\Models\Manager\Person;
 use App\Models\Manager\Product;
 use App\Models\Manager\CajasEntrevista;
 use App\Models\Manager\Settings;
+use App\Models\Padron;
 
 class CollectionController extends Controller
 {
@@ -60,7 +61,7 @@ class CollectionController extends Controller
         }
 
         if (request('num_documento')) {
-            $num_documento = request('num_documento');
+            $num_documento = str_replace(['.', '-', ' '], '', request('num_documento'));
             $entrevistas->whereHas('person', function ($query) use ($num_documento) {
                 $query->where('num_documento', $num_documento);
             });
@@ -181,7 +182,7 @@ class CollectionController extends Controller
         }
         // dd(request('num_documento'));
         if (request('num_documento')) {
-            $num_documento = request('num_documento');
+            $num_documento = str_replace(['.', '-', ' '], '', request('num_documento'));
             // dd($num_documento);
             $collections->whereHas('person', function ($query) use ($num_documento) {
                 $query->where('num_documento', $num_documento);
@@ -230,7 +231,10 @@ class CollectionController extends Controller
 
     public function getPerson($documento)
     {
-        $person = Person::where('num_documento', $documento)
+        // Limpiar el documento: eliminar puntos, guiones y espacios
+        $documentoLimpio = str_replace(['.', '-', ' '], '', $documento);
+
+        $person = Person::where('num_documento', $documentoLimpio)
             ->with(
                 'collections',
                 'address',
@@ -300,18 +304,64 @@ class CollectionController extends Controller
     }
     private function canShowForm($person)
     {
-        // Solo verificar la entrevista para mostrar el formulario
-        // La validación de días se hace por producto en checkProductAvailability
-        $entrevista = CajasEntrevista::where('person_id', $person->id)->first();
+        // Verificar si existe un padrón activo para entregas
+        $padronActivoParaEntregas = Padron::paraEntregas()->first();
+
+        if (!$padronActivoParaEntregas) {
+            return [
+                'status' => false,
+                'message' => 'No existe un padrón activo para realizar entregas en este momento'
+            ];
+        }
+
+        // Buscar entrevista de la persona en el padrón activo para entregas
+        $entrevista = CajasEntrevista::where('person_id', $person->id)
+            ->where('padron_id', $padronActivoParaEntregas->id)
+            ->with('padron', 'status')
+            ->first();
+
         if (!$entrevista) {
-            return ['status' => false, 'message' => 'No se encontró una entrevista registrada'];
+            return [
+                'status' => false,
+                'message' => "No se encontró una entrevista registrada para el padrón '{$padronActivoParaEntregas->nombre}' que está activo para entregas"
+            ];
         }
 
-        if ($entrevista->status_id != 2) {
-            return ['status' => false, 'message' => 'La entrevista no fue aprobada'];
-        }
+        // Verificar el estado de la entrevista
+        switch ($entrevista->status_id) {
+            case 1: // PENDIENTE
+                return [
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' está PENDIENTE de aprobación"
+                ];
 
-        return ['status' => true, 'message' => 'Puede realizar entregas'];
+            case 2: // APROBADA
+                return [
+                    'status' => true,
+                    'message' => 'Puede realizar entregas'
+                ];
+
+            case 3: // RECHAZADA
+                return [
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' fue RECHAZADA"
+                ];
+
+            case 4: // SUSPENDIDO
+                $motivoTexto = $entrevista->motivoSuspension
+                    ? " (Motivo: {$entrevista->motivoSuspension->description})"
+                    : '';
+                return [
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' está SUSPENDIDA{$motivoTexto}"
+                ];
+
+            default:
+                return [
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' tiene un estado desconocido"
+                ];
+        }
     }
 
     public function checkProductAvailability(Request $request)
@@ -319,30 +369,67 @@ class CollectionController extends Controller
         $person = Person::find($request->person_id);
         $productId = $request->product_id;
 
+        // Verificar si existe un padrón activo para entregas
+        $padronActivoParaEntregas = Padron::paraEntregas()->first();
+
+        if (!$padronActivoParaEntregas) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No existe un padrón activo para realizar entregas en este momento'
+            ]);
+        }
+
+        // Buscar entrevista de la persona en el padrón activo para entregas
+        $entrevista = CajasEntrevista::where('person_id', $person->id)
+            ->where('padron_id', $padronActivoParaEntregas->id)
+            ->with('padron', 'status', 'motivoSuspension')
+            ->first();
+
+        if (!$entrevista) {
+            return response()->json([
+                'status' => false,
+                'message' => "No se encontró una entrevista aprobada para el padrón '{$padronActivoParaEntregas->nombre}' que está activo para entregas"
+            ]);
+        }
+
+        // Verificar el estado de la entrevista con mensajes detallados
+        switch ($entrevista->status_id) {
+            case 1: // PENDIENTE
+                return response()->json([
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' está PENDIENTE de aprobación"
+                ]);
+
+            case 3: // RECHAZADA
+                return response()->json([
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' fue RECHAZADA"
+                ]);
+
+            case 4: // SUSPENDIDO
+                $motivoTexto = $entrevista->motivoSuspension
+                    ? " (Motivo: {$entrevista->motivoSuspension->description})"
+                    : '';
+                return response()->json([
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' está SUSPENDIDA{$motivoTexto}"
+                ]);
+
+            case 2: // APROBADA - continuar con la validación de días
+                break;
+
+            default:
+                return response()->json([
+                    'status' => false,
+                    'message' => "La entrevista para el padrón '{$padronActivoParaEntregas->nombre}' tiene un estado desconocido"
+                ]);
+        }
+
         // Buscar última entrega de este producto específico
         $lastDeliveryOfProduct = Collection::where('person_id', $person->id)
             ->where('product_id', $productId)
             ->orderBy('date', 'desc')
             ->first();
-
-        // Verificar entrevista (igual que antes)
-        $entrevista = CajasEntrevista::where('person_id', $person->id)->first();
-        if (!$entrevista) {
-            return response()->json([
-                'status' => false,
-                'message' => 'No se encontró una entrevista registrada'
-            ]);
-        }
-
-        if ($entrevista->status_id != 2) {
-            $statusMessage = $entrevista->status_id == 4
-                ? 'La entrevista está suspendida'
-                : 'La entrevista no fue aprobada';
-            return response()->json([
-                'status' => false,
-                'message' => $statusMessage
-            ]);
-        }
 
         // Si no hay entrega previa de este producto, puede recibir
         if (!$lastDeliveryOfProduct) {

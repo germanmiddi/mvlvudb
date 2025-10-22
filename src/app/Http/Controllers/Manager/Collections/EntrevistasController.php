@@ -50,7 +50,7 @@ class EntrevistasController extends Controller
             'estados' => CajasEntrevistasStatus::all(),
             'sedes' => PuntoEntrega::all(),
             'entrevistadores' => User::whereHas('puntosEntrega')->get(),
-            'padrones' => Padron::activos()->orderBy('fecha_inicio', 'desc')->get()
+            'padrones' => Padron::orderBy('fecha_inicio', 'desc')->get()
         ]);
     }
 
@@ -85,6 +85,9 @@ class EntrevistasController extends Controller
 
     public function store(Request $request)
     {
+        // Limpiar el documento: eliminar puntos, guiones y espacios
+        $documentoLimpio = str_replace(['.', '-', ' '], '', $request['num_documento']);
+
         // Validar que no exista una entrevista para el mismo padrón y persona
         $existingInterview = CajasEntrevista::where('person_id', $request->person_id)
             ->where('padron_id', $request->padron_id)
@@ -105,14 +108,14 @@ class EntrevistasController extends Controller
             $person = Person::updateOrCreate(
                 [
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento']
+                    'num_documento' => $documentoLimpio
                 ],
                 [
                     'lastname' => $request['lastname'],
                     'name' => $request['name'],
                     'fecha_nac' => $request['fecha_nac'],
                     'tipo_documento_id' => $request['tipo_documento_id'],
-                    'num_documento' => $request['num_documento']
+                    'num_documento' => $documentoLimpio
                 ]
             );
 
@@ -263,7 +266,7 @@ class EntrevistasController extends Controller
         }
 
         if (request('num_documento')) {
-            $num_documento = request('num_documento');
+            $num_documento = str_replace(['.', '-', ' '], '', request('num_documento'));
             // dd($num_documento);
             $entrevistas->whereHas('person', function ($query) use ($num_documento) {
                 $query->where('num_documento', $num_documento);

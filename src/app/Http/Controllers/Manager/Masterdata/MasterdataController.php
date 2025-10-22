@@ -771,7 +771,8 @@ class MasterdataController extends Controller
             'descripcion' => 'nullable|string',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'activo' => 'boolean'
+            'estado_entrevistas' => 'required|in:activo,inactivo',
+            'estado_entregas' => 'required|in:activo,inactivo'
         ]);
 
         $padron = Padron::create([
@@ -779,7 +780,8 @@ class MasterdataController extends Controller
             'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
-            'activo' => $request->activo ?? true,
+            'estado_entrevistas' => $request->estado_entrevistas,
+            'estado_entregas' => $request->estado_entregas,
             'created_at' => Carbon::now()
         ]);
 
@@ -794,7 +796,8 @@ class MasterdataController extends Controller
             'descripcion' => 'nullable|string',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'activo' => 'boolean'
+            'estado_entrevistas' => 'required|in:activo,inactivo',
+            'estado_entregas' => 'required|in:activo,inactivo'
         ]);
 
         $padron = Padron::find($request->id);
@@ -808,7 +811,8 @@ class MasterdataController extends Controller
             'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
-            'activo' => $request->activo,
+            'estado_entrevistas' => $request->estado_entrevistas,
+            'estado_entregas' => $request->estado_entregas,
             'updated_at' => Carbon::now()
         ]);
 
@@ -927,5 +931,48 @@ class MasterdataController extends Controller
         $motivo->delete();
 
         return response()->json(['message' => 'Motivo de suspensión eliminado correctamente'], 200);
+    }
+
+    // Nuevos métodos para toggle de estados de padrones
+    public function toggle_estado_entrevistas(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:padrones,id'
+        ]);
+
+        $padron = Padron::find($request->id);
+
+        if (!$padron) {
+            return response()->json(['message' => 'Padrón no encontrado'], 404);
+        }
+
+        $padron->estado_entrevistas = $padron->estado_entrevistas === 'activo' ? 'inactivo' : 'activo';
+        $padron->save();
+
+        return response()->json([
+            'message' => 'Estado de entrevistas actualizado correctamente',
+            'estado_entrevistas' => $padron->estado_entrevistas
+        ], 200);
+    }
+
+    public function toggle_estado_entregas(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:padrones,id'
+        ]);
+
+        $padron = Padron::find($request->id);
+
+        if (!$padron) {
+            return response()->json(['message' => 'Padrón no encontrado'], 404);
+        }
+
+        $padron->estado_entregas = $padron->estado_entregas === 'activo' ? 'inactivo' : 'activo';
+        $padron->save();
+
+        return response()->json([
+            'message' => 'Estado de entregas actualizado correctamente',
+            'estado_entregas' => $padron->estado_entregas
+        ], 200);
     }
 }

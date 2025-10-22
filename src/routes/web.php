@@ -271,6 +271,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update_padron/', [MasterdataController::class, 'update_padron'])->name('masterdata.update_padron');
         Route::post('/hide_padron/', [MasterdataController::class, 'hide_padron'])->name('masterdata.hide_padron');
         Route::post('/destroy_padron/', [MasterdataController::class, 'destroy_padron'])->name('masterdata.destroy_padron');
+        Route::post('/toggle_estado_entrevistas/', [MasterdataController::class, 'toggle_estado_entrevistas'])->name('masterdata.toggle_estado_entrevistas');
+        Route::post('/toggle_estado_entregas/', [MasterdataController::class, 'toggle_estado_entregas'])->name('masterdata.toggle_estado_entregas');
 
         // Motivos de Suspensión
         Route::get('/get_motivos_suspension', [MasterdataController::class, 'get_motivos_suspension'])->name('masterdata.get_motivos_suspension');

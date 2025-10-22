@@ -15,13 +15,15 @@ class Padron extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
-        'activo',
+        'estado_entrevistas',
+        'estado_entregas',
         'fecha_inicio',
         'fecha_fin'
     ];
 
     protected $casts = [
-        'activo' => 'boolean',
+        'estado_entrevistas' => 'string',
+        'estado_entregas' => 'string',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date'
     ];
@@ -35,24 +37,57 @@ class Padron extends Model
     }
 
     /**
-     * Scope para padrones activos
+     * Scope para padrones activos en entrevistas
      */
     public function scopeActivos($query)
     {
-        return $query->where('activo', true);
+        return $query->where('estado_entrevistas', 'activo');
     }
 
     /**
-     * Scope para padrones vigentes (fecha actual entre inicio y fin)
+     * Scope para padrones activos en entregas
+     */
+    public function scopeParaEntregas($query)
+    {
+        return $query->where('estado_entregas', 'activo');
+    }
+
+    /**
+     * Scope para padrones vigentes (entrevistas activas + fechas válidas)
      */
     public function scopeVigentes($query)
     {
         $now = now()->toDateString();
-        return $query->where('activo', true)
+        return $query->where('estado_entrevistas', 'activo')
                     ->where('fecha_inicio', '<=', $now)
                     ->where(function($q) use ($now) {
                         $q->whereNull('fecha_fin')
                           ->orWhere('fecha_fin', '>=', $now);
                     });
+    }
+
+    /**
+     * Scope para padrones con entregas vigentes
+     */
+    public function scopeEntregasVigentes($query)
+    {
+        $now = now()->toDateString();
+        return $query->where('estado_entregas', 'activo')
+                    ->where('fecha_inicio', '<=', $now)
+                    ->where(function($q) use ($now) {
+                        $q->whereNull('fecha_fin')
+                          ->orWhere('fecha_fin', '>=', $now);
+                    });
+    }
+
+    // Métodos helper
+    public function isActivoParaEntrevistas()
+    {
+        return $this->estado_entrevistas === 'activo';
+    }
+
+    public function isActivoParaEntregas()
+    {
+        return $this->estado_entregas === 'activo';
     }
 }

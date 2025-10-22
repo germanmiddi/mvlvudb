@@ -10,6 +10,11 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+// Configure axios to use the same protocol as the current page
+if (window.location.protocol === 'https:') {
+    window.axios.defaults.baseURL = window.location.origin;
+}
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

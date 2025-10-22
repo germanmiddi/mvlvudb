@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mix_url' => env('MIX_ASSET_URL', null),    
+    'mix_url' => env('MIX_ASSET_URL', null),
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -55,6 +55,8 @@ return [
     'url' => env('APP_URL', 'https://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
+
+    'force_https' => env('FORCE_HTTPS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +177,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\HttpsServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
 

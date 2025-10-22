@@ -47,7 +47,7 @@ use App\Http\Controllers\Manager\Charts\ChartController;
 
 
 //import collections routes
-require_once 'Collection/web.php';
+require __DIR__.'/Collection/web.php';
 
 Route::middleware(['auth'])->group(function () {
 
